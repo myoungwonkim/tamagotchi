@@ -8,20 +8,66 @@ import {
   hideNameModal,
   getEnteredName,
   getElements,
+  setGameActive,
 } from "./ui.js";
 
 const OFFLINE_MESSAGE_MS = 30 * 60 * 1000;
+const OFFLINE_NOTICE_MS = 5 * 60 * 1000;
 const TICK_MS = 1000;
 
 let pet = null;
+let lastTickAt = Date.now();
+
+function persistPet() {
+  if (pet) savePet(pet);
+}
+
+function formatAwayTime(ms) {
+  const totalMinutes = Math.floor(ms / 60000);
+  if (totalMinutes < 1) return "잠깐";
+  if (totalMinutes < 60) return `${totalMinutes}분`;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return minutes > 0 ? `${hours}시간 ${minutes}분` : `${hours}시간`;
+}
+
+function getAwayMessage(elapsed, name) {
+  if (elapsed >= OFFLINE_MESSAGE_MS) {
+    return `${name}가 ${formatAwayTime(elapsed)} 동안 당신을 기다렸어요!`;
+  }
+  if (elapsed >= OFFLINE_NOTICE_MS) {
+    return `${formatAwayTime(elapsed)} 동안 다녀오셨네요.`;
+  }
+  return null;
+}
+
+function applyAwayTime(elapsed, { notify = false } = {}) {
+  if (!pet || !pet.isAlive || elapsed <= 0) return;
+
+  applyTimeDelta(pet, elapsed);
+  pet.lastUpdated = Date.now();
+  lastTickAt = Date.now();
+
+  if (notify) {
+    const message = getAwayMessage(elapsed, pet.name);
+    if (message) showMessage(message);
+  }
+
+  checkGameOver(pet);
+  renderPet(pet);
+  savePet(pet);
+}
 
 function init() {
   const saved = loadPet();
 
   if (saved) {
     pet = saved;
+    setGameActive(true);
     if (saved.isAlive !== false) {
       applyOfflineTime();
+    } else {
+      lastTickAt = Date.now();
     }
     renderPet(pet);
     savePet(pet);
@@ -31,26 +77,43 @@ function init() {
 
   bindEvents();
   setInterval(gameTick, TICK_MS);
+
+  window.addEventListener("pagehide", persistPet);
+  window.addEventListener("beforeunload", persistPet);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      persistPet();
+      return;
+    }
+    if (!pet?.isAlive) return;
+    const elapsed = Date.now() - pet.lastUpdated;
+    if (elapsed > TICK_MS) {
+      applyElapsedTime(elapsed);
+    }
+  });
+}
+
+function applyElapsedTime(elapsed) {
+  if (!pet || !pet.isAlive || elapsed <= 0) return;
+  applyAwayTime(elapsed, { notify: elapsed >= OFFLINE_NOTICE_MS });
 }
 
 function applyOfflineTime() {
   const elapsed = Date.now() - pet.lastUpdated;
-  if (elapsed <= 0) return;
-
-  applyTimeDelta(pet, elapsed);
-  pet.lastUpdated = Date.now();
-
-  if (elapsed >= OFFLINE_MESSAGE_MS) {
-    showMessage(`${pet.name}가 당신을 기다렸어요!`);
-  }
-
-  checkGameOver(pet);
+  applyAwayTime(elapsed, { notify: true });
 }
 
 function gameTick() {
   if (!pet || !pet.isAlive) return;
 
-  tickPet(pet, TICK_MS);
+  const now = Date.now();
+  const elapsed = now - lastTickAt;
+  lastTickAt = now;
+
+  if (elapsed <= 0) return;
+
+  tickPet(pet, elapsed);
   renderPet(pet);
   savePet(pet);
 }
@@ -81,6 +144,8 @@ function startNewPet(name) {
   clearPet();
   resetActionCooldown();
   pet = createNewPet(name);
+  lastTickAt = Date.now();
+  setGameActive(true);
   renderPet(pet);
   savePet(pet);
 }
@@ -110,4 +175,43 @@ function bindEvents() {
   });
 }
 
+function mountDevToolsIfEnabled() {
+  if (!new URLSearchParams(location.search).has("dev")) return;
+
+  import("./dev.js").then(({ mountDevPanel }) => {
+    mountDevPanel({
+      simulateHealthGameOver() {
+        if (!pet) return;
+        pet.health = 0;
+        checkGameOver(pet);
+        renderPet(pet);
+        savePet(pet);
+      },
+
+      simulateNeglectGameOver() {
+        if (!pet) return;
+        pet.hunger = 5;
+        pet.happiness = 5;
+        pet.cleanliness = 5;
+        applyAwayTime(11 * 60 * 1000, { notify: false });
+      },
+
+      simulateOffline(minutes) {
+        if (!pet?.isAlive) return;
+        const elapsed = minutes * 60 * 1000;
+        pet.lastUpdated = Date.now() - elapsed;
+        applyAwayTime(elapsed, { notify: true });
+      },
+
+      simulateAgePlusOne() {
+        if (!pet) return;
+        pet.bornAt -= 86400000;
+        renderPet(pet);
+        savePet(pet);
+      },
+    });
+  });
+}
+
 init();
+mountDevToolsIfEnabled();

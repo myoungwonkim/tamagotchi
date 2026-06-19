@@ -1,4 +1,4 @@
-import { getAgeDays, getPetEmoji } from "./pet.js";
+import { getAgeDays, getPetEmoji, getGameOverReason } from "./pet.js";
 
 const elements = {
   petName: document.getElementById("pet-name"),
@@ -9,6 +9,7 @@ const elements = {
   actions: document.getElementById("actions"),
   gameOverOverlay: document.getElementById("game-over-overlay"),
   gameOverTitle: document.getElementById("game-over-title"),
+  gameOverText: document.getElementById("game-over-text"),
   nameOverlay: document.getElementById("name-overlay"),
   nameInput: document.getElementById("name-input"),
   bars: {
@@ -38,12 +39,14 @@ export function renderPet(pet) {
   elements.petAge.textContent = `${getAgeDays(pet)}일째`;
 
   const emoji = getPetEmoji(pet);
-  if (elements.petEmoji.textContent !== emoji) {
-    elements.petEmoji.textContent = emoji;
+  const domEmoji = elements.petEmoji.textContent;
+
+  if (domEmoji !== emoji) {
     elements.petEmoji.classList.remove("pet-emoji--bounce");
     void elements.petEmoji.offsetWidth;
     elements.petEmoji.classList.add("pet-emoji--bounce");
   }
+  elements.petEmoji.textContent = emoji;
 
   elements.petArea.classList.toggle("pet-area--sleeping", pet.isSleeping);
 
@@ -83,7 +86,17 @@ function updateGameOver(pet) {
     return;
   }
 
+  const age = getAgeDays(pet);
   elements.gameOverTitle.textContent = `${pet.name}가 떠났어요...`;
+
+  if (age > 0) {
+    elements.gameOverText.textContent = `${age}일 동안 함께했어요. 새 친구를 만나볼까요?`;
+  } else if (getGameOverReason(pet) === "health") {
+    elements.gameOverText.textContent = "건강이 너무 나빠졌어요. 다음엔 더 잘 돌봐줄 수 있을까요?";
+  } else {
+    elements.gameOverText.textContent = "너무 오래 방치했어요. 다음엔 더 잘 돌봐줄 수 있을까요?";
+  }
+
   elements.gameOverOverlay.hidden = false;
   elements.actions.hidden = true;
 }
@@ -100,12 +113,26 @@ export function showMessage(text, durationMs = 4000) {
 
 export function showNameModal() {
   elements.nameOverlay.hidden = false;
+  elements.gameOverOverlay.hidden = true;
   elements.nameInput.value = "";
   elements.nameInput.focus();
+  setGameActive(false);
 }
 
 export function hideNameModal() {
   elements.nameOverlay.hidden = true;
+}
+
+export function setGameActive(active) {
+  elements.actions.hidden = !active;
+  if (!active) {
+    elements.petEmoji.textContent = "🥚";
+    elements.petName.textContent = "???";
+    elements.petAge.textContent = "이름을 지어주세요";
+    Object.keys(elements.buttons).forEach((key) => {
+      elements.buttons[key].disabled = true;
+    });
+  }
 }
 
 export function getEnteredName() {

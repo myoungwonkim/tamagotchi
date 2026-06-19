@@ -2,11 +2,42 @@ import { createNewPet } from "./pet.js";
 
 const STORAGE_KEY = "tamagotchi-pet";
 
+export function normalizePet(raw) {
+  if (!raw || typeof raw !== "object") return null;
+
+  const defaults = createNewPet(raw.name || "치치");
+  return {
+    ...defaults,
+    ...raw,
+    name: typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : defaults.name,
+    bornAt: typeof raw.bornAt === "number" ? raw.bornAt : defaults.bornAt,
+    hunger: clampStat(raw.hunger, defaults.hunger),
+    happiness: clampStat(raw.happiness, defaults.happiness),
+    cleanliness: clampStat(raw.cleanliness, defaults.cleanliness),
+    health: clampStat(raw.health, defaults.health),
+    isSleeping: Boolean(raw.isSleeping),
+    isAlive: raw.isAlive !== false,
+    lastUpdated: typeof raw.lastUpdated === "number" ? raw.lastUpdated : defaults.lastUpdated,
+    neglectStartedAt:
+      raw.neglectStartedAt === null || typeof raw.neglectStartedAt === "number"
+        ? raw.neglectStartedAt
+        : null,
+  };
+}
+
+function clampStat(value, fallback) {
+  if (typeof value !== "number" || Number.isNaN(value)) return fallback;
+  return Math.min(100, Math.max(0, value));
+}
+
 export function savePet(pet) {
+  if (!pet) return false;
+
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(pet));
+    return true;
   } catch {
-    // localStorage unavailable or full
+    return false;
   }
 }
 
@@ -15,9 +46,7 @@ export function loadPet() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
 
-    const pet = JSON.parse(raw);
-    if (!pet || typeof pet !== "object") return null;
-    return pet;
+    return normalizePet(JSON.parse(raw));
   } catch {
     return null;
   }
@@ -26,8 +55,9 @@ export function loadPet() {
 export function clearPet() {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    return true;
   } catch {
-    // ignore
+    return false;
   }
 }
 
