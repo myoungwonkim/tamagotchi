@@ -76,16 +76,13 @@ git push -u origin main
 
 ### 2. GitHub Pages 활성화
 
-**방법 A — GitHub Actions (권장, `.github/workflows/pages.yml` 포함)**
+1. GitHub에서 저장소 열기: https://github.com/myoungwonkim/tamagotchi
+2. 상단 **Settings** 탭 클릭 (안 보이면 `⋯` 메뉴 안에 있음)
+3. 왼쪽 사이드바 **Code and automation** 섹션에서 **Pages** 클릭
+4. **Build and deployment** → **Source**에서 **Deploy from a branch** 선택
+5. **Branch:** `main` / **Folder:** `/ (root)` 선택 → **Save**
 
-1. 저장소 **Settings → Pages**
-2. **Build and deployment → Source:** `GitHub Actions`
-3. `main` 브랜치에 push하면 자동 배포
-
-**방법 B — 브랜치 배포**
-
-1. **Settings → Pages → Source:** `Deploy from a branch`
-2. Branch: `main`, Folder: `/ (root)`
+> **GitHub Actions** 옵션은 workflow 파일과 추가 권한이 필요합니다. 이 프로젝트는 정적 HTML이라 **Deploy from a branch**가 더 간단합니다.
 
 ### 3. 배포 URL
 
@@ -106,5 +103,4 @@ tamagotchi/
     ui.js        # 화면 갱신
     main.js      # 게임 루프
     dev.js       # ?dev=1 테스트 패널
-  .github/workflows/pages.yml
 ```
