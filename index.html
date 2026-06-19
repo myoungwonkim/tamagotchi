@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#fef6e4">
+  <title>다마고치</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="pet-name" id="pet-name">치치</h1>
+      <p class="pet-age" id="pet-age">0일째</p>
+    </header>
+
+    <main class="main">
+      <p class="message" id="message" hidden></p>
+
+      <div class="pet-area" id="pet-area">
+        <span class="pet-emoji" id="pet-emoji" aria-hidden="true">🐣</span>
+      </div>
+
+      <section class="stats" aria-label="펫 상태">
+        <div class="stat">
+          <label for="bar-hunger">배고픔</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--hunger" id="bar-hunger" style="width: 80%"></div>
+          </div>
+          <span class="stat-value" id="val-hunger">80</span>
+        </div>
+        <div class="stat">
+          <label for="bar-happiness">행복</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--happiness" id="bar-happiness" style="width: 70%"></div>
+          </div>
+          <span class="stat-value" id="val-happiness">70</span>
+        </div>
+        <div class="stat">
+          <label for="bar-cleanliness">청결</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--cleanliness" id="bar-cleanliness" style="width: 60%"></div>
+          </div>
+          <span class="stat-value" id="val-cleanliness">60</span>
+        </div>
+        <div class="stat">
+          <label for="bar-health">건강</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--health" id="bar-health" style="width: 100%"></div>
+          </div>
+          <span class="stat-value" id="val-health">100</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="actions" id="actions">
+      <button type="button" class="action-btn action-btn--feed" id="btn-feed" data-action="feed">
+        <span class="action-icon">🍎</span>
+        <span>먹이</span>
+      </button>
+      <button type="button" class="action-btn action-btn--play" id="btn-play" data-action="play">
+        <span class="action-icon">🎾</span>
+        <span>놀기</span>
+      </button>
+      <button type="button" class="action-btn action-btn--clean" id="btn-clean" data-action="clean">
+        <span class="action-icon">🛁</span>
+        <span>씻기</span>
+      </button>
+      <button type="button" class="action-btn action-btn--sleep" id="btn-sleep" data-action="sleep">
+        <span class="action-icon">🌙</span>
+        <span>재우기</span>
+      </button>
+    </footer>
+
+    <div class="overlay" id="game-over-overlay" hidden>
+      <div class="overlay-card">
+        <p class="overlay-emoji" aria-hidden="true">💔</p>
+        <h2 class="overlay-title" id="game-over-title">치치가 떠났어요...</h2>
+        <p class="overlay-text">더 잘 돌봐줄 수 있을까요?</p>
+        <button type="button" class="overlay-btn" id="btn-new-pet">새 펫 키우기</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="name-overlay" hidden>
+      <div class="overlay-card">
+        <h2 class="overlay-title">펫 이름 짓기</h2>
+        <p class="overlay-text">새로운 친구의 이름을 지어주세요!</p>
+        <input type="text" class="name-input" id="name-input" maxlength="12" placeholder="이름 입력" autocomplete="off">
+        <button type="button" class="overlay-btn" id="btn-start-pet">시작하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
