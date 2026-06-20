@@ -1,3 +1,5 @@
+import { getEvolutionStage } from "./evolution.js";
+
 const MS_PER_DAY = 86400000;
 const NEGLECT_THRESHOLD = 10;
 const NEGLECT_DURATION_MS = 10 * 60 * 1000;
@@ -28,6 +30,7 @@ export function createNewPet(name = "치치") {
     isAlive: true,
     lastUpdated: now,
     neglectStartedAt: null,
+    lastEvolutionStage: null,
   };
 }
 
@@ -46,9 +49,15 @@ export function getPetEmoji(pet) {
 
   const avg = getAverageCare(pet);
   const minStat = Math.min(pet.hunger, pet.happiness, pet.cleanliness);
-  if (minStat < 35 || avg < 40) return "😢";
-  if (minStat < 55 || avg < 70) return "😐";
-  return "😊";
+  const mood =
+    minStat < 35 || avg < 40 ? "😢" :
+    minStat < 55 || avg < 70 ? "😐" :
+    "😊";
+
+  const { baseEmoji } = getEvolutionStage(pet);
+  if (mood === "😊") return baseEmoji;
+
+  return mood;
 }
 
 export function applyTimeDelta(pet, elapsedMs) {

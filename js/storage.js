@@ -1,4 +1,5 @@
 import { createNewPet } from "./pet.js";
+import { getEvolutionStage } from "./evolution.js";
 
 const STORAGE_KEY = "tamagotchi-pet";
 
@@ -6,7 +7,7 @@ export function normalizePet(raw) {
   if (!raw || typeof raw !== "object") return null;
 
   const defaults = createNewPet(raw.name || "치치");
-  return {
+  const pet = {
     ...defaults,
     ...raw,
     name: typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : defaults.name,
@@ -22,7 +23,15 @@ export function normalizePet(raw) {
       raw.neglectStartedAt === null || typeof raw.neglectStartedAt === "number"
         ? raw.neglectStartedAt
         : null,
+    lastEvolutionStage:
+      typeof raw.lastEvolutionStage === "string" ? raw.lastEvolutionStage : null,
   };
+
+  if (pet.isAlive && pet.lastEvolutionStage === null) {
+    pet.lastEvolutionStage = getEvolutionStage(pet).id;
+  }
+
+  return pet;
 }
 
 function clampStat(value, fallback) {

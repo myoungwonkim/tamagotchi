@@ -1,6 +1,8 @@
 import { applyTimeDelta, checkGameOver, createNewPet, tickPet } from "./pet.js";
 import { feed, play, clean, toggleSleep, resetActionCooldown } from "./actions.js";
 import { savePet, loadPet, clearPet } from "./storage.js";
+import { checkEvolution, getEvolutionStage, getStageIndex, EVOLUTION_STAGES } from "./evolution.js";
+import { initAudio, playSfx, toggleMuted, updateMuteButton } from "./audio.js";
 import {
   renderPet,
   showMessage,
@@ -22,6 +24,10 @@ function persistPet() {
   if (pet) savePet(pet);
 }
 
+function unlockAudioOnce() {
+  initAudio();
+}
+
 function formatAwayTime(ms) {
   const totalMinutes = Math.floor(ms / 60000);
   if (totalMinutes < 1) return "잠깐";
@@ -41,6 +47,18 @@ function getAwayMessage(elapsed, name) {
   return null;
 }
 
+function handleEvolution({ notify = true } = {}) {
+  if (!pet?.isAlive) return false;
+
+  const result = checkEvolution(pet);
+  if (result.evolved && notify) {
+    showMessage(`${pet.name}가 ${result.stage.label}(으)로 진화했어요!`, 5000);
+    playSfx("evolve");
+  }
+
+  return result.evolved;
+}
+
 function applyAwayTime(elapsed, { notify = false } = {}) {
   if (!pet || !pet.isAlive || elapsed <= 0) return;
 
@@ -50,10 +68,14 @@ function applyAwayTime(elapsed, { notify = false } = {}) {
 
   if (notify) {
     const message = getAwayMessage(elapsed, pet.name);
-    if (message) showMessage(message);
+    if (message) {
+      showMessage(message);
+      playSfx("message");
+    }
   }
 
   checkGameOver(pet);
+  handleEvolution();
   renderPet(pet);
   savePet(pet);
 }
@@ -69,6 +91,7 @@ function init() {
     } else {
       lastTickAt = Date.now();
     }
+    handleEvolution({ notify: false });
     renderPet(pet);
     savePet(pet);
   } else {
@@ -76,6 +99,7 @@ function init() {
   }
 
   bindEvents();
+  setupMuteButton();
   setInterval(gameTick, TICK_MS);
 
   window.addEventListener("pagehide", persistPet);
@@ -114,6 +138,7 @@ function gameTick() {
   if (elapsed <= 0) return;
 
   tickPet(pet, elapsed);
+  handleEvolution();
   renderPet(pet);
   savePet(pet);
 }
@@ -128,6 +153,8 @@ const ACTION_MESSAGES = {
 function handleAction(actionFn, messageKey) {
   if (!pet || !pet.isAlive) return;
 
+  unlockAudioOnce();
+
   const changed = actionFn(pet);
   if (!changed) return;
 
@@ -135,6 +162,12 @@ function handleAction(actionFn, messageKey) {
   pet.lastUpdated = Date.now();
   renderPet(pet);
   savePet(pet);
+
+  if (messageKey === "sleep") {
+    playSfx(pet.isSleeping ? "sleep" : "wake");
+  } else {
+    playSfx(messageKey);
+  }
 
   const getMessage = ACTION_MESSAGES[messageKey];
   if (getMessage) showMessage(getMessage(pet));
@@ -145,28 +178,45 @@ function startNewPet(name) {
   resetActionCooldown();
   pet = createNewPet(name);
   lastTickAt = Date.now();
+  handleEvolution({ notify: false });
   setGameActive(true);
   renderPet(pet);
   savePet(pet);
 }
 
+function setupMuteButton() {
+  const muteButton = document.getElementById("btn-mute");
+  if (!muteButton) return;
+
+  updateMuteButton(muteButton);
+  muteButton.addEventListener("click", () => {
+    toggleMuted();
+    updateMuteButton(muteButton);
+  });
+}
+
 function bindEvents() {
   const { buttons } = getElements();
 
-  buttons.feed.addEventListener("click", () => handleAction(feed, "feed"));
-  buttons.play.addEventListener("click", () => handleAction(play, "play"));
-  buttons.clean.addEventListener("click", () => handleAction(clean, "clean"));
-  buttons.sleep.addEventListener("click", () => handleAction(toggleSleep, "sleep"));
+  const withAudio = (handler) => () => {
+    unlockAudioOnce();
+    handler();
+  };
 
-  document.getElementById("btn-new-pet").addEventListener("click", () => {
+  buttons.feed.addEventListener("click", withAudio(() => handleAction(feed, "feed")));
+  buttons.play.addEventListener("click", withAudio(() => handleAction(play, "play")));
+  buttons.clean.addEventListener("click", withAudio(() => handleAction(clean, "clean")));
+  buttons.sleep.addEventListener("click", withAudio(() => handleAction(toggleSleep, "sleep")));
+
+  document.getElementById("btn-new-pet").addEventListener("click", withAudio(() => {
     showNameModal();
-  });
+  }));
 
-  document.getElementById("btn-start-pet").addEventListener("click", () => {
+  document.getElementById("btn-start-pet").addEventListener("click", withAudio(() => {
     const name = getEnteredName() || "치치";
     hideNameModal();
     startNewPet(name);
-  });
+  }));
 
   document.getElementById("name-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -206,6 +256,18 @@ function mountDevToolsIfEnabled() {
       simulateAgePlusOne() {
         if (!pet) return;
         pet.bornAt -= 86400000;
+        handleEvolution();
+        renderPet(pet);
+        savePet(pet);
+      },
+
+      simulateEvolution() {
+        if (!pet) return;
+        const stage = getEvolutionStage(pet);
+        const idx = getStageIndex(stage.id);
+        if (idx <= 0) return;
+        pet.lastEvolutionStage = EVOLUTION_STAGES[idx - 1].id;
+        handleEvolution();
         renderPet(pet);
         savePet(pet);
       },

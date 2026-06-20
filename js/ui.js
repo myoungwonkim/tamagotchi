@@ -1,8 +1,11 @@
 import { getAgeDays, getPetEmoji, getGameOverReason } from "./pet.js";
+import { getEvolutionStage } from "./evolution.js";
+import { playSfx } from "./audio.js";
 
 const elements = {
   petName: document.getElementById("pet-name"),
   petAge: document.getElementById("pet-age"),
+  petStage: document.getElementById("pet-stage"),
   petEmoji: document.getElementById("pet-emoji"),
   petArea: document.getElementById("pet-area"),
   message: document.getElementById("message"),
@@ -33,10 +36,12 @@ const elements = {
 };
 
 let messageTimeout = null;
+let gameOverSoundNotified = false;
 
 export function renderPet(pet) {
   elements.petName.textContent = pet.name;
   elements.petAge.textContent = `${getAgeDays(pet)}일째`;
+  elements.petStage.textContent = getEvolutionStage(pet).label;
 
   const emoji = getPetEmoji(pet);
   const domEmoji = elements.petEmoji.textContent;
@@ -83,6 +88,7 @@ function updateGameOver(pet) {
   if (pet.isAlive) {
     elements.gameOverOverlay.hidden = true;
     elements.actions.hidden = false;
+    gameOverSoundNotified = false;
     return;
   }
 
@@ -99,6 +105,11 @@ function updateGameOver(pet) {
 
   elements.gameOverOverlay.hidden = false;
   elements.actions.hidden = true;
+
+  if (!gameOverSoundNotified) {
+    gameOverSoundNotified = true;
+    playSfx("gameover");
+  }
 }
 
 export function showMessage(text, durationMs = 4000) {
@@ -129,6 +140,7 @@ export function setGameActive(active) {
     elements.petEmoji.textContent = "🥚";
     elements.petName.textContent = "???";
     elements.petAge.textContent = "이름을 지어주세요";
+    elements.petStage.textContent = "알";
     Object.keys(elements.buttons).forEach((key) => {
       elements.buttons[key].disabled = true;
     });

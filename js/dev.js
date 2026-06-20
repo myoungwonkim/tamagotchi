@@ -19,6 +19,7 @@ export function mountDevPanel(handlers) {
     { label: "5분 오프라인", action: () => handlers.simulateOffline(5) },
     { label: "30분 오프라인", action: () => handlers.simulateOffline(30) },
     { label: "나이 +1일", action: handlers.simulateAgePlusOne },
+    { label: "진화 테스트", action: handlers.simulateEvolution },
   ];
 
   for (const test of tests) {
