@@ -25,7 +25,7 @@ export const ADULT_VARIANTS = [
   { id: "sparkle", tier: "pretty", emoji: "🌟🐔", label: "반짝 닭" },
   { id: "standard", tier: "normal", emoji: "🐔", label: "평범한 닭" },
   { id: "farm", tier: "normal", emoji: "🐔‍🌾", label: "농장 닭" },
-  { id: "plain", tier: "normal", emoji: "🐔", label: "무난한 닭" },
+  { id: "plain", tier: "normal", emoji: "🐔💤", label: "무난한 닭" },
   { id: "scruffy", tier: "defective", emoji: "🪶🐔", label: "털 빠진 닭" },
   { id: "grumpy", tier: "defective", emoji: "💢🐔", label: "심술 닭" },
   { id: "sickly", tier: "defective", emoji: "🤕🐔", label: "병든 닭" },

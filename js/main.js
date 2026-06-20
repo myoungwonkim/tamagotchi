@@ -19,6 +19,7 @@ import {
   hideGraduateModal,
   showEncyclopedia,
   hideEncyclopedia,
+  isMessageVisible,
   getEnteredName,
   getElements,
   setGameActive,
@@ -86,7 +87,15 @@ function handleEvolution({ notify = true } = {}) {
   return result.evolved;
 }
 
+function ensureAdultRegistered() {
+  if (!pet?.adultVariantId) return;
+  if (getEvolutionStage(pet).id !== "adult") return;
+  addToEncyclopedia(pet);
+}
+
 function maybeShowIdleDialogue() {
+  if (isMessageVisible()) return;
+
   const line = shouldShowIdleDialogue(pet);
   if (line) showMessage(line, 5000);
 }
@@ -125,8 +134,12 @@ function init() {
       lastTickAt = Date.now();
     }
     handleEvolution({ notify: false });
-    if (getEvolutionStage(pet).id === "adult" && !pet.adultVariantId) {
-      handleAdultEvolution({ notify: false });
+    if (getEvolutionStage(pet).id === "adult") {
+      if (!pet.adultVariantId) {
+        handleAdultEvolution({ notify: false });
+      } else {
+        ensureAdultRegistered();
+      }
     }
     renderPet(pet);
     savePet(pet);

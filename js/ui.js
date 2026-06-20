@@ -172,6 +172,10 @@ export function showMessage(text, durationMs = 4000) {
   }, durationMs);
 }
 
+export function isMessageVisible() {
+  return !elements.message.hidden;
+}
+
 export function showNameModal() {
   elements.nameOverlay.hidden = false;
   elements.gameOverOverlay.hidden = true;
@@ -221,6 +225,12 @@ export function renderEncyclopedia() {
     card.append(emoji, label);
 
     if (slot.collected && slot.entries[0]) {
+      const entry = slot.entries[0];
+
+      const name = document.createElement("span");
+      name.className = "encyclopedia-card__name";
+      name.textContent = entry.petName || "이름 없음";
+
       const tier = document.createElement("span");
       tier.className = "encyclopedia-card__tier";
       tier.textContent =
@@ -232,9 +242,9 @@ export function renderEncyclopedia() {
 
       const date = document.createElement("span");
       date.className = "encyclopedia-card__date";
-      date.textContent = formatAchievedDate(slot.entries[0].achievedAt);
+      date.textContent = formatAchievedDate(entry.achievedAt);
 
-      card.append(tier, date);
+      card.append(name, tier, date);
     }
 
     elements.encyclopediaGrid.append(card);

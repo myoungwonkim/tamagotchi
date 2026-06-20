@@ -418,6 +418,17 @@ body {
   line-height: 1.2;
 }
 
+.encyclopedia-card__name {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .encyclopedia-card__tier {
   font-size: 0.5625rem;
   color: var(--accent-dark);
