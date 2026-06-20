@@ -45,16 +45,14 @@ export function addToEncyclopedia(pet) {
   const data = loadEncyclopedia();
 
   const duplicate = data.entries.find(
-    (e) =>
-      e.petName === pet.name &&
-      e.variantId === pet.adultVariantId &&
-      e.achievedAt === pet.bornAt
+    (e) => e.petBornAt === pet.bornAt && e.variantId === pet.adultVariantId
   );
   if (duplicate) return duplicate;
 
   const entry = {
     id: createEntryId(),
     petName: pet.name,
+    petBornAt: pet.bornAt,
     variantId: variant.id,
     tier: variant.tier,
     emoji: variant.emoji,
