@@ -31,6 +31,8 @@ export function createNewPet(name = "치치") {
     lastUpdated: now,
     neglectStartedAt: null,
     lastEvolutionStage: null,
+    adultVariantId: null,
+    adultCareSnapshot: null,
   };
 }
 
@@ -42,22 +44,29 @@ export function getAverageCare(pet) {
   return (pet.hunger + pet.happiness + pet.cleanliness) / 3;
 }
 
-export function getPetEmoji(pet) {
-  if (!pet.isAlive) return "👻";
+export function getMoodEmoji(pet) {
+  if (!pet.isAlive) return null;
   if (pet.isSleeping) return "😴";
   if (pet.health < 30) return "🤒";
 
   const avg = getAverageCare(pet);
   const minStat = Math.min(pet.hunger, pet.happiness, pet.cleanliness);
-  const mood =
-    minStat < 35 || avg < 40 ? "😢" :
-    minStat < 55 || avg < 70 ? "😐" :
-    "😊";
+  if (minStat < 35 || avg < 40) return "😢";
+  if (minStat < 55 || avg < 70) return "😐";
+  return "😊";
+}
 
-  const { baseEmoji } = getEvolutionStage(pet);
+export function getEvolutionEmoji(pet) {
+  if (!pet.isAlive) return "👻";
+  return getEvolutionStage(pet).baseEmoji;
+}
+
+/** @deprecated Phase 3: use getEvolutionEmoji + getMoodEmoji */
+export function getPetEmoji(pet) {
+  const mood = getMoodEmoji(pet);
+  if (!pet.isAlive) return "👻";
   if (mood === "😢") return "😢";
-
-  return baseEmoji;
+  return getEvolutionEmoji(pet);
 }
 
 export function applyTimeDelta(pet, elapsedMs) {

@@ -20,6 +20,10 @@ export function mountDevPanel(handlers) {
     { label: "30분 오프라인", action: () => handlers.simulateOffline(30) },
     { label: "나이 +1일", action: handlers.simulateAgePlusOne },
     { label: "진화 테스트", action: handlers.simulateEvolution },
+    { label: "성체 진화 (pretty)", action: handlers.simulateAdultPretty },
+    { label: "성체 진화 (defective)", action: handlers.simulateAdultDefective },
+    { label: "도감 초기화", action: handlers.clearEncyclopedia },
+    { label: "idle 대사 강제", action: handlers.forceIdleDialogue },
   ];
 
   for (const test of tests) {

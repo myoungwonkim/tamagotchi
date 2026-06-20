@@ -13,6 +13,7 @@
 <body>
   <div class="app">
     <header class="header">
+      <button type="button" class="encyclopedia-btn" id="btn-encyclopedia" aria-label="도감">📖</button>
       <button type="button" class="mute-btn" id="btn-mute" aria-label="소리 끄기" aria-pressed="false">🔊</button>
       <h1 class="pet-name" id="pet-name">치치</h1>
       <p class="pet-age" id="pet-age">0일째</p>
@@ -23,8 +24,15 @@
       <p class="message" id="message" hidden></p>
 
       <div class="pet-area" id="pet-area">
-        <span class="pet-emoji" id="pet-emoji" aria-hidden="true">🐣</span>
+        <div class="pet-display">
+          <span class="pet-evolution" id="pet-evolution" aria-hidden="true">🥚</span>
+          <div class="pet-mood-bubble" id="pet-mood-bubble" aria-hidden="true">
+            <span class="pet-mood-emoji" id="pet-mood-emoji">😊</span>
+          </div>
+        </div>
       </div>
+
+      <button type="button" class="new-pet-fab" id="btn-new-pet-side" hidden>새 펫 키우기</button>
 
       <section class="stats" aria-label="펫 상태">
         <div class="stat">
@@ -76,6 +84,25 @@
         <span>재우기</span>
       </button>
     </footer>
+
+    <div class="overlay" id="encyclopedia-overlay" hidden>
+      <div class="overlay-card overlay-card--wide">
+        <h2 class="overlay-title">도감</h2>
+        <p class="overlay-text" id="encyclopedia-count">수집 0 / 9</p>
+        <div class="encyclopedia-grid" id="encyclopedia-grid"></div>
+        <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-close-encyclopedia">닫기</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="graduate-overlay" hidden>
+      <div class="overlay-card">
+        <p class="overlay-emoji" aria-hidden="true">🐣</p>
+        <h2 class="overlay-title">새 펫을 키울까요?</h2>
+        <p class="overlay-text" id="graduate-text">지금 키우는 친구는 도감에 남고, 새 알부터 시작해요.</p>
+        <button type="button" class="overlay-btn" id="btn-graduate-confirm">새 펫 시작</button>
+        <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-graduate-cancel">계속 키우기</button>
+      </div>
+    </div>
 
     <div class="overlay" id="game-over-overlay" hidden>
       <div class="overlay-card">

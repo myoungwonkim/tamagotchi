@@ -2,12 +2,23 @@ import { applyTimeDelta, checkGameOver, createNewPet, tickPet } from "./pet.js";
 import { feed, play, clean, toggleSleep, resetActionCooldown } from "./actions.js";
 import { savePet, loadPet, clearPet } from "./storage.js";
 import { checkEvolution, getEvolutionStage, getStageIndex, EVOLUTION_STAGES } from "./evolution.js";
+import { resolveAdultVariant } from "./adultVariants.js";
+import { addToEncyclopedia } from "./encyclopedia.js";
+import {
+  getAdultActionMessage,
+  shouldShowIdleDialogue,
+  resetDialogueTimer,
+} from "./dialogue.js";
 import { initAudio, playSfx, toggleMuted, updateMuteButton } from "./audio.js";
 import {
   renderPet,
   showMessage,
   showNameModal,
   hideNameModal,
+  showGraduateModal,
+  hideGraduateModal,
+  showEncyclopedia,
+  hideEncyclopedia,
   getEnteredName,
   getElements,
   setGameActive,
@@ -47,16 +58,37 @@ function getAwayMessage(elapsed, name) {
   return null;
 }
 
+function handleAdultEvolution({ notify = true } = {}) {
+  resolveAdultVariant(pet);
+  addToEncyclopedia(pet);
+
+  if (notify) {
+    showMessage(`${pet.name}가 어른으로 진화했어요! 도감에 등록됐어요!`, 5000);
+    playSfx("evolve");
+  }
+}
+
 function handleEvolution({ notify = true } = {}) {
   if (!pet?.isAlive) return false;
 
   const result = checkEvolution(pet);
+
+  if (result.evolved && result.stage.id === "adult") {
+    handleAdultEvolution({ notify });
+    return true;
+  }
+
   if (result.evolved && notify) {
     showMessage(`${pet.name}가 ${result.stage.label}(으)로 진화했어요!`, 5000);
     playSfx("evolve");
   }
 
   return result.evolved;
+}
+
+function maybeShowIdleDialogue() {
+  const line = shouldShowIdleDialogue(pet);
+  if (line) showMessage(line, 5000);
 }
 
 function applyAwayTime(elapsed, { notify = false } = {}) {
@@ -76,6 +108,7 @@ function applyAwayTime(elapsed, { notify = false } = {}) {
 
   checkGameOver(pet);
   handleEvolution();
+  maybeShowIdleDialogue();
   renderPet(pet);
   savePet(pet);
 }
@@ -92,6 +125,9 @@ function init() {
       lastTickAt = Date.now();
     }
     handleEvolution({ notify: false });
+    if (getEvolutionStage(pet).id === "adult" && !pet.adultVariantId) {
+      handleAdultEvolution({ notify: false });
+    }
     renderPet(pet);
     savePet(pet);
   } else {
@@ -139,6 +175,7 @@ function gameTick() {
 
   tickPet(pet, elapsed);
   handleEvolution();
+  maybeShowIdleDialogue();
   renderPet(pet);
   savePet(pet);
 }
@@ -149,6 +186,14 @@ const ACTION_MESSAGES = {
   clean: () => "깨끗해졌어요!",
   sleep: (p) => (p.isSleeping ? "잠들었어요..." : "깨어났어요!"),
 };
+
+function getActionMessage(pet, messageKey) {
+  const adultMessage = getAdultActionMessage(pet, messageKey);
+  if (adultMessage) return adultMessage;
+
+  const getMessage = ACTION_MESSAGES[messageKey];
+  return getMessage ? getMessage(pet) : null;
+}
 
 function handleAction(actionFn, messageKey) {
   if (!pet || !pet.isAlive) return;
@@ -169,19 +214,27 @@ function handleAction(actionFn, messageKey) {
     playSfx(messageKey);
   }
 
-  const getMessage = ACTION_MESSAGES[messageKey];
-  if (getMessage) showMessage(getMessage(pet));
+  const message = getActionMessage(pet, messageKey);
+  if (message) showMessage(message);
 }
 
 function startNewPet(name) {
   clearPet();
   resetActionCooldown();
+  resetDialogueTimer();
   pet = createNewPet(name);
   lastTickAt = Date.now();
   handleEvolution({ notify: false });
   setGameActive(true);
   renderPet(pet);
   savePet(pet);
+}
+
+function graduateToNewPet() {
+  if (!pet) return;
+  addToEncyclopedia(pet);
+  hideGraduateModal();
+  showNameModal();
 }
 
 function setupMuteButton() {
@@ -223,6 +276,27 @@ function bindEvents() {
       document.getElementById("btn-start-pet").click();
     }
   });
+
+  document.getElementById("btn-encyclopedia")?.addEventListener("click", withAudio(() => {
+    showEncyclopedia();
+  }));
+
+  document.getElementById("btn-close-encyclopedia")?.addEventListener("click", withAudio(() => {
+    hideEncyclopedia();
+  }));
+
+  document.getElementById("btn-new-pet-side")?.addEventListener("click", withAudio(() => {
+    if (!pet) return;
+    showGraduateModal(pet);
+  }));
+
+  document.getElementById("btn-graduate-confirm")?.addEventListener("click", withAudio(() => {
+    graduateToNewPet();
+  }));
+
+  document.getElementById("btn-graduate-cancel")?.addEventListener("click", withAudio(() => {
+    hideGraduateModal();
+  }));
 }
 
 function mountDevToolsIfEnabled() {
@@ -271,9 +345,59 @@ function mountDevToolsIfEnabled() {
         renderPet(pet);
         savePet(pet);
       },
+
+      simulateAdultPretty() {
+        if (!pet) return;
+        pet.hunger = 90;
+        pet.happiness = 90;
+        pet.cleanliness = 90;
+        pet.health = 90;
+        pet.bornAt = Date.now() - 14 * 86400000;
+        pet.lastEvolutionStage = "teen";
+        pet.adultVariantId = null;
+        pet.adultCareSnapshot = null;
+        handleEvolution();
+        renderPet(pet);
+        savePet(pet);
+      },
+
+      simulateAdultDefective() {
+        if (!pet) return;
+        pet.hunger = 25;
+        pet.happiness = 20;
+        pet.cleanliness = 30;
+        pet.health = 35;
+        pet.bornAt = Date.now() - 14 * 86400000;
+        pet.lastEvolutionStage = "teen";
+        pet.adultVariantId = null;
+        pet.adultCareSnapshot = null;
+        handleEvolution();
+        renderPet(pet);
+        savePet(pet);
+      },
+
+      clearEncyclopedia() {
+        import("./encyclopedia.js").then(({ clearEncyclopedia }) => {
+          clearEncyclopedia();
+          showMessage("도감을 초기화했어요.");
+        });
+      },
+
+      forceIdleDialogue() {
+        if (!pet?.adultVariantId) {
+          showMessage("성체가 아니에요.");
+          return;
+        }
+        import("./dialogue.js").then(({ pickAdultLine }) => {
+          const line = pickAdultLine(pet, "idle");
+          if (line) showMessage(line, 5000);
+        });
+      },
     });
   });
 }
 
 init();
 mountDevToolsIfEnabled();
+
+export { pet, handleEvolution, startNewPet };

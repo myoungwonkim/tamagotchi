@@ -78,6 +78,26 @@ body {
   transform: scale(0.96);
 }
 
+.encyclopedia-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: 1.25rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.encyclopedia-btn:active {
+  transform: scale(0.96);
+}
+
 .pet-name {
   font-size: 1.5rem;
   font-weight: 700;
@@ -131,6 +151,90 @@ body {
 
 .pet-area--sleeping {
   background: #e8eef8;
+}
+
+.pet-display {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pet-evolution {
+  font-size: 6rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.pet-evolution--bounce {
+  animation: bounce 0.4s ease;
+}
+
+.pet-mood-bubble {
+  position: absolute;
+  top: -8px;
+  right: -56px;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  padding: 8px;
+}
+
+.pet-mood-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  background: var(--surface);
+  transform: rotate(45deg);
+  box-shadow: -2px 2px 4px rgba(45, 42, 38, 0.06);
+}
+
+.pet-mood-bubble[hidden] {
+  display: none;
+}
+
+.pet-mood-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.new-pet-fab {
+  position: fixed;
+  right: calc(16px + var(--safe-right));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  touch-action: manipulation;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.05em;
+}
+
+.new-pet-fab[hidden] {
+  display: none;
+}
+
+.new-pet-fab:active {
+  background: var(--accent-dark);
 }
 
 .pet-emoji {
@@ -261,6 +365,67 @@ body {
   width: 100%;
   max-width: 320px;
   box-shadow: 0 8px 32px rgba(45, 42, 38, 0.15);
+}
+
+.overlay-card--wide {
+  max-width: 360px;
+  max-height: min(80dvh, 560px);
+  overflow-y: auto;
+}
+
+.overlay-btn--secondary {
+  margin-top: 10px;
+  background: #eee8df;
+  color: var(--text);
+}
+
+.overlay-btn--secondary:active {
+  background: #e0d8cc;
+}
+
+.encyclopedia-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.encyclopedia-card {
+  background: #faf7f2;
+  border-radius: 12px;
+  padding: 10px 6px;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.encyclopedia-card--locked {
+  opacity: 0.45;
+}
+
+.encyclopedia-card__emoji {
+  font-size: 1.75rem;
+  line-height: 1.1;
+}
+
+.encyclopedia-card__label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.encyclopedia-card__tier {
+  font-size: 0.5625rem;
+  color: var(--accent-dark);
+}
+
+.encyclopedia-card__date {
+  font-size: 0.5rem;
+  color: var(--text-muted);
 }
 
 .overlay-emoji {
