@@ -14,6 +14,7 @@ const DIALOGUE = {
     clean: ["상쾌해! 기분 최고!", "깨끗해서 날아갈 것 같아!"],
     sleep: ["좋은 꿈 꿀게, 고마워.", "포근하게 재워줘서 고마워."],
     wake: ["좋은 아침! 오늘도 잘 부탁해!"],
+    snoozing: ["쿨쿨…", "행복하게 잠든다…", "좋은 꿈 꾸는 중…", "zzz…"],
   },
   normal: {
     idle: ["배는 안 고파.", "그냥 그래.", "오늘 날씨 괜찮네.", "별일 없어."],
@@ -22,6 +23,7 @@ const DIALOGUE = {
     clean: ["깨끗해졌네.", "나쁘지 않아."],
     sleep: ["잘 자.", "..."],
     wake: ["깼어.", "아침이구나."],
+    snoozing: ["쿨쿨.", "…", "zzz", "…쿨쿨"],
   },
   defective: {
     idle: [
@@ -36,6 +38,7 @@ const DIALOGUE = {
     clean: ["더러워도 상관없어.", "굳이?", "어차피 금방 더러워져."],
     sleep: ["방해하지 마.", "..."],
     wake: ["왜 깨운 거야.", "피곤해, 조용히 해."],
+    snoozing: ["…쿨쿨", "시끄러워…", "그만…", "…zzz"],
   },
 };
 
@@ -43,6 +46,12 @@ const IDLE_INTERVALS = {
   pretty: 90000,
   normal: 75000,
   defective: 45000,
+};
+
+const SNOOZE_INTERVALS = {
+  pretty: 80000,
+  normal: 70000,
+  defective: 55000,
 };
 
 let lastIdleAt = 0;
@@ -63,6 +72,7 @@ export function pickAdultLine(pet, context = "idle") {
 
 export function getAdultActionMessage(pet, actionKey) {
   if (getEvolutionStage(pet).id !== "adult" || !pet.adultVariantId) return null;
+  if (pet.isSleeping && actionKey !== "sleep") return null;
 
   if (actionKey === "sleep") {
     return pickAdultLine(pet, pet.isSleeping ? "sleep" : "wake");
@@ -73,14 +83,15 @@ export function getAdultActionMessage(pet, actionKey) {
 export function shouldShowIdleDialogue(pet, now = Date.now()) {
   if (!pet?.isAlive || !pet.adultVariantId) return false;
   if (getEvolutionStage(pet).id !== "adult") return false;
-  if (pet.isSleeping) return false;
 
   const tier = getAdultTier(pet) ?? "normal";
-  const interval = IDLE_INTERVALS[tier] ?? IDLE_INTERVALS.normal;
+  const context = pet.isSleeping ? "snoozing" : "idle";
+  const intervals = pet.isSleeping ? SNOOZE_INTERVALS : IDLE_INTERVALS;
+  const interval = intervals[tier] ?? intervals.normal;
 
   if (now - lastIdleAt < interval) return false;
   lastIdleAt = now;
-  return pickAdultLine(pet, "idle");
+  return pickAdultLine(pet, context);
 }
 
 export function resetDialogueTimer() {

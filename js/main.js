@@ -223,6 +223,7 @@ function handleAction(actionFn, messageKey) {
 
   if (messageKey === "sleep") {
     playSfx(pet.isSleeping ? "sleep" : "wake");
+    resetDialogueTimer();
   } else {
     playSfx(messageKey);
   }
@@ -402,7 +403,8 @@ function mountDevToolsIfEnabled() {
           return;
         }
         import("./dialogue.js").then(({ pickAdultLine }) => {
-          const line = pickAdultLine(pet, "idle");
+          const context = pet.isSleeping ? "snoozing" : "idle";
+          const line = pickAdultLine(pet, context);
           if (line) showMessage(line, 5000);
         });
       },
