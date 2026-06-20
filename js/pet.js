@@ -55,9 +55,9 @@ export function getPetEmoji(pet) {
     "😊";
 
   const { baseEmoji } = getEvolutionStage(pet);
-  if (mood === "😊") return baseEmoji;
+  if (mood === "😢") return "😢";
 
-  return mood;
+  return baseEmoji;
 }
 
 export function applyTimeDelta(pet, elapsedMs) {
