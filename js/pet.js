@@ -71,14 +71,14 @@ export function getMoodEmoji(pet) {
 }
 
 export function getEvolutionEmoji(pet) {
-  if (!pet.isAlive) return "👻";
+  if (!pet.isAlive) return "🦴";
   return getEvolutionStage(pet).baseEmoji;
 }
 
 /** @deprecated Phase 3: use getEvolutionEmoji + getMoodEmoji */
 export function getPetEmoji(pet) {
   const mood = getMoodEmoji(pet);
-  if (!pet.isAlive) return "👻";
+  if (!pet.isAlive) return "🦴";
   if (mood === "😢") return "😢";
   return getEvolutionEmoji(pet);
 }

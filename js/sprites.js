@@ -38,7 +38,9 @@ export function toggleSpritesEnabled() {
 }
 
 export function getSpriteFormat() {
-  return readSettings().spriteFormat === "png" ? "png" : "svg";
+  const fmt = readSettings().spriteFormat;
+  if (fmt === "svg") return "svg";
+  return "png";
 }
 
 export function setSpriteFormat(format) {
@@ -73,7 +75,7 @@ export function getEvolutionSpriteMeta(pet) {
       key: "dead",
       src: getSpriteUrl("evolution", "dead"),
       alt: "게임 오버",
-      fallbackEmoji: "👻",
+      fallbackEmoji: "🦴",
     };
   }
 
@@ -81,7 +83,7 @@ export function getEvolutionSpriteMeta(pet) {
   if (stage.id === "adult") {
     const variant = pet.adultVariantId
       ? getAdultVariant(pet.adultVariantId)
-      : { spriteId: "standard", emoji: "🐔", label: "어른" };
+      : { spriteId: "standard", emoji: "🐟", label: "성체" };
     return {
       key: `adult-${variant.spriteId ?? variant.id}`,
       src: getSpriteUrl("adult", variant.spriteId ?? variant.id ?? "standard"),
@@ -166,7 +168,7 @@ export function preloadSpritesForPet(pet) {
 }
 
 export function getFallbackEvolutionEmoji(pet) {
-  if (!pet.isAlive) return "👻";
+  if (!pet.isAlive) return "🦴";
   const stage = getEvolutionStage(pet);
   if (stage.id === "adult") return getEvolutionDisplayEmoji(pet);
   return getEvolutionEmoji(pet);

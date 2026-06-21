@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <circle cx="64" cy="64" r="48" fill="#E8EAF6" stroke="#2D2A26" stroke-width="2.5"/>
-  <path d="M44 52 Q48 48 52 52" fill="none" stroke="#2D2A26" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M76 52 Q80 48 84 52" fill="none" stroke="#2D2A26" stroke-width="2.5" stroke-linecap="round"/>
-  <text x="64" y="88" text-anchor="middle" font-size="20" fill="#2D2A26" font-family="sans-serif">z</text>
-  <text x="78" y="80" text-anchor="middle" font-size="14" fill="#2D2A26" font-family="sans-serif" opacity="0.6">z</text>
-</svg>

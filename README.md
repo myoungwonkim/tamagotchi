@@ -1,6 +1,6 @@
-# 다마고치 웹 게임
+# 심해 다마고치 웹 게임
 
-모바일 브라우저에서 플레이하는 웹 기반 다마고치 게임입니다.
+모바일 브라우저에서 키우는 **심해어** 다마고치 게임입니다. 90년대 패미컴 스타일 픽셀 PNG 스프라이트 21종.
 
 **플레이:** https://myoungwonkim.github.io/tamagotchi/
 
@@ -15,7 +15,7 @@
 - 방치 시 게임 오버 후 새 펫 시작
 
 ### Phase 2 (진화 + 사운드)
-- **진화:** 나이에 따라 5단계 (알 → 아기 → 어린이 → 청소년 → 어른)
+- **진화:** 나이에 따라 5단계 (알 → 라바 → 치어 → 청소년어 → 성체)
 - **진화 알림:** 단계가 올라가면 메시지 + 팡파레
 - **효과음:** 돌봄·진화·게임 오버·오프라인 환영 (Web Audio)
 - **음소거:** 헤더 🔊/🔇 토글 (`tamagotchi-settings` localStorage 저장)
@@ -28,48 +28,37 @@
 - **새 펫 FAB:** 성체 후 새 알 시작
 
 ### Phase 4 (그래픽 업그레이드)
-- **SVG 스프라이트:** 진화·성체·무드·도감·오버레이 UI
+- **스프라이트:** 진화·성체·무드·도감·오버레이 UI (PNG)
 - **이중 fallback:** 이미지 로드 실패 또는 설정 off 시 이모지 표시
 - **preload:** 현재 펫·다음 진화·무드 5종 선로드
 - **dev 토글:** `?dev=1` → "스프라이트 on/off" (`tamagotchi-settings.useSprites`)
 
 ### Phase 5B (그래픽 고도화)
-- **SVG 리파인:** 21종 placeholder를 통일 viewBox·팔레트로 개선
-- **PNG drop-in:** `tamagotchi-settings.spriteFormat` (`svg` | `png`), dev 「스프라이트 포맷 svg/png」
+- **심해어 PNG 21종:** 90년대 패미컴 픽셀아트 (`scripts/generate_all_sprites.py`)
+- **PNG 기본:** `spriteFormat` 미설정 시 png (dev에서 svg/png 전환 가능, svg 파일 없음)
 - **진화 전환:** `evolvePop` 애니메이션 (`js/effects.js`)
 - **무드·수면:** 말풍선 fade, 수면 배경 gradient, sleep idle bob
 - **idle 모션:** tier별 bob/shake (`data-variant` on `#pet-evolution`)
 - **돌보기 FX:** 먹이/놀기/씻기 이모지 파티클 (`#care-fx`)
 - **접근성:** `prefers-reduced-motion: reduce` 시 애니메이션 비활성
 
+진행 상황: **[docs/DEVELOPMENT-PROGRESS.md](docs/DEVELOPMENT-PROGRESS.md)**
+
 ## 스프라이트 구조
 
 ```
 assets/sprites/
-  evolution/   egg baby child teen dead
+  evolution/   egg baby child teen dead   (.png)
   adult/       golden fluffy sparkle standard farm plain scruffy grumpy sickly
   mood/        happy neutral sad sleep sick
   ui/          heart-broken locked
 ```
 
-PNG로 교체할 때:
-
-1. `assets/sprites/{category}/{id}.png` 로 **동일 파일명**만 추가 (예: `adult/golden.png`)
-2. 로컬 서버 실행 후 `?dev=1` → **스프라이트 포맷 svg/png** 로 png 선택
-3. 로드 실패 시 이모지 fallback (스프라이트 on 상태에서도 img error 처리)
-
-코드 변경 없이 PNG만 drop-in 가능합니다. 제작 체크리스트: **[docs/PNG-SPRITE-GUIDE.md](docs/PNG-SPRITE-GUIDE.md)**
-
-### PNG 보조 스크립트 (선택)
-
-수동 일러스트 전 **`scripts/svg_to_png.py`** 로 SVG placeholder를 PNG로 일괄 변환할 수 있습니다 (Pillow 필요).
+PNG 재생성:
 
 ```bash
-pip3 install Pillow
-python3 scripts/svg_to_png.py assets/sprites/evolution/egg.svg -o assets/sprites/evolution/egg.png
+python3 scripts/generate_all_sprites.py --install
 ```
-
-픽셀아트 그리드 → PNG: **`scripts/pixel_sprite.py`** (레트로 스타일 실험용).
 
 ## 그래픽 표시 규칙
 
@@ -77,28 +66,28 @@ python3 scripts/svg_to_png.py assets/sprites/evolution/egg.svg -o assets/sprites
 
 | 조건 | 스프라이트 |
 |------|-----------|
-| 게임 오버 | `evolution/dead.svg` |
-| egg ~ teen | `evolution/{stage}.svg` |
-| adult | `adult/{variantId}.svg` |
+| 게임 오버 | `evolution/dead.png` |
+| egg ~ teen | `evolution/{stage}.png` |
+| adult | `adult/{variantId}.png` |
 
 ### 말풍선 (무드 스프라이트)
 
 | 조건 | 스프라이트 |
 |------|-----------|
 | 게임 오버 | 숨김 |
-| 수면 | `mood/sleep.svg` |
-| 건강 < 30 | `mood/sick.svg` |
-| 슬픔/보통/좋음 | `mood/sad|neutral|happy.svg` |
+| 수면 | `mood/sleep.png` |
+| 건강 < 30 | `mood/sick.png` |
+| 슬픔/보통/좋음 | `mood/sad|neutral|happy.png` |
 
-스프라이트 off 또는 로드 실패 시 Phase 3 이모지 fallback.
+스프라이트 off 또는 로드 실패 시 이모지 fallback.
 
 ## 성체 변형 (tier)
 
 | tier | 조건 (진화 시점) | 톤 |
 |------|------------------|-----|
-| pretty | 4 stat min ≥ 65, avg ≥ 72 | 예쁜 닭, 긍정 대사 |
-| normal | min ≥ 40, avg ≥ 50 | 보통 닭, 중립 대사 |
-| defective | 그 외 | 불량 닭, 부정 대사 |
+| pretty | 4 stat min ≥ 65, avg ≥ 72 | 빛나는 심해어, 긍정 대사 |
+| normal | min ≥ 40, avg ≥ 50 | 보통 심해어, 중립 대사 |
+| defective | 그 외 | 불량 심해어, 부정 대사 |
 
 ## 효과음
 
@@ -153,12 +142,12 @@ http://localhost:8080/?dev=1
 
 요약 (수동 확인):
 
-- [ ] 메인 진화 SVG + 말풍선 무드 SVG 동시 표시
+- [ ] 메인 진화 PNG + 말풍선 무드 PNG 동시 표시
 - [ ] `?dev=1` 스프라이트 off → 이모지 fallback
-- [ ] 진화 단계별 SVG 전환 (dev 나이 +1일)
-- [ ] 성체 pretty/defective → 다른 adult SVG
-- [ ] 도감 카드 SVG + 미수집 locked SVG
-- [ ] 게임 오버·졸업 오버레이 SVG
+- [ ] 진화 단계별 PNG 전환 (dev 나이 +1일)
+- [ ] 성체 pretty/defective → 다른 adult PNG
+- [ ] 도감 카드 PNG + 미수집 locked PNG
+- [ ] 게임 오버·졸업 오버레이 PNG
 - [ ] 🔊/🔇, safe-area, 오프라인 반영
 - [ ] 재우기/깨우기·돌보기 버튼 (최근 버그 회귀 — A섹션)
 - [ ] Phase 5B 모션·FX (G섹션)
@@ -189,7 +178,7 @@ http://localhost:8080/?dev=1
 
 ```
 tamagotchi/
-  assets/sprites/   # SVG (PNG 교체 가능)
+  assets/sprites/   # 심해어 PNG 21종
   index.html
   css/style.css
   js/

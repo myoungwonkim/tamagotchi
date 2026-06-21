@@ -113,12 +113,15 @@ GHOST2 = (144, 202, 249, 255)
 # pretty — bioluminescent
 GLOW = (255, 241, 118, 255)
 GLOW2 = (255, 213, 79, 255)
+GOLD_LIGHT = (255, 249, 196, 255)
 JELLY = (206, 147, 216, 255)
 JELLY2 = (186, 104, 200, 255)
 JELLY3 = (233, 213, 255, 255)
+JELLY4 = (255, 220, 245, 255)
 SPARK = (0, 229, 255, 255)
 SPARK2 = (124, 77, 255, 255)
 SPARK3 = (213, 255, 255, 255)
+AQUA = (77, 208, 225, 255)
 
 # normal — reef / common fish
 COPPER = (255, 183, 77, 255)
@@ -129,13 +132,21 @@ ALGAE = (102, 187, 106, 255)
 MUD = (120, 144, 156, 255)
 MUD2 = (84, 110, 122, 255)
 
-# defective — abyssal ugly
-RAG = (141, 127, 124, 255)
-RAG2 = (109, 93, 90, 255)
-BLOB = (158, 158, 158, 255)
-BLOB2 = (117, 117, 117, 255)
-PALE = (176, 190, 197, 255)
-PALE2 = (144, 164, 174, 255)
+# defective — grotesque abyssal
+RAG = (110, 98, 92, 255)
+RAG2 = (78, 67, 63, 255)
+ROT = (84, 66, 54, 255)
+BLOB = (130, 130, 130, 255)
+BLOB2 = (90, 90, 90, 255)
+PALE = (160, 175, 170, 255)
+PALE2 = (120, 140, 135, 255)
+SLIME = (156, 204, 101, 255)
+SLIME2 = (104, 159, 56, 255)
+MUCUS = (188, 214, 122, 255)
+BONE_SHOW = (228, 218, 198, 255)
+PARASITE = (124, 179, 66, 255)
+LESION = (183, 28, 28, 255)
+EYE_YELLOW = (255, 235, 59, 255)
 RED = (229, 57, 53, 255)
 WHITE = (255, 255, 255, 255)
 
@@ -203,51 +214,88 @@ def sprite_teen():
 
 
 def sprite_dead():
-    """Ghost fish spirit."""
+    """Fish bone skeleton."""
     g = blank()
-    fill_ellipse(g, 16, 24, 9, 2, (45, 42, 38, 40))
-    for y in range(9, 22):
-        for x in range(10, 22):
-            if ((x - 15) / 6) ** 2 + ((y - 14) / 7) ** 2 <= 1:
-                px(g, x, y, GHOST if (x + y) % 2 else GHOST2)
-    draw_poly(g, [(20, 16), (26, 14), (26, 18)], GHOST, K)
-    px(g, 13, 13, K)
-    px(g, 17, 13, K)
-    draw_line(g, 13, 18, 17, 18, K)
+    BONE = (245, 245, 235, 255)
+    fill_circle(g, 9, 16, 4, BONE, K)
+    px(g, 8, 15, K)
+    px(g, 10, 15, K)
+    draw_line(g, 13, 16, 27, 16, K)
+    draw_line(g, 13, 16, 27, 16, BONE)
+    for x in (15, 17, 19, 21, 23):
+        draw_line(g, x, 16, x - 2, 11, K)
+        draw_line(g, x, 16, x - 2, 11, BONE)
+        draw_line(g, x, 16, x + 2, 11, K)
+        draw_line(g, x, 16, x + 2, 11, BONE)
+        draw_line(g, x, 16, x - 2, 21, K)
+        draw_line(g, x, 16, x - 2, 21, BONE)
+        draw_line(g, x, 16, x + 2, 21, K)
+        draw_line(g, x, 16, x + 2, 21, BONE)
+    draw_line(g, 27, 16, 29, 12, K)
+    draw_line(g, 27, 16, 29, 12, BONE)
+    draw_line(g, 27, 16, 29, 20, K)
+    draw_line(g, 27, 16, 29, 20, BONE)
+    draw_line(g, 29, 12, 30, 13, K)
+    draw_line(g, 29, 20, 30, 19, K)
     return g
 
 
 # ── Adult variants ────────────────────────────────────────────────────
 def sprite_golden():
-    """Lanternfish — golden bioluminescent lure."""
+    """Pretty — radiant lanternfish queen, sleek + golden halo lure."""
     g = blank()
-    draw_fish(g, GLOW2, GLOW, cx=13, cy=17, rx=8, ry=6)
-    draw_lure(g, 10, 10, GLOW)
-    px(g, 9, 5, GLOW)
-    px(g, 10, 4, WHITE)
+    fill_ellipse(g, 14, 17, 9, 5, GLOW2, K)
+    fill_ellipse(g, 14, 17, 7, 4, GOLD_LIGHT)
+    draw_poly(g, [(20, 17), (27, 13), (27, 21)], GLOW, K)
+    draw_poly(g, [(8, 14), (11, 8), (14, 13)], GLOW2, K)
+    draw_poly(g, [(10, 19), (13, 24), (16, 19)], GLOW, K)
+    for x, y in ((10, 15), (11, 16), (17, 16), (18, 15)):
+        px(g, x, y, GLOW)
+    draw_line(g, 11, 7, 11, 3, K)
+    for x, y in ((10, 2), (11, 2), (12, 2), (11, 1), (10, 3), (12, 3)):
+        px(g, x, y, GLOW)
+    px(g, 11, 1, WHITE)
+    px(g, 10, 15, K)
+    px(g, 11, 15, WHITE)
     return g
 
 
 def sprite_fluffy():
-    """Frilled jellyfish-fish hybrid."""
+    """Pretty — moon jelly bell, graceful trailing tentacles."""
     g = blank()
-    fill_ellipse(g, 16, 14, 8, 7, JELLY, K)
-    fill_ellipse(g, 16, 16, 6, 5, JELLY3, K)
-    px(g, 13, 13, K)
-    px(g, 19, 13, K)
-    for x in range(10, 23):
-        if (x + 14) % 3 == 0:
-            draw_line(g, x, 20, x + (x % 5 - 2), 27, JELLY2)
+    fill_ellipse(g, 16, 12, 9, 6, JELLY3, K)
+    fill_ellipse(g, 16, 13, 7, 4, JELLY4)
+    for x, y in ((13, 11), (16, 10), (19, 11), (15, 12), (17, 12)):
+        px(g, x, y, WHITE)
+    px(g, 14, 13, JELLY2)
+    px(g, 18, 13, JELLY2)
+    tentacles = [
+        (11, 17, 9, 27), (13, 17, 12, 28), (15, 18, 14, 29),
+        (17, 18, 18, 29), (19, 17, 21, 28), (21, 17, 23, 27),
+    ]
+    for x0, y0, x1, y1 in tentacles:
+        draw_line(g, x0, y0, x1, y1, JELLY2)
+        px(g, x1, y1, JELLY)
     return g
 
 
 def sprite_sparkle():
-    """Bioluminescent firefly squid."""
+    """Pretty — cosmic squid, constellation bioluminescence."""
     g = blank()
-    draw_fish(g, SPARK2, SPARK, cx=13, cy=16, rx=8, ry=6)
-    for p in ((6, 10), (24, 8), (25, 16), (7, 20)):
-        px(g, p[0], p[1], SPARK)
-        px(g, p[0], p[1] + 1, SPARK3)
+    fill_ellipse(g, 13, 14, 7, 8, SPARK2, K)
+    fill_ellipse(g, 13, 15, 5, 6, (156, 120, 255, 255))
+    draw_poly(g, [(20, 14), (27, 10), (27, 18)], SPARK2, K)
+    for x0, y0, x1, y1 in ((11, 22, 8, 28), (13, 23, 13, 29), (15, 22, 18, 28)):
+        draw_line(g, x0, y0, x1, y1, SPARK2)
+    stars = (
+        (8, 8), (9, 9), (24, 7), (25, 8), (6, 16), (7, 17),
+        (25, 15), (26, 16), (10, 6), (22, 20), (13, 11), (15, 13),
+    )
+    for x, y in stars:
+        px(g, x, y, SPARK)
+        px(g, x, y + 1, SPARK3)
+    px(g, 10, 13, K)
+    px(g, 11, 13, AQUA)
     return g
 
 
@@ -279,50 +327,121 @@ def sprite_plain():
 
 
 def sprite_scruffy():
-    """Ragged anglerfish — torn fins."""
+    """Defective — rotting angler, missing eye, bone patch, slime."""
     g = blank()
-    draw_fish(g, RAG, RAG2, cx=13, cy=16, rx=8, ry=6, dorsal=False)
-    draw_line(g, 8, 11, 6, 8, RAG2)
+    fill_ellipse(g, 14, 17, 8, 6, RAG, K)
+    fill_ellipse(g, 12, 16, 3, 3, BONE_SHOW, K)
+    px(g, 11, 15, K)
+    px(g, 13, 15, ROT)
+    px(g, 10, 14, K)
+    px(g, 14, 14, EYE_YELLOW)
+    px(g, 15, 14, RED)
+    draw_line(g, 9, 11, 7, 9, RAG2)
     draw_line(g, 10, 10, 8, 7, K)
-    draw_line(g, 20, 22, 18, 25, RAG2)
-    draw_lure(g, 9, 11, (120, 120, 120, 255), length=3)
+    draw_line(g, 8, 12, 5, 11, ROT)
+    draw_poly(g, [(20, 17), (25, 14), (24, 20)], RAG2, K)
+    draw_line(g, 11, 10, 14, 8, K)
+    draw_line(g, 14, 8, 16, 10, (90, 90, 90, 255))
+    px(g, 16, 10, SLIME2)
+    for x, y in ((13, 22), (14, 23), (15, 24), (14, 25)):
+        px(g, x, y, SLIME)
+    px(g, 12, 19, MUCUS)
     return g
 
 
 def sprite_grumpy():
-    """Fangtooth — angry brows + fang."""
+    """Defective — nightmare fangfish, giant maw full of teeth."""
     g = blank()
-    draw_fish(g, BLOB, BLOB2, cx=13, cy=16, rx=8, ry=6)
-    draw_line(g, 10, 13, 12, 14, K)
-    draw_line(g, 16, 13, 14, 14, K)
-    px(g, 11, 17, WHITE)
-    px(g, 12, 18, K)
+    fill_ellipse(g, 15, 18, 7, 5, BLOB2, K)
+    fill_circle(g, 11, 14, 6, BLOB, K)
+    fill_ellipse(g, 11, 15, 5, 4, (50, 50, 50, 255))
+    for x in range(7, 15):
+        if x % 2 == 0:
+            px(g, x, 14, WHITE)
+            px(g, x, 15, K)
+    px(g, 8, 13, K)
+    px(g, 13, 12, K)
+    draw_line(g, 7, 11, 10, 12, K)
+    draw_line(g, 14, 11, 11, 12, K)
+    draw_poly(g, [(18, 17), (24, 15), (23, 20)], BLOB2, K)
     px(g, 24, 14, RED)
+    for x, y in ((10, 16), (11, 17), (12, 16)):
+        px(g, x, y, SLIME2)
     return g
 
 
 def sprite_sickly():
-    """Pale sick deep fish — spots + droopy."""
+    """Defective — parasite host, lesions, swollen eye, worms."""
     g = blank()
-    draw_fish(g, PALE, PALE2, cx=13, cy=17, rx=7, ry=5)
+    fill_ellipse(g, 14, 18, 7, 5, PALE, K)
+    fill_ellipse(g, 14, 18, 5, 3, PALE2)
     draw_line(g, 10, 13, 12, 15, K)
-    draw_line(g, 16, 13, 14, 15, K)
-    px(g, 11, 16, RED)
-    px(g, 15, 18, RED)
-    fill_circle(g, 16, 10, 3, (239, 83, 80, 100))
+    fill_circle(g, 15, 13, 3, EYE_YELLOW, K)
+    px(g, 16, 13, LESION)
+    px(g, 10, 14, K)
+    px(g, 10, 15, K)
+    for x, y in ((12, 17), (15, 19), (13, 20)):
+        px(g, x, y, LESION)
+    worms = ((8, 16, 5, 18), (17, 19, 20, 21), (11, 20, 8, 23))
+    for x0, y0, x1, y1 in worms:
+        draw_line(g, x0, y0, x1, y1, PARASITE)
+        px(g, x1, y1, SLIME2)
+    draw_poly(g, [(20, 18), (24, 16), (23, 21)], PALE2, K)
+    for x, y in ((14, 24), (15, 25), (13, 26)):
+        px(g, x, y, MUCUS)
     return g
 
 
 # ── Mood bubbles (ocean-tinted) ───────────────────────────────────────
-def sprite_mood(bg, mouth_fn, extra_fn=None):
+HEART_EYE = (229, 57, 53, 255)
+TEAR = (100, 181, 246, 255)
+DROOL = (129, 212, 250, 255)
+MOUTH_IN = (69, 90, 100, 255)
+
+
+def sprite_mood(bg, mouth_fn, eyes_fn=None, extra_fn=None):
     g = blank()
     fill_circle(g, 16, 16, 13, bg, K)
-    px(g, 12, 13, K)
-    px(g, 20, 13, K)
+    if eyes_fn:
+        eyes_fn(g)
+    else:
+        px(g, 12, 13, K)
+        px(g, 20, 13, K)
     mouth_fn(g)
     if extra_fn:
         extra_fn(g)
     return g
+
+
+def draw_mini_heart(g, cx, cy, color):
+    """Tiny pixel heart centered near (cx, cy)."""
+    for x, y in (
+        (cx - 1, cy - 1), (cx + 1, cy - 1),
+        (cx - 2, cy), (cx - 1, cy), (cx, cy), (cx + 1, cy), (cx + 2, cy),
+        (cx - 1, cy + 1), (cx, cy + 1), (cx + 1, cy + 1),
+        (cx, cy + 2),
+    ):
+        px(g, x, y, color)
+
+
+def eyes_heart(g):
+    draw_mini_heart(g, 12, 13, HEART_EYE)
+    draw_mini_heart(g, 20, 13, HEART_EYE)
+
+
+def eyes_sleep_closed(g):
+    draw_line(g, 10, 12, 14, 12, K)
+    draw_line(g, 18, 12, 22, 12, K)
+
+
+def eyes_sick_tears(g):
+    px(g, 12, 13, K)
+    px(g, 20, 13, K)
+    for x, y in (
+        (11, 14), (11, 15), (11, 16), (11, 17), (12, 18),
+        (21, 14), (21, 15), (21, 16), (21, 17), (20, 18),
+    ):
+        px(g, x, y, TEAR)
 
 
 def mouth_smile(g):
@@ -339,26 +458,45 @@ def mouth_sad(g):
         px(g, x, y, K)
 
 
-def mouth_sleep(g):
-    draw_line(g, 11, 13, 13, 13, K)
-    draw_line(g, 19, 13, 21, 13, K)
-    px(g, 22, 18, K)
-    px(g, 24, 16, K)
+def mouth_sleep_drool(g):
+    for x in range(13, 20):
+        px(g, x, 18, K)
+    for x in range(14, 19):
+        px(g, x, 19, MOUTH_IN)
+        px(g, x, 20, MOUTH_IN)
+    px(g, 13, 19, K)
+    px(g, 13, 20, K)
+    px(g, 19, 19, K)
+    px(g, 19, 20, K)
+    px(g, 20, 20, K)
+    for x, y in ((17, 21), (17, 22), (17, 23), (16, 24), (18, 24), (17, 25)):
+        px(g, x, y, DROOL)
 
 
 def mouth_sick(g):
     draw_line(g, 12, 20, 20, 20, K)
-    fill_circle(g, 16, 10, 3, (239, 83, 80, 90))
 
 
 # ── UI ────────────────────────────────────────────────────────────────
 def sprite_heart_broken():
+    """Heart split in two halves."""
     g = blank()
-    fill_circle(g, 12, 14, 5, (129, 212, 250, 255), K)
-    fill_circle(g, 20, 14, 5, (129, 212, 250, 255), K)
-    draw_poly(g, [(16, 24), (8, 16), (24, 16)], (129, 212, 250, 255), K)
-    draw_line(g, 16, 12, 16, 22, RED)
-    draw_line(g, 12, 16, 20, 16, RED)
+    PINK = (236, 64, 122, 255)
+    fill_circle(g, 10, 14, 5, PINK, K)
+    draw_poly(g, [(10, 23), (4, 15), (15, 16)], PINK, K)
+    fill_circle(g, 22, 14, 5, PINK, K)
+    draw_poly(g, [(22, 23), (17, 16), (28, 15)], PINK, K)
+    for x, y in ((16, 11), (15, 13), (16, 15), (17, 17), (16, 19), (15, 21)):
+        px(g, x, y, K)
+    px(g, 14, 12, (0, 0, 0, 0))
+    px(g, 18, 12, (0, 0, 0, 0))
+    px(g, 16, 13, (0, 0, 0, 0))
+    px(g, 15, 14, (0, 0, 0, 0))
+    px(g, 17, 14, (0, 0, 0, 0))
+    px(g, 16, 16, (0, 0, 0, 0))
+    px(g, 15, 18, (0, 0, 0, 0))
+    px(g, 17, 18, (0, 0, 0, 0))
+    px(g, 16, 20, (0, 0, 0, 0))
     return g
 
 
@@ -388,11 +526,11 @@ SPRITES = {
     "adult/scruffy": sprite_scruffy,
     "adult/grumpy": sprite_grumpy,
     "adult/sickly": sprite_sickly,
-    "mood/happy": lambda: sprite_mood((224, 247, 250, 255), mouth_smile),
+    "mood/happy": lambda: sprite_mood((224, 247, 250, 255), mouth_smile, eyes_heart),
     "mood/neutral": lambda: sprite_mood((207, 216, 220, 255), mouth_neutral),
     "mood/sad": lambda: sprite_mood((187, 222, 251, 255), mouth_sad),
-    "mood/sleep": lambda: sprite_mood((179, 157, 219, 255), mouth_sleep),
-    "mood/sick": lambda: sprite_mood((200, 230, 201, 255), mouth_sick),
+    "mood/sleep": lambda: sprite_mood((179, 157, 219, 255), mouth_sleep_drool, eyes_sleep_closed),
+    "mood/sick": lambda: sprite_mood((200, 230, 201, 255), mouth_sick, eyes_sick_tears),
     "ui/heart-broken": sprite_heart_broken,
     "ui/locked": sprite_locked,
 }
@@ -432,9 +570,47 @@ def build_sheet(base_dir, sheet_path, cols=7, cell=128, pad=8, title=""):
 
 
 if __name__ == "__main__":
+    import sys
+
     root = Path(__file__).resolve().parent.parent
-    staging = root / ".sprite-staging-deepsea"
+    install = "--install" in sys.argv
+    staging = root / "assets/sprites" if install else root / ".sprite-staging-deepsea"
     build_all(staging)
-    sheet = build_sheet(staging, staging / "_preview-sheet.png", title="Deep Sea Fish — 21 sprites")
+    if not install:
+        sheet = build_sheet(staging, staging / "_preview-sheet.png", title="Deep Sea Fish — 21 sprites")
+        changed = ["evolution/dead", "mood/happy", "mood/sleep", "mood/sick", "ui/heart-broken"]
+        cols, cell, pad = 5, 160, 12
+        title_h = 24
+        w = cols * (cell + pad) + pad
+        h = title_h + cell + pad + 24
+        comp = Image.new("RGBA", (w, h), (12, 20, 38, 255))
+        draw = ImageDraw.Draw(comp)
+        font = ImageFont.load_default()
+        draw.text((pad, 6), "Updated: dead | happy | sleep | sick | heart-broken", fill=(0, 229, 255), font=font)
+        for i, rel in enumerate(changed):
+            x = pad + i * (cell + pad)
+            y = title_h + pad
+            img = Image.open(staging / f"{rel}.png").resize((cell, cell), Image.NEAREST)
+            comp.paste(img, (x, y), img)
+            draw.text((x, y + cell + 4), rel.split("/")[-1], fill=(144, 202, 249), font=font)
+        comp.save(staging / "_preview-changed.png", "PNG")
+        tiers = ["adult/golden", "adult/fluffy", "adult/sparkle", "adult/scruffy", "adult/grumpy", "adult/sickly"]
+        cols, cell, pad = 6, 140, 10
+        title_h = 24
+        w = cols * (cell + pad) + pad
+        h = title_h + cell + pad + 28
+        tier_img = Image.new("RGBA", (w, h), (12, 20, 38, 255))
+        draw = ImageDraw.Draw(tier_img)
+        draw.text((pad, 6), "Pretty vs Defective adult tiers", fill=(0, 229, 255), font=font)
+        for i, rel in enumerate(tiers):
+            x = pad + i * (cell + pad)
+            y = title_h + pad
+            img = Image.open(staging / f"{rel}.png").resize((cell, cell), Image.NEAREST)
+            tier_img.paste(img, (x, y), img)
+            color = (255, 213, 79) if i < 3 else (156, 204, 101)
+            draw.text((x, y + cell + 4), rel.split("/")[-1], fill=color, font=font)
+        tier_img.save(staging / "_preview-tiers.png", "PNG")
+        print(f"Preview sheet -> {sheet}")
+        print(f"Changed sprites -> {staging / '_preview-changed.png'}")
+        print(f"Tier comparison -> {staging / '_preview-tiers.png'}")
     print(f"Generated {len(SPRITES)} sprites -> {staging}")
-    print(f"Preview sheet -> {sheet}")

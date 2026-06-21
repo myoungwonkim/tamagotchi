@@ -304,7 +304,7 @@ export function showGraduateModal(pet) {
     `지금 키우는 ${pet.name}은 도감에 남고, 새 알부터 시작할까요?`;
   setOverlayGraphic(
     elements.graduateGraphic,
-    getStageSpriteMeta("baby", "🐣", "새 펫"),
+    getStageSpriteMeta("baby", "🐠", "새 펫"),
   );
   elements.graduateOverlay.hidden = false;
 }
@@ -395,12 +395,7 @@ export function setGameActive(active) {
     lastEvolutionKey = null;
     setPetGraphic(
       elements.petEvolution,
-      {
-        key: "egg",
-        src: "assets/sprites/evolution/egg.svg",
-        alt: "알",
-        fallbackEmoji: "🥚",
-      },
+      getStageSpriteMeta("egg", "🥚", "알"),
       { imgClass: "pet-evolution-img" },
     );
     elements.petMoodBubble.hidden = true;

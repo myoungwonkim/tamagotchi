@@ -1,8 +1,9 @@
 # QA 체크리스트
 
 **배포 URL:** [https://myoungwonkim.github.io/tamagotchi/](https://myoungwonkim.github.io/tamagotchi/)  
-**검증 기준 커밋:** `b911a43` (안정화 1단계, 2026-06-21)  
-**dev 모드:** `?dev=1` 붙여 접속
+**검증 기준 커밋:** `66d394c` (캐시 버스팅, 2026-06-21)  
+**dev 모드:** `?dev=1` 붙여 접속  
+**자동 스모크:** `./scripts/qa-smoke.sh`
 
 ---
 
@@ -14,11 +15,11 @@
 |------|------|------|
 | GitHub Pages 배포 | ✅ | `main` push 후 Pages 빌드 |
 | Phase 5B `effects.js` | ✅ | 진화·무드·idle·care FX |
-| `spriteFormat` svg/png | ✅ | `sprites.js` + dev F6 |
+| `spriteFormat` svg/png | ✅ | `sprites.js` + dev F6 (기본 png) |
 | `renderPet` / sleep 수정 | ✅ | `fca2f30` 이후 유지 |
-| SVG 에셋 21종 | ✅ | `assets/sprites/` |
+| PNG 21종 (심해어) | ✅ | `assets/sprites/` — [DEVELOPMENT-PROGRESS.md](DEVELOPMENT-PROGRESS.md) |
+| 닭 SVG | — | 삭제됨 |
 | safe-area CSS | ✅ | `style.css` |
-| PNG 21종 | ⏳ | 수동 제작 — [PNG-SPRITE-GUIDE.md](PNG-SPRITE-GUIDE.md) |
 | 캐시 버스팅 (`app-version`) | ✅ | `index.html` meta + `style.css?v=` + `main.js` dynamic import |
 
 ### 2단계 배포 스모크 (2026-06-21)
@@ -29,6 +30,22 @@
 | Pages `care-fx` in HTML | ✅ | `index.html` `#care-fx` |
 | Pages sleep/care hooks | ✅ | `main.js` `syncSleepControls`, `playCareEffect` |
 | 로컬 8093 smoke | ✅ | index meta, main/effects/css 키워드 |
+
+### 3단계 QA 자동 검증 (2026-06-21)
+
+`./scripts/qa-smoke.sh` — **31 OK, 0 FAIL**
+
+| 영역 | 결과 | 비고 |
+|------|------|------|
+| PNG 21종 (로컬) | ✅ | SVG 0, png-only |
+| 캐시·HTML·JS 훅 | ✅ | sleep/care/effects/sprites |
+| CSS 모션·레이아웃 | ✅ | evolvePop, idleBob, FAB z-index |
+| dev F6/F toggles | ✅ | 코드 존재 |
+| **배포 PNG** | ⚠️ | push 전: Pages는 SVG만 (404) → **심해어 PNG push 후 재검** |
+
+**Desktop `[x]`** = 자동·코드 검증 통과  
+**Desktop `[ ]`** = 브라우저에서 터치·소리·애니메이션 **수동 확인 필요**  
+**iOS / Android** = 실기기 테스트 **사용자 확인**
 
 
 ---
@@ -60,8 +77,8 @@
 | A2  | **깨우기** 탭              | 배경 밝아짐, 돌보기 버튼 활성, 문구 **재우기**        | [ ]     | [ ] | [ ]     |
 | A3  | 재우기 ↔ 깨우기 3회 연속        | 매번 UI·상태 정상 전환, 버튼 멈춤 없음             | [ ]     | [ ] | [ ]     |
 | A4  | 먹이 → 1초 내 놀기 → 씻기      | 각각 반응 (공유 쿨다own 1.5초 버그 없음)          | [ ]     | [ ] | [ ]     |
-| A5  | 재운 상태에서 먹이/놀기/씻기 탭     | 동작하지 않음 (의도된 동작)                     | [ ]     | [ ] | [ ]     |
-| A6  | 새 펫 FAB(왼쪽 하단)과 재우기 버튼 | FAB가 재우기 버튼 가리지 않음                   | [ ]     | [ ] | [ ]     |
+| A5  | 재운 상태에서 먹이/놀기/씻기 탭     | 동작하지 않음 (의도된 동작)                     | [x]     | [ ] | [ ]     |
+| A6  | 새 펫 FAB(왼쪽 하단)과 재우기 버튼 | FAB가 재우기 버튼 가리지 않음                   | [x]     | [ ] | [ ]     |
 
 
 ---
@@ -152,8 +169,8 @@
 | G4  | 성체 pretty (dev)   | 빠른 idle bob (`variant-pretty`)     | [ ]     | [ ] | [ ]     |
 | G5  | 성체 defective (dev) | idle shake (`variant-defective`)   | [ ]     | [ ] | [ ]     |
 | G6  | 먹이 / 놀기 / 씻기      | `#care-fx` 이모지 파티클 상승             | [ ]     | [ ] | [ ]     |
-| G7  | dev 스프라이트 포맷 png  | URL이 `.png`로 변경 (파일 없으면 fallback)  | [ ]     | [ ] | [ ]     |
-| G8  | OS reduced-motion | idle·FX·진화 전환 애니메이션 없음            | [ ]     | [ ] | [ ]     |
+| G7  | dev 스프라이트 포맷 png  | URL이 `.png`로 변경 (파일 없으면 fallback)  | [x]     | [ ] | [ ]     |
+| G8  | OS reduced-motion | idle·FX·진화 전환 애니메이션 없음            | [x]     | [ ] | [ ]     |
 
 
 ---
@@ -174,11 +191,14 @@ ID: (예: A2)
 
 | 항목 | 상태 |
 | ---- | ---- |
-| SVG 21종 리파인 | 완료 |
-| PNG drop-in (`spriteFormat`) | 완료 |
+| 심해어 PNG 21종 | 완료 |
+| 닭 SVG 제거 | 완료 |
+| PNG 기본 포맷 | 완료 |
 | 진화 전환 애니메이션 | 완료 |
 | 무드·수면 연출 | 완료 |
 | idle 모션 (tier별) | 완료 |
 | 돌보기 FX | 완료 |
+
+전체 진행: **[DEVELOPMENT-PROGRESS.md](DEVELOPMENT-PROGRESS.md)**
 
 수동 검증: **G섹션** 참고.

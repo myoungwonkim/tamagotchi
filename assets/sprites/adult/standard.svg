@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <ellipse cx="64" cy="80" rx="34" ry="28" fill="#F5C542" stroke="#2D2A26" stroke-width="2.5"/>
-  <circle cx="64" cy="48" r="28" fill="#F5C542" stroke="#2D2A26" stroke-width="2.5"/>
-  <polygon points="64,24 58,38 70,38" fill="#E8A838" stroke="#2D2A26" stroke-width="2"/>
-  <circle cx="52" cy="46" r="5" fill="#2D2A26"/>
-  <circle cx="76" cy="46" r="5" fill="#2D2A26"/>
-  <polygon points="64,56 58,66 70,66" fill="#E67E22"/>
-</svg>
