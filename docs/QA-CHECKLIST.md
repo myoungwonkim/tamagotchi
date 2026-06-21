@@ -1,7 +1,7 @@
 # QA 체크리스트
 
 **배포 URL:** [https://myoungwonkim.github.io/tamagotchi/](https://myoungwonkim.github.io/tamagotchi/)  
-**검증 기준 커밋:** `66d394c` (캐시 버스팅, 2026-06-21)  
+**검증 기준 커밋:** `a1e6b7a` (심해어 PNG + QA 3단계, 2026-06-21)  
 **dev 모드:** `?dev=1` 붙여 접속  
 **자동 스모크:** `./scripts/qa-smoke.sh`
 
@@ -41,7 +41,7 @@
 | 캐시·HTML·JS 훅 | ✅ | sleep/care/effects/sprites |
 | CSS 모션·레이아웃 | ✅ | evolvePop, idleBob, FAB z-index |
 | dev F6/F toggles | ✅ | 코드 존재 |
-| **배포 PNG** | ⚠️ | push 전: Pages는 SVG만 (404) → **심해어 PNG push 후 재검** |
+| **배포 PNG** | ⏳ | `git push` 후 Pages 재검 (로컬 21 PNG ✅) |
 
 **Desktop `[x]`** = 자동·코드 검증 통과  
 **Desktop `[ ]`** = 브라우저에서 터치·소리·애니메이션 **수동 확인 필요**  
