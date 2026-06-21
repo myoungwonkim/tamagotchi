@@ -19,6 +19,10 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
+  /* Main pet + mood bubble sprite display sizes */
+  --sprite-evolution-size: clamp(9.5rem, 48vw, 13.5rem);
+  --sprite-mood-size: clamp(2.75rem, 12vw, 3.5rem);
+  --sprite-overlay-size: clamp(5rem, 28vw, 7rem);
 }
 
 html {
@@ -145,7 +149,8 @@ body {
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  min-height: 200px;
+  min-height: clamp(240px, 38dvh, 340px);
+  padding: 12px 8px;
   transition: background 0.6s ease, box-shadow 0.6s ease;
 }
 
@@ -159,20 +164,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: min(100%, var(--sprite-evolution-size));
+  min-height: var(--sprite-evolution-size);
 }
 
 .pet-evolution {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 6rem;
-  min-height: 6rem;
+  min-width: var(--sprite-evolution-size);
+  min-height: var(--sprite-evolution-size);
   transition: transform 0.2s ease;
 }
 
 .pet-evolution-img {
-  width: 6rem;
-  height: 6rem;
+  width: var(--sprite-evolution-size);
+  height: var(--sprite-evolution-size);
   object-fit: contain;
   display: block;
 }
@@ -183,7 +190,7 @@ img.pet-sprite[hidden] {
 
 .pet-evolution-fallback,
 .pet-sprite-fallback {
-  font-size: 6rem;
+  font-size: var(--sprite-evolution-size);
   line-height: 1;
 }
 
@@ -240,17 +247,17 @@ img.pet-sprite[hidden] {
 
 .pet-mood-bubble {
   position: absolute;
-  top: -8px;
-  right: -56px;
-  min-width: 48px;
-  min-height: 48px;
+  top: 0;
+  right: max(-4rem, calc(var(--sprite-evolution-size) * -0.38));
+  min-width: calc(var(--sprite-mood-size) + 1.25rem);
+  min-height: calc(var(--sprite-mood-size) + 1.25rem);
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--surface);
   border-radius: 50%;
   box-shadow: var(--shadow);
-  padding: 8px;
+  padding: 10px;
 }
 
 .pet-mood-bubble::after {
@@ -278,14 +285,14 @@ img.pet-sprite[hidden] {
 }
 
 .pet-mood-img {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: var(--sprite-mood-size);
+  height: var(--sprite-mood-size);
   object-fit: contain;
   display: block;
 }
 
 .pet-mood-fallback {
-  font-size: 1.8rem;
+  font-size: var(--sprite-mood-size);
   line-height: 1;
 }
 
@@ -318,7 +325,7 @@ img.pet-sprite[hidden] {
 }
 
 .pet-emoji {
-  font-size: 6rem;
+  font-size: var(--sprite-evolution-size);
   line-height: 1;
   transition: transform 0.2s ease;
 }
@@ -563,18 +570,18 @@ img.pet-sprite[hidden] {
   align-items: center;
   justify-content: center;
   margin-bottom: 12px;
-  min-height: 3rem;
+  min-height: var(--sprite-overlay-size);
 }
 
 .overlay-graphic-img {
-  width: 3rem;
-  height: 3rem;
+  width: var(--sprite-overlay-size);
+  height: var(--sprite-overlay-size);
   object-fit: contain;
 }
 
 .overlay-graphic-img--small {
-  width: 3rem;
-  height: 3rem;
+  width: var(--sprite-overlay-size);
+  height: var(--sprite-overlay-size);
 }
 
 .overlay-title {
