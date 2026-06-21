@@ -19,9 +19,9 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  /* Main pet + mood bubble sprite display sizes */
-  --sprite-evolution-size: clamp(9.5rem, 48vw, 13.5rem);
-  --sprite-mood-size: clamp(2.75rem, 12vw, 3.5rem);
+  /* Per-stage pet size — set on .pet-display[data-stage] */
+  --sprite-evolution-size: clamp(4.75rem, 24vw, 6rem);
+  --sprite-mood-size: clamp(2.25rem, 10vw, 2.75rem);
   --sprite-overlay-size: clamp(5rem, 28vw, 7rem);
 }
 
@@ -149,7 +149,7 @@ body {
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  min-height: clamp(240px, 38dvh, 340px);
+  min-height: clamp(260px, 42dvh, 400px);
   padding: 12px 8px;
   transition: background 0.6s ease, box-shadow 0.6s ease;
 }
@@ -166,6 +166,40 @@ body {
   justify-content: center;
   width: min(100%, var(--sprite-evolution-size));
   min-height: var(--sprite-evolution-size);
+  transition:
+    width 0.45s ease,
+    min-height 0.45s ease,
+    min-width 0.45s ease;
+}
+
+.pet-display[data-stage="egg"] {
+  --sprite-evolution-size: clamp(4.75rem, 24vw, 6rem);
+  --sprite-mood-size: clamp(2.25rem, 10vw, 2.75rem);
+}
+
+.pet-display[data-stage="baby"] {
+  --sprite-evolution-size: clamp(6rem, 30vw, 7.75rem);
+  --sprite-mood-size: clamp(2.4rem, 10.5vw, 3rem);
+}
+
+.pet-display[data-stage="child"] {
+  --sprite-evolution-size: clamp(7.25rem, 36vw, 9.25rem);
+  --sprite-mood-size: clamp(2.55rem, 11vw, 3.15rem);
+}
+
+.pet-display[data-stage="teen"] {
+  --sprite-evolution-size: clamp(8.5rem, 44vw, 11.25rem);
+  --sprite-mood-size: clamp(2.7rem, 11.5vw, 3.35rem);
+}
+
+.pet-display[data-stage="adult"] {
+  --sprite-evolution-size: clamp(11rem, 58vw, 16rem);
+  --sprite-mood-size: clamp(3rem, 13vw, 3.85rem);
+}
+
+.pet-display[data-stage="dead"] {
+  --sprite-evolution-size: clamp(8rem, 42vw, 10.5rem);
+  --sprite-mood-size: clamp(2.5rem, 11vw, 3.1rem);
 }
 
 .pet-evolution {
@@ -174,7 +208,10 @@ body {
   justify-content: center;
   min-width: var(--sprite-evolution-size);
   min-height: var(--sprite-evolution-size);
-  transition: transform 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    min-width 0.45s ease,
+    min-height 0.45s ease;
 }
 
 .pet-evolution-img {
@@ -182,6 +219,7 @@ body {
   height: var(--sprite-evolution-size);
   object-fit: contain;
   display: block;
+  transition: width 0.45s ease, height 0.45s ease;
 }
 
 img.pet-sprite[hidden] {
@@ -192,6 +230,7 @@ img.pet-sprite[hidden] {
 .pet-sprite-fallback {
   font-size: var(--sprite-evolution-size);
   line-height: 1;
+  transition: font-size 0.45s ease;
 }
 
 .pet-evolution--bounce {

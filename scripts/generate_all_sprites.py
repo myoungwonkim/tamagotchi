@@ -151,7 +151,54 @@ RED = (229, 57, 53, 255)
 WHITE = (255, 255, 255, 255)
 
 
-def draw_fish(g, body, fin, cx=14, cy=16, rx=8, ry=6, tail=True, dorsal=True, belly=True, eye_x=-3):
+def draw_eye(g, x, y, sclera=WHITE, pupil=K, highlight=WHITE, large=False):
+    """Draw a readable Famicom-style eye; (x, y) is top-left."""
+    if not large:
+        px(g, x, y, sclera)
+        px(g, x + 1, y, sclera)
+        px(g, x, y + 1, pupil)
+        px(g, x + 1, y + 1, highlight)
+        return
+
+    for dx in range(3):
+        px(g, x + dx, y, sclera)
+    px(g, x, y + 1, pupil)
+    px(g, x + 1, y + 1, pupil)
+    px(g, x + 2, y + 1, highlight)
+    px(g, x, y + 2, pupil)
+    px(g, x + 1, y + 2, sclera)
+    px(g, x + 2, y + 2, sclera)
+
+
+def draw_eye_grotesque(g, cx, cy, iris=EYE_YELLOW, pupil=RED):
+    """High-contrast defective eye — bold white sclera on dark bodies."""
+    fill_circle(g, cx, cy, 4, WHITE, K)
+    fill_circle(g, cx, cy, 2, iris, K)
+    px(g, cx + 1, cy, pupil)
+    px(g, cx - 1, cy + 1, pupil)
+    px(g, cx + 2, cy - 1, WHITE)
+
+
+def draw_empty_socket(g, cx, cy):
+    """Broken/missing eye socket."""
+    fill_circle(g, cx, cy, 2, K, None)
+    px(g, cx - 1, cy - 1, BONE_SHOW)
+    px(g, cx + 1, cy - 1, BONE_SHOW)
+    px(g, cx, cy, ROT)
+    px(g, cx - 1, cy + 1, K)
+    px(g, cx + 1, cy + 1, K)
+
+
+def draw_swollen_eye(g, cx, cy):
+    """Bulging parasitic eye — large white ring, yellow iris, red pupil."""
+    fill_circle(g, cx, cy, 5, WHITE, K)
+    fill_circle(g, cx, cy, 3, EYE_YELLOW, K)
+    fill_circle(g, cx, cy, 1, RED, None)
+    px(g, cx + 2, cy - 1, WHITE)
+    px(g, cx + 2, cy + 1, LESION)
+
+
+def draw_fish(g, body, fin, cx=14, cy=16, rx=8, ry=6, tail=True, dorsal=True, belly=True, large_eye=False):
     fill_ellipse(g, cx, cy, rx, ry, body, K)
     if tail:
         draw_poly(g, [(cx + rx, cy), (cx + rx + 6, cy - 4), (cx + rx + 6, cy + 4)], fin, K)
@@ -159,8 +206,7 @@ def draw_fish(g, body, fin, cx=14, cy=16, rx=8, ry=6, tail=True, dorsal=True, be
         draw_poly(g, [(cx - 2, cy - ry), (cx + 2, cy - ry - 4), (cx + 7, cy - ry + 1)], fin, K)
     if belly:
         draw_poly(g, [(cx - 2, cy + ry - 1), (cx + 4, cy + ry + 3), (cx + 8, cy + ry - 1)], fin, K)
-    px(g, cx + eye_x, cy - 2, K)
-    px(g, cx + eye_x + 1, cy - 2, WHITE)
+    draw_eye(g, cx - rx + 3, cy - 3, large=large_eye)
 
 
 def draw_lure(g, cx, cy, color, length=5):
@@ -249,14 +295,13 @@ def sprite_golden():
     draw_poly(g, [(20, 17), (27, 13), (27, 21)], GLOW, K)
     draw_poly(g, [(8, 14), (11, 8), (14, 13)], GLOW2, K)
     draw_poly(g, [(10, 19), (13, 24), (16, 19)], GLOW, K)
-    for x, y in ((10, 15), (11, 16), (17, 16), (18, 15)):
+    for x, y in ((11, 16), (17, 16), (18, 15)):
         px(g, x, y, GLOW)
     draw_line(g, 11, 7, 11, 3, K)
     for x, y in ((10, 2), (11, 2), (12, 2), (11, 1), (10, 3), (12, 3)):
         px(g, x, y, GLOW)
     px(g, 11, 1, WHITE)
-    px(g, 10, 15, K)
-    px(g, 11, 15, WHITE)
+    draw_eye(g, 8, 13, large=True)
     return g
 
 
@@ -267,8 +312,8 @@ def sprite_fluffy():
     fill_ellipse(g, 16, 13, 7, 4, JELLY4)
     for x, y in ((13, 11), (16, 10), (19, 11), (15, 12), (17, 12)):
         px(g, x, y, WHITE)
-    px(g, 14, 13, JELLY2)
-    px(g, 18, 13, JELLY2)
+    draw_eye(g, 13, 12, sclera=WHITE, pupil=K, large=True)
+    draw_eye(g, 17, 12, sclera=WHITE, pupil=K, large=True)
     tentacles = [
         (11, 17, 9, 27), (13, 17, 12, 28), (15, 18, 14, 29),
         (17, 18, 18, 29), (19, 17, 21, 28), (21, 17, 23, 27),
@@ -294,22 +339,21 @@ def sprite_sparkle():
     for x, y in stars:
         px(g, x, y, SPARK)
         px(g, x, y + 1, SPARK3)
-    px(g, 10, 13, K)
-    px(g, 11, 13, AQUA)
+    draw_eye(g, 8, 12, sclera=WHITE, pupil=K, highlight=SPARK3, large=True)
     return g
 
 
 def sprite_standard():
     """Common copper reef fish."""
     g = blank()
-    draw_fish(g, COPPER, COPPER2, cx=13, cy=16, rx=8, ry=6)
+    draw_fish(g, COPPER, COPPER2, cx=13, cy=16, rx=8, ry=6, large_eye=True)
     return g
 
 
 def sprite_farm():
     """Coral-dwelling fish with algae."""
     g = blank()
-    draw_fish(g, REEF, REEF2, cx=13, cy=16, rx=8, ry=6)
+    draw_fish(g, REEF, REEF2, cx=13, cy=16, rx=8, ry=6, large_eye=True)
     px(g, 10, 9, ALGAE)
     px(g, 12, 8, ALGAE)
     px(g, 14, 9, ALGAE)
@@ -320,7 +364,7 @@ def sprite_farm():
 def sprite_plain():
     """Plain abyssal mudfish."""
     g = blank()
-    draw_fish(g, MUD, MUD2, cx=13, cy=16, rx=8, ry=6)
+    draw_fish(g, MUD, MUD2, cx=13, cy=16, rx=8, ry=6, large_eye=True)
     px(g, 12, 15, MUD2)
     px(g, 14, 17, MUD2)
     return g
@@ -330,12 +374,8 @@ def sprite_scruffy():
     """Defective — rotting angler, missing eye, bone patch, slime."""
     g = blank()
     fill_ellipse(g, 14, 17, 8, 6, RAG, K)
-    fill_ellipse(g, 12, 16, 3, 3, BONE_SHOW, K)
-    px(g, 11, 15, K)
-    px(g, 13, 15, ROT)
-    px(g, 10, 14, K)
-    px(g, 14, 14, EYE_YELLOW)
-    px(g, 15, 14, RED)
+    fill_ellipse(g, 10, 18, 2, 2, BONE_SHOW, K)
+    px(g, 9, 17, ROT)
     draw_line(g, 9, 11, 7, 9, RAG2)
     draw_line(g, 10, 10, 8, 7, K)
     draw_line(g, 8, 12, 5, 11, ROT)
@@ -346,6 +386,8 @@ def sprite_scruffy():
     for x, y in ((13, 22), (14, 23), (15, 24), (14, 25)):
         px(g, x, y, SLIME)
     px(g, 12, 19, MUCUS)
+    draw_empty_socket(g, 7, 11)
+    draw_eye_grotesque(g, 11, 11)
     return g
 
 
@@ -359,14 +401,14 @@ def sprite_grumpy():
         if x % 2 == 0:
             px(g, x, 14, WHITE)
             px(g, x, 15, K)
-    px(g, 8, 13, K)
-    px(g, 13, 12, K)
     draw_line(g, 7, 11, 10, 12, K)
     draw_line(g, 14, 11, 11, 12, K)
     draw_poly(g, [(18, 17), (24, 15), (23, 20)], BLOB2, K)
     px(g, 24, 14, RED)
     for x, y in ((10, 16), (11, 17), (12, 16)):
         px(g, x, y, SLIME2)
+    draw_eye_grotesque(g, 7, 9, iris=WHITE, pupil=RED)
+    draw_eye_grotesque(g, 15, 9, iris=WHITE, pupil=RED)
     return g
 
 
@@ -376,8 +418,6 @@ def sprite_sickly():
     fill_ellipse(g, 14, 18, 7, 5, PALE, K)
     fill_ellipse(g, 14, 18, 5, 3, PALE2)
     draw_line(g, 10, 13, 12, 15, K)
-    fill_circle(g, 15, 13, 3, EYE_YELLOW, K)
-    px(g, 16, 13, LESION)
     px(g, 10, 14, K)
     px(g, 10, 15, K)
     for x, y in ((12, 17), (15, 19), (13, 20)):
@@ -389,6 +429,7 @@ def sprite_sickly():
     draw_poly(g, [(20, 18), (24, 16), (23, 21)], PALE2, K)
     for x, y in ((14, 24), (15, 25), (13, 26)):
         px(g, x, y, MUCUS)
+    draw_swollen_eye(g, 11, 14)
     return g
 
 

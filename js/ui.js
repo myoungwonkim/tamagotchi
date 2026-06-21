@@ -78,6 +78,13 @@ function getStageLabel(pet) {
   return stage.label;
 }
 
+function getFallbackClassName(imgClass = "") {
+  if (imgClass.includes("mood")) return "pet-mood-fallback";
+  if (imgClass.includes("encyclopedia")) return "encyclopedia-card__emoji";
+  if (imgClass.includes("evolution")) return "pet-evolution-fallback";
+  return "pet-sprite-fallback";
+}
+
 function applyEmojiFallback(container, emoji, className = "pet-sprite-fallback") {
   container.innerHTML = "";
   const span = document.createElement("span");
@@ -96,6 +103,12 @@ function spriteSrcMatches(currentSrc, nextSrc) {
 function bindSpriteImgHandlers(img, fallback, getMeta) {
   const onError = () => {
     const meta = getMeta();
+    if (!img.dataset.retryBust && meta?.src) {
+      img.dataset.retryBust = "1";
+      const bust = `${meta.src}${meta.src.includes("?") ? "&" : "?"}_r=${Date.now()}`;
+      img.src = bust;
+      return;
+    }
     img.removeAttribute("src");
     img.hidden = true;
     img.style.display = "none";
@@ -113,19 +126,20 @@ function bindSpriteImgHandlers(img, fallback, getMeta) {
 
   img.onerror = onError;
   img.onload = onLoad;
+  return { onLoad, onError };
 }
 
 export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img", sizeClass = "" } = {}) {
   if (!container || !meta) return null;
 
   if (!isSpritesEnabled()) {
-    return applyEmojiFallback(container, meta.fallbackEmoji, imgClass.includes("mood") ? "pet-mood-fallback" : "pet-evolution-fallback");
+    return applyEmojiFallback(container, meta.fallbackEmoji, getFallbackClassName(imgClass));
   }
 
   const currentKey = container.dataset.spriteKey;
   const isNewKey = currentKey !== meta.key;
 
-  const fallbackSelector = ".pet-sprite-fallback, .pet-mood-fallback, .pet-evolution-fallback";
+  const fallbackSelector = ".pet-sprite-fallback, .pet-mood-fallback, .pet-evolution-fallback, .encyclopedia-card__emoji";
   let img = container.querySelector("img.pet-sprite");
   let fallback = container.querySelector(fallbackSelector);
   const orphanImgs = container.querySelectorAll("img:not(.pet-sprite)");
@@ -139,28 +153,36 @@ export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img",
     img.className = `pet-sprite ${imgClass}${sizeClass ? ` ${sizeClass}` : ""}`;
     img.alt = meta.alt || "";
     fallback = document.createElement("span");
-    fallback.className = imgClass.includes("mood") ? "pet-mood-fallback" : "pet-sprite-fallback";
+    fallback.className = getFallbackClassName(imgClass);
     fallback.hidden = true;
     container.append(img, fallback);
   } else if (!fallback) {
     fallback = document.createElement("span");
-    fallback.className = imgClass.includes("mood") ? "pet-mood-fallback" : "pet-sprite-fallback";
+    fallback.className = getFallbackClassName(imgClass);
     fallback.hidden = true;
     container.append(fallback);
   }
 
-  bindSpriteImgHandlers(img, fallback, () => meta);
+  const { onLoad, onError } = bindSpriteImgHandlers(img, fallback, () => meta);
   container.dataset.spriteKey = meta.key;
 
   const currentSrc = img.getAttribute("src");
   const needsUpdate = isNewKey || !spriteSrcMatches(currentSrc, meta.src);
 
   if (needsUpdate) {
+    delete img.dataset.retryBust;
     img.hidden = false;
     img.style.display = "";
     if (fallback) fallback.hidden = true;
     img.src = meta.src;
     img.alt = meta.alt || "";
+    if (img.complete) {
+      if (img.naturalWidth > 0) onLoad();
+      else onError();
+    }
+  } else if (img.complete) {
+    if (img.naturalWidth > 0) onLoad();
+    else onError();
   }
 
   return meta.key;
@@ -422,6 +444,11 @@ export function setGameActive(active) {
   elements.actions.hidden = !active;
   if (!active) {
     lastEvolutionKey = null;
+    const displayEl = elements.petEvolution?.closest(".pet-display");
+    elements.petEvolution?.setAttribute("data-stage", "egg");
+    displayEl?.setAttribute("data-stage", "egg");
+    displayEl?.removeAttribute("data-variant");
+    elements.petEvolution?.removeAttribute("data-variant");
     setPetGraphic(
       elements.petEvolution,
       getStageSpriteMeta("egg", "🥚", "알"),
