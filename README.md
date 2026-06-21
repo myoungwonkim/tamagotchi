@@ -113,6 +113,10 @@ http://localhost:8080/?dev=1
 
 ### 체크리스트
 
+상세 QA 시나리오(기기별 Pass/Fail 표): **[docs/QA-CHECKLIST.md](docs/QA-CHECKLIST.md)**
+
+요약 (수동 확인):
+
 - [ ] 메인 진화 SVG + 말풍선 무드 SVG 동시 표시
 - [ ] `?dev=1` 스프라이트 off → 이모지 fallback
 - [ ] 진화 단계별 SVG 전환 (dev 나이 +1일)
@@ -120,6 +124,7 @@ http://localhost:8080/?dev=1
 - [ ] 도감 카드 SVG + 미수집 locked SVG
 - [ ] 게임 오버·졸업 오버레이 SVG
 - [ ] 🔊/🔇, safe-area, 오프라인 반영
+- [ ] 재우기/깨우기·돌보기 버튼 (최근 버그 회귀 — A섹션)
 
 ## 밸런스
 
