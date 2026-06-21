@@ -43,6 +43,12 @@ export function playMoodTransition(bubbleEl) {
 export function applyIdleClasses(el, pet) {
   if (!el || !pet) return;
 
+  const displayEl = el.closest(".pet-display");
+  const stageId = !pet.isAlive ? "dead" : getEvolutionStage(pet).id;
+
+  el.setAttribute("data-stage", stageId);
+  if (displayEl) displayEl.setAttribute("data-stage", stageId);
+
   el.classList.remove(
     "pet-evolution--idle",
     "pet-evolution--sleep-idle",
@@ -53,6 +59,7 @@ export function applyIdleClasses(el, pet) {
 
   if (!pet.isAlive) {
     el.removeAttribute("data-variant");
+    if (displayEl) displayEl.removeAttribute("data-variant");
     return;
   }
 
@@ -66,9 +73,11 @@ export function applyIdleClasses(el, pet) {
   if (stage.id === "adult" && pet.adultVariantId) {
     const variant = getAdultVariant(pet.adultVariantId);
     el.setAttribute("data-variant", variant.tier);
+    if (displayEl) displayEl.setAttribute("data-variant", variant.tier);
     el.classList.add(`pet-evolution--variant-${variant.tier}`);
   } else {
     el.removeAttribute("data-variant");
+    if (displayEl) displayEl.removeAttribute("data-variant");
   }
 }
 
