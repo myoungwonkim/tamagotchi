@@ -1,7 +1,7 @@
 # QA 체크리스트
 
 **배포 URL:** [https://myoungwonkim.github.io/tamagotchi/](https://myoungwonkim.github.io/tamagotchi/)  
-**검증 기준 커밋:** `68c4188` (Phase 5B, 2026-06-21)  
+**검증 기준 커밋:** `b911a43` (안정화 1단계, 2026-06-21)  
 **dev 모드:** `?dev=1` 붙여 접속
 
 ---
@@ -19,6 +19,16 @@
 | SVG 에셋 21종 | ✅ | `assets/sprites/` |
 | safe-area CSS | ✅ | `style.css` |
 | PNG 21종 | ⏳ | 수동 제작 — [PNG-SPRITE-GUIDE.md](PNG-SPRITE-GUIDE.md) |
+| 캐시 버스팅 (`app-version`) | ✅ | `index.html` meta + `style.css?v=` + `main.js` dynamic import |
+
+### 2단계 배포 스모크 (2026-06-21)
+
+| 항목 | 결과 | 근거 |
+|------|------|------|
+| Pages `effects.js` | ✅ | HTTP 200, `playEvolutionTransition` 등 |
+| Pages `care-fx` in HTML | ✅ | `index.html` `#care-fx` |
+| Pages sleep/care hooks | ✅ | `main.js` `syncSleepControls`, `playCareEffect` |
+| 로컬 8093 smoke | ✅ | index meta, main/effects/css 키워드 |
 
 
 ---

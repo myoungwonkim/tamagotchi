@@ -123,6 +123,16 @@ python3 -m http.server 8080
 
 > ES 모듈을 사용하므로 `file://`로 직접 열면 동작하지 않습니다. 반드시 로컬 서버를 사용하세요.
 
+### 배포 후 캐시
+
+`index.html`의 `<meta name="app-version">`과 `css/style.css?v=…`가 배포마다 갱신됩니다. JS·CSS 변경 후:
+
+```bash
+./scripts/bump-version.sh   # git short SHA로 app-version 동기화
+```
+
+스프라이트 URL에도 동일 버전 쿼리가 붙습니다 (`sprites.js`).
+
 ### 개발 테스트 모드
 
 ```

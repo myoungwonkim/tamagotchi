@@ -7,8 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="description" content="모바일 브라우저에서 키우는 웹 다마고치 게임">
+  <meta name="app-version" content="b911a43">
   <title>다마고치</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=b911a43">
 </head>
 <body>
   <div class="app">
@@ -124,6 +125,9 @@
     </div>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    const v = document.querySelector('meta[name="app-version"]')?.content || "";
+    await import(`./js/main.js?v=${v}`);
+  </script>
 </body>
 </html>

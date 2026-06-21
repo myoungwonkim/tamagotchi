@@ -55,9 +55,16 @@ export function clearPreloadCache() {
   preloaded.clear();
 }
 
+function getAppVersion() {
+  if (typeof document === "undefined") return "";
+  return document.querySelector('meta[name="app-version"]')?.content || "";
+}
+
 export function getSpriteUrl(category, id) {
   const ext = getSpriteFormat();
-  return `${SPRITE_BASE}/${category}/${id}.${ext}`;
+  const base = `${SPRITE_BASE}/${category}/${id}.${ext}`;
+  const v = getAppVersion();
+  return v ? `${base}?v=${v}` : base;
 }
 
 export function getEvolutionSpriteMeta(pet) {
