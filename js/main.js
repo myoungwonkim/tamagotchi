@@ -12,6 +12,7 @@ import {
 import { initAudio, playSfx, toggleMuted, updateMuteButton } from "./audio.js";
 import { toggleSpritesEnabled, toggleSpriteFormat } from "./sprites.js";
 import { playCareEffect } from "./effects.js";
+import { withSubjectParticle } from "./korean.js";
 import {
   renderPet,
   showMessage,
@@ -56,7 +57,7 @@ function formatAwayTime(ms) {
 
 function getAwayMessage(elapsed, name) {
   if (elapsed >= OFFLINE_MESSAGE_MS) {
-    return `${name}가 ${formatAwayTime(elapsed)} 동안 당신을 기다렸어요!`;
+    return `${withSubjectParticle(name)} ${formatAwayTime(elapsed)} 동안 당신을 기다렸어요!`;
   }
   if (elapsed >= OFFLINE_NOTICE_MS) {
     return `${formatAwayTime(elapsed)} 동안 다녀오셨네요.`;
@@ -69,7 +70,7 @@ function handleAdultEvolution({ notify = true } = {}) {
   addToEncyclopedia(pet);
 
   if (notify) {
-    showMessage(`${pet.name}가 어른으로 진화했어요! 도감에 등록됐어요!`, 5000);
+    showMessage(`${withSubjectParticle(pet.name)} 어른으로 진화했어요! 도감에 등록됐어요!`, 5000);
     playSfx("evolve");
   }
 }
@@ -85,7 +86,7 @@ function handleEvolution({ notify = true } = {}) {
   }
 
   if (result.evolved && notify) {
-    showMessage(`${pet.name}가 ${result.stage.label}(으)로 진화했어요!`, 5000);
+    showMessage(`${withSubjectParticle(pet.name)} ${result.stage.label}(으)로 진화했어요!`, 5000);
     playSfx("evolve");
   }
 

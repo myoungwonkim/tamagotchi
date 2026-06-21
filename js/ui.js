@@ -21,6 +21,7 @@ import {
   playMoodTransition,
   applyIdleClasses,
 } from "./effects.js";
+import { withSubjectParticle } from "./korean.js";
 
 const elements = {
   petName: document.getElementById("pet-name"),
@@ -298,7 +299,7 @@ function updateGameOver(pet) {
   }
 
   const age = getAgeDays(pet);
-  elements.gameOverTitle.textContent = `${pet.name}가 떠났어요...`;
+  elements.gameOverTitle.textContent = `${withSubjectParticle(pet.name)} 떠났어요...`;
 
   if (age > 0) {
     elements.gameOverText.textContent = `${age}일 동안 함께했어요. 새 친구를 만나볼까요?`;
