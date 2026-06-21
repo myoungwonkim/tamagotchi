@@ -87,6 +87,41 @@ function applyEmojiFallback(container, emoji, className = "pet-sprite-fallback")
   return emoji;
 }
 
+function spriteSrcMatches(currentSrc, nextSrc) {
+  if (!currentSrc || !nextSrc) return false;
+  const strip = (url) => url.split("?")[0];
+  return strip(currentSrc) === strip(nextSrc);
+}
+
+function bindSpriteImgHandlers(img, fallback, getMeta) {
+  const onError = () => {
+    const meta = getMeta();
+    // #region agent log
+    fetch("http://127.0.0.1:7798/ingest/55c83e3c-3a53-4598-a8dc-fa9ca68b490e",{method:"POST",headers:{"Content-Type":"application/json","X-Debug-Session-Id":"b0d685"},body:JSON.stringify({sessionId:"b0d685",location:"ui.js:setPetGraphic:onError",message:"sprite img error",data:{src:img.getAttribute("src"),key:meta?.key,imgHidden:img.hidden,fallbackHidden:fallback?.hidden,childCount:img.parentElement?.childElementCount},timestamp:Date.now(),hypothesisId:"A-C",runId:"pre-fix"})}).catch(()=>{});
+    // #endregion
+    img.removeAttribute("src");
+    img.hidden = true;
+    img.style.display = "none";
+    if (fallback) {
+      fallback.hidden = false;
+      fallback.textContent = meta?.fallbackEmoji ?? "";
+    }
+  };
+
+  const onLoad = () => {
+    const meta = getMeta();
+    // #region agent log
+    fetch("http://127.0.0.1:7798/ingest/55c83e3c-3a53-4598-a8dc-fa9ca68b490e",{method:"POST",headers:{"Content-Type":"application/json","X-Debug-Session-Id":"b0d685"},body:JSON.stringify({sessionId:"b0d685",location:"ui.js:setPetGraphic:onLoad",message:"sprite img load ok",data:{src:img.getAttribute("src"),key:meta?.key,naturalWidth:img.naturalWidth},timestamp:Date.now(),hypothesisId:"A",runId:"pre-fix"})}).catch(()=>{});
+    // #endregion
+    img.hidden = false;
+    img.style.display = "";
+    if (fallback) fallback.hidden = true;
+  };
+
+  img.onerror = onError;
+  img.onload = onLoad;
+}
+
 export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img", sizeClass = "" } = {}) {
   if (!container || !meta) return null;
 
@@ -100,6 +135,13 @@ export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img",
   const fallbackSelector = ".pet-sprite-fallback, .pet-mood-fallback, .pet-evolution-fallback";
   let img = container.querySelector("img.pet-sprite");
   let fallback = container.querySelector(fallbackSelector);
+  const orphanImgs = container.querySelectorAll("img:not(.pet-sprite)");
+  if (orphanImgs.length) {
+    // #region agent log
+    fetch("http://127.0.0.1:7798/ingest/55c83e3c-3a53-4598-a8dc-fa9ca68b490e",{method:"POST",headers:{"Content-Type":"application/json","X-Debug-Session-Id":"b0d685"},body:JSON.stringify({sessionId:"b0d685",location:"ui.js:setPetGraphic:orphan",message:"removed orphan imgs",data:{count:orphanImgs.length,containerId:container.id},timestamp:Date.now(),hypothesisId:"D",runId:"pre-fix"})}).catch(()=>{});
+    // #endregion
+    orphanImgs.forEach((el) => el.remove());
+  }
 
   if (!img) {
     container.innerHTML = "";
@@ -110,14 +152,6 @@ export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img",
     fallback.className = imgClass.includes("mood") ? "pet-mood-fallback" : "pet-sprite-fallback";
     fallback.hidden = true;
     container.append(img, fallback);
-
-    img.addEventListener("error", () => {
-      img.hidden = true;
-      if (fallback) {
-        fallback.hidden = false;
-        fallback.textContent = meta.fallbackEmoji;
-      }
-    });
   } else if (!fallback) {
     fallback = document.createElement("span");
     fallback.className = imgClass.includes("mood") ? "pet-mood-fallback" : "pet-sprite-fallback";
@@ -125,10 +159,19 @@ export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img",
     container.append(fallback);
   }
 
+  bindSpriteImgHandlers(img, fallback, () => meta);
   container.dataset.spriteKey = meta.key;
 
-  if (isNewKey || !img.getAttribute("src")?.endsWith(meta.src)) {
+  const currentSrc = img.getAttribute("src");
+  const needsUpdate = isNewKey || !spriteSrcMatches(currentSrc, meta.src);
+
+  // #region agent log
+  fetch("http://127.0.0.1:7798/ingest/55c83e3c-3a53-4598-a8dc-fa9ca68b490e",{method:"POST",headers:{"Content-Type":"application/json","X-Debug-Session-Id":"b0d685"},body:JSON.stringify({sessionId:"b0d685",location:"ui.js:setPetGraphic",message:"setPetGraphic update",data:{key:meta.key,src:meta.src,currentSrc,isNewKey,needsUpdate,containerId:container.id,imgCount:container.querySelectorAll("img").length},timestamp:Date.now(),hypothesisId:"B-D",runId:"pre-fix"})}).catch(()=>{});
+  // #endregion
+
+  if (needsUpdate) {
     img.hidden = false;
+    img.style.display = "";
     if (fallback) fallback.hidden = true;
     img.src = meta.src;
     img.alt = meta.alt || "";

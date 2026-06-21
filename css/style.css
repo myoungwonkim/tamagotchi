@@ -177,6 +177,10 @@ body {
   display: block;
 }
 
+img.pet-sprite[hidden] {
+  display: none !important;
+}
+
 .pet-evolution-fallback,
 .pet-sprite-fallback {
   font-size: 6rem;
@@ -329,8 +333,13 @@ body {
   gap: 12px;
   background: var(--surface);
   padding: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+}
+
+.main:has(.new-pet-fab:not([hidden])) .stats {
+  padding-left: calc(52px + max(16px, env(safe-area-inset-left, 0px)));
 }
 
 .stat {
