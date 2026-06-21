@@ -166,6 +166,7 @@ body {
   justify-content: center;
   width: min(100%, var(--sprite-evolution-size));
   min-height: var(--sprite-evolution-size);
+  overflow: visible;
   transition:
     width 0.45s ease,
     min-height 0.45s ease,
@@ -286,29 +287,43 @@ img.pet-sprite[hidden] {
 
 .pet-mood-bubble {
   position: absolute;
-  top: 0;
-  right: max(-4rem, calc(var(--sprite-evolution-size) * -0.38));
-  min-width: calc(var(--sprite-mood-size) + 1.25rem);
-  min-height: calc(var(--sprite-mood-size) + 1.25rem);
+  top: 4%;
+  right: max(-2.75rem, calc(var(--sprite-evolution-size) * -0.28));
+  min-width: calc(var(--sprite-mood-size) + 0.65rem);
+  min-height: calc(var(--sprite-mood-size) + 0.65rem);
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--surface);
+  border: 2px solid rgba(45, 42, 38, 0.12);
   border-radius: 50%;
-  box-shadow: var(--shadow);
-  padding: 10px;
+  box-shadow: 0 2px 0 rgba(45, 42, 38, 0.06);
+  padding: 5px;
+  z-index: 2;
+}
+
+.pet-mood-bubble::before {
+  content: "";
+  position: absolute;
+  top: 58%;
+  left: -9px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 9px 5px 0;
+  border-color: transparent rgba(45, 42, 38, 0.12) transparent transparent;
 }
 
 .pet-mood-bubble::after {
   content: "";
   position: absolute;
-  bottom: 8px;
+  top: 58%;
   left: -6px;
-  width: 12px;
-  height: 12px;
-  background: var(--surface);
-  transform: rotate(45deg);
-  box-shadow: -2px 2px 4px rgba(45, 42, 38, 0.06);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 7px 4px 0;
+  border-color: transparent var(--surface) transparent transparent;
 }
 
 .pet-mood-bubble[hidden] {
