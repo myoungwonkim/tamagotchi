@@ -37,8 +37,27 @@ export function toggleSpritesEnabled() {
   return setSpritesEnabled(!isSpritesEnabled());
 }
 
+export function getSpriteFormat() {
+  return readSettings().spriteFormat === "png" ? "png" : "svg";
+}
+
+export function setSpriteFormat(format) {
+  writeSettings({ spriteFormat: format === "png" ? "png" : "svg" });
+  clearPreloadCache();
+  return getSpriteFormat();
+}
+
+export function toggleSpriteFormat() {
+  return setSpriteFormat(getSpriteFormat() === "png" ? "svg" : "png");
+}
+
+export function clearPreloadCache() {
+  preloaded.clear();
+}
+
 export function getSpriteUrl(category, id) {
-  return `${SPRITE_BASE}/${category}/${id}.svg`;
+  const ext = getSpriteFormat();
+  return `${SPRITE_BASE}/${category}/${id}.${ext}`;
 }
 
 export function getEvolutionSpriteMeta(pet) {

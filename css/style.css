@@ -146,11 +146,12 @@ body {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   min-height: 200px;
-  transition: background 0.3s ease;
+  transition: background 0.6s ease, box-shadow 0.6s ease;
 }
 
 .pet-area--sleeping {
-  background: #e8eef8;
+  background: linear-gradient(165deg, #e8eef8 0%, #d4dce8 100%);
+  box-shadow: inset 0 0 24px rgba(100, 120, 160, 0.12);
 }
 
 .pet-display {
@@ -184,6 +185,53 @@ body {
 
 .pet-evolution--bounce {
   animation: bounce 0.4s ease;
+}
+
+.pet-evolution--evolving {
+  animation: evolvePop 0.5s ease;
+}
+
+.pet-evolution--idle {
+  animation: idleBob 3s ease-in-out infinite;
+}
+
+.pet-evolution--sleep-idle {
+  animation: idleBob 4s ease-in-out infinite;
+  opacity: 0.88;
+}
+
+.pet-evolution--variant-defective {
+  animation: idleShake 3.5s ease-in-out infinite;
+}
+
+.pet-evolution--sleep-idle.pet-evolution--variant-defective,
+.pet-evolution--sleep-idle.pet-evolution--variant-pretty {
+  animation: idleBob 4s ease-in-out infinite;
+}
+
+.pet-evolution--idle.pet-evolution--variant-pretty {
+  animation-duration: 2.5s;
+}
+
+.pet-mood-bubble--changing {
+  animation: moodFade 0.4s ease;
+}
+
+.care-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.care-fx__particle {
+  position: absolute;
+  bottom: 28%;
+  font-size: 1.25rem;
+  line-height: 1;
+  animation: careFloat 0.65s ease-out forwards;
+  opacity: 0;
 }
 
 .pet-mood-bubble {
@@ -570,9 +618,51 @@ body {
   50% { transform: scale(1.15); }
 }
 
+@keyframes evolvePop {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes idleBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes idleShake {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-1deg); }
+  75% { transform: translateY(-2px) rotate(1deg); }
+}
+
+@keyframes moodFade {
+  0% { opacity: 0.4; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes careFloat {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-48px) scale(0.6); }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-evolution--idle,
+  .pet-evolution--sleep-idle,
+  .pet-evolution--variant-defective,
+  .pet-evolution--evolving,
+  .pet-mood-bubble--changing,
+  .care-fx__particle {
+    animation: none !important;
+  }
+
+  .pet-evolution--sleep-idle {
+    opacity: 0.88;
+  }
 }
 
 .dev-panel {

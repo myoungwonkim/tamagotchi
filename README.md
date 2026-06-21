@@ -33,6 +33,15 @@
 - **preload:** 현재 펫·다음 진화·무드 5종 선로드
 - **dev 토글:** `?dev=1` → "스프라이트 on/off" (`tamagotchi-settings.useSprites`)
 
+### Phase 5B (그래픽 고도화)
+- **SVG 리파인:** 21종 placeholder를 통일 viewBox·팔레트로 개선
+- **PNG drop-in:** `tamagotchi-settings.spriteFormat` (`svg` | `png`), dev 「스프라이트 포맷 svg/png」
+- **진화 전환:** `evolvePop` 애니메이션 (`js/effects.js`)
+- **무드·수면:** 말풍선 fade, 수면 배경 gradient, sleep idle bob
+- **idle 모션:** tier별 bob/shake (`data-variant` on `#pet-evolution`)
+- **돌보기 FX:** 먹이/놀기/씻기 이모지 파티클 (`#care-fx`)
+- **접근성:** `prefers-reduced-motion: reduce` 시 애니메이션 비활성
+
 ## 스프라이트 구조
 
 ```
@@ -43,7 +52,13 @@ assets/sprites/
   ui/          heart-broken locked
 ```
 
-PNG로 교체할 때는 **같은 파일명**으로 `assets/sprites/` 아래 파일만 바꾸면 됩니다 (코드 변경 불필요).
+PNG로 교체할 때:
+
+1. `assets/sprites/{category}/{id}.png` 로 **동일 파일명**만 추가 (예: `adult/golden.png`)
+2. `?dev=1` → **스프라이트 포맷 svg/png** 로 png 선택
+3. 로드 실패 시 이모지 fallback (스프라이트 on 상태에서도 img error 처리)
+
+코드 변경 없이 PNG만 drop-in 가능합니다.
 
 ## 그래픽 표시 규칙
 
@@ -103,7 +118,7 @@ python3 -m http.server 8080
 http://localhost:8080/?dev=1
 ```
 
-테스트 패널: 게임 오버, 오프라인, 나이 +1일, 진화, 성체 pretty/defective, 도감 초기화, idle 대사, **스프라이트 on/off**
+테스트 패널: 게임 오버, 오프라인, 나이 +1일, 진화, 성체 pretty/defective, 도감 초기화, idle 대사, **스프라이트 on/off**, **스프라이트 포맷 svg/png**
 
 ## 모바일 테스트
 
@@ -125,6 +140,7 @@ http://localhost:8080/?dev=1
 - [ ] 게임 오버·졸업 오버레이 SVG
 - [ ] 🔊/🔇, safe-area, 오프라인 반영
 - [ ] 재우기/깨우기·돌보기 버튼 (최근 버그 회귀 — A섹션)
+- [ ] Phase 5B 모션·FX (G섹션)
 
 ## 밸런스
 
@@ -164,6 +180,7 @@ tamagotchi/
     encyclopedia.js   # 도감 localStorage
     audio.js          # Web Audio SFX, 음소거
     actions.js        # 돌봄 버튼
+    effects.js        # 진화·무드·idle·돌보기 FX
     storage.js        # localStorage
     ui.js             # setPetGraphic, 도감·FAB UI
     main.js           # 게임 루프

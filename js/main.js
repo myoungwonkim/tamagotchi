@@ -10,7 +10,8 @@ import {
   resetDialogueTimer,
 } from "./dialogue.js";
 import { initAudio, playSfx, toggleMuted, updateMuteButton } from "./audio.js";
-import { isSpritesEnabled, toggleSpritesEnabled } from "./sprites.js";
+import { toggleSpritesEnabled, toggleSpriteFormat } from "./sprites.js";
+import { playCareEffect } from "./effects.js";
 import {
   renderPet,
   showMessage,
@@ -22,6 +23,7 @@ import {
   hideEncyclopedia,
   isMessageVisible,
   refreshAllGraphics,
+  resetGraphicAnimationState,
   getEnteredName,
   getElements,
   setGameActive,
@@ -233,6 +235,9 @@ function handleAction(actionFn, messageKey) {
     resetDialogueTimer();
   } else {
     playSfx(messageKey);
+    if (["feed", "play", "clean"].includes(messageKey)) {
+      playCareEffect(messageKey, document.getElementById("pet-area"));
+    }
   }
 
   const message = getActionMessage(pet, messageKey);
@@ -418,8 +423,16 @@ function mountDevToolsIfEnabled() {
 
       toggleSprites() {
         const enabled = toggleSpritesEnabled();
+        resetGraphicAnimationState();
         refreshAllGraphics(pet);
         showMessage(enabled ? "스프라이트 모드 켜짐" : "이모지 fallback 모드");
+      },
+
+      toggleSpriteFormat() {
+        const format = toggleSpriteFormat();
+        resetGraphicAnimationState();
+        refreshAllGraphics(pet);
+        showMessage(`스프라이트 포맷: ${format}`);
       },
     });
   });

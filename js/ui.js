@@ -16,6 +16,11 @@ import {
   preloadSpritesForPet,
 } from "./sprites.js";
 import { playSfx } from "./audio.js";
+import {
+  playEvolutionTransition,
+  playMoodTransition,
+  applyIdleClasses,
+} from "./effects.js";
 
 const elements = {
   petName: document.getElementById("pet-name"),
@@ -63,6 +68,7 @@ const elements = {
 let messageTimeout = null;
 let gameOverSoundNotified = false;
 let lastEvolutionKey = null;
+let lastMoodKey = null;
 
 function getStageLabel(pet) {
   const stage = getEvolutionStage(pet);
@@ -147,23 +153,28 @@ export function renderPet(pet) {
   });
 
   if (evolutionKey && evolutionKey !== lastEvolutionKey) {
-    elements.petEvolution.classList.remove("pet-evolution--bounce");
-    void elements.petEvolution.offsetWidth;
-    elements.petEvolution.classList.add("pet-evolution--bounce");
+    playEvolutionTransition(elements.petEvolution);
     lastEvolutionKey = evolutionKey;
   }
 
   const moodMeta = getMoodSpriteMeta(pet);
   if (moodMeta && elements.petMoodBubble) {
+    const moodChanged = moodMeta.key !== lastMoodKey;
     elements.petMoodBubble.hidden = false;
     setPetGraphic(elements.petMoodEmoji, moodMeta, { imgClass: "pet-mood-img" });
+    if (moodChanged) {
+      playMoodTransition(elements.petMoodBubble);
+      lastMoodKey = moodMeta.key;
+    }
   } else if (elements.petMoodBubble) {
     elements.petMoodBubble.hidden = true;
     elements.petMoodEmoji.innerHTML = "";
     delete elements.petMoodEmoji.dataset.spriteKey;
+    lastMoodKey = null;
   }
 
   elements.petArea.classList.toggle("pet-area--sleeping", pet.isSleeping);
+  applyIdleClasses(elements.petEvolution, pet);
 
   updateStat("hunger", pet.hunger);
   updateStat("happiness", pet.happiness);
@@ -214,6 +225,7 @@ export function syncSleepControls(pet) {
   if (elements.petArea) {
     elements.petArea.classList.toggle("pet-area--sleeping", pet.isSleeping);
   }
+  applyIdleClasses(elements.petEvolution, pet);
   updateButtons(pet);
 }
 
@@ -401,6 +413,11 @@ export function setGameActive(active) {
       elements.buttons[key].disabled = true;
     });
   }
+}
+
+export function resetGraphicAnimationState() {
+  lastEvolutionKey = null;
+  lastMoodKey = null;
 }
 
 export function refreshAllGraphics(pet) {

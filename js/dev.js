@@ -25,6 +25,7 @@ export function mountDevPanel(handlers) {
     { label: "도감 초기화", action: handlers.clearEncyclopedia },
     { label: "idle 대사 강제", action: handlers.forceIdleDialogue },
     { label: "스프라이트 on/off", action: handlers.toggleSprites },
+    { label: "스프라이트 포맷 svg/png", action: handlers.toggleSpriteFormat },
   ];
 
   for (const test of tests) {
