@@ -91,8 +91,9 @@ export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img",
   const currentKey = container.dataset.spriteKey;
   const isNewKey = currentKey !== meta.key;
 
+  const fallbackSelector = ".pet-sprite-fallback, .pet-mood-fallback, .pet-evolution-fallback";
   let img = container.querySelector("img.pet-sprite");
-  let fallback = container.querySelector(".pet-sprite-fallback");
+  let fallback = container.querySelector(fallbackSelector);
 
   if (!img) {
     container.innerHTML = "";
@@ -106,16 +107,23 @@ export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img",
 
     img.addEventListener("error", () => {
       img.hidden = true;
-      fallback.hidden = false;
-      fallback.textContent = meta.fallbackEmoji;
+      if (fallback) {
+        fallback.hidden = false;
+        fallback.textContent = meta.fallbackEmoji;
+      }
     });
+  } else if (!fallback) {
+    fallback = document.createElement("span");
+    fallback.className = imgClass.includes("mood") ? "pet-mood-fallback" : "pet-sprite-fallback";
+    fallback.hidden = true;
+    container.append(fallback);
   }
 
   container.dataset.spriteKey = meta.key;
 
   if (isNewKey || !img.getAttribute("src")?.endsWith(meta.src)) {
     img.hidden = false;
-    fallback.hidden = true;
+    if (fallback) fallback.hidden = true;
     img.src = meta.src;
     img.alt = meta.alt || "";
   }
@@ -146,10 +154,10 @@ export function renderPet(pet) {
   }
 
   const moodMeta = getMoodSpriteMeta(pet);
-  if (moodMeta) {
+  if (moodMeta && elements.petMoodBubble) {
     elements.petMoodBubble.hidden = false;
     setPetGraphic(elements.petMoodEmoji, moodMeta, { imgClass: "pet-mood-img" });
-  } else {
+  } else if (elements.petMoodBubble) {
     elements.petMoodBubble.hidden = true;
     elements.petMoodEmoji.innerHTML = "";
     delete elements.petMoodEmoji.dataset.spriteKey;
@@ -181,17 +189,32 @@ function updateButtons(pet) {
 
   for (const key of ["feed", "play", "clean"]) {
     const btn = elements.buttons[key];
+    if (!btn) continue;
     btn.disabled = blockCare;
     btn.toggleAttribute("inert", blockCare);
   }
 
-  elements.buttons.sleep.disabled = !alive;
-  elements.buttons.sleep.removeAttribute("inert");
-  elements.actions.classList.toggle("actions--care-blocked", sleeping && alive);
+  if (elements.buttons.sleep) {
+    elements.buttons.sleep.disabled = !alive;
+    elements.buttons.sleep.removeAttribute("inert");
+    const label = elements.buttons.sleep.querySelector("span:last-child");
+    if (label) {
+      label.textContent = sleeping ? "깨우기" : "재우기";
+    }
+  }
 
-  elements.buttons.sleep.querySelector("span:last-child").textContent = sleeping
-    ? "깨우기"
-    : "재우기";
+  if (elements.actions) {
+    elements.actions.classList.toggle("actions--care-blocked", sleeping && alive);
+  }
+}
+
+/** Sleep toggle 직후 버튼·배경만 즉시 반영 */
+export function syncSleepControls(pet) {
+  if (!pet) return;
+  if (elements.petArea) {
+    elements.petArea.classList.toggle("pet-area--sleeping", pet.isSleeping);
+  }
+  updateButtons(pet);
 }
 
 function updateNewPetFab(pet) {

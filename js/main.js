@@ -25,6 +25,7 @@ import {
   getEnteredName,
   getElements,
   setGameActive,
+  syncSleepControls,
 } from "./ui.js";
 
 const OFFLINE_MESSAGE_MS = 30 * 60 * 1000;
@@ -217,6 +218,10 @@ function handleAction(actionFn, messageKey) {
 
   const changed = actionFn(pet);
   if (!changed) return;
+
+  if (messageKey === "sleep") {
+    syncSleepControls(pet);
+  }
 
   checkGameOver(pet);
   pet.lastUpdated = Date.now();
