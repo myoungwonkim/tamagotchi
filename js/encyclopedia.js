@@ -77,11 +77,12 @@ export function clearEncyclopedia() {
 }
 
 export function getEncyclopediaSlots() {
-  const collected = getCollectedVariantIds();
+  const data = loadEncyclopedia();
+  const collected = new Set(data.entries.map((e) => e.variantId));
   return ADULT_VARIANTS.map((variant) => ({
     variant,
     collected: collected.has(variant.id),
-    entries: loadEncyclopedia().entries.filter((e) => e.variantId === variant.id),
+    entries: data.entries.filter((e) => e.variantId === variant.id),
   }));
 }
 

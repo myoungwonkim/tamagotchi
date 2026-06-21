@@ -1,48 +1,62 @@
 import { clamp } from "./pet.js";
 
-const ACTION_COOLDOWN_MS = 1500;
+const ACTION_COOLDOWN_MS = 800;
+const SLEEP_TOGGLE_GUARD_MS = 50;
 
-let lastActionAt = 0;
+const lastActionAtByKey = {
+  feed: 0,
+  play: 0,
+  clean: 0,
+};
 
-export function canPerformAction(pet) {
-  if (!pet.isAlive) return false;
-  return Date.now() - lastActionAt >= ACTION_COOLDOWN_MS;
+let lastSleepToggleAt = 0;
+
+function canPerformAction(actionKey) {
+  return Date.now() - lastActionAtByKey[actionKey] >= ACTION_COOLDOWN_MS;
+}
+
+function markActionPerformed(actionKey) {
+  lastActionAtByKey[actionKey] = Date.now();
 }
 
 export function feed(pet) {
-  if (!canPerformAction(pet) || pet.isSleeping) return false;
+  if (!canPerformAction("feed") || pet.isSleeping) return false;
 
   pet.hunger = clamp(pet.hunger + 30);
   pet.cleanliness = clamp(pet.cleanliness - 5);
-  lastActionAt = Date.now();
+  markActionPerformed("feed");
   return true;
 }
 
 export function play(pet) {
-  if (!canPerformAction(pet) || pet.isSleeping) return false;
+  if (!canPerformAction("play") || pet.isSleeping) return false;
 
   pet.happiness = clamp(pet.happiness + 25);
   pet.hunger = clamp(pet.hunger - 10);
-  lastActionAt = Date.now();
+  markActionPerformed("play");
   return true;
 }
 
 export function clean(pet) {
-  if (!canPerformAction(pet) || pet.isSleeping) return false;
+  if (!canPerformAction("clean") || pet.isSleeping) return false;
 
   pet.cleanliness = clamp(pet.cleanliness + 40);
-  lastActionAt = Date.now();
+  markActionPerformed("clean");
   return true;
 }
 
 export function toggleSleep(pet) {
-  if (!canPerformAction(pet)) return false;
+  const now = Date.now();
+  if (now - lastSleepToggleAt < SLEEP_TOGGLE_GUARD_MS) return false;
 
+  lastSleepToggleAt = now;
   pet.isSleeping = !pet.isSleeping;
-  lastActionAt = Date.now();
   return true;
 }
 
 export function resetActionCooldown() {
-  lastActionAt = 0;
+  for (const key of Object.keys(lastActionAtByKey)) {
+    lastActionAtByKey[key] = 0;
+  }
+  lastSleepToggleAt = 0;
 }

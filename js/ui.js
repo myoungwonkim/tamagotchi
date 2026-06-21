@@ -177,11 +177,17 @@ function updateStat(key, value) {
 function updateButtons(pet) {
   const alive = pet.isAlive;
   const sleeping = pet.isSleeping;
+  const blockCare = !alive || sleeping;
 
-  elements.buttons.feed.disabled = !alive || sleeping;
-  elements.buttons.play.disabled = !alive || sleeping;
-  elements.buttons.clean.disabled = !alive || sleeping;
+  for (const key of ["feed", "play", "clean"]) {
+    const btn = elements.buttons[key];
+    btn.disabled = blockCare;
+    btn.toggleAttribute("inert", blockCare);
+  }
+
   elements.buttons.sleep.disabled = !alive;
+  elements.buttons.sleep.removeAttribute("inert");
+  elements.actions.classList.toggle("actions--care-blocked", sleeping && alive);
 
   elements.buttons.sleep.querySelector("span:last-child").textContent = sleeping
     ? "깨우기"
