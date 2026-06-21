@@ -56,6 +56,7 @@ export function addToEncyclopedia(pet) {
     variantId: variant.id,
     tier: variant.tier,
     emoji: variant.emoji,
+    spriteId: variant.spriteId,
     label: variant.label,
     achievedAt: Date.now(),
     careSnapshot: pet.adultCareSnapshot ?? null,

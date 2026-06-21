@@ -161,9 +161,25 @@ body {
 }
 
 .pet-evolution {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6rem;
+  min-height: 6rem;
+  transition: transform 0.2s ease;
+}
+
+.pet-evolution-img {
+  width: 6rem;
+  height: 6rem;
+  object-fit: contain;
+  display: block;
+}
+
+.pet-evolution-fallback,
+.pet-sprite-fallback {
   font-size: 6rem;
   line-height: 1;
-  transition: transform 0.2s ease;
 }
 
 .pet-evolution--bounce {
@@ -202,10 +218,23 @@ body {
 }
 
 .pet-mood-emoji {
-  font-size: 1.8rem;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 1;
+}
+
+.pet-mood-img {
+  width: 1.8rem;
+  height: 1.8rem;
+  object-fit: contain;
+  display: block;
+}
+
+.pet-mood-fallback {
+  font-size: 1.8rem;
+  line-height: 1;
 }
 
 .new-pet-fab {
@@ -411,6 +440,19 @@ body {
   line-height: 1.1;
 }
 
+.encyclopedia-card__graphic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.75rem;
+}
+
+.encyclopedia-card__img {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
 .encyclopedia-card__label {
   font-size: 0.625rem;
   font-weight: 700;
@@ -442,6 +484,25 @@ body {
 .overlay-emoji {
   font-size: 3rem;
   margin-bottom: 12px;
+}
+
+.overlay-graphic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  min-height: 3rem;
+}
+
+.overlay-graphic-img {
+  width: 3rem;
+  height: 3rem;
+  object-fit: contain;
+}
+
+.overlay-graphic-img--small {
+  width: 3rem;
+  height: 3rem;
 }
 
 .overlay-title {

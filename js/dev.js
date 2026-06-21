@@ -24,6 +24,7 @@ export function mountDevPanel(handlers) {
     { label: "성체 진화 (defective)", action: handlers.simulateAdultDefective },
     { label: "도감 초기화", action: handlers.clearEncyclopedia },
     { label: "idle 대사 강제", action: handlers.forceIdleDialogue },
+    { label: "스프라이트 on/off", action: handlers.toggleSprites },
   ];
 
   for (const test of tests) {

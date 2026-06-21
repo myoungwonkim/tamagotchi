@@ -10,6 +10,7 @@ import {
   resetDialogueTimer,
 } from "./dialogue.js";
 import { initAudio, playSfx, toggleMuted, updateMuteButton } from "./audio.js";
+import { isSpritesEnabled, toggleSpritesEnabled } from "./sprites.js";
 import {
   renderPet,
   showMessage,
@@ -20,6 +21,7 @@ import {
   showEncyclopedia,
   hideEncyclopedia,
   isMessageVisible,
+  refreshAllGraphics,
   getEnteredName,
   getElements,
   setGameActive,
@@ -407,6 +409,12 @@ function mountDevToolsIfEnabled() {
           const line = pickAdultLine(pet, context);
           if (line) showMessage(line, 5000);
         });
+      },
+
+      toggleSprites() {
+        const enabled = toggleSpritesEnabled();
+        refreshAllGraphics(pet);
+        showMessage(enabled ? "스프라이트 모드 켜짐" : "이모지 fallback 모드");
       },
     });
   });

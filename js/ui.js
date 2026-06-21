@@ -1,11 +1,20 @@
-import { getAgeDays, getEvolutionEmoji, getMoodEmoji, getGameOverReason } from "./pet.js";
+import { getAgeDays, getGameOverReason } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
-import { getEvolutionDisplayEmoji, getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
+import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
 import {
   getEncyclopediaSlots,
   getCollectedCount,
   formatAchievedDate,
 } from "./encyclopedia.js";
+import {
+  isSpritesEnabled,
+  getEvolutionSpriteMeta,
+  getMoodSpriteMeta,
+  getVariantSpriteMeta,
+  getUiSpriteMeta,
+  getStageSpriteMeta,
+  preloadSpritesForPet,
+} from "./sprites.js";
 import { playSfx } from "./audio.js";
 
 const elements = {
@@ -19,6 +28,7 @@ const elements = {
   message: document.getElementById("message"),
   actions: document.getElementById("actions"),
   gameOverOverlay: document.getElementById("game-over-overlay"),
+  gameOverGraphic: document.getElementById("game-over-graphic"),
   gameOverTitle: document.getElementById("game-over-title"),
   gameOverText: document.getElementById("game-over-text"),
   nameOverlay: document.getElementById("name-overlay"),
@@ -27,6 +37,7 @@ const elements = {
   encyclopediaGrid: document.getElementById("encyclopedia-grid"),
   encyclopediaCount: document.getElementById("encyclopedia-count"),
   graduateOverlay: document.getElementById("graduate-overlay"),
+  graduateGraphic: document.getElementById("graduate-graphic"),
   graduateText: document.getElementById("graduate-text"),
   newPetFab: document.getElementById("btn-new-pet-side"),
   bars: {
@@ -51,15 +62,7 @@ const elements = {
 
 let messageTimeout = null;
 let gameOverSoundNotified = false;
-
-function getDisplayEvolutionEmoji(pet) {
-  if (!pet.isAlive) return "👻";
-  const stage = getEvolutionStage(pet);
-  if (stage.id === "adult") {
-    return getEvolutionDisplayEmoji(pet);
-  }
-  return getEvolutionEmoji(pet);
-}
+let lastEvolutionKey = null;
 
 function getStageLabel(pet) {
   const stage = getEvolutionStage(pet);
@@ -69,27 +72,87 @@ function getStageLabel(pet) {
   return stage.label;
 }
 
+function applyEmojiFallback(container, emoji, className = "pet-sprite-fallback") {
+  container.innerHTML = "";
+  const span = document.createElement("span");
+  span.className = className;
+  span.textContent = emoji;
+  container.append(span);
+  return emoji;
+}
+
+export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img", sizeClass = "" } = {}) {
+  if (!container || !meta) return null;
+
+  if (!isSpritesEnabled()) {
+    return applyEmojiFallback(container, meta.fallbackEmoji, imgClass.includes("mood") ? "pet-mood-fallback" : "pet-evolution-fallback");
+  }
+
+  const currentKey = container.dataset.spriteKey;
+  const isNewKey = currentKey !== meta.key;
+
+  let img = container.querySelector("img.pet-sprite");
+  let fallback = container.querySelector(".pet-sprite-fallback");
+
+  if (!img) {
+    container.innerHTML = "";
+    img = document.createElement("img");
+    img.className = `pet-sprite ${imgClass}${sizeClass ? ` ${sizeClass}` : ""}`;
+    img.alt = meta.alt || "";
+    fallback = document.createElement("span");
+    fallback.className = imgClass.includes("mood") ? "pet-mood-fallback" : "pet-sprite-fallback";
+    fallback.hidden = true;
+    container.append(img, fallback);
+
+    img.addEventListener("error", () => {
+      img.hidden = true;
+      fallback.hidden = false;
+      fallback.textContent = meta.fallbackEmoji;
+    });
+  }
+
+  container.dataset.spriteKey = meta.key;
+
+  if (isNewKey || !img.getAttribute("src")?.endsWith(meta.src)) {
+    img.hidden = false;
+    fallback.hidden = true;
+    img.src = meta.src;
+    img.alt = meta.alt || "";
+  }
+
+  return meta.key;
+}
+
+function setOverlayGraphic(container, meta) {
+  if (!container) return;
+  setPetGraphic(container, meta, { imgClass: "overlay-graphic-img", sizeClass: "overlay-graphic-img--small" });
+}
+
 export function renderPet(pet) {
   elements.petName.textContent = pet.name;
   elements.petAge.textContent = `${getAgeDays(pet)}일째`;
   elements.petStage.textContent = getStageLabel(pet);
 
-  const evolutionEmoji = getDisplayEvolutionEmoji(pet);
-  const domEvolution = elements.petEvolution.textContent;
+  const evolutionMeta = getEvolutionSpriteMeta(pet);
+  const evolutionKey = setPetGraphic(elements.petEvolution, evolutionMeta, {
+    imgClass: "pet-evolution-img",
+  });
 
-  if (domEvolution !== evolutionEmoji) {
+  if (evolutionKey && evolutionKey !== lastEvolutionKey) {
     elements.petEvolution.classList.remove("pet-evolution--bounce");
     void elements.petEvolution.offsetWidth;
     elements.petEvolution.classList.add("pet-evolution--bounce");
+    lastEvolutionKey = evolutionKey;
   }
-  elements.petEvolution.textContent = evolutionEmoji;
 
-  const moodEmoji = getMoodEmoji(pet);
-  if (moodEmoji) {
+  const moodMeta = getMoodSpriteMeta(pet);
+  if (moodMeta) {
     elements.petMoodBubble.hidden = false;
-    elements.petMoodEmoji.textContent = moodEmoji;
+    setPetGraphic(elements.petMoodEmoji, moodMeta, { imgClass: "pet-mood-img" });
   } else {
     elements.petMoodBubble.hidden = true;
+    elements.petMoodEmoji.innerHTML = "";
+    delete elements.petMoodEmoji.dataset.spriteKey;
   }
 
   elements.petArea.classList.toggle("pet-area--sleeping", pet.isSleeping);
@@ -102,6 +165,7 @@ export function renderPet(pet) {
   updateButtons(pet);
   updateGameOver(pet);
   updateNewPetFab(pet);
+  preloadSpritesForPet(pet);
 }
 
 function updateStat(key, value) {
@@ -152,6 +216,11 @@ function updateGameOver(pet) {
     elements.gameOverText.textContent = "너무 오래 방치했어요. 다음엔 더 잘 돌봐줄 수 있을까요?";
   }
 
+  setOverlayGraphic(
+    elements.gameOverGraphic,
+    getUiSpriteMeta("heart-broken", "💔", "게임 오버"),
+  );
+
   elements.gameOverOverlay.hidden = false;
   elements.actions.hidden = true;
   if (elements.newPetFab) elements.newPetFab.hidden = true;
@@ -192,6 +261,10 @@ export function hideNameModal() {
 export function showGraduateModal(pet) {
   elements.graduateText.textContent =
     `지금 키우는 ${pet.name}은 도감에 남고, 새 알부터 시작할까요?`;
+  setOverlayGraphic(
+    elements.graduateGraphic,
+    getStageSpriteMeta("baby", "🐣", "새 펫"),
+  );
   elements.graduateOverlay.hidden = false;
 }
 
@@ -199,10 +272,25 @@ export function hideGraduateModal() {
   elements.graduateOverlay.hidden = true;
 }
 
+function createEncyclopediaGraphic(meta, locked = false) {
+  const wrap = document.createElement("div");
+  wrap.className = "encyclopedia-card__graphic";
+
+  if (locked) {
+    setPetGraphic(wrap, getUiSpriteMeta("locked", "❓", "미수집"), {
+      imgClass: "encyclopedia-card__img",
+    });
+    return wrap;
+  }
+
+  setPetGraphic(wrap, meta, { imgClass: "encyclopedia-card__img" });
+  return wrap;
+}
+
 export function renderEncyclopedia() {
   const slots = getEncyclopediaSlots();
   const collectedVariants = new Set(
-    slots.filter((s) => s.collected).map((s) => s.variant.id)
+    slots.filter((s) => s.collected).map((s) => s.variant.id),
   );
 
   elements.encyclopediaCount.textContent =
@@ -214,15 +302,15 @@ export function renderEncyclopedia() {
     const card = document.createElement("div");
     card.className = `encyclopedia-card${slot.collected ? "" : " encyclopedia-card--locked"}`;
 
-    const emoji = document.createElement("span");
-    emoji.className = "encyclopedia-card__emoji";
-    emoji.textContent = slot.collected ? slot.variant.emoji : "❓";
+    const graphic = slot.collected
+      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant))
+      : createEncyclopediaGraphic(null, true);
 
     const label = document.createElement("span");
     label.className = "encyclopedia-card__label";
     label.textContent = slot.collected ? slot.variant.label : "???";
 
-    card.append(emoji, label);
+    card.append(graphic, label);
 
     if (slot.collected && slot.entries[0]) {
       const entry = slot.entries[0];
@@ -263,8 +351,19 @@ export function hideEncyclopedia() {
 export function setGameActive(active) {
   elements.actions.hidden = !active;
   if (!active) {
-    elements.petEvolution.textContent = "🥚";
+    lastEvolutionKey = null;
+    setPetGraphic(
+      elements.petEvolution,
+      {
+        key: "egg",
+        src: "assets/sprites/evolution/egg.svg",
+        alt: "알",
+        fallbackEmoji: "🥚",
+      },
+      { imgClass: "pet-evolution-img" },
+    );
     elements.petMoodBubble.hidden = true;
+    elements.petMoodEmoji.innerHTML = "";
     elements.petName.textContent = "???";
     elements.petAge.textContent = "이름을 지어주세요";
     elements.petStage.textContent = "알";
@@ -273,6 +372,11 @@ export function setGameActive(active) {
       elements.buttons[key].disabled = true;
     });
   }
+}
+
+export function refreshAllGraphics(pet) {
+  if (pet) renderPet(pet);
+  renderEncyclopedia();
 }
 
 export function getEnteredName() {

@@ -28,7 +28,8 @@ function loadSettings() {
 
 function saveSettings() {
   try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify({ muted }));
+    const existing = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...existing, muted }));
   } catch {
     // ignore
   }

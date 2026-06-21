@@ -21,42 +21,50 @@
 - **음소거:** 헤더 🔊/🔇 토글 (`tamagotchi-settings` localStorage 저장)
 
 ### Phase 3 (이중 그래픽 + 성체 변형 + 도감)
-- **이중 그래픽:** 중앙에 진화 이모지(메인), 옆 말풍선에 무드 이모지(😊😐😢😴🤒)
-- **성체 변형:** 14일째 어른 진화 시 돌봄 수치로 tier 결정 (예쁜 / 보통 / 불량), tier 내 랜덤 3종
-- **성체 대사:** tier별 idle·돌봄 대사 (예쁜=긍정, 불량=부정)
-- **도감:** 성체 달성 시 자동 등록, 헤더 📖에서 9종 수집 현황 확인
-- **새 펫 FAB:** 성체 달성 후 화면 측면 버튼으로 도감 보존 + 새 알 시작
+- **이중 그래픽:** 중앙 진화 + 옆 말풍선 무드
+- **성체 변형:** tier 3종 × variant 3종 (총 9종)
+- **성체 대사:** tier별 idle·돌봄·수면(snoozing) 대사
+- **도감:** 성체 달성 시 등록, 📖 9종 수집
+- **새 펫 FAB:** 성체 후 새 알 시작
 
-## 진화 단계
+### Phase 4 (그래픽 업그레이드)
+- **SVG 스프라이트:** 진화·성체·무드·도감·오버레이 UI
+- **이중 fallback:** 이미지 로드 실패 또는 설정 off 시 이모지 표시
+- **preload:** 현재 펫·다음 진화·무드 5종 선로드
+- **dev 토글:** `?dev=1` → "스프라이트 on/off" (`tamagotchi-settings.useSprites`)
 
-| 단계 | 일수 | 이모지 | 이름 |
-|------|------|--------|------|
-| egg | 0 | 🥚 | 알 |
-| baby | 1–2 | 🐣 | 아기 |
-| child | 3–6 | 🐥 | 어린이 |
-| teen | 7–13 | 🐤 | 청소년 |
-| adult | 14+ | 변형별 | 어른 (9종) |
+## 스프라이트 구조
+
+```
+assets/sprites/
+  evolution/   egg baby child teen dead
+  adult/       golden fluffy sparkle standard farm plain scruffy grumpy sickly
+  mood/        happy neutral sad sleep sick
+  ui/          heart-broken locked
+```
+
+PNG로 교체할 때는 **같은 파일명**으로 `assets/sprites/` 아래 파일만 바꾸면 됩니다 (코드 변경 불필요).
 
 ## 그래픽 표시 규칙
 
-### 메인 (진화 그래픽)
+### 메인 (진화 스프라이트)
 
-| 조건 | 표시 |
-|------|------|
-| 게임 오버 | 👻 |
-| egg ~ teen | 해당 단계 이모지 (🥚🐣🐥🐤) |
-| adult | 성체 변형 이모지 (🐓 ✨🐔 🪶🐔 등) |
+| 조건 | 스프라이트 |
+|------|-----------|
+| 게임 오버 | `evolution/dead.svg` |
+| egg ~ teen | `evolution/{stage}.svg` |
+| adult | `adult/{variantId}.svg` |
 
-### 말풍선 (무드 그래픽)
+### 말풍선 (무드 스프라이트)
 
-| 조건 | 표시 |
-|------|------|
+| 조건 | 스프라이트 |
+|------|-----------|
 | 게임 오버 | 숨김 |
-| 수면 | 😴 |
-| 건강 < 30 | 🤒 |
-| minStat < 35 또는 avg < 40 | 😢 |
-| minStat < 55 또는 avg < 70 | 😐 |
-| 그 외 | 😊 |
+| 수면 | `mood/sleep.svg` |
+| 건강 < 30 | `mood/sick.svg` |
+| 슬픔/보통/좋음 | `mood/sad|neutral|happy.svg` |
+
+스프라이트 off 또는 로드 실패 시 Phase 3 이모지 fallback.
 
 ## 성체 변형 (tier)
 
@@ -65,8 +73,6 @@
 | pretty | 4 stat min ≥ 65, avg ≥ 72 | 예쁜 닭, 긍정 대사 |
 | normal | min ≥ 40, avg ≥ 50 | 보통 닭, 중립 대사 |
 | defective | 그 외 | 불량 닭, 부정 대사 |
-
-tier당 3종 variant (총 9종). `js/adultVariants.js` 참고.
 
 ## 효과음
 
@@ -97,7 +103,7 @@ python3 -m http.server 8080
 http://localhost:8080/?dev=1
 ```
 
-테스트 패널: 게임 오버, 오프라인, 나이 +1일, 진화, 성체 pretty/defective, 도감 초기화, idle 대사
+테스트 패널: 게임 오버, 오프라인, 나이 +1일, 진화, 성체 pretty/defective, 도감 초기화, idle 대사, **스프라이트 on/off**
 
 ## 모바일 테스트
 
@@ -107,15 +113,13 @@ http://localhost:8080/?dev=1
 
 ### 체크리스트
 
-- [ ] 메인 진화 이모지 + 말풍선 무드 이모지 동시 표시
-- [ ] 0일째 **알** 단계에서 메인 🥚, 말풍선은 상태에 따라 변경
-- [ ] 4개 돌봄 버튼 터치 + 각각 다른 소리
-- [ ] 🔊/🔇 음소거 토글 (새로고침 후 유지)
-- [ ] iOS: 첫 버튼 터치 후 소리 재생
-- [ ] `?dev=1` 성체 pretty/defective 진화 → 다른 이모지·대사
-- [ ] 성체 달성 시 도감 등록 + 📖 그리드 표시
-- [ ] 성체 FAB → 새 펫 시작 후 도감 유지
-- [ ] safe-area, 레이아웃, 오프라인 반영
+- [ ] 메인 진화 SVG + 말풍선 무드 SVG 동시 표시
+- [ ] `?dev=1` 스프라이트 off → 이모지 fallback
+- [ ] 진화 단계별 SVG 전환 (dev 나이 +1일)
+- [ ] 성체 pretty/defective → 다른 adult SVG
+- [ ] 도감 카드 SVG + 미수집 locked SVG
+- [ ] 게임 오버·졸업 오버레이 SVG
+- [ ] 🔊/🔇, safe-area, 오프라인 반영
 
 ## 밸런스
 
@@ -143,18 +147,20 @@ http://localhost:8080/?dev=1
 
 ```
 tamagotchi/
+  assets/sprites/   # SVG (PNG 교체 가능)
   index.html
   css/style.css
   js/
-    pet.js            # 펫 모델, decay, getEvolutionEmoji/getMoodEmoji
-    evolution.js      # 진화 단계, checkEvolution
-    adultVariants.js  # 성체 tier·variant, resolveAdultVariant
+    sprites.js        # 스프라이트 URL, preload, useSprites 설정
+    pet.js            # getMoodKind, decay
+    evolution.js      # 진화 단계 + spriteId
+    adultVariants.js  # 성체 variant + spriteId
     dialogue.js       # 성체 tier별 대사
     encyclopedia.js   # 도감 localStorage
     audio.js          # Web Audio SFX, 음소거
     actions.js        # 돌봄 버튼
     storage.js        # localStorage
-    ui.js             # 화면 갱신, 도감·FAB UI
+    ui.js             # setPetGraphic, 도감·FAB UI
     main.js           # 게임 루프
     dev.js            # ?dev=1 테스트 패널
 ```

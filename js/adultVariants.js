@@ -20,15 +20,15 @@ export const ADULT_TIERS = {
 };
 
 export const ADULT_VARIANTS = [
-  { id: "golden", tier: "pretty", emoji: "🐓", label: "황금 닭" },
-  { id: "fluffy", tier: "pretty", emoji: "✨🐔", label: "복슬 닭" },
-  { id: "sparkle", tier: "pretty", emoji: "🌟🐔", label: "반짝 닭" },
-  { id: "standard", tier: "normal", emoji: "🐔", label: "평범한 닭" },
-  { id: "farm", tier: "normal", emoji: "🐔‍🌾", label: "농장 닭" },
-  { id: "plain", tier: "normal", emoji: "🐔💤", label: "무난한 닭" },
-  { id: "scruffy", tier: "defective", emoji: "🪶🐔", label: "털 빠진 닭" },
-  { id: "grumpy", tier: "defective", emoji: "💢🐔", label: "심술 닭" },
-  { id: "sickly", tier: "defective", emoji: "🤕🐔", label: "병든 닭" },
+  { id: "golden", tier: "pretty", emoji: "🐓", spriteId: "golden", label: "황금 닭" },
+  { id: "fluffy", tier: "pretty", emoji: "✨🐔", spriteId: "fluffy", label: "복슬 닭" },
+  { id: "sparkle", tier: "pretty", emoji: "🌟🐔", spriteId: "sparkle", label: "반짝 닭" },
+  { id: "standard", tier: "normal", emoji: "🐔", spriteId: "standard", label: "평범한 닭" },
+  { id: "farm", tier: "normal", emoji: "🐔‍🌾", spriteId: "farm", label: "농장 닭" },
+  { id: "plain", tier: "normal", emoji: "🐔💤", spriteId: "plain", label: "무난한 닭" },
+  { id: "scruffy", tier: "defective", emoji: "🪶🐔", spriteId: "scruffy", label: "털 빠진 닭" },
+  { id: "grumpy", tier: "defective", emoji: "💢🐔", spriteId: "grumpy", label: "심술 닭" },
+  { id: "sickly", tier: "defective", emoji: "🤕🐔", spriteId: "sickly", label: "병든 닭" },
 ];
 
 const variantById = Object.fromEntries(ADULT_VARIANTS.map((v) => [v.id, v]));

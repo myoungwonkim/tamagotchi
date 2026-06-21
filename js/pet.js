@@ -44,16 +44,30 @@ export function getAverageCare(pet) {
   return (pet.hunger + pet.happiness + pet.cleanliness) / 3;
 }
 
-export function getMoodEmoji(pet) {
+export function getMoodKind(pet) {
   if (!pet.isAlive) return null;
-  if (pet.isSleeping) return "😴";
-  if (pet.health < 30) return "🤒";
+  if (pet.isSleeping) return "sleep";
+  if (pet.health < 30) return "sick";
 
   const avg = getAverageCare(pet);
   const minStat = Math.min(pet.hunger, pet.happiness, pet.cleanliness);
-  if (minStat < 35 || avg < 40) return "😢";
-  if (minStat < 55 || avg < 70) return "😐";
-  return "😊";
+  if (minStat < 35 || avg < 40) return "sad";
+  if (minStat < 55 || avg < 70) return "neutral";
+  return "happy";
+}
+
+export function getMoodEmoji(pet) {
+  const kind = getMoodKind(pet);
+  if (!kind) return null;
+
+  const map = {
+    sleep: "😴",
+    sick: "🤒",
+    sad: "😢",
+    neutral: "😐",
+    happy: "😊",
+  };
+  return map[kind];
 }
 
 export function getEvolutionEmoji(pet) {

@@ -1,11 +1,11 @@
 import { getAgeDays } from "./pet.js";
 
 export const EVOLUTION_STAGES = [
-  { id: "egg", minDays: 0, label: "알", baseEmoji: "🥚" },
-  { id: "baby", minDays: 1, label: "아기", baseEmoji: "🐣" },
-  { id: "child", minDays: 3, label: "어린이", baseEmoji: "🐥" },
-  { id: "teen", minDays: 7, label: "청소년", baseEmoji: "🐤" },
-  { id: "adult", minDays: 14, label: "어른", baseEmoji: "🐔" },
+  { id: "egg", minDays: 0, label: "알", baseEmoji: "🥚", spriteId: "egg" },
+  { id: "baby", minDays: 1, label: "아기", baseEmoji: "🐣", spriteId: "baby" },
+  { id: "child", minDays: 3, label: "어린이", baseEmoji: "🐥", spriteId: "child" },
+  { id: "teen", minDays: 7, label: "청소년", baseEmoji: "🐤", spriteId: "teen" },
+  { id: "adult", minDays: 14, label: "어른", baseEmoji: "🐔", spriteId: "adult" },
 ];
 
 export function getEvolutionStage(pet) {
