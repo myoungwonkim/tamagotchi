@@ -55,10 +55,21 @@ assets/sprites/
 PNG로 교체할 때:
 
 1. `assets/sprites/{category}/{id}.png` 로 **동일 파일명**만 추가 (예: `adult/golden.png`)
-2. `?dev=1` → **스프라이트 포맷 svg/png** 로 png 선택
+2. 로컬 서버 실행 후 `?dev=1` → **스프라이트 포맷 svg/png** 로 png 선택
 3. 로드 실패 시 이모지 fallback (스프라이트 on 상태에서도 img error 처리)
 
-코드 변경 없이 PNG만 drop-in 가능합니다.
+코드 변경 없이 PNG만 drop-in 가능합니다. 제작 체크리스트: **[docs/PNG-SPRITE-GUIDE.md](docs/PNG-SPRITE-GUIDE.md)**
+
+### PNG 보조 스크립트 (선택)
+
+수동 일러스트 전 **`scripts/svg_to_png.py`** 로 SVG placeholder를 PNG로 일괄 변환할 수 있습니다 (Pillow 필요).
+
+```bash
+pip3 install Pillow
+python3 scripts/svg_to_png.py assets/sprites/evolution/egg.svg -o assets/sprites/evolution/egg.png
+```
+
+픽셀아트 그리드 → PNG: **`scripts/pixel_sprite.py`** (레트로 스타일 실험용).
 
 ## 그래픽 표시 규칙
 

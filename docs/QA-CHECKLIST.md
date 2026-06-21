@@ -1,24 +1,24 @@
 # QA 체크리스트
 
 **배포 URL:** [https://myoungwonkim.github.io/tamagotchi/](https://myoungwonkim.github.io/tamagotchi/)  
-**검증 기준 커밋:** `fca2f30` (2026-06-21)  
+**검증 기준 커밋:** `68c4188` (Phase 5B, 2026-06-21)  
 **dev 모드:** `?dev=1` 붙여 접속
 
 ---
 
-## 자동 검증 결과 (2026-06-21)
+## 자동 검증 결과 (2026-06-21, `68c4188`)
 
 코드·배포 서버 기준으로 확인한 항목입니다. UI 동작은 아래 수동 체크리스트로 확인하세요.
 
-
-| 항목                     | 결과  | 근거                                                            |
-| ---------------------- | --- | ------------------------------------------------------------- |
-| GitHub Pages 배포        | ✅   | `js/ui.js` Last-Modified 2026-06-21, HTTP 200                 |
-| `renderPet` 크래시 수정 반영  | ✅   | 배포 `ui.js`에 `fallbackSelector`, `pet-mood-fallback` 포함        |
-| `syncSleepControls` 반영 | ✅   | 배포 `main.js`에 import·호출 2곳                                    |
-| 재우기 쿨다운 분리             | ✅   | 배포 `actions.js`에 `SLEEP_TOGGLE_GUARD_MS`, `lastActionAtByKey` |
-| SVG 에셋 21종             | ✅   | evolution 5 + adult 9 + mood 5 + ui 2, 배포 URL 200             |
-| safe-area CSS          | ✅   | `style.css`에 `env(safe-area-inset-*)` 정의                      |
+| 항목 | 결과 | 근거 |
+|------|------|------|
+| GitHub Pages 배포 | ✅ | `main` push 후 Pages 빌드 |
+| Phase 5B `effects.js` | ✅ | 진화·무드·idle·care FX |
+| `spriteFormat` svg/png | ✅ | `sprites.js` + dev F6 |
+| `renderPet` / sleep 수정 | ✅ | `fca2f30` 이후 유지 |
+| SVG 에셋 21종 | ✅ | `assets/sprites/` |
+| safe-area CSS | ✅ | `style.css` |
+| PNG 21종 | ⏳ | 수동 제작 — [PNG-SPRITE-GUIDE.md](PNG-SPRITE-GUIDE.md) |
 
 
 ---
