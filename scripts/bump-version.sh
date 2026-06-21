@@ -14,15 +14,21 @@ index = Path("$INDEX")
 text = index.read_text()
 v = "$V"
 
+def sub_meta(match):
+    return f'{match.group(1)}{v}{match.group(2)}'
+
+def sub_css(match):
+    return f'{match.group(1)}{v}{match.group(2)}'
+
 text = re.sub(
     r'(<meta name="app-version" content=")[^"]*(")',
-    rf"\1{v}\2",
+    sub_meta,
     text,
     count=1,
 )
 text = re.sub(
     r'(href="css/style\.css\?v=)[^"]*(")',
-    rf"\1{v}\2",
+    sub_css,
     text,
     count=1,
 )
