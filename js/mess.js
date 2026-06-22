@@ -45,9 +45,15 @@ function getMessSpriteUrl(id) {
   return v ? `${base}?v=${v}&${bust}` : `${base}?${bust}`;
 }
 
-export function getMessCount(cleanliness) {
+export function getMessCount(cleanliness, stageId) {
+  if (stageId === "egg") return 0;
   if (cleanliness >= MESS_THRESHOLD) return 0;
   return Math.min(MAX_MESS, Math.ceil((MESS_THRESHOLD - cleanliness) / MESS_STEP));
+}
+
+function getMessStageId(anchorRootEl) {
+  const display = anchorRootEl?.closest(".pet-display");
+  return display?.dataset.stage || anchorRootEl?.getAttribute("data-stage") || "baby";
 }
 
 function resolveMessAnchor(anchorRootEl) {
@@ -304,7 +310,7 @@ function appendMessItem(layerEl, index, anchorRootEl) {
 export function syncMessLayer(layerEl, cleanliness, anchorRootEl) {
   if (!layerEl) return;
 
-  const target = getMessCount(cleanliness);
+  const target = getMessCount(cleanliness, getMessStageId(anchorRootEl));
   let items = [...layerEl.querySelectorAll(".mess-item:not(.mess-item--remove)")];
 
   if (target > 0 && items.some(needsMessSpriteUpgrade)) {
