@@ -21,19 +21,21 @@ echo
 echo "[assets]"
 PNG_COUNT=$(find assets/sprites -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
 SVG_COUNT=$(find assets/sprites -name '*.svg' 2>/dev/null | wc -l | tr -d ' ')
-if [ "$PNG_COUNT" -eq 23 ]; then ok "23 PNG sprites"; else bad "PNG count=$PNG_COUNT (expected 23)"; fi
+if [ "$PNG_COUNT" -eq 28 ]; then ok "28 PNG sprites"; else bad "PNG count=$PNG_COUNT (expected 28)"; fi
 if [ "$SVG_COUNT" -eq 0 ]; then ok "no legacy SVG (png-only)"; else warn "SVG count=$SVG_COUNT (legacy)"; fi
 
 for cat in evolution adult mood ui; do
   if [ -d "assets/sprites/$cat" ]; then ok "dir assets/sprites/$cat"; else bad "missing assets/sprites/$cat"; fi
 done
-for id in poop fly; do
+for id in poop fly feed play clean sleep wake; do
   if [ -f "assets/sprites/ui/$id.png" ]; then ok "ui sprite $id.png"; else bad "missing assets/sprites/ui/$id.png"; fi
 done
 
 # --- HTML / cache ---
 echo "[html]"
 grep -q 'name="app-version"' index.html && ok 'app-version meta' || bad 'app-version meta'
+grep -q 'action-label' index.html && ok 'action pixel labels' || bad 'action pixel labels'
+grep -q 'action-icon' index.html && ok 'action sprite icons' || bad 'action sprite icons'
 grep -q 'care-fx' index.html && ok '#care-fx layer' || bad '#care-fx layer'
 grep -q 'style.css?v=' index.html && ok 'css cache query' || bad 'css cache query'
 grep -q 'import(`./js/main.js?v=' index.html && ok 'js dynamic import cache' || bad 'js dynamic import'
@@ -59,7 +61,7 @@ PY
 
 # --- CSS ---
 echo "[css]"
-for cls in pet-area--sleeping evolvePop moodFade careFloat idleBob prefers-reduced-motion new-pet-fab actions--care-blocked; do
+for cls in pet-area--sleeping evolvePop moodFade careFloat idleBob prefers-reduced-motion new-pet-fab actions--care-blocked action-label action-icon; do
   if rg -q "$cls" css/style.css 2>/dev/null; then ok "css: $cls"; else bad "css missing: $cls"; fi
 done
 

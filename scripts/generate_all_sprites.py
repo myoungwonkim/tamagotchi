@@ -600,6 +600,119 @@ def sprite_fly():
     return g
 
 
+def sprite_action_feed():
+    """Red apple — feed."""
+    g = blank()
+    RED = (229, 57, 53, 255)
+    RED2 = (198, 40, 40, 255)
+    LEAF = (102, 187, 106, 255)
+    LEAF2 = (76, 175, 80, 255)
+    fill_circle(g, 16, 18, 8, RED, K)
+    fill_circle(g, 15, 19, 6, RED2)
+    px(g, 13, 14, RED2)
+    px(g, 18, 13, WHITE)
+    draw_line(g, 16, 8, 16, 11, (109, 76, 65, 255))
+    draw_line(g, 16, 9, 19, 7, LEAF2)
+    draw_poly(g, [(17, 7), (21, 6), (20, 9), (17, 9)], LEAF, K)
+    px(g, 20, 7, LEAF2)
+    return g
+
+
+def sprite_action_play():
+    """Tennis ball — play."""
+    g = blank()
+    BALL = (196, 214, 52, 255)
+    BALL_D = (164, 181, 36, 255)
+    SEAM = (250, 250, 250, 255)
+    fill_circle(g, 16, 16, 9, BALL, K)
+    fill_circle(g, 17, 17, 6, BALL_D)
+    draw_line(g, 10, 10, 12, 13, SEAM)
+    draw_line(g, 12, 13, 14, 16, SEAM)
+    draw_line(g, 14, 16, 15, 19, SEAM)
+    draw_line(g, 15, 19, 16, 23, SEAM)
+    draw_line(g, 22, 10, 20, 13, SEAM)
+    draw_line(g, 20, 13, 18, 16, SEAM)
+    draw_line(g, 18, 16, 17, 19, SEAM)
+    draw_line(g, 17, 19, 16, 23, SEAM)
+    px(g, 13, 12, WHITE)
+    return g
+
+
+def sprite_action_clean():
+    """Straw broom — clean (side view)."""
+    g = blank()
+    WOOD = (141, 110, 99, 255)
+    WOOD_D = (109, 76, 65, 255)
+    BRISTLE = (255, 213, 79, 255)
+    BRISTLE_D = (255, 193, 7, 255)
+    METAL = (158, 158, 158, 255)
+
+    for y in range(5, 21):
+        px(g, 20, y, WOOD_D)
+        px(g, 21, y, WOOD)
+    px(g, 20, 6, WHITE)
+
+    draw_line(g, 17, 19, 23, 19, METAL)
+    draw_line(g, 17, 20, 23, 20, K)
+
+    draw_poly(g, [(6, 21), (24, 21), (23, 25), (7, 25)], BRISTLE, K)
+    for x in range(8, 23):
+        if x % 2 == 0:
+            draw_line(g, x, 25, x, 29, BRISTLE_D)
+        px(g, x, 29, K)
+    return g
+
+
+def sprite_action_sleep():
+    """Thin crescent moon — sleep."""
+    g = blank()
+    MOON = (255, 241, 118, 255)
+    MOON2 = (255, 213, 79, 255)
+    fill_circle(g, 14, 16, 8, MOON, K)
+    fill_circle(g, 17, 14, 7, (0, 0, 0, 0))
+    for y in range(SIZE):
+        for x in range(SIZE):
+            if g[y][x][:3] == MOON[:3]:
+                if x < 12:
+                    px(g, x, y, MOON2)
+    px(g, 11, 13, WHITE)
+    px(g, 12, 12, MOON2)
+    return g
+
+
+def sprite_action_wake():
+    """Sun — wake."""
+    g = blank()
+    SUN = (255, 241, 118, 255)
+    SUN2 = (255, 213, 79, 255)
+    RAY = (255, 193, 7, 255)
+    fill_circle(g, 16, 16, 6, SUN, K)
+    fill_circle(g, 16, 17, 4, SUN2)
+    px(g, 14, 14, WHITE)
+    rays = (
+        (16, 5), (16, 27), (5, 16), (27, 16),
+        (9, 9), (23, 9), (9, 23), (23, 23),
+    )
+    for x, y in rays:
+        px(g, x, y, RAY)
+        if x == 16:
+            px(g, x, y + (1 if y < 16 else -1), K)
+        elif y == 16:
+            px(g, x + (1 if x < 16 else -1), y, K)
+    for x, y in ((10, 10), (22, 10), (10, 22), (22, 22)):
+        px(g, x, y, K)
+    return g
+
+
+ACTION_SPRITES = {
+    "feed": sprite_action_feed,
+    "play": sprite_action_play,
+    "clean": sprite_action_clean,
+    "sleep": sprite_action_sleep,
+    "wake": sprite_action_wake,
+}
+
+
 SPRITES = {
     "evolution/egg": sprite_egg,
     "evolution/baby": sprite_baby,
@@ -624,6 +737,11 @@ SPRITES = {
     "ui/locked": sprite_locked,
     "ui/poop": sprite_poop,
     "ui/fly": sprite_fly,
+    "ui/feed": sprite_action_feed,
+    "ui/play": sprite_action_play,
+    "ui/clean": sprite_action_clean,
+    "ui/sleep": sprite_action_sleep,
+    "ui/wake": sprite_action_wake,
 }
 
 
@@ -668,7 +786,7 @@ if __name__ == "__main__":
     staging = root / "assets/sprites" if install else root / ".sprite-staging-deepsea"
     build_all(staging)
     if not install:
-        sheet = build_sheet(staging, staging / "_preview-sheet.png", title="Deep Sea Fish — 23 sprites")
+        sheet = build_sheet(staging, staging / "_preview-sheet.png", title="Deep Sea Fish — 28 sprites")
         changed = ["evolution/dead", "mood/happy", "mood/sleep", "mood/sick", "ui/heart-broken"]
         cols, cell, pad = 5, 160, 12
         title_h = 24

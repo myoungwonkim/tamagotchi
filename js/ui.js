@@ -253,6 +253,38 @@ function updateStat(key, value) {
   elements.values[key].textContent = String(rounded);
 }
 
+const ACTION_ICON_META = {
+  feed: ["feed", "🍎", "먹이"],
+  play: ["play", "🎾", "놀이"],
+  clean: ["clean", "🧹", "청소"],
+};
+
+function setActionButtonIcon(btn, spriteId, fallbackEmoji, alt) {
+  if (!btn) return;
+  const icon = btn.querySelector(".action-icon");
+  if (!icon) return;
+  const meta = getUiSpriteMeta(spriteId, fallbackEmoji, alt);
+  if (!spriteSrcMatches(icon.src, meta.src)) {
+    icon.src = meta.src;
+    icon.alt = meta.alt;
+  }
+}
+
+function updateActionIcons(pet) {
+  const sleeping = pet.isSleeping;
+  for (const [key, [id, emoji, alt]] of Object.entries(ACTION_ICON_META)) {
+    setActionButtonIcon(elements.buttons[key], id, emoji, alt);
+  }
+  if (elements.buttons.sleep) {
+    setActionButtonIcon(
+      elements.buttons.sleep,
+      sleeping ? "wake" : "sleep",
+      sleeping ? "☀️" : "🌙",
+      sleeping ? "깨우기" : "재우기",
+    );
+  }
+}
+
 function updateButtons(pet) {
   const alive = pet.isAlive;
   const sleeping = pet.isSleeping;
@@ -268,11 +300,13 @@ function updateButtons(pet) {
   if (elements.buttons.sleep) {
     elements.buttons.sleep.disabled = !alive;
     elements.buttons.sleep.removeAttribute("inert");
-    const label = elements.buttons.sleep.querySelector("span:last-child");
+    const label = elements.buttons.sleep.querySelector(".action-label");
     if (label) {
       label.textContent = sleeping ? "깨우기" : "재우기";
     }
   }
+
+  updateActionIcons(pet);
 
   if (elements.actions) {
     elements.actions.classList.toggle("actions--care-blocked", sleeping && alive);

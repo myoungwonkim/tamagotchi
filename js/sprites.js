@@ -166,7 +166,7 @@ export function preloadSpritesForPet(pet) {
     preloadSpriteMeta({ src: getSpriteUrl("mood", kind) });
   }
 
-  for (const id of ["poop", "fly"]) {
+  for (const id of ["poop", "fly", "feed", "play", "clean", "sleep", "wake"]) {
     const base = `${SPRITE_BASE}/ui/${id}.png`;
     const v = getAppVersion();
     preloadSpriteMeta({ src: v ? `${base}?v=${v}` : base });

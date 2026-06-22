@@ -6,6 +6,14 @@
   padding: 0;
 }
 
+@font-face {
+  font-family: "Galmuri11Bold";
+  src: url("../assets/fonts/Galmuri11-Bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #fef6e4;
   --surface: #ffffff;
@@ -541,22 +549,24 @@ img.pet-sprite[hidden] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   min-height: 72px;
   min-width: 44px;
-  padding: 12px;
+  padding: 12px 8px;
   border: none;
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--text);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition: transform 0.1s ease, opacity 0.2s ease;
 }
+
+.action-btn--feed { background: #fff3e6; }
+.action-btn--play { background: #fde8f0; }
+.action-btn--clean { background: #e8f7fb; }
+.action-btn--sleep { background: #e8eef8; }
 
 .action-btn:active:not(:disabled) {
   transform: scale(0.96);
@@ -568,10 +578,10 @@ img.pet-sprite[hidden] {
   pointer-events: none;
 }
 
-.action-btn--feed:active:not(:disabled) { background: #fff3e6; }
-.action-btn--play:active:not(:disabled) { background: #fde8f0; }
-.action-btn--clean:active:not(:disabled) { background: #e8f7fb; }
-.action-btn--sleep:active:not(:disabled) { background: #e8eef8; }
+.action-btn--feed:active:not(:disabled) { background: #ffe8cc; }
+.action-btn--play:active:not(:disabled) { background: #fcdae8; }
+.action-btn--clean:active:not(:disabled) { background: #d4eef6; }
+.action-btn--sleep:active:not(:disabled) { background: #d8e0f0; }
 
 .action-btn--sleep {
   position: relative;
@@ -579,7 +589,30 @@ img.pet-sprite[hidden] {
 }
 
 .action-icon {
-  font-size: 1.5rem;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+}
+
+.action-label {
+  font-family: "Galmuri11Bold", monospace;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--text);
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  text-shadow:
+    -1px -1px 0 #fff,
+     0    -1px 0 #fff,
+     1px -1px 0 #fff,
+    -1px  0    0 #fff,
+     1px  0    0 #fff,
+    -1px  1px 0 #fff,
+     0     1px 0 #fff,
+     1px  1px 0 #fff;
 }
 
 .overlay {
