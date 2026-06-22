@@ -146,17 +146,92 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   min-height: clamp(260px, 42dvh, 400px);
   padding: 12px 8px;
+  overflow: hidden;
   transition: background 0.6s ease, box-shadow 0.6s ease;
 }
 
 .pet-area--sleeping {
   background: linear-gradient(165deg, #e8eef8 0%, #d4dce8 100%);
   box-shadow: inset 0 0 24px rgba(100, 120, 160, 0.12);
+}
+
+.mess-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  overflow: visible;
+}
+
+.mess-item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2.2rem, 10vw, 3rem);
+  line-height: 1;
+  transform: translate(-50%, -50%) rotate(var(--mess-rotate, 0deg));
+  filter: drop-shadow(0 1px 2px rgba(45, 42, 38, 0.15));
+  user-select: none;
+}
+
+.mess-item__img {
+  width: clamp(2.7rem, 12vw, 3.7rem);
+  height: clamp(2.7rem, 12vw, 3.7rem);
+  object-fit: contain;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.mess-item__img[hidden],
+.mess-item__fallback[hidden] {
+  display: none;
+}
+
+.mess-item__fallback {
+  font-size: inherit;
+  line-height: 1;
+}
+
+.mess-item--appear {
+  animation: messPop 0.35s ease;
+}
+
+.mess-item--remove {
+  animation: messFade 0.3s ease forwards;
+}
+
+@keyframes messPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--mess-rotate, 0deg)) scale(0.3);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--mess-rotate, 0deg)) scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--mess-rotate, 0deg)) scale(1);
+  }
+}
+
+@keyframes messFade {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--mess-rotate, 0deg)) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--mess-rotate, 0deg)) scale(0.4);
+  }
 }
 
 .pet-display {
@@ -167,6 +242,7 @@ body {
   width: min(100%, var(--sprite-evolution-size));
   min-height: var(--sprite-evolution-size);
   overflow: visible;
+  z-index: 2;
   transition:
     width 0.45s ease,
     min-height 0.45s ease,
@@ -204,6 +280,8 @@ body {
 }
 
 .pet-evolution {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -726,7 +804,9 @@ img.pet-sprite[hidden] {
   .pet-evolution--variant-defective,
   .pet-evolution--evolving,
   .pet-mood-bubble--changing,
-  .care-fx__particle {
+  .care-fx__particle,
+  .mess-item--appear,
+  .mess-item--remove {
     animation: none !important;
   }
 

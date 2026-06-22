@@ -22,6 +22,7 @@ import {
   applyIdleClasses,
 } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
+import { syncMessLayer, scheduleMessLayer, clearMessLayer } from "./mess.js";
 
 const elements = {
   petName: document.getElementById("pet-name"),
@@ -31,6 +32,7 @@ const elements = {
   petMoodBubble: document.getElementById("pet-mood-bubble"),
   petMoodEmoji: document.getElementById("pet-mood-emoji"),
   petArea: document.getElementById("pet-area"),
+  messLayer: document.getElementById("mess-layer"),
   message: document.getElementById("message"),
   actions: document.getElementById("actions"),
   gameOverOverlay: document.getElementById("game-over-overlay"),
@@ -227,6 +229,12 @@ export function renderPet(pet) {
 
   elements.petArea.classList.toggle("pet-area--sleeping", pet.isSleeping);
   applyIdleClasses(elements.petEvolution, pet);
+
+  if (pet.isAlive) {
+    scheduleMessLayer(elements.messLayer, pet.cleanliness, elements.petEvolution);
+  } else {
+    clearMessLayer(elements.messLayer);
+  }
 
   updateStat("hunger", pet.hunger);
   updateStat("happiness", pet.happiness);
@@ -445,6 +453,7 @@ export function setGameActive(active) {
   elements.actions.hidden = !active;
   if (!active) {
     lastEvolutionKey = null;
+    clearMessLayer(elements.messLayer);
     const displayEl = elements.petEvolution?.closest(".pet-display");
     elements.petEvolution?.setAttribute("data-stage", "egg");
     displayEl?.setAttribute("data-stage", "egg");

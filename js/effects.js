@@ -84,7 +84,7 @@ export function applyIdleClasses(el, pet) {
 const CARE_PARTICLES = {
   feed: ["🍎", "🥕", "🍞"],
   play: ["⭐", "🎾", "✨"],
-  clean: ["✨", "💧", "🫧"],
+  clean: ["🧹", "✨", "💨"],
 };
 
 let activeCareFx = 0;

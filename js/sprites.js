@@ -165,6 +165,12 @@ export function preloadSpritesForPet(pet) {
   for (const kind of ["happy", "neutral", "sad", "sleep", "sick"]) {
     preloadSpriteMeta({ src: getSpriteUrl("mood", kind) });
   }
+
+  for (const id of ["poop", "fly"]) {
+    const base = `${SPRITE_BASE}/ui/${id}.png`;
+    const v = getAppVersion();
+    preloadSpriteMeta({ src: v ? `${base}?v=${v}` : base });
+  }
 }
 
 export function getFallbackEvolutionEmoji(pet) {

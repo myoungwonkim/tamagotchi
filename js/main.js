@@ -411,14 +411,14 @@ function mountDevToolsIfEnabled() {
       },
 
       forceIdleDialogue() {
-        if (!pet?.adultVariantId) {
-          showMessage("성체가 아니에요.");
+        if (!pet?.isAlive) {
+          showMessage("펫이 없어요.");
           return;
         }
-        import("./dialogue.js").then(({ pickAdultLine }) => {
-          const context = pet.isSleeping ? "snoozing" : "idle";
-          const line = pickAdultLine(pet, context);
+        import("./dialogue.js").then(({ pickIdleLine }) => {
+          const line = pickIdleLine(pet);
           if (line) showMessage(line, 5000);
+          else showMessage("지금은 대사가 없어요.");
         });
       },
 

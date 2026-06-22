@@ -21,11 +21,14 @@ echo
 echo "[assets]"
 PNG_COUNT=$(find assets/sprites -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
 SVG_COUNT=$(find assets/sprites -name '*.svg' 2>/dev/null | wc -l | tr -d ' ')
-if [ "$PNG_COUNT" -eq 21 ]; then ok "21 PNG sprites"; else bad "PNG count=$PNG_COUNT (expected 21)"; fi
+if [ "$PNG_COUNT" -eq 23 ]; then ok "23 PNG sprites"; else bad "PNG count=$PNG_COUNT (expected 23)"; fi
 if [ "$SVG_COUNT" -eq 0 ]; then ok "no legacy SVG (png-only)"; else warn "SVG count=$SVG_COUNT (legacy)"; fi
 
 for cat in evolution adult mood ui; do
   if [ -d "assets/sprites/$cat" ]; then ok "dir assets/sprites/$cat"; else bad "missing assets/sprites/$cat"; fi
+done
+for id in poop fly; do
+  if [ -f "assets/sprites/ui/$id.png" ]; then ok "ui sprite $id.png"; else bad "missing assets/sprites/ui/$id.png"; fi
 done
 
 # --- HTML / cache ---
@@ -43,6 +46,7 @@ done
 rg -q 'SLEEP_TOGGLE_GUARD_MS' js/actions.js && ok 'sleep toggle guard' || bad 'sleep toggle guard'
 rg -q 'lastActionAtByKey' js/actions.js && ok 'per-action cooldown' || bad 'per-action cooldown'
 rg -q 'pet-mood-fallback' js/ui.js && ok 'mood fallback selector' || bad 'mood fallback selector'
+rg -q 'syncMessLayer' js/mess.js js/ui.js && ok 'mess layer sync' || bad 'mess layer sync'
 
 DEFAULT_PNG=$(python3 - <<'PY'
 import re
