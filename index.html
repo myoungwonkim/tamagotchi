@@ -125,6 +125,25 @@
     </div>
   </div>
 
+  <script>
+    (function injectJsImportMap() {
+      const v = document.querySelector('meta[name="app-version"]')?.content || "";
+      const scope = new URL("js/", document.baseURI).href;
+      const files = [
+        "pet.js", "actions.js", "storage.js", "evolution.js", "adultVariants.js",
+        "encyclopedia.js", "dialogue.js", "audio.js", "sprites.js", "effects.js",
+        "korean.js", "ui.js", "mess.js", "dev.js", "main.js",
+      ];
+      const scoped = {};
+      for (const file of files) {
+        scoped[`./${file}`] = `./${file}?v=${encodeURIComponent(v)}`;
+      }
+      const el = document.createElement("script");
+      el.type = "importmap";
+      el.textContent = JSON.stringify({ scopes: { [scope]: scoped } });
+      document.head.appendChild(el);
+    })();
+  </script>
   <script type="module">
     const v = document.querySelector('meta[name="app-version"]')?.content || "";
     await import(`./js/main.js?v=${v}`);
