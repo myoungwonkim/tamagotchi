@@ -233,6 +233,7 @@ function handleAction(actionFn, messageKey) {
 
   if (messageKey === "sleep") {
     playSfx(pet.isSleeping ? "sleep" : "wake");
+    playCareEffect(pet.isSleeping ? "sleep" : "wake", document.getElementById("pet-area"));
     resetDialogueTimer();
   } else {
     playSfx(messageKey);

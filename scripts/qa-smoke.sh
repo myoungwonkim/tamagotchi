@@ -34,7 +34,7 @@ done
 # --- HTML / cache ---
 echo "[html]"
 grep -q 'name="app-version"' index.html && ok 'app-version meta' || bad 'app-version meta'
-grep -q 'action-label' index.html && ok 'action pixel labels' || bad 'action pixel labels'
+grep -q 'action-label' index.html && ok 'action button labels' || bad 'action button labels'
 grep -q 'action-icon' index.html && ok 'action sprite icons' || bad 'action sprite icons'
 grep -q 'care-fx' index.html && ok '#care-fx layer' || bad '#care-fx layer'
 grep -q 'style.css?v=' index.html && ok 'css cache query' || bad 'css cache query'
@@ -61,7 +61,7 @@ PY
 
 # --- CSS ---
 echo "[css]"
-for cls in pet-area--sleeping evolvePop moodFade careFloat idleBob prefers-reduced-motion new-pet-fab actions--care-blocked action-label action-icon; do
+for cls in pet-area--sleeping evolvePop moodFade careFxFeed idleBob prefers-reduced-motion new-pet-fab actions--care-blocked action-label action-icon; do
   if rg -q "$cls" css/style.css 2>/dev/null; then ok "css: $cls"; else bad "css missing: $cls"; fi
 done
 

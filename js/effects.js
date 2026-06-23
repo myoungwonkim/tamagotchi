@@ -1,5 +1,6 @@
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant } from "./adultVariants.js";
+import { getUiSpriteMeta } from "./sprites.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -81,38 +82,205 @@ export function applyIdleClasses(el, pet) {
   }
 }
 
-const CARE_PARTICLES = {
-  feed: ["🍎", "🥕", "🍞"],
-  play: ["⭐", "🎾", "✨"],
-  clean: ["🧹", "✨", "💨"],
+const CARE_EDGE_GAP_CM = 0.45;
+const CM_TO_PX_FALLBACK = 96 / 2.54;
+const PARTICLE_HALF_FALLBACK_PX = 18;
+
+let cmProbe;
+
+const CARE_FALLBACK = {
+  feed: "🍎",
+  play: "🎾",
+  clean: "🧹",
+  sleep: "🌙",
+  wake: "☀️",
+};
+
+/** Orbit angles (0° = right, clockwise) — pet 가장자리 밖 */
+const CARE_ORBITS = {
+  feed: [125, 55, 145, 35],
+  play: [175, 5, 195, 350, 20, 340],
+  clean: [95, 85, 265, 275, 110, 250],
+  sleep: [240, 300, 120, 60],
+  wake: [270, 250, 290, 230, 310],
+};
+
+const CARE_SPARKLES = {
+  feed: ["#ff9f43", "#ff6b6b", "#ffd93d"],
+  play: ["#f582ae", "#ffd93d", "#88c4dc"],
+  clean: ["#58c4dc", "#fff9c4", "#b2ebf2"],
+  sleep: ["#b39ddb", "#e1bee7", "#c5cae9"],
+  wake: ["#ffd54f", "#ffeb3b", "#ff9800"],
 };
 
 let activeCareFx = 0;
-const MAX_CARE_FX = 5;
+const MAX_CARE_FX = 12;
+
+function cmToPx(cm) {
+  if (!cmProbe) {
+    cmProbe = document.createElement("div");
+    cmProbe.style.cssText =
+      "position:absolute;visibility:hidden;width:1cm;height:1cm;pointer-events:none";
+    document.body.append(cmProbe);
+  }
+  const unit = cmProbe.getBoundingClientRect().width;
+  return (unit > 0 ? unit : CM_TO_PX_FALLBACK) * cm;
+}
+
+function resolvePetAnchor(petArea) {
+  const root = petArea?.querySelector("#pet-evolution");
+  if (!root) return null;
+
+  const img = root.querySelector("img.pet-evolution-img:not([hidden])");
+  if (img) {
+    const rect = img.getBoundingClientRect();
+    if (rect.width > 1 && rect.height > 1) return img;
+  }
+
+  const fallback = root.querySelector(
+    ".pet-evolution-fallback, .pet-sprite-fallback:not([hidden])",
+  );
+  if (fallback) {
+    const rect = fallback.getBoundingClientRect();
+    if (rect.width > 1 && rect.height > 1) return fallback;
+  }
+
+  const rootRect = root.getBoundingClientRect();
+  return rootRect.width > 1 && rootRect.height > 1 ? root : null;
+}
+
+function orbitPoint(angleDeg, anchorEl, layerEl, particleHalf) {
+  const anchor = anchorEl.getBoundingClientRect();
+  const layer = layerEl.getBoundingClientRect();
+  if (anchor.width < 1 || layer.width < 1) return null;
+
+  const cx = anchor.left + anchor.width / 2 - layer.left;
+  const cy = anchor.top + anchor.height / 2 - layer.top;
+  const anchorHalf = Math.max(anchor.width, anchor.height) / 2;
+  const radius = anchorHalf + particleHalf + cmToPx(CARE_EDGE_GAP_CM);
+  const rad = (angleDeg * Math.PI) / 180;
+
+  const pad = particleHalf + 6;
+  const x = Math.min(Math.max(cx + Math.cos(rad) * radius, pad), layer.width - pad);
+  const y = Math.min(Math.max(cy + Math.sin(rad) * radius, pad), layer.height - pad);
+
+  return { x, y, cx, cy };
+}
+
+function createCareParticle(actionKey, spriteId, angleDeg, anchorEl, layerEl, index) {
+  const meta = getUiSpriteMeta(spriteId, CARE_FALLBACK[spriteId] ?? "✨", actionKey);
+  const particle = document.createElement("span");
+  particle.className = `care-fx__particle care-fx__particle--${actionKey}`;
+  particle.style.animationDelay = `${index * 0.07}s`;
+
+  const img = document.createElement("img");
+  img.className = "care-fx__img";
+  img.alt = "";
+  img.decoding = "async";
+  img.src = meta.src;
+
+  const fallback = document.createElement("span");
+  fallback.className = "care-fx__fallback";
+  fallback.textContent = meta.fallbackEmoji;
+  fallback.hidden = true;
+
+  img.onerror = () => {
+    img.hidden = true;
+    fallback.hidden = false;
+  };
+  img.onload = () => {
+    img.hidden = false;
+    fallback.hidden = true;
+    positionParticle(particle, angleDeg, anchorEl, layerEl);
+  };
+
+  particle.append(img, fallback);
+  layerEl.append(particle);
+
+  if (img.complete && img.naturalWidth > 0) {
+    img.onload();
+  } else if (img.complete) {
+    img.onerror();
+  } else {
+    positionParticle(particle, angleDeg, anchorEl, layerEl);
+  }
+
+  return particle;
+}
+
+function positionParticle(particle, angleDeg, anchorEl, layerEl) {
+  const half = particle.getBoundingClientRect().width / 2 || PARTICLE_HALF_FALLBACK_PX;
+  const point = orbitPoint(angleDeg, anchorEl, layerEl, half);
+  if (!point) return;
+
+  particle.style.left = `${point.x}px`;
+  particle.style.top = `${point.y}px`;
+
+  const driftX = point.x - point.cx;
+  particle.style.setProperty("--care-drift-x", `${Math.max(-24, Math.min(24, driftX * 0.35))}px`);
+  particle.style.setProperty("--care-bounce-dir", driftX < 0 ? "-1" : "1");
+  particle.style.setProperty("--care-orbit-angle", `${angleDeg}deg`);
+}
+
+function createSparkles(actionKey, anchorEl, layerEl, count) {
+  const colors = CARE_SPARKLES[actionKey] ?? CARE_SPARKLES.play;
+  for (let i = 0; i < count; i += 1) {
+    const angle = CARE_ORBITS[actionKey][i % CARE_ORBITS[actionKey].length] + (i * 17) % 24;
+    const sparkle = document.createElement("span");
+    sparkle.className = `care-fx__spark care-fx__spark--${actionKey}`;
+    sparkle.style.animationDelay = `${i * 0.05}s`;
+    sparkle.style.background = colors[i % colors.length];
+    layerEl.append(sparkle);
+
+    const half = 4;
+    const point = orbitPoint(angle, anchorEl, layerEl, half);
+    if (!point) {
+      sparkle.remove();
+      continue;
+    }
+    sparkle.style.left = `${point.x}px`;
+    sparkle.style.top = `${point.y}px`;
+    const outwardX = (point.x - point.cx) * 0.5;
+    const outwardY = (point.y - point.cy) * 0.5;
+    sparkle.style.setProperty("--care-spark-x", `${outwardX}px`);
+    sparkle.style.setProperty("--care-spark-y", `${outwardY}px`);
+  }
+}
 
 export function playCareEffect(actionKey, containerEl) {
-  const layer =
-    containerEl?.querySelector("#care-fx") ?? document.getElementById("care-fx");
-  if (!layer || !CARE_PARTICLES[actionKey]) return;
+  const petArea = containerEl ?? document.getElementById("pet-area");
+  const layer = petArea?.querySelector("#care-fx") ?? document.getElementById("care-fx");
+  const orbits = CARE_ORBITS[actionKey];
+  if (!layer || !orbits) return;
   if (activeCareFx >= MAX_CARE_FX) return;
 
-  const particles = CARE_PARTICLES[actionKey];
-  const count = 3 + Math.floor(Math.random() * 2);
+  const anchor = resolvePetAnchor(petArea);
+  if (!anchor) return;
 
-  for (let i = 0; i < count; i += 1) {
+  const reduced = prefersReducedMotion();
+  const particleCount = reduced ? 2 : Math.min(orbits.length, actionKey === "play" ? 5 : 4);
+  const sparkleCount = reduced ? 0 : actionKey === "clean" || actionKey === "wake" ? 6 : 3;
+
+  for (let i = 0; i < particleCount; i += 1) {
     activeCareFx += 1;
-    const span = document.createElement("span");
-    span.className = "care-fx__particle";
-    span.textContent = particles[i % particles.length];
-    span.style.left = `${35 + Math.random() * 30}%`;
-    span.style.animationDelay = `${i * 0.08}s`;
-    layer.append(span);
+    const angle = orbits[i % orbits.length];
+    const particle = createCareParticle(actionKey, actionKey, angle, anchor, layer, i);
 
     const cleanup = () => {
-      span.remove();
+      particle.remove();
       activeCareFx = Math.max(0, activeCareFx - 1);
     };
-    span.addEventListener("animationend", cleanup, { once: true });
-    setTimeout(cleanup, prefersReducedMotion() ? 100 : 700);
+    particle.addEventListener("animationend", cleanup, { once: true });
+    setTimeout(cleanup, reduced ? 120 : 900);
+  }
+
+  if (sparkleCount > 0) {
+    createSparkles(actionKey, anchor, layer, sparkleCount);
+    const sparks = layer.querySelectorAll(`.care-fx__spark--${actionKey}`);
+    sparks.forEach((sparkle, i) => {
+      const cleanup = () => sparkle.remove();
+      sparkle.addEventListener("animationend", cleanup, { once: true });
+      setTimeout(cleanup, reduced ? 120 : 700 + i * 40);
+    });
   }
 }

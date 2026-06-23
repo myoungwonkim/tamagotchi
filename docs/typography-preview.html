@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>텍스트 스타일 후보 비교</title>
+  <style>
+    @font-face {
+      font-family: "Galmuri11Bold";
+      src: url("../assets/fonts/Galmuri11-Bold.woff2") format("woff2");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #fef6e4;
+      --surface: #ffffff;
+      --text: #2d2a26;
+      --text-muted: #6b6560;
+      --accent: #f582ae;
+      --accent-dark: #e05a8a;
+      --shadow: 0 4px 20px rgba(45, 42, 38, 0.08);
+      --radius: 16px;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      --pixel: "Galmuri11Bold", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: #e8e4dc;
+      color: var(--text);
+      padding: 24px 16px 48px;
+      line-height: 1.4;
+    }
+
+    h1.page-title {
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    p.page-desc {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .candidate {
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 16px;
+      border: 2px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    .candidate:hover {
+      border-color: var(--accent);
+    }
+
+    .candidate__badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--accent-dark);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .candidate__name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .candidate__summary {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      min-height: 2.6em;
+    }
+
+    .mock {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .mock--pet-area {
+      background: var(--surface);
+      min-height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .mock-header { text-align: center; margin-bottom: 10px; }
+    .mock-message {
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(245, 130, 174, 0.12);
+      margin-bottom: 10px;
+    }
+
+    .mock-stat {
+      display: grid;
+      grid-template-columns: 48px 1fr 28px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .mock-stat-bar {
+      height: 10px;
+      background: #eee8df;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .mock-stat-fill {
+      height: 100%;
+      width: 70%;
+      background: #f582ae;
+      border-radius: 5px;
+    }
+
+    .mock-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mock-action {
+      background: #fde8f0;
+      border-radius: 12px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+
+    .mock-action-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .mock-modal {
+      background: #faf7f2;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    /* ── A: Full Pixel ── */
+    .style-a, .style-a .mock { font-family: var(--pixel); }
+    .style-a .t-xl { font-size: 20px; line-height: 1.25; }
+    .style-a .t-lg { font-size: 16px; line-height: 1.3; }
+    .style-a .t-md { font-size: 14px; line-height: 1.35; }
+    .style-a .t-sm { font-size: 12px; line-height: 1.35; }
+    .style-a .t-xs { font-size: 10px; line-height: 1.3; }
+    .style-a .w-bold { font-weight: normal; }
+    .style-a .c-muted { color: var(--text-muted); }
+    .style-a .c-accent { color: var(--accent-dark); }
+    .style-a .action-label {
+      text-shadow: -1px -1px 0 #fff, 0 -1px 0 #fff, 1px -1px 0 #fff,
+        -1px 0 0 #fff, 1px 0 0 #fff, -1px 1px 0 #fff, 0 1px 0 #fff, 1px 1px 0 #fff;
+    }
+
+    /* ── B: Hybrid ── */
+    .style-b .pixel { font-family: var(--pixel); }
+    .style-b .sans { font-family: var(--sans); }
+    .style-b .t-xl { font-size: 1.25rem; line-height: 1.2; }
+    .style-b .t-lg { font-size: 1rem; line-height: 1.35; }
+    .style-b .t-md { font-size: 0.875rem; line-height: 1.4; }
+    .style-b .t-sm { font-size: 0.75rem; line-height: 1.35; }
+    .style-b .t-xs { font-size: 0.6875rem; line-height: 1.3; }
+    .style-b .w-bold { font-weight: 700; }
+    .style-b .w-semi { font-weight: 600; }
+    .style-b .c-muted { color: var(--text-muted); }
+    .style-b .c-accent { color: var(--accent-dark); }
+    .style-b .action-label.pixel {
+      text-shadow: -1px -1px 0 #fff, 0 -1px 0 #fff, 1px -1px 0 #fff,
+        -1px 0 0 #fff, 1px 0 0 #fff, -1px 1px 0 #fff, 0 1px 0 #fff, 1px 1px 0 #fff;
+    }
+
+    /* ── C: Scale only (current fonts) ── */
+    .style-c .sans { font-family: var(--sans); }
+    .style-c .pixel { font-family: var(--pixel); }
+    .style-c .t-xl { font-size: 1.25rem; line-height: 1.2; font-weight: 700; }
+    .style-c .t-lg { font-size: 1rem; line-height: 1.35; font-weight: 600; }
+    .style-c .t-md { font-size: 0.875rem; line-height: 1.4; font-weight: 600; }
+    .style-c .t-sm { font-size: 0.75rem; line-height: 1.35; font-weight: 600; }
+    .style-c .t-xs { font-size: 0.6875rem; line-height: 1.3; font-weight: 400; }
+    .style-c .c-muted { color: var(--text-muted); }
+    .style-c .c-accent { color: var(--accent-dark); }
+    .style-c .action-label.pixel {
+      font-size: 0.9375rem;
+      text-shadow: -1px -1px 0 #fff, 0 -1px 0 #fff, 1px -1px 0 #fff,
+        -1px 0 0 #fff, 1px 0 0 #fff, -1px 1px 0 #fff, 0 1px 0 #fff, 1px 1px 0 #fff;
+    }
+
+    /* ── D: Modern clean ── */
+    .style-d, .style-d .mock { font-family: var(--sans); }
+    .style-d .t-xl { font-size: 1.25rem; line-height: 1.2; font-weight: 700; }
+    .style-d .t-lg { font-size: 1rem; line-height: 1.4; font-weight: 600; }
+    .style-d .t-md { font-size: 0.875rem; line-height: 1.45; font-weight: 500; }
+    .style-d .t-sm { font-size: 0.8125rem; line-height: 1.4; font-weight: 500; }
+    .style-d .t-xs { font-size: 0.75rem; line-height: 1.35; font-weight: 400; }
+    .style-d .c-muted { color: var(--text-muted); }
+    .style-d .c-accent { color: var(--accent-dark); font-weight: 600; }
+    .style-d .action-label { font-weight: 600; }
+
+    .legend {
+      max-width: 1200px;
+      margin: 28px auto 0;
+      padding: 16px;
+      background: var(--surface);
+      border-radius: 12px;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .legend strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">텍스트 스타일 후보 비교</h1>
+  <p class="page-desc">실제 게임 색상·Galmuri11 Bold 폰트로 각 후보를 미리 봅니다. 마음에 드는 후보를 알려주세요.</p>
+
+  <div class="grid">
+    <!-- A -->
+    <section class="candidate style-a">
+      <span class="candidate__badge">후보 A</span>
+      <h2 class="candidate__name">풀 픽셀</h2>
+      <p class="candidate__summary">모든 UI 텍스트에 Galmuri. 레트로 다마고치 느낌 최대.</p>
+
+      <div class="mock-header">
+        <div class="t-xl w-bold">치치</div>
+        <div class="t-md c-muted">3일째</div>
+        <div class="t-sm c-accent w-bold">청소년</div>
+      </div>
+      <div class="mock mock-message t-md c-accent">요즘 바다 분위기 괜찮네.</div>
+      <div class="mock">
+        <div class="mock-stat t-sm">
+          <span class="c-muted w-bold">행복</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill"></div></div>
+          <span class="c-muted w-bold">70</span>
+        </div>
+        <div class="mock-stat t-sm">
+          <span class="c-muted w-bold">청결</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill" style="width:45%;background:#58c4dc"></div></div>
+          <span class="c-muted w-bold">45</span>
+        </div>
+      </div>
+      <div class="mock-actions">
+        <div class="mock-action">
+          <div class="mock-action-icon">🎾</div>
+          <div class="t-md action-label w-bold">놀이</div>
+        </div>
+        <div class="mock-action">
+          <div class="mock-action-icon">🧹</div>
+          <div class="t-md action-label w-bold">청소</div>
+        </div>
+      </div>
+      <div class="mock mock-modal" style="margin-top:10px">
+        <div class="t-lg w-bold" style="margin-bottom:6px">펫 이름 짓기</div>
+        <div class="t-sm c-muted">새로운 친구의 이름을 지어주세요!</div>
+      </div>
+    </section>
+
+    <!-- B -->
+    <section class="candidate style-b">
+      <span class="candidate__badge">후보 B · 추천</span>
+      <h2 class="candidate__name">픽셀 + UI 하이브리드</h2>
+      <p class="candidate__summary">짧은 라벨은 Galmuri, 긴 문장은 sans. 가독성과 감성 균형.</p>
+
+      <div class="mock-header">
+        <div class="t-xl w-bold pixel">치치</div>
+        <div class="t-md c-muted sans">3일째</div>
+        <div class="t-sm c-accent w-semi pixel">청소년</div>
+      </div>
+      <div class="mock mock-message t-md c-accent sans">요즘 바다 분위기 괜찮네.</div>
+      <div class="mock">
+        <div class="mock-stat t-sm">
+          <span class="c-muted w-semi pixel">행복</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill"></div></div>
+          <span class="c-muted w-semi sans">70</span>
+        </div>
+        <div class="mock-stat t-sm">
+          <span class="c-muted w-semi pixel">청결</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill" style="width:45%;background:#58c4dc"></div></div>
+          <span class="c-muted w-semi sans">45</span>
+        </div>
+      </div>
+      <div class="mock-actions">
+        <div class="mock-action">
+          <div class="mock-action-icon">🎾</div>
+          <div class="t-md action-label pixel w-bold">놀이</div>
+        </div>
+        <div class="mock-action">
+          <div class="mock-action-icon">🧹</div>
+          <div class="t-md action-label pixel w-bold">청소</div>
+        </div>
+      </div>
+      <div class="mock mock-modal" style="margin-top:10px">
+        <div class="t-lg w-bold pixel" style="margin-bottom:6px">펫 이름 짓기</div>
+        <div class="t-sm c-muted sans">새로운 친구의 이름을 지어주세요!</div>
+      </div>
+    </section>
+
+    <!-- C -->
+    <section class="candidate style-c">
+      <span class="candidate__badge">후보 C</span>
+      <h2 class="candidate__name">스케일만 통일</h2>
+      <p class="candidate__summary">폰트 구성은 지금과 같고, 크기·굵기만 정리.</p>
+
+      <div class="mock-header sans">
+        <div class="t-xl">치치</div>
+        <div class="t-md c-muted">3일째</div>
+        <div class="t-sm c-accent">청소년</div>
+      </div>
+      <div class="mock mock-message t-md c-accent sans">요즘 바다 분위기 괜찮네.</div>
+      <div class="mock sans">
+        <div class="mock-stat t-sm">
+          <span class="c-muted">행복</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill"></div></div>
+          <span class="c-muted">70</span>
+        </div>
+        <div class="mock-stat t-sm">
+          <span class="c-muted">청결</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill" style="width:45%;background:#58c4dc"></div></div>
+          <span class="c-muted">45</span>
+        </div>
+      </div>
+      <div class="mock-actions">
+        <div class="mock-action">
+          <div class="mock-action-icon">🎾</div>
+          <div class="action-label pixel">놀이</div>
+        </div>
+        <div class="mock-action">
+          <div class="mock-action-icon">🧹</div>
+          <div class="action-label pixel">청소</div>
+        </div>
+      </div>
+      <div class="mock mock-modal sans" style="margin-top:10px">
+        <div class="t-lg" style="margin-bottom:6px">펫 이름 짓기</div>
+        <div class="t-sm c-muted">새로운 친구의 이름을 지어주세요!</div>
+      </div>
+    </section>
+
+    <!-- D -->
+    <section class="candidate style-d">
+      <span class="candidate__badge">후보 D</span>
+      <h2 class="candidate__name">모던 클린</h2>
+      <p class="candidate__summary">전부 시스템 sans. 픽셀 외곽선 제거, 앱 UI 스타일.</p>
+
+      <div class="mock-header">
+        <div class="t-xl">치치</div>
+        <div class="t-sm c-muted">3일째</div>
+        <div class="t-sm c-accent">청소년</div>
+      </div>
+      <div class="mock mock-message t-md c-accent">요즘 바다 분위기 괜찮네.</div>
+      <div class="mock">
+        <div class="mock-stat t-sm">
+          <span class="c-muted">행복</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill"></div></div>
+          <span class="c-muted">70</span>
+        </div>
+        <div class="mock-stat t-sm">
+          <span class="c-muted">청결</span>
+          <div class="mock-stat-bar"><div class="mock-stat-fill" style="width:45%;background:#58c4dc"></div></div>
+          <span class="c-muted">45</span>
+        </div>
+      </div>
+      <div class="mock-actions">
+        <div class="mock-action">
+          <div class="mock-action-icon">🎾</div>
+          <div class="t-sm action-label">놀이</div>
+        </div>
+        <div class="mock-action">
+          <div class="mock-action-icon">🧹</div>
+          <div class="t-sm action-label">청소</div>
+        </div>
+      </div>
+      <div class="mock mock-modal" style="margin-top:10px">
+        <div class="t-lg" style="margin-bottom:6px">펫 이름 짓기</div>
+        <div class="t-md c-muted">새로운 친구의 이름을 지어주세요!</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="legend">
+    <strong>비교 요소:</strong> 펫 이름 · 나이/단계 · idle 메시지 · 스탯 라벨/숫자 · 액션 버튼 · 모달 제목/본문<br>
+    <strong>선택 방법:</strong> 채팅에 <strong>A / B / C / D</strong> 또는 조합(예: "B인데 메시지도 픽셀")을 알려주세요.
+  </div>
+</body>
+</html>
