@@ -96,25 +96,17 @@ const CARE_FALLBACK = {
   wake: "☀️",
 };
 
-/** Orbit angles (0° = right, clockwise) — pet 가장자리 밖 */
-const CARE_ORBITS = {
-  feed: [125, 55, 145, 35],
-  play: [175, 5, 195, 350, 20, 340],
-  clean: [95, 85, 265, 275, 110, 250],
-  sleep: [240, 300, 120, 60],
-  wake: [270, 250, 290, 230, 310],
-};
-
-const CARE_SPARKLES = {
-  feed: ["#ff9f43", "#ff6b6b", "#ffd93d"],
-  play: ["#f582ae", "#ffd93d", "#88c4dc"],
-  clean: ["#58c4dc", "#fff9c4", "#b2ebf2"],
-  sleep: ["#b39ddb", "#e1bee7", "#c5cae9"],
-  wake: ["#ffd54f", "#ffeb3b", "#ff9800"],
+/** Orbit angle (0° = right, clockwise; 90° = down) — pet 가장자리 밖 */
+const CARE_ORBIT_ANGLE = {
+  feed: 315,
+  play: 350,
+  clean: 200,
+  sleep: 240,
+  wake: 270,
 };
 
 let activeCareFx = 0;
-const MAX_CARE_FX = 12;
+const MAX_CARE_FX = 3;
 
 function cmToPx(cm) {
   if (!cmProbe) {
@@ -167,11 +159,10 @@ function orbitPoint(angleDeg, anchorEl, layerEl, particleHalf) {
   return { x, y, cx, cy };
 }
 
-function createCareParticle(actionKey, spriteId, angleDeg, anchorEl, layerEl, index) {
+function createCareParticle(actionKey, spriteId, angleDeg, anchorEl, layerEl) {
   const meta = getUiSpriteMeta(spriteId, CARE_FALLBACK[spriteId] ?? "✨", actionKey);
   const particle = document.createElement("span");
   particle.className = `care-fx__particle care-fx__particle--${actionKey}`;
-  particle.style.animationDelay = `${index * 0.07}s`;
 
   const img = document.createElement("img");
   img.className = "care-fx__img";
@@ -222,65 +213,24 @@ function positionParticle(particle, angleDeg, anchorEl, layerEl) {
   particle.style.setProperty("--care-orbit-angle", `${angleDeg}deg`);
 }
 
-function createSparkles(actionKey, anchorEl, layerEl, count) {
-  const colors = CARE_SPARKLES[actionKey] ?? CARE_SPARKLES.play;
-  for (let i = 0; i < count; i += 1) {
-    const angle = CARE_ORBITS[actionKey][i % CARE_ORBITS[actionKey].length] + (i * 17) % 24;
-    const sparkle = document.createElement("span");
-    sparkle.className = `care-fx__spark care-fx__spark--${actionKey}`;
-    sparkle.style.animationDelay = `${i * 0.05}s`;
-    sparkle.style.background = colors[i % colors.length];
-    layerEl.append(sparkle);
-
-    const half = 4;
-    const point = orbitPoint(angle, anchorEl, layerEl, half);
-    if (!point) {
-      sparkle.remove();
-      continue;
-    }
-    sparkle.style.left = `${point.x}px`;
-    sparkle.style.top = `${point.y}px`;
-    const outwardX = (point.x - point.cx) * 0.5;
-    const outwardY = (point.y - point.cy) * 0.5;
-    sparkle.style.setProperty("--care-spark-x", `${outwardX}px`);
-    sparkle.style.setProperty("--care-spark-y", `${outwardY}px`);
-  }
-}
-
 export function playCareEffect(actionKey, containerEl) {
   const petArea = containerEl ?? document.getElementById("pet-area");
   const layer = petArea?.querySelector("#care-fx") ?? document.getElementById("care-fx");
-  const orbits = CARE_ORBITS[actionKey];
-  if (!layer || !orbits) return;
+  const angle = CARE_ORBIT_ANGLE[actionKey];
+  if (!layer || angle == null) return;
   if (activeCareFx >= MAX_CARE_FX) return;
 
   const anchor = resolvePetAnchor(petArea);
   if (!anchor) return;
 
   const reduced = prefersReducedMotion();
-  const particleCount = reduced ? 2 : Math.min(orbits.length, actionKey === "play" ? 5 : 4);
-  const sparkleCount = reduced ? 0 : actionKey === "clean" || actionKey === "wake" ? 6 : 3;
+  activeCareFx += 1;
+  const particle = createCareParticle(actionKey, actionKey, angle, anchor, layer);
 
-  for (let i = 0; i < particleCount; i += 1) {
-    activeCareFx += 1;
-    const angle = orbits[i % orbits.length];
-    const particle = createCareParticle(actionKey, actionKey, angle, anchor, layer, i);
-
-    const cleanup = () => {
-      particle.remove();
-      activeCareFx = Math.max(0, activeCareFx - 1);
-    };
-    particle.addEventListener("animationend", cleanup, { once: true });
-    setTimeout(cleanup, reduced ? 120 : 900);
-  }
-
-  if (sparkleCount > 0) {
-    createSparkles(actionKey, anchor, layer, sparkleCount);
-    const sparks = layer.querySelectorAll(`.care-fx__spark--${actionKey}`);
-    sparks.forEach((sparkle, i) => {
-      const cleanup = () => sparkle.remove();
-      sparkle.addEventListener("animationend", cleanup, { once: true });
-      setTimeout(cleanup, reduced ? 120 : 700 + i * 40);
-    });
-  }
+  const cleanup = () => {
+    particle.remove();
+    activeCareFx = Math.max(0, activeCareFx - 1);
+  };
+  particle.addEventListener("animationend", cleanup, { once: true });
+  setTimeout(cleanup, reduced ? 120 : 900);
 }
