@@ -553,50 +553,29 @@ def sprite_locked():
 
 
 def sprite_poop():
-    """Comic pixel poop pile — tank grime."""
+    """Simple pixel poop — single mound."""
     g = blank()
     POOP = (141, 110, 99, 255)
     POOP2 = (109, 76, 65, 255)
-    POOP3 = (161, 136, 127, 255)
-    STINK = (156, 204, 101, 255)
-    fill_ellipse(g, 16, 23, 8, 4, POOP, K)
-    fill_ellipse(g, 15, 18, 6, 4, POOP2, K)
-    fill_ellipse(g, 14, 13, 5, 3, POOP3, K)
-    px(g, 12, 12, POOP3)
-    px(g, 16, 11, POOP3)
-    for x, y in ((11, 21), (18, 22), (14, 24)):
-        px(g, x, y, POOP2)
-    for x0, y0, x1, y1 in ((9, 9, 8, 7), (11, 8, 10, 6), (13, 7, 12, 5)):
-        draw_line(g, x0, y0, x1, y1, K)
-        px(g, x1, y1, STINK)
-    px(g, 20, 9, K)
-    px(g, 21, 8, STINK)
-    px(g, 22, 7, K)
+    fill_ellipse(g, 16, 18, 7, 5, POOP, K)
+    fill_ellipse(g, 15, 19, 4, 3, POOP2)
+    px(g, 13, 16, WHITE)
     return g
 
 
 def sprite_fly():
-    """Comic buzzing fly — big googly eyes."""
+    """Simple pixel fly — X wings."""
     g = blank()
     WING = (144, 202, 249, 255)
-    WING2 = (100, 181, 246, 255)
     BODY = (69, 90, 100, 255)
-    draw_poly(g, [(8, 14), (14, 10), (16, 16)], WING, K)
-    draw_poly(g, [(24, 14), (18, 10), (16, 16)], WING, K)
-    px(g, 10, 12, WING2)
-    px(g, 22, 12, WING2)
-    fill_ellipse(g, 16, 17, 3, 4, BODY, K)
-    draw_line(g, 14, 21, 13, 24, K)
-    draw_line(g, 16, 21, 16, 25, K)
-    draw_line(g, 18, 21, 19, 24, K)
-    fill_circle(g, 12, 14, 4, WHITE, K)
-    fill_circle(g, 20, 14, 4, WHITE, K)
-    fill_circle(g, 12, 14, 2, K, None)
-    fill_circle(g, 20, 14, 2, K, None)
-    px(g, 13, 13, WHITE)
-    px(g, 21, 13, WHITE)
-    for x, y in ((6, 16), (7, 15), (25, 16), (26, 15)):
-        px(g, x, y, K)
+    draw_line(g, 8, 14, 15, 17, WING)
+    draw_line(g, 8, 18, 15, 17, WING)
+    draw_line(g, 24, 14, 17, 17, WING)
+    draw_line(g, 24, 18, 17, 17, WING)
+    px(g, 9, 15, K)
+    px(g, 23, 15, K)
+    fill_ellipse(g, 16, 17, 2, 3, BODY, K)
+    px(g, 16, 16, WHITE)
     return g
 
 
