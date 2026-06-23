@@ -38,6 +38,7 @@ grep -q 'action-label' index.html && ok 'action button labels' || bad 'action bu
 grep -q 'action-icon' index.html && ok 'action sprite icons' || bad 'action sprite icons'
 grep -q 'care-fx' index.html && ok '#care-fx layer' || bad '#care-fx layer'
 grep -q 'id="pet-area"' index.html && rg -q 'id="message"' index.html && ok 'message in pet-area' || bad 'message in pet-area'
+grep -q 'encyclopedia-detail' index.html && ok 'encyclopedia detail panel' || bad 'encyclopedia detail panel'
 grep -q 'style.css?v=' index.html && ok 'css cache query' || bad 'css cache query'
 grep -q 'import(`./js/main.js?v=' index.html && ok 'js dynamic import cache' || bad 'js dynamic import'
 grep -q 'injectJsImportMap' index.html && ok 'js importmap cache bust' || bad 'js importmap cache bust'
@@ -47,6 +48,7 @@ echo "[js]"
 for sym in syncSleepControls playCareEffect playEvolutionTransition playMoodTransition applyIdleClasses getSpriteFormat; do
   if rg -q "$sym" js/ 2>/dev/null; then ok "$sym"; else bad "missing $sym"; fi
 done
+rg -q 'getVariantDescription' js/encyclopedia.js && ok 'encyclopedia descriptions' || bad 'encyclopedia descriptions'
 rg -q 'SLEEP_TOGGLE_GUARD_MS' js/actions.js && ok 'sleep toggle guard' || bad 'sleep toggle guard'
 rg -q 'lastActionAtByKey' js/actions.js && ok 'per-action cooldown' || bad 'per-action cooldown'
 rg -q 'pet-mood-fallback' js/ui.js && ok 'mood fallback selector' || bad 'mood fallback selector'

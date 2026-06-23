@@ -4,7 +4,7 @@ import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
 import {
   getEncyclopediaSlots,
   getCollectedCount,
-  formatAchievedDate,
+  getVariantDescription,
 } from "./encyclopedia.js";
 import {
   isSpritesEnabled,
@@ -44,6 +44,10 @@ const elements = {
   encyclopediaOverlay: document.getElementById("encyclopedia-overlay"),
   encyclopediaGrid: document.getElementById("encyclopedia-grid"),
   encyclopediaCount: document.getElementById("encyclopedia-count"),
+  encyclopediaDetail: document.getElementById("encyclopedia-detail"),
+  encyclopediaDetailGraphic: document.getElementById("encyclopedia-detail-graphic"),
+  encyclopediaDetailName: document.getElementById("encyclopedia-detail-name"),
+  encyclopediaDetailDesc: document.getElementById("encyclopedia-detail-desc"),
   graduateOverlay: document.getElementById("graduate-overlay"),
   graduateGraphic: document.getElementById("graduate-graphic"),
   graduateText: document.getElementById("graduate-text"),
@@ -422,7 +426,30 @@ function createEncyclopediaGraphic(meta, locked = false) {
   return wrap;
 }
 
+function hideEncyclopediaDetail() {
+  elements.encyclopediaDetail.hidden = true;
+  elements.encyclopediaGrid.hidden = false;
+}
+
+function showEncyclopediaDetail(variant, entry) {
+  elements.encyclopediaDetailGraphic.innerHTML = "";
+  setPetGraphic(
+    elements.encyclopediaDetailGraphic,
+    getVariantSpriteMeta(variant),
+    { imgClass: "encyclopedia-detail__img encyclopedia-card__img" },
+  );
+
+  const petName = entry.petName?.trim() || "이름 없음";
+  elements.encyclopediaDetailName.textContent = petName;
+  elements.encyclopediaDetailDesc.textContent = getVariantDescription(variant.id, petName);
+
+  elements.encyclopediaGrid.hidden = true;
+  elements.encyclopediaDetail.hidden = false;
+}
+
 export function renderEncyclopedia() {
+  hideEncyclopediaDetail();
+
   const slots = getEncyclopediaSlots();
   const collectedVariants = new Set(
     slots.filter((s) => s.collected).map((s) => s.variant.id),
@@ -435,39 +462,34 @@ export function renderEncyclopedia() {
 
   for (const slot of slots) {
     const card = document.createElement("div");
-    card.className = `encyclopedia-card${slot.collected ? "" : " encyclopedia-card--locked"}`;
+    card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
 
     const graphic = slot.collected
       ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant))
       : createEncyclopediaGraphic(null, true);
 
-    const label = document.createElement("span");
-    label.className = "encyclopedia-card__label";
-    label.textContent = slot.collected ? slot.variant.label : "???";
+    const name = document.createElement("span");
+    name.className = "encyclopedia-card__name";
+    name.textContent = slot.collected && slot.entries[0]
+      ? slot.entries[0].petName?.trim() || "이름 없음"
+      : "???";
 
-    card.append(graphic, label);
+    card.append(graphic, name);
 
     if (slot.collected && slot.entries[0]) {
       const entry = slot.entries[0];
+      card.setAttribute("role", "button");
+      card.tabIndex = 0;
+      card.setAttribute("aria-label", `${entry.petName || "이름 없음"} 도감 상세 보기`);
 
-      const name = document.createElement("span");
-      name.className = "encyclopedia-card__name";
-      name.textContent = entry.petName || "이름 없음";
-
-      const tier = document.createElement("span");
-      tier.className = "encyclopedia-card__tier";
-      tier.textContent =
-        slot.variant.tier === "pretty"
-          ? "예쁜"
-          : slot.variant.tier === "defective"
-            ? "불량"
-            : "보통";
-
-      const date = document.createElement("span");
-      date.className = "encyclopedia-card__date";
-      date.textContent = formatAchievedDate(entry.achievedAt);
-
-      card.append(name, tier, date);
+      const openDetail = () => showEncyclopediaDetail(slot.variant, entry);
+      card.addEventListener("click", openDetail);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openDetail();
+        }
+      });
     }
 
     elements.encyclopediaGrid.append(card);
@@ -480,7 +502,12 @@ export function showEncyclopedia() {
 }
 
 export function hideEncyclopedia() {
+  hideEncyclopediaDetail();
   elements.encyclopediaOverlay.hidden = true;
+}
+
+export function backToEncyclopediaList() {
+  hideEncyclopediaDetail();
 }
 
 export function setGameActive(active) {

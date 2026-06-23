@@ -90,3 +90,32 @@ export function formatAchievedDate(timestamp) {
   const date = new Date(timestamp);
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
 }
+
+/** variantId → {name} 치환 가능한 기괴한 도감 설명 */
+const ENCYCLOPEDIA_DESCRIPTIONS = {
+  golden:
+    "{name}의 등에는 영원히 꺼지지 않는 할로겐이 붙어 있어요. 심해 한가운데서도 길을 잃지 않지만, 가끔 지나가던 물고기 눈을 멀게 합니다.",
+  fluffy:
+    "{name}은 달빛을 먹고 자란다고 해요. 몸이 반투명해서 속이 비치는데, 그 안에는 어제 먹은 플랑크톤과 비밀이 둥둥 떠다닙니다.",
+  sparkle:
+    "{name}이 기분이 좋으면 몸 전체가 깜빡여요. 파티 조명 대신 쓰기 좋지만, 밤에 재우려면 먼저 눈을 가려야 할지도 모릅니다.",
+  standard:
+    "{name}은 산호초 옆에서 평범하게 살아요. 특별한 능력은 없지만, 물고기 친구들 사이에서 가장 무난한 인사를 건넵니다.",
+  farm:
+    "{name}의 지느러미 사이사이에 해조류가 자라요. 스스로 키운 채소를 먹는다고 주장하지만, 사실은 그냥 안 빗겨 주는 겁니다.",
+  plain:
+    "{name}은 진흙과 한 몸이 된 지 오래예요. 색이 바닥이랑 똑같아서 찾기 어렵지만, 발밑에서 '안녕' 하고 손을 흔듭니다.",
+  scruffy:
+    "{name}은 바닷속 냉장고에서 3년을 보냈어요. 냄새는 나지만 정이 많고, 지나가던 가오리에게도 먼저 인사를 건넵니다.",
+  grumpy:
+    "{name}의 송곳니는 생각보다 부드러워요. 표정만 험악할 뿐, 사실은 쓰다듬어 달라고 입을 벌리고 기다립니다.",
+  sickly:
+    "{name} 몸에 기생충이 살지만 이름표를 달고 다녀요. 주인은 기생충이고, 기생충이 진짜 주인인지는 아직 논쟁 중입니다.",
+};
+
+export function getVariantDescription(variantId, petName) {
+  const template =
+    ENCYCLOPEDIA_DESCRIPTIONS[variantId] ?? ENCYCLOPEDIA_DESCRIPTIONS.standard;
+  const name = petName?.trim() || "이 친구";
+  return template.replace(/\{name\}/g, name);
+}

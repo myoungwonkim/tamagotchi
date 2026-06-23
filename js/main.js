@@ -22,6 +22,7 @@ import {
   hideGraduateModal,
   showEncyclopedia,
   hideEncyclopedia,
+  backToEncyclopediaList,
   isMessageVisible,
   refreshAllGraphics,
   resetGraphicAnimationState,
@@ -311,6 +312,10 @@ function bindEvents() {
 
   document.getElementById("btn-close-encyclopedia")?.addEventListener("click", withAudio(() => {
     hideEncyclopedia();
+  }));
+
+  document.getElementById("btn-encyclopedia-detail-back")?.addEventListener("click", withAudio(() => {
+    backToEncyclopediaList();
   }));
 
   document.getElementById("btn-new-pet-side")?.addEventListener("click", withAudio(() => {
