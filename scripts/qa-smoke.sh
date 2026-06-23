@@ -37,6 +37,7 @@ grep -q 'name="app-version"' index.html && ok 'app-version meta' || bad 'app-ver
 grep -q 'action-label' index.html && ok 'action button labels' || bad 'action button labels'
 grep -q 'action-icon' index.html && ok 'action sprite icons' || bad 'action sprite icons'
 grep -q 'care-fx' index.html && ok '#care-fx layer' || bad '#care-fx layer'
+grep -q 'id="pet-area"' index.html && rg -q 'id="message"' index.html && ok 'message in pet-area' || bad 'message in pet-area'
 grep -q 'style.css?v=' index.html && ok 'css cache query' || bad 'css cache query'
 grep -q 'import(`./js/main.js?v=' index.html && ok 'js dynamic import cache' || bad 'js dynamic import'
 

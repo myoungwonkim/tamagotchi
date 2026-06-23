@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대사 창 디자인 후보 비교</title>
+  <style>
+    :root {
+      --bg: #fef6e4;
+      --surface: #ffffff;
+      --text: #2d2a26;
+      --text-muted: #6b6560;
+      --accent: #f582ae;
+      --accent-dark: #e05a8a;
+      --shadow: 0 4px 20px rgba(45, 42, 38, 0.08);
+      --radius: 16px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      --text-md: 0.875rem;
+      --text-sm: 0.8125rem;
+      --weight-medium: 500;
+      --weight-semibold: 600;
+      --weight-bold: 700;
+      --leading-relaxed: 1.45;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: #e8e4dc;
+      color: var(--text);
+      padding: 24px 16px 48px;
+      line-height: 1.4;
+    }
+
+    h1.page-title {
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: var(--weight-bold);
+      margin-bottom: 8px;
+    }
+
+    p.page-desc {
+      text-align: center;
+      font-size: var(--text-md);
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .candidate {
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 14px;
+      border: 2px solid transparent;
+    }
+
+    .candidate:hover { border-color: var(--accent); }
+
+    .candidate__badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.04em;
+      color: #fff;
+      background: var(--accent-dark);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .candidate__badge--muted {
+      background: var(--text-muted);
+    }
+
+    .candidate__name {
+      font-size: 1rem;
+      font-weight: var(--weight-bold);
+      margin-bottom: 4px;
+    }
+
+    .candidate__summary {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      min-height: 2.4em;
+    }
+
+    /* ── Mini game mock ── */
+    .mock-app {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 10px;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    .mock-header {
+      text-align: center;
+      padding: 4px 0 10px;
+    }
+
+    .mock-header .name {
+      font-size: 1.125rem;
+      font-weight: var(--weight-bold);
+    }
+
+    .mock-header .meta {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .mock-header .stage {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--accent-dark);
+    }
+
+    .mock-main {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mock-pet-area {
+      position: relative;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .mock-pet {
+      font-size: 3rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 0 rgba(45, 42, 38, 0.08));
+    }
+
+    .mock-mood {
+      position: absolute;
+      top: 12%;
+      right: 18%;
+      width: 2rem;
+      height: 2rem;
+      background: var(--surface);
+      border: 2px solid rgba(45, 42, 38, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* 현재 */
+    .msg-current {
+      text-align: center;
+      font-size: var(--text-md);
+      font-weight: var(--weight-medium);
+      line-height: var(--leading-relaxed);
+      color: var(--accent-dark);
+      background: rgba(245, 130, 174, 0.12);
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+
+    /* A — 말풍선 */
+    .msg-a-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .msg-a {
+      position: relative;
+      width: 100%;
+      text-align: center;
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-relaxed);
+      color: var(--text);
+      background: var(--surface);
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 2px solid rgba(45, 42, 38, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .msg-a::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 10px 9px 0 9px;
+      border-color: var(--surface) transparent transparent transparent;
+      filter: drop-shadow(0 2px 0 rgba(45, 42, 38, 0.06));
+    }
+
+    .msg-a::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -13px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 11px 10px 0 10px;
+      border-color: rgba(45, 42, 38, 0.08) transparent transparent transparent;
+    }
+
+    /* B — 배너 */
+    .msg-b {
+      text-align: left;
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-relaxed);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 12px 14px 12px 16px;
+      border-radius: 12px;
+      border-left: 4px solid var(--accent);
+      box-shadow: var(--shadow);
+    }
+
+    /* C — 오버레이 (pet-area 내부) */
+    .mock-pet-area--c {
+      align-items: flex-end;
+      padding-bottom: 20px;
+    }
+
+    .msg-c {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      text-align: center;
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-relaxed);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(45, 42, 38, 0.08);
+      box-shadow: 0 4px 16px rgba(45, 42, 38, 0.1);
+      z-index: 2;
+    }
+
+    /* D — 픽셀 프레임 */
+    .msg-d {
+      text-align: center;
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-relaxed);
+      color: var(--text);
+      background: #fff9fb;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 3px solid var(--accent-dark);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.8) inset,
+        0 4px 0 rgba(224, 90, 138, 0.25);
+    }
+
+    .legend {
+      max-width: 1100px;
+      margin: 28px auto 0;
+      padding: 16px;
+      background: var(--surface);
+      border-radius: 12px;
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .legend strong { color: var(--text); }
+
+    @keyframes msgPop {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-current,
+    .msg-a,
+    .msg-b,
+    .msg-c,
+    .msg-d {
+      animation: msgPop 0.45s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">대사 창 디자인 후보 비교</h1>
+  <p class="page-desc">실제 게임 색상·타이포(모던 sans)로 각 후보를 미리 봅니다. 마음에 드는 후보를 알려주세요.</p>
+
+  <div class="grid">
+    <!-- 현재 -->
+    <section class="candidate">
+      <span class="candidate__badge candidate__badge--muted">현재</span>
+      <h2 class="candidate__name">연한 핑크 배경</h2>
+      <p class="candidate__summary">pet-area 위에 옅은 배경만. 주변 UI에 묻히기 쉬움.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">치치</div>
+          <div class="meta">3일째 · <span class="stage">청소년</span></div>
+        </div>
+        <div class="mock-main">
+          <p class="msg-current">요즘 바다 분위기 괜찮네.</p>
+          <div class="mock-pet-area">
+            <span class="mock-mood">😐</span>
+            <span class="mock-pet">🐟</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- A -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 A · 추천</span>
+      <h2 class="candidate__name">말풍선 카드</h2>
+      <p class="candidate__summary">흰 카드 + 그림자 + 아래 꼬리. 펫이 말하는 느낌.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">치치</div>
+          <div class="meta">3일째 · <span class="stage">청소년</span></div>
+        </div>
+        <div class="mock-main">
+          <div class="msg-a-wrap">
+            <p class="msg-a">요즘 바다 분위기 괜찮네.</p>
+          </div>
+          <div class="mock-pet-area" style="margin-top: 4px">
+            <span class="mock-mood">😐</span>
+            <span class="mock-pet">🐟</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 B</span>
+      <h2 class="candidate__name">강조 배너</h2>
+      <p class="candidate__summary">왼쪽 액센트 바 + 흰 배경. 알림·시스템 메시지에도 잘 맞음.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">치치</div>
+          <div class="meta">3일째 · <span class="stage">청소년</span></div>
+        </div>
+        <div class="mock-main">
+          <p class="msg-b">요즘 바다 분위기 괜찮네.</p>
+          <div class="mock-pet-area">
+            <span class="mock-mood">😐</span>
+            <span class="mock-pet">🐟</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- C -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 C</span>
+      <h2 class="candidate__name">펫 영역 오버레이</h2>
+      <p class="candidate__summary">pet-area 상단에 겹침. 시선이 펫과 대사에 동시에 감.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">치치</div>
+          <div class="meta">3일째 · <span class="stage">청소년</span></div>
+        </div>
+        <div class="mock-main">
+          <div class="mock-pet-area mock-pet-area--c">
+            <p class="msg-c">요즘 바다 분위기 괜찮네.</p>
+            <span class="mock-mood">😐</span>
+            <span class="mock-pet">🐟</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- D -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 D</span>
+      <h2 class="candidate__name">픽셀 프레임</h2>
+      <p class="candidate__summary">두꺼운 핑크 테두리. 스프라이트와 레트로 감성.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">치치</div>
+          <div class="meta">3일째 · <span class="stage">청소년</span></div>
+        </div>
+        <div class="mock-main">
+          <p class="msg-d">요즘 바다 분위기 괜찮네.</p>
+          <div class="mock-pet-area">
+            <span class="mock-mood">😐</span>
+            <span class="mock-pet">🐟</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="legend">
+    <strong>비교 요소:</strong> 동일 대사 「요즘 바다 분위기 괜찮네.」·청소년 단계·무드 버블<br>
+  <strong>선택:</strong> 채팅에 <strong>현재 / A / B / C / D</strong> 또는 조합(예: 「A인데 긴 대사만 B」)을 알려주세요.<br>
+  <strong>열기:</strong> 로컬 서버 실행 중이면 <code>docs/message-preview.html</code> 또는
+  <code>/docs/message-preview.html</code> 경로로 열 수 있습니다.
+  </div>
+</body>
+</html>
