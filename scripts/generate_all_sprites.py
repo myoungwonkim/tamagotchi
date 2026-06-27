@@ -170,31 +170,63 @@ def draw_eye(g, x, y, sclera=WHITE, pupil=K, highlight=WHITE, large=False):
     px(g, x + 2, y + 2, sclera)
 
 
+def _eye_disk(g, cx, cy, r_outer, inner_fn):
+    """Pixel disk with crisp black rim — large defective eyes."""
+    r_inner = r_outer - 1
+    for y in range(cy - r_outer, cy + r_outer + 1):
+        for x in range(cx - r_outer, cx + r_outer + 1):
+            d2 = (x - cx) ** 2 + (y - cy) ** 2
+            if d2 > r_outer * r_outer:
+                continue
+            if d2 >= r_inner * r_inner:
+                px(g, x, y, K)
+            else:
+                inner_fn(g, x, y, cx, cy, d2)
+
+
 def draw_eye_grotesque(g, cx, cy, iris=EYE_YELLOW, pupil=RED):
-    """High-contrast defective eye — bold white sclera on dark bodies."""
-    fill_circle(g, cx, cy, 4, WHITE, K)
-    fill_circle(g, cx, cy, 2, iris, K)
+    """Large defective eye — sharp sclera ring, block iris, twin pupils."""
+
+    def inner(gr, x, y, _cx, _cy, d2):
+        if d2 >= 4:
+            px(gr, x, y, WHITE)
+        else:
+            px(gr, x, y, iris)
+
+    _eye_disk(g, cx, cy, 4, inner)
+    px(g, cx, cy, pupil)
     px(g, cx + 1, cy, pupil)
     px(g, cx - 1, cy + 1, pupil)
     px(g, cx + 2, cy - 1, WHITE)
 
 
 def draw_empty_socket(g, cx, cy):
-    """Broken/missing eye socket."""
+    """Broken/missing eye — bold bone cross + rot pit."""
     fill_circle(g, cx, cy, 2, K, None)
-    px(g, cx - 1, cy - 1, BONE_SHOW)
-    px(g, cx + 1, cy - 1, BONE_SHOW)
     px(g, cx, cy, ROT)
-    px(g, cx - 1, cy + 1, K)
-    px(g, cx + 1, cy + 1, K)
+    px(g, cx - 2, cy, BONE_SHOW)
+    px(g, cx + 2, cy, BONE_SHOW)
+    px(g, cx, cy - 2, BONE_SHOW)
+    px(g, cx - 1, cy - 1, K)
+    px(g, cx + 1, cy - 1, K)
+    px(g, cx - 1, cy + 1, RAG2)
+    px(g, cx + 1, cy + 1, RAG2)
 
 
 def draw_swollen_eye(g, cx, cy):
-    """Bulging parasitic eye — large white ring, yellow iris, red pupil."""
-    fill_circle(g, cx, cy, 5, WHITE, K)
-    fill_circle(g, cx, cy, 3, EYE_YELLOW, K)
-    fill_circle(g, cx, cy, 1, RED, None)
-    px(g, cx + 2, cy - 1, WHITE)
+    """Bulging parasitic eye — white/yellow/red rings + lesion fleck."""
+
+    def inner(gr, x, y, _cx, _cy, d2):
+        if d2 >= 9:
+            px(gr, x, y, WHITE)
+        elif d2 >= 1:
+            px(gr, x, y, EYE_YELLOW)
+        else:
+            px(gr, x, y, RED)
+
+    _eye_disk(g, cx, cy, 5, inner)
+    px(g, cx + 1, cy, RED)
+    px(g, cx + 2, cy - 2, WHITE)
     px(g, cx + 2, cy + 1, LESION)
 
 
