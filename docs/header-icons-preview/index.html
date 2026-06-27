@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>헤더 아이콘 — 도감 · 스피커</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #101820;
+      color: #c8d4dc;
+      padding: 20px 14px 48px;
+      line-height: 1.5;
+    }
+    .wrap { max-width: 420px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #eef4f8; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+    .sheet { width: 100%; border: 1px solid #2a3848; border-radius: 6px; margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+    figure {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 8px; text-align: center;
+    }
+    figure img { image-rendering: pixelated; background: #243040; border-radius: 4px; }
+    figcaption { font-size: 0.625rem; margin-top: 8px; line-height: 1.45; color: #88a0b0; }
+    figcaption strong { color: #d8e4ec; display: block; margin-bottom: 2px; }
+    h2 {
+      font-size: 0.8125rem; color: #58b8c8; margin: 20px 0 10px;
+      border-bottom: 1px solid #2a3848; padding-bottom: 6px;
+    }
+    .compare { display: flex; flex-direction: column; gap: 16px; }
+    .phone {
+      background: #1a2838; border: 2px solid #3a5060; border-radius: 18px;
+      overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    }
+    .phone__inner { padding: 10px 12px 14px; }
+    .header-mock {
+      position: relative; text-align: center; padding: 4px 52px 12px; min-height: 52px;
+    }
+    .icon-btn {
+      position: absolute; top: 0; width: 44px; height: 44px;
+      border: 1px solid #3a5060; border-radius: 10px;
+      background: #243040; box-shadow: 0 4px 20px rgba(0,0,0,0.28);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .icon-btn--left { left: 0; }
+    .icon-btn--right { right: 0; }
+    .icon-btn img { width: 28px; height: 28px; image-rendering: pixelated; }
+    .pet-name { font-size: 1.125rem; font-weight: 700; color: #d8e4ec; }
+    .pet-meta { font-size: 0.6875rem; color: #7a8a98; margin-top: 2px; }
+    .label-row {
+      display: flex; justify-content: space-between; font-size: 0.625rem;
+      color: #7a8898; margin-bottom: 6px; padding: 0 4px;
+    }
+    .stamp {
+      display: inline-block; margin-top: 16px; padding: 5px 12px;
+      background: #58b8c8; color: #0c1426; font-size: 0.625rem; font-weight: 700;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>헤더 아이콘</h1>
+    <p class="lead">SUB-3 수압 계기판 · 32×32 픽셀 · <strong>게임 반영됨</strong></p>
+    <div class="notice">
+      <strong>도감</strong> — 탐사 일지 + 소나 blip ·
+      <strong>스피커</strong> — 함체 인터컴 on/off
+    </div>
+    <img class="sheet" src="_preview-header-icons.png" alt="아이콘 시트">
+    <h2>아이콘</h2>
+    <div class="grid">
+    <figure>
+      <img src="encyclopedia.png" width="128" height="128" alt="">
+      <figcaption><strong>도감 · 탐사 일지</strong><br><code>encyclopedia.png</code></figcaption>
+    </figure>
+    <figure>
+      <img src="sound-on.png" width="128" height="128" alt="">
+      <figcaption><strong>스피커 ON · 함체 송출</strong><br><code>sound-on.png</code></figcaption>
+    </figure>
+    <figure>
+      <img src="sound-off.png" width="128" height="128" alt="">
+      <figcaption><strong>스피커 OFF · 음소거</strong><br><code>sound-off.png</code></figcaption>
+    </figure>
+    </div>
+    <h2>헤더 맥락</h2>
+    <div class="compare">
+      <div>
+        <div class="label-row"><span>음소거 OFF</span><span>sound-on</span></div>
+        <div class="phone"><div class="phone__inner"><div class="header-mock">
+          <button type="button" class="icon-btn icon-btn--left" disabled><img src="encyclopedia.png" alt=""></button>
+          <button type="button" class="icon-btn icon-btn--right" disabled><img src="sound-on.png" alt=""></button>
+          <p class="pet-name">치치</p><p class="pet-meta">3일째</p>
+        </div></div></div>
+      </div>
+      <div>
+        <div class="label-row"><span>음소거 ON</span><span>sound-off</span></div>
+        <div class="phone"><div class="phone__inner"><div class="header-mock">
+          <button type="button" class="icon-btn icon-btn--left" disabled><img src="encyclopedia.png" alt=""></button>
+          <button type="button" class="icon-btn icon-btn--right" disabled><img src="sound-off.png" alt=""></button>
+          <p class="pet-name">치치</p><p class="pet-meta">3일째</p>
+        </div></div></div>
+      </div>
+    </div>
+    <p style="text-align:center"><span class="stamp">IN GAME</span></p>
+  </div>
+</body>
+</html>

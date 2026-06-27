@@ -1,3 +1,5 @@
+import { getSpriteUrl } from "./sprites.js";
+
 const SETTINGS_KEY = "tamagotchi-settings";
 
 const SFX_PRESETS = {
@@ -117,7 +119,12 @@ export function playSfx(name, options = {}) {
 
 export function updateMuteButton(button) {
   if (!button) return;
-  button.textContent = muted ? "🔇" : "🔊";
+  const img = button.querySelector(".header-icon");
+  if (img) {
+    img.src = getSpriteUrl("ui", muted ? "sound-off" : "sound-on");
+  } else {
+    button.textContent = muted ? "🔇" : "🔊";
+  }
   button.setAttribute("aria-label", muted ? "소리 켜기" : "소리 끄기");
   button.setAttribute("aria-pressed", muted ? "true" : "false");
 }

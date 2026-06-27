@@ -21,7 +21,7 @@ echo
 echo "[assets]"
 PNG_COUNT=$(find assets/sprites -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
 MERMAID_COUNT=$(find assets/sprites/mermaid -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
-if [ "$PNG_COUNT" -eq 47 ]; then ok "47 PNG sprites (28 deepsea + 19 mermaid)"; else bad "PNG count=$PNG_COUNT (expected 47)"; fi
+if [ "$PNG_COUNT" -eq 50 ]; then ok "50 PNG sprites (28 deepsea + 19 mermaid + 3 ui header)"; else bad "PNG count=$PNG_COUNT (expected 50)"; fi
 if [ "$MERMAID_COUNT" -eq 19 ]; then ok "19 mermaid pet sprites"; else bad "mermaid PNG count=$MERMAID_COUNT (expected 19)"; fi
 
 for cat in evolution adult mood ui; do

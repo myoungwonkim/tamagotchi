@@ -193,7 +193,7 @@ export function preloadSpritesForPet(pet) {
     preloadSpriteMeta({ src: getSpriteUrl("mood", kind, theme) });
   }
 
-  for (const id of ["poop", "fly", "feed", "play", "clean", "sleep", "wake"]) {
+  for (const id of ["poop", "fly", "feed", "play", "clean", "sleep", "wake", "encyclopedia", "sound-on", "sound-off"]) {
     preloadSpriteMeta({ src: getSpriteUrl("ui", id) });
   }
 }

@@ -1,7 +1,13 @@
 import { applyTimeDelta, checkGameOver, createNewPet, tickPet } from "./pet.js";
 import { feed, play, clean, toggleSleep, resetActionCooldown } from "./actions.js";
 import { savePet, loadPet, clearPet } from "./storage.js";
-import { checkEvolution, getEvolutionStage, getStageIndex, EVOLUTION_STAGES } from "./evolution.js";
+import {
+  checkEvolution,
+  getEvolutionStage,
+  getStageIndex,
+  EVOLUTION_STAGES,
+  EVOLUTION_ADULT_MIN_AGE_MS,
+} from "./evolution.js";
 import { resolveAdultVariant } from "./adultVariants.js";
 import { addToEncyclopedia } from "./encyclopedia.js";
 import {
@@ -385,7 +391,7 @@ function mountDevToolsIfEnabled() {
         pet.happiness = 90;
         pet.cleanliness = 90;
         pet.health = 90;
-        pet.bornAt = Date.now() - 14 * 86400000;
+        pet.bornAt = Date.now() - EVOLUTION_ADULT_MIN_AGE_MS;
         pet.lastEvolutionStage = "teen";
         pet.adultVariantId = null;
         pet.adultCareSnapshot = null;
@@ -400,7 +406,7 @@ function mountDevToolsIfEnabled() {
         pet.happiness = 20;
         pet.cleanliness = 30;
         pet.health = 35;
-        pet.bornAt = Date.now() - 14 * 86400000;
+        pet.bornAt = Date.now() - EVOLUTION_ADULT_MIN_AGE_MS;
         pet.lastEvolutionStage = "teen";
         pet.adultVariantId = null;
         pet.adultCareSnapshot = null;

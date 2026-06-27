@@ -111,10 +111,13 @@ body {
   border-radius: 10px;
   background: var(--surface);
   box-shadow: var(--shadow);
-  font-size: 1.25rem;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .mute-btn:active {
@@ -131,14 +134,25 @@ body {
   border-radius: 10px;
   background: var(--surface);
   box-shadow: var(--shadow);
-  font-size: 1.25rem;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .encyclopedia-btn:active {
   transform: scale(0.96);
+}
+
+.header-icon {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
 }
 
 .pet-name {

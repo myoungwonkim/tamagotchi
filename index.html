@@ -14,8 +14,12 @@
 <body>
   <div class="app">
     <header class="header">
-      <button type="button" class="encyclopedia-btn" id="btn-encyclopedia" aria-label="도감">📖</button>
-      <button type="button" class="mute-btn" id="btn-mute" aria-label="소리 끄기" aria-pressed="false">🔊</button>
+      <button type="button" class="encyclopedia-btn" id="btn-encyclopedia" aria-label="도감">
+        <img class="header-icon" src="assets/sprites/ui/encyclopedia.png" alt="" width="28" height="28" decoding="async">
+      </button>
+      <button type="button" class="mute-btn" id="btn-mute" aria-label="소리 끄기" aria-pressed="false">
+        <img class="header-icon" id="mute-icon" src="assets/sprites/ui/sound-on.png" alt="" width="28" height="28" decoding="async">
+      </button>
       <h1 class="pet-name" id="pet-name">치치</h1>
       <p class="pet-age" id="pet-age">0일째</p>
       <p class="pet-stage" id="pet-stage">알</p>

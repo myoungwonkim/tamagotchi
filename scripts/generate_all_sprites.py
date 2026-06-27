@@ -715,6 +715,85 @@ def sprite_action_wake():
     return g
 
 
+# ── Header UI (SUB-3 submersible) ─────────────────────────────────────
+PANEL = (36, 48, 64, 255)
+PANEL2 = (48, 64, 80, 255)
+ACCENT = (88, 184, 200, 255)
+ACCENT2 = (58, 152, 168, 255)
+GLOW = (0, 229, 255, 255)
+BRASS = (196, 160, 96, 255)
+PAPER = (200, 212, 220, 255)
+PAPER2 = (168, 184, 196, 255)
+MUTED = (90, 104, 118, 255)
+MUTE_SLASH = (200, 100, 88, 255)
+FISH_SIL = (72, 96, 112, 255)
+
+
+def _arc_pts(cx, cy, r, a0, a1, step=1):
+    import math
+
+    pts = []
+    for a in range(a0, a1 + 1, step):
+        rad = math.radians(a)
+        x = int(round(cx + r * math.cos(rad)))
+        y = int(round(cy + r * math.sin(rad)))
+        pts.append((x, y))
+    return pts
+
+
+def sprite_encyclopedia():
+    """탐사 일지 — 클립보드 + 소나 fish blip."""
+    g = blank()
+    draw_poly(g, [(9, 7), (23, 7), (24, 26), (8, 26)], PANEL2, K)
+    draw_poly(g, [(10, 8), (22, 8), (23, 25), (9, 25)], PAPER, K)
+    draw_poly(g, [(13, 5), (19, 5), (19, 9), (13, 9)], BRASS, K)
+    fill_ellipse(g, 16, 7, 2, 2, (140, 112, 72, 255), K)
+    for y in (13, 17, 21):
+        draw_line(g, 11, y, 21, y, PAPER2)
+    for x in (13, 17):
+        draw_line(g, x, 11, x, 23, PAPER2)
+    fill_ellipse(g, 16, 16, 3, 2, FISH_SIL, K)
+    draw_poly(g, [(13, 16), (11, 15), (11, 17)], FISH_SIL)
+    draw_poly(g, [(19, 16), (21, 15), (21, 17)], FISH_SIL)
+    px(g, 16, 15, ACCENT)
+    for y in range(9, 24):
+        px(g, 10, y, ACCENT2)
+    px(g, 10, 8, GLOW)
+    return g
+
+
+def sprite_sound_on():
+    """함체 스피커 + 소나 파동."""
+    g = blank()
+    fill_circle(g, 13, 16, 8, PANEL, K)
+    fill_circle(g, 13, 16, 6, PANEL2, K)
+    for dx, dy in ((11, 14), (15, 14), (11, 18), (15, 18)):
+        px(g, dx, dy, (28, 36, 44, 255))
+    px(g, 13, 16, ACCENT)
+    for r, col in ((4, ACCENT2), (6, ACCENT), (8, GLOW)):
+        for x, y in _arc_pts(19, 16, r, -50, 50):
+            px(g, x, y, col)
+    return g
+
+
+def sprite_sound_off():
+    """음소거 — 파동 흐림 + 슬래시."""
+    g = blank()
+    fill_circle(g, 13, 16, 8, PANEL, K)
+    fill_circle(g, 13, 16, 6, PANEL2, K)
+    for dx, dy in ((11, 14), (15, 14), (11, 18), (15, 18)):
+        px(g, dx, dy, (28, 36, 44, 255))
+    px(g, 13, 16, MUTED)
+    for r in (4, 6, 8):
+        for x, y in _arc_pts(19, 16, r, -50, 50, step=2):
+            px(g, x, y, MUTED)
+    draw_line(g, 18, 10, 26, 22, MUTE_SLASH)
+    draw_line(g, 19, 10, 27, 22, (160, 72, 64, 255))
+    px(g, 17, 9, K)
+    px(g, 26, 23, K)
+    return g
+
+
 ACTION_SPRITES = {
     "feed": sprite_action_feed,
     "play": sprite_action_play,
@@ -753,6 +832,9 @@ SPRITES = {
     "ui/clean": sprite_action_clean,
     "ui/sleep": sprite_action_sleep,
     "ui/wake": sprite_action_wake,
+    "ui/encyclopedia": sprite_encyclopedia,
+    "ui/sound-on": sprite_sound_on,
+    "ui/sound-off": sprite_sound_off,
 }
 
 
