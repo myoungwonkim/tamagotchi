@@ -1,5 +1,7 @@
 import { getEvolutionStage } from "./evolution.js";
 
+import { pickRandomSpeciesTheme } from "./speciesThemes.js";
+
 const MS_PER_DAY = 86400000;
 const NEGLECT_THRESHOLD = 10;
 const NEGLECT_DURATION_MS = 10 * 60 * 1000;
@@ -31,6 +33,7 @@ export function createNewPet(name = "치치") {
     lastUpdated: now,
     neglectStartedAt: null,
     lastEvolutionStage: null,
+    speciesTheme: pickRandomSpeciesTheme(),
     adultVariantId: null,
     adultCareSnapshot: null,
   };

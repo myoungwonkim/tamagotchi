@@ -1,6 +1,7 @@
 import { createNewPet } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { resolveAdultVariant } from "./adultVariants.js";
+import { DEFAULT_SPECIES_THEME, normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const STORAGE_KEY = "tamagotchi-pet";
 
@@ -26,6 +27,10 @@ export function normalizePet(raw) {
         : null,
     lastEvolutionStage:
       typeof raw.lastEvolutionStage === "string" ? raw.lastEvolutionStage : null,
+    speciesTheme:
+      typeof raw.speciesTheme === "string"
+        ? normalizeSpeciesTheme(raw.speciesTheme)
+        : DEFAULT_SPECIES_THEME,
     adultVariantId:
       typeof raw.adultVariantId === "string" ? raw.adultVariantId : null,
     adultCareSnapshot:

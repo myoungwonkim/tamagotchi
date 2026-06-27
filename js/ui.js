@@ -1,6 +1,7 @@
 import { getAgeDays, getGameOverReason } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
+import { getStageLabelForTheme } from "./speciesThemes.js";
 import {
   getEncyclopediaSlots,
   getCollectedCount,
@@ -13,6 +14,7 @@ import {
   getVariantSpriteMeta,
   getUiSpriteMeta,
   getStageSpriteMeta,
+  getPetSpeciesTheme,
   preloadSpritesForPet,
 } from "./sprites.js";
 import { playSfx } from "./audio.js";
@@ -81,11 +83,12 @@ let lastEvolutionKey = null;
 let lastMoodKey = null;
 
 function getStageLabel(pet) {
+  const theme = getPetSpeciesTheme(pet);
   const stage = getEvolutionStage(pet);
   if (stage.id === "adult" && pet.adultVariantId) {
-    return getAdultVariant(pet.adultVariantId).label;
+    return getAdultVariant(pet.adultVariantId, theme).label;
   }
-  return stage.label;
+  return getStageLabelForTheme(stage.id, theme);
 }
 
 function getFallbackClassName(imgClass = "") {
@@ -438,16 +441,17 @@ function hideEncyclopediaDetail() {
 }
 
 function showEncyclopediaDetail(variant, entry) {
+  const theme = entry.speciesTheme;
   elements.encyclopediaDetailGraphic.innerHTML = "";
   setPetGraphic(
     elements.encyclopediaDetailGraphic,
-    getVariantSpriteMeta(variant),
+    getVariantSpriteMeta(variant, theme),
     { imgClass: "encyclopedia-detail__img encyclopedia-card__img" },
   );
 
   const petName = entry.petName?.trim() || "이름 없음";
   elements.encyclopediaDetailName.textContent = petName;
-  elements.encyclopediaDetailSpecies.textContent = variant.label;
+  elements.encyclopediaDetailSpecies.textContent = entry.label ?? variant.label;
   elements.encyclopediaDetailDesc.textContent = getVariantDescription(variant.id, petName);
 
   elements.encyclopediaList.hidden = true;
@@ -472,24 +476,24 @@ export function renderEncyclopedia() {
     const card = document.createElement("div");
     card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
 
+    const entry = slot.entries[0];
     const graphic = slot.collected
-      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant))
+      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant, entry?.speciesTheme))
       : createEncyclopediaGraphic(null, true);
 
     const name = document.createElement("span");
     name.className = "encyclopedia-card__name";
-    name.textContent = slot.collected && slot.entries[0]
-      ? slot.entries[0].petName?.trim() || "이름 없음"
+    name.textContent = slot.collected && entry
+      ? entry.petName?.trim() || "이름 없음"
       : "???";
 
     const species = document.createElement("span");
     species.className = "encyclopedia-card__species";
-    species.textContent = slot.collected ? slot.variant.label : "???";
+    species.textContent = slot.collected ? (entry?.label ?? slot.variant.label) : "???";
 
     card.append(graphic, name, species);
 
-    if (slot.collected && slot.entries[0]) {
-      const entry = slot.entries[0];
+    if (slot.collected && entry) {
       card.setAttribute("role", "button");
       card.tabIndex = 0;
       card.setAttribute("aria-label", `${entry.petName || "이름 없음"} 도감 상세 보기`);

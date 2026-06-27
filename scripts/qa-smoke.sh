@@ -20,13 +20,17 @@ echo
 # --- Assets ---
 echo "[assets]"
 PNG_COUNT=$(find assets/sprites -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
-SVG_COUNT=$(find assets/sprites -name '*.svg' 2>/dev/null | wc -l | tr -d ' ')
-if [ "$PNG_COUNT" -eq 28 ]; then ok "28 PNG sprites"; else bad "PNG count=$PNG_COUNT (expected 28)"; fi
-if [ "$SVG_COUNT" -eq 0 ]; then ok "no legacy SVG (png-only)"; else warn "SVG count=$SVG_COUNT (legacy)"; fi
+MERMAID_COUNT=$(find assets/sprites/mermaid -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+if [ "$PNG_COUNT" -eq 47 ]; then ok "47 PNG sprites (28 deepsea + 19 mermaid)"; else bad "PNG count=$PNG_COUNT (expected 47)"; fi
+if [ "$MERMAID_COUNT" -eq 19 ]; then ok "19 mermaid pet sprites"; else bad "mermaid PNG count=$MERMAID_COUNT (expected 19)"; fi
 
 for cat in evolution adult mood ui; do
   if [ -d "assets/sprites/$cat" ]; then ok "dir assets/sprites/$cat"; else bad "missing assets/sprites/$cat"; fi
 done
+for cat in evolution adult mood; do
+  if [ -d "assets/sprites/mermaid/$cat" ]; then ok "dir assets/sprites/mermaid/$cat"; else bad "missing assets/sprites/mermaid/$cat"; fi
+done
+rg -q 'speciesTheme' js/pet.js js/storage.js js/sprites.js && ok 'speciesTheme field' || bad 'speciesTheme field'
 for id in poop fly feed play clean sleep wake; do
   if [ -f "assets/sprites/ui/$id.png" ]; then ok "ui sprite $id.png"; else bad "missing assets/sprites/ui/$id.png"; fi
 done

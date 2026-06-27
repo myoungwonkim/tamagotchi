@@ -1,5 +1,7 @@
 import { getAverageCare } from "./pet.js";
 
+import { getVariantEmojiForTheme, getVariantLabelForTheme, normalizeSpeciesTheme } from "./speciesThemes.js";
+
 export const ADULT_TIERS = {
   pretty: {
     id: "pretty",
@@ -63,26 +65,33 @@ function pickVariantForTier(tier) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-export function getAdultVariant(variantId) {
-  return variantById[variantId] ?? ADULT_VARIANTS.find((v) => v.id === "standard");
+export function getAdultVariant(variantId, speciesTheme) {
+  const base = variantById[variantId] ?? ADULT_VARIANTS.find((v) => v.id === "standard");
+  if (speciesTheme == null) return base;
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  return {
+    ...base,
+    label: getVariantLabelForTheme(base.id, theme),
+    emoji: getVariantEmojiForTheme(base.id, theme),
+  };
 }
 
 export function resolveAdultVariant(pet) {
   if (pet.adultVariantId) {
-    return getAdultVariant(pet.adultVariantId);
+    return getAdultVariant(pet.adultVariantId, pet.speciesTheme);
   }
 
   const tier = determineTier(pet);
   const variant = pickVariantForTier(tier);
   pet.adultVariantId = variant.id;
   pet.adultCareSnapshot = getCareSnapshot(pet);
-  return variant;
+  return getAdultVariant(variant.id, pet.speciesTheme);
 }
 
 export function getEvolutionDisplayEmoji(pet) {
   if (!pet.isAlive) return "🦴";
   if (pet.adultVariantId) {
-    return getAdultVariant(pet.adultVariantId).emoji;
+    return getAdultVariant(pet.adultVariantId, pet.speciesTheme).emoji;
   }
   return "🦑";
 }

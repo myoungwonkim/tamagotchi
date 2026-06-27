@@ -1,6 +1,13 @@
 import { getEvolutionEmoji, getMoodEmoji, getMoodKind } from "./pet.js";
 import { getEvolutionStage, EVOLUTION_STAGES, getStageIndex } from "./evolution.js";
 import { getEvolutionDisplayEmoji, getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
+import {
+  DEFAULT_SPECIES_THEME,
+  getDeadEmojiForTheme,
+  getEvolutionStageEmojiForTheme,
+  getStageLabelForTheme,
+  normalizeSpeciesTheme,
+} from "./speciesThemes.js";
 
 export const SPRITE_BASE = "assets/sprites";
 const SETTINGS_KEY = "tamagotchi-settings";
@@ -62,41 +69,55 @@ function getAppVersion() {
   return document.querySelector('meta[name="app-version"]')?.content || "";
 }
 
-export function getSpriteUrl(category, id) {
+export function getPetSpeciesTheme(pet) {
+  return normalizeSpeciesTheme(pet?.speciesTheme);
+}
+
+export function getSpriteUrl(category, id, speciesTheme = DEFAULT_SPECIES_THEME) {
   const ext = getSpriteFormat();
-  const base = `${SPRITE_BASE}/${category}/${id}.${ext}`;
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  let base;
+  if (category === "ui") {
+    base = `${SPRITE_BASE}/ui/${id}.${ext}`;
+  } else if (theme === "mermaid") {
+    base = `${SPRITE_BASE}/mermaid/${category}/${id}.${ext}`;
+  } else {
+    base = `${SPRITE_BASE}/${category}/${id}.${ext}`;
+  }
   const v = getAppVersion();
   return v ? `${base}?v=${v}` : base;
 }
 
 export function getEvolutionSpriteMeta(pet) {
+  const theme = getPetSpeciesTheme(pet);
+
   if (!pet.isAlive) {
     return {
-      key: "dead",
-      src: getSpriteUrl("evolution", "dead"),
+      key: `${theme}-dead`,
+      src: getSpriteUrl("evolution", "dead", theme),
       alt: "게임 오버",
-      fallbackEmoji: "🦴",
+      fallbackEmoji: getDeadEmojiForTheme(theme),
     };
   }
 
   const stage = getEvolutionStage(pet);
   if (stage.id === "adult") {
     const variant = pet.adultVariantId
-      ? getAdultVariant(pet.adultVariantId)
-      : { spriteId: "standard", emoji: "🐟", label: "성체" };
+      ? getAdultVariant(pet.adultVariantId, theme)
+      : { spriteId: "standard", emoji: "🐟", label: getStageLabelForTheme("adult", theme) };
     return {
-      key: `adult-${variant.spriteId ?? variant.id}`,
-      src: getSpriteUrl("adult", variant.spriteId ?? variant.id ?? "standard"),
+      key: `${theme}-adult-${variant.spriteId ?? variant.id}`,
+      src: getSpriteUrl("adult", variant.spriteId ?? variant.id ?? "standard", theme),
       alt: variant.label,
       fallbackEmoji: variant.emoji,
     };
   }
 
   return {
-    key: stage.spriteId,
-    src: getSpriteUrl("evolution", stage.spriteId),
-    alt: stage.label,
-    fallbackEmoji: stage.baseEmoji,
+    key: `${theme}-${stage.spriteId}`,
+    src: getSpriteUrl("evolution", stage.spriteId, theme),
+    alt: getStageLabelForTheme(stage.id, theme),
+    fallbackEmoji: getEvolutionStageEmojiForTheme(stage.id, theme),
   };
 }
 
@@ -104,21 +125,24 @@ export function getMoodSpriteMeta(pet) {
   const kind = getMoodKind(pet);
   if (!kind) return null;
 
+  const theme = getPetSpeciesTheme(pet);
   const fallbackEmoji = getMoodEmoji(pet);
   return {
-    key: kind,
-    src: getSpriteUrl("mood", kind),
+    key: `${theme}-${kind}`,
+    src: getSpriteUrl("mood", kind, theme),
     alt: kind,
     fallbackEmoji,
   };
 }
 
-export function getVariantSpriteMeta(variant) {
+export function getVariantSpriteMeta(variant, speciesTheme = DEFAULT_SPECIES_THEME) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  const themed = getAdultVariant(variant.id, theme);
   return {
-    key: variant.id,
-    src: getSpriteUrl("adult", variant.spriteId),
-    alt: variant.label,
-    fallbackEmoji: variant.emoji,
+    key: `${theme}-${variant.id}`,
+    src: getSpriteUrl("adult", variant.spriteId, theme),
+    alt: themed.label,
+    fallbackEmoji: themed.emoji,
   };
 }
 
@@ -131,10 +155,11 @@ export function getUiSpriteMeta(id, fallbackEmoji, alt = "") {
   };
 }
 
-export function getStageSpriteMeta(spriteId, fallbackEmoji, alt) {
+export function getStageSpriteMeta(spriteId, fallbackEmoji, alt, speciesTheme = DEFAULT_SPECIES_THEME) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
   return {
-    key: spriteId,
-    src: getSpriteUrl("evolution", spriteId),
+    key: `${theme}-${spriteId}`,
+    src: getSpriteUrl("evolution", spriteId, theme),
     alt,
     fallbackEmoji,
   };
@@ -150,6 +175,8 @@ export function preloadSpriteMeta(meta) {
 export function preloadSpritesForPet(pet) {
   if (!pet || !isSpritesEnabled()) return;
 
+  const theme = getPetSpeciesTheme(pet);
+
   preloadSpriteMeta(getEvolutionSpriteMeta(pet));
   preloadSpriteMeta(getMoodSpriteMeta(pet));
 
@@ -158,24 +185,22 @@ export function preloadSpritesForPet(pet) {
   if (idx >= 0 && idx < EVOLUTION_STAGES.length - 1) {
     const next = EVOLUTION_STAGES[idx + 1];
     preloadSpriteMeta({
-      src: getSpriteUrl("evolution", next.spriteId),
+      src: getSpriteUrl("evolution", next.spriteId, theme),
     });
   }
 
   for (const kind of ["happy", "neutral", "sad", "sleep", "sick"]) {
-    preloadSpriteMeta({ src: getSpriteUrl("mood", kind) });
+    preloadSpriteMeta({ src: getSpriteUrl("mood", kind, theme) });
   }
 
   for (const id of ["poop", "fly", "feed", "play", "clean", "sleep", "wake"]) {
-    const base = `${SPRITE_BASE}/ui/${id}.png`;
-    const v = getAppVersion();
-    preloadSpriteMeta({ src: v ? `${base}?v=${v}` : base });
+    preloadSpriteMeta({ src: getSpriteUrl("ui", id) });
   }
 }
 
 export function getFallbackEvolutionEmoji(pet) {
-  if (!pet.isAlive) return "🦴";
+  if (!pet.isAlive) return getDeadEmojiForTheme(getPetSpeciesTheme(pet));
   const stage = getEvolutionStage(pet);
   if (stage.id === "adult") return getEvolutionDisplayEmoji(pet);
-  return getEvolutionEmoji(pet);
+  return getEvolutionStageEmojiForTheme(stage.id, getPetSpeciesTheme(pet));
 }

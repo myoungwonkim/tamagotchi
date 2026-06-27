@@ -432,5 +432,5 @@ export function resetDialogueTimer() {
 
 export function getVariantLabel(pet) {
   if (!pet.adultVariantId) return null;
-  return getAdultVariant(pet.adultVariantId).label;
+  return getAdultVariant(pet.adultVariantId, pet.speciesTheme).label;
 }

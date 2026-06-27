@@ -1,5 +1,6 @@
 import { ADULT_VARIANTS, getAdultVariant } from "./adultVariants.js";
 import { getEvolutionStage } from "./evolution.js";
+import { getVariantLabelForTheme, normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const STORAGE_KEY = "tamagotchi-encyclopedia";
 
@@ -41,7 +42,8 @@ export function addToEncyclopedia(pet) {
   if (!pet?.adultVariantId) return null;
   if (getEvolutionStage(pet).id !== "adult") return null;
 
-  const variant = getAdultVariant(pet.adultVariantId);
+  const variant = getAdultVariant(pet.adultVariantId, pet.speciesTheme);
+  const speciesTheme = normalizeSpeciesTheme(pet.speciesTheme);
   const data = loadEncyclopedia();
 
   const duplicate = data.entries.find(
@@ -57,7 +59,8 @@ export function addToEncyclopedia(pet) {
     tier: variant.tier,
     emoji: variant.emoji,
     spriteId: variant.spriteId,
-    label: variant.label,
+    label: getVariantLabelForTheme(variant.id, speciesTheme),
+    speciesTheme,
     achievedAt: Date.now(),
     careSnapshot: pet.adultCareSnapshot ?? null,
   };
