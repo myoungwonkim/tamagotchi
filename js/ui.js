@@ -42,11 +42,14 @@ const elements = {
   nameOverlay: document.getElementById("name-overlay"),
   nameInput: document.getElementById("name-input"),
   encyclopediaOverlay: document.getElementById("encyclopedia-overlay"),
+  encyclopediaPanel: document.querySelector(".encyclopedia-panel"),
+  encyclopediaList: document.getElementById("encyclopedia-list"),
   encyclopediaGrid: document.getElementById("encyclopedia-grid"),
   encyclopediaCount: document.getElementById("encyclopedia-count"),
   encyclopediaDetail: document.getElementById("encyclopedia-detail"),
   encyclopediaDetailGraphic: document.getElementById("encyclopedia-detail-graphic"),
   encyclopediaDetailName: document.getElementById("encyclopedia-detail-name"),
+  encyclopediaDetailSpecies: document.getElementById("encyclopedia-detail-species"),
   encyclopediaDetailDesc: document.getElementById("encyclopedia-detail-desc"),
   graduateOverlay: document.getElementById("graduate-overlay"),
   graduateGraphic: document.getElementById("graduate-graphic"),
@@ -201,11 +204,11 @@ function setOverlayGraphic(container, meta) {
 }
 
 export function renderPet(pet) {
+  const evolutionMeta = getEvolutionSpriteMeta(pet);
   elements.petName.textContent = pet.name;
   elements.petAge.textContent = `${getAgeDays(pet)}일째`;
   elements.petStage.textContent = getStageLabel(pet);
 
-  const evolutionMeta = getEvolutionSpriteMeta(pet);
   const evolutionKey = setPetGraphic(elements.petEvolution, evolutionMeta, {
     imgClass: "pet-evolution-img",
   });
@@ -427,8 +430,9 @@ function createEncyclopediaGraphic(meta, locked = false) {
 }
 
 function hideEncyclopediaDetail() {
+  elements.encyclopediaPanel?.classList.remove("encyclopedia-panel--detail");
+  elements.encyclopediaList.hidden = false;
   elements.encyclopediaDetail.hidden = true;
-  elements.encyclopediaGrid.hidden = false;
 }
 
 function showEncyclopediaDetail(variant, entry) {
@@ -441,10 +445,12 @@ function showEncyclopediaDetail(variant, entry) {
 
   const petName = entry.petName?.trim() || "이름 없음";
   elements.encyclopediaDetailName.textContent = petName;
+  elements.encyclopediaDetailSpecies.textContent = variant.label;
   elements.encyclopediaDetailDesc.textContent = getVariantDescription(variant.id, petName);
 
-  elements.encyclopediaGrid.hidden = true;
+  elements.encyclopediaList.hidden = true;
   elements.encyclopediaDetail.hidden = false;
+  elements.encyclopediaPanel?.classList.add("encyclopedia-panel--detail");
 }
 
 export function renderEncyclopedia() {
@@ -474,7 +480,11 @@ export function renderEncyclopedia() {
       ? slot.entries[0].petName?.trim() || "이름 없음"
       : "???";
 
-    card.append(graphic, name);
+    const species = document.createElement("span");
+    species.className = "encyclopedia-card__species";
+    species.textContent = slot.collected ? slot.variant.label : "???";
+
+    card.append(graphic, name, species);
 
     if (slot.collected && slot.entries[0]) {
       const entry = slot.entries[0];
@@ -504,6 +514,7 @@ export function showEncyclopedia() {
 export function hideEncyclopedia() {
   hideEncyclopediaDetail();
   elements.encyclopediaOverlay.hidden = true;
+  elements.encyclopediaPanel?.classList.remove("encyclopedia-panel--detail");
 }
 
 export function backToEncyclopediaList() {

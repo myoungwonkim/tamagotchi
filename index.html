@@ -88,17 +88,20 @@
     </footer>
 
     <div class="overlay" id="encyclopedia-overlay" hidden>
-      <div class="overlay-card overlay-card--wide">
-        <h2 class="overlay-title">도감</h2>
-        <p class="overlay-text" id="encyclopedia-count">수집 0 / 9</p>
-        <div class="encyclopedia-grid" id="encyclopedia-grid"></div>
+      <div class="overlay-card overlay-card--wide encyclopedia-panel">
+        <div class="encyclopedia-list" id="encyclopedia-list">
+          <h2 class="overlay-title">도감</h2>
+          <p class="overlay-text" id="encyclopedia-count">수집 0 / 9</p>
+          <div class="encyclopedia-grid" id="encyclopedia-grid"></div>
+          <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-close-encyclopedia">닫기</button>
+        </div>
         <div class="encyclopedia-detail" id="encyclopedia-detail" hidden>
           <div class="encyclopedia-detail__graphic" id="encyclopedia-detail-graphic" aria-hidden="true"></div>
-          <h3 class="encyclopedia-detail__name" id="encyclopedia-detail-name"></h3>
+          <h2 class="encyclopedia-detail__name" id="encyclopedia-detail-name"></h2>
+          <p class="encyclopedia-detail__species" id="encyclopedia-detail-species"></p>
           <p class="encyclopedia-detail__desc" id="encyclopedia-detail-desc"></p>
           <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-encyclopedia-detail-back">목록으로</button>
         </div>
-        <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-close-encyclopedia">닫기</button>
       </div>
     </div>
 
@@ -131,7 +134,28 @@
     </div>
   </div>
 
+  <div class="overlay boot-error" id="boot-error" hidden>
+    <div class="overlay-card">
+      <h2 class="overlay-title">게임을 불러오지 못했어요</h2>
+      <p class="overlay-text" id="boot-error-text"></p>
+      <p class="overlay-text boot-error__hint">로컬: 프로젝트 폴더에서 <code>python3 -m http.server 8080</code> 실행 후 <code>http://localhost:8080</code> 으로 접속하세요.</p>
+    </div>
+  </div>
+
   <script>
+    function showBootError(err) {
+      const overlay = document.getElementById("boot-error");
+      const text = document.getElementById("boot-error-text");
+      if (!overlay || !text) return;
+
+      const isFile = location.protocol === "file:";
+      text.textContent = isFile
+        ? "파일을 직접 열면(file://) ES 모듈이 차단되어 그래픽과 버튼이 동작하지 않습니다. 로컬 서버나 배포 URL로 접속해 주세요."
+        : "JavaScript 모듈을 불러오지 못했습니다. 새로고침하거나 캐시를 비운 뒤 다시 시도해 주세요.";
+
+      overlay.hidden = false;
+    }
+
     (function injectJsImportMap() {
       const v = document.querySelector('meta[name="app-version"]')?.content || "";
       const scope = new URL("js/", document.baseURI).href;
@@ -152,7 +176,15 @@
   </script>
   <script type="module">
     const v = document.querySelector('meta[name="app-version"]')?.content || "";
-    await import(`./js/main.js?v=${v}`);
+    if (location.protocol === "file:") {
+      showBootError(new Error("file protocol blocked"));
+    } else {
+      try {
+        await import(`./js/main.js?v=${v}`);
+      } catch (err) {
+        showBootError(err);
+      }
+    }
   </script>
 </body>
 </html>
