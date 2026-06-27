@@ -33,9 +33,9 @@ const VARIANT_LABELS = {
   standard: { deepsea: "산호어", mermaid: "산호 인어" },
   farm: { deepsea: "해조어", mermaid: "해초 인어" },
   plain: { deepsea: "진흙어", mermaid: "늪 인어" },
-  scruffy: { deepsea: "썩은 아귀", mermaid: "저주받은 인어" },
-  grumpy: { deepsea: "송곳니어", mermaid: "송곳니 인어" },
-  sickly: { deepsea: "기생어", mermaid: "기생 인어" },
+  scruffy: { deepsea: "썩은 아귀", mermaid: "헝클 어인" },
+  grumpy: { deepsea: "송곳니어", mermaid: "투성 어인" },
+  sickly: { deepsea: "기생어", mermaid: "반점 어인" },
 };
 
 const VARIANT_EMOJI = {
@@ -45,9 +45,9 @@ const VARIANT_EMOJI = {
   standard: { deepsea: "🐟", mermaid: "🧜‍♀️" },
   farm: { deepsea: "🪸🐟", mermaid: "🧜‍♀️🌿" },
   plain: { deepsea: "🐟", mermaid: "🧜" },
-  scruffy: { deepsea: "🪱🐟", mermaid: "🧟‍♀️🧜" },
-  grumpy: { deepsea: "💢🐡", mermaid: "💢🧜" },
-  sickly: { deepsea: "🤢🐟", mermaid: "🤢🧜" },
+  scruffy: { deepsea: "🪱🐟", mermaid: "🐟👖" },
+  grumpy: { deepsea: "💢🐡", mermaid: "🐟👞" },
+  sickly: { deepsea: "🤢🐟", mermaid: "🐟🩹" },
 };
 
 const STAGE_EMOJI = {

@@ -1,6 +1,6 @@
 # 심해 다마고치 웹 게임
 
-모바일 브라우저에서 키우는 **심해어** 다마고치 게임입니다. 90년대 패미컴 스타일 픽셀 PNG 스프라이트 21종.
+모바일 브라우저에서 키우는 **심해어 / 인어** 다마고치 게임입니다. 90년대 패미컴 스타일 32×32 픽셀 PNG 스프라이트(256px nearest-neighbor).
 
 **플레이:** https://myoungwonkim.github.io/tamagotchi/
 
@@ -9,7 +9,7 @@
 ### Phase 1 (MVP)
 - 펫 1마리 키우기 (이름 설정 가능)
 - 상태 4가지: 배고픔, 행복, 청결, 건강
-- 돌봄 버튼: 먹이, 놀기, 씻기, 재우기
+- 돌봄 버튼: 먹이, 놀기, 씻기, 재우기/깨우기
 - 실시간 상태 감소 + 오프라인 시간 반영
 - localStorage 자동 저장
 - 방치 시 게임 오버 후 새 펫 시작
@@ -34,30 +34,93 @@
 - **dev 토글:** `?dev=1` → "스프라이트 on/off" (`tamagotchi-settings.useSprites`)
 
 ### Phase 5B (그래픽 고도화)
-- **심해어 PNG 21종:** 90년대 패미컴 픽셀아트 (`scripts/generate_all_sprites.py`)
+- **심해어 PNG 28종:** 90년대 패미컴 픽셀아트 (`scripts/generate_all_sprites.py`)
 - **PNG 기본:** `spriteFormat` 미설정 시 png (dev에서 svg/png 전환 가능, svg 파일 없음)
 - **진화 전환:** `evolvePop` 애니메이션 (`js/effects.js`)
 - **무드·수면:** 말풍선 fade, 수면 배경 gradient, sleep idle bob
 - **idle 모션:** tier별 bob/shake (`data-variant` on `#pet-evolution`)
-- **돌보기 FX:** 먹이/놀기/씻기 이모지 파티클 (`#care-fx`)
 - **접근성:** `prefers-reduced-motion: reduce` 시 애니메이션 비활성
+
+### Phase 5C (UI·돌봄·더러움)
+- **액션 버튼:** 픽셀 PNG 아이콘 (사과·테니스공·빗자루·달·해) + **Galmuri11 Bold** 라벨 (먹이 / 놀이 / 청소 / 재우기·깨우기)
+- **돌봄 FX:** 이모지 대신 UI 스프라이트 1개씩 펫 가장자리 궤도에 표시 (`#care-fx`, `js/effects.js`)
+- **더러움 레이어:** 청결 70 미만 시 배변물·파리 PNG가 펫 주변에 단계별 등장 (`js/mess.js`, `#mess-layer`)
+- **메시지 박스:** 펫 영역 상단 얇은 밴드 오버레이 (옵션 C)
+- **부트 에러:** JS 모듈 로드 실패·`file://` 접속 시 안내 오버레이
+
+### Phase 5D (도감·스프라이트 품질)
+- **도감 상세:** 카드 클릭 → 변종별 기괴한 설명문 (flavor text)
+- **도감 레이아웃:** 목록 한 화면에 맞춤, 스프라이트 인게임 성체 크기에 맞게 확대
+- **불량 성체 눈:** scruffy / grumpy / sickly — 검정 테두리·흰자·홍채·동공 픽셀 링으로 또렷하게
+- **배변물·파리:** 단순화된 poop A / fly A 디자인
+- **캐시 버스트:** importmap으로 모든 JS 모듈에 `app-version` 쿼리 적용
+
+### Phase 6 (인어 테마)
+- **종 테마:** 새 펫 시작 시 `deepsea`(심해어) / `mermaid`(인어) **50% 랜덤**
+- **진화 규칙 동일:** 나이·케어 기반 tier / variant 9종 풀은 심해어와 같음
+- **테마별 라벨:** 단계명·변종명·이모지가 테마에 맞게 표시 (`js/speciesThemes.js`)
+- **인어 스프라이트 19종:** `assets/sprites/mermaid/` (진화 5 + 성체 9 + 무드 5)
+- **인어 성체 9종:** 티어 콘셉트 디자인 (pretty/normal — 사람 상체+물고기 꼬리, defective — 물고기 상체+사람 다리·발)
+- **도감 설명:** `speciesTheme`별 flavor text (심해어 / 인어 각 9종)
+- **UI 아이콘 공용:** 먹이·청소·배변물 등 9종은 심해어·인어 공통
 
 진행 상황: **[docs/DEVELOPMENT-PROGRESS.md](docs/DEVELOPMENT-PROGRESS.md)**
 
+## 종 테마 (speciesTheme)
+
+| 항목 | 심해어 (`deepsea`) | 인어 (`mermaid`) |
+|------|-------------------|------------------|
+| 알 | 알 | 진주 알 |
+| baby | 라바 | 꼬물 인어 |
+| child | 치어 | 어린 인어 |
+| teen | 청소년어 | 청소년 인어 |
+| pretty 예 | 등불어 · 달빛 해파리 · 발광 오징어 | 진주 인어 · 달빛 실크 인어 · 별빛 인어 |
+| normal 예 | 산호어 · 해조어 · 진흙어 | 산호 인어 · 해초 인어 · 늪 인어 |
+| defective 예 | 썩은 아귀 · 송곳니어 · 기생어 | 헝클 어인 · 투성 어인 · 반점 어인 |
+
+- `pet.speciesTheme`은 **알 단계에서 한 번 정해지면** 해당 펫 생애 동안 유지
+- 기존 세이브(필드 없음) → `deepsea`로 처리
+- 도감 엔트리에 `speciesTheme`·테마별 `label` 저장
+
 ## 스프라이트 구조
+
+총 **47 PNG** (심해어 28 + 인어 19, UI 9종은 심해어 경로에만 존재·공용)
 
 ```
 assets/sprites/
-  evolution/   egg baby child teen dead   (.png)
-  adult/       golden fluffy sparkle standard farm plain scruffy grumpy sickly
-  mood/        happy neutral sad sleep sick
-  ui/          heart-broken locked
+  evolution/          egg baby child teen dead          # 심해어 (28종 중)
+  adult/              golden fluffy sparkle standard farm plain scruffy grumpy sickly
+  mood/               happy neutral sad sleep sick
+  ui/                 feed play clean sleep wake poop fly heart-broken locked
+  mermaid/
+    evolution/        egg baby child teen dead          # 인어 (19종)
+    adult/            (동일 9종 ID)
+    mood/             (동일 5종)
 ```
+
+| 카테고리 | 심해어 경로 | 인어 경로 |
+|----------|------------|-----------|
+| evolution / adult / mood | `assets/sprites/{category}/{id}.png` | `assets/sprites/mermaid/{category}/{id}.png` |
+| ui | `assets/sprites/ui/{id}.png` | 동일 (공용) |
 
 PNG 재생성:
 
 ```bash
+# 심해어 28종 → assets/sprites/
 python3 scripts/generate_all_sprites.py --install
+
+# 인어 19종 → assets/sprites/mermaid/
+python3 scripts/generate_mermaid_preview.py --install
+```
+
+스테이징 미리보기 (게임 미반영):
+
+```bash
+python3 scripts/generate_all_sprites.py              # → .sprite-staging-deepsea/
+python3 scripts/generate_mermaid_preview.py          # → .sprite-staging-mermaid/preview.html
+python3 scripts/generate_action_preview.py           # 액션 버튼 시안
+python3 scripts/generate_mess_preview.py             # 배변물·파리 시안
+python3 scripts/generate_defective_eye_preview.py    # 불량 눈 시안
 ```
 
 ## 그래픽 표시 규칙
@@ -66,18 +129,27 @@ python3 scripts/generate_all_sprites.py --install
 
 | 조건 | 스프라이트 |
 |------|-----------|
-| 게임 오버 | `evolution/dead.png` |
-| egg ~ teen | `evolution/{stage}.png` |
-| adult | `adult/{variantId}.png` |
+| 게임 오버 | `{theme}/evolution/dead.png` |
+| egg ~ teen | `{theme}/evolution/{stage}.png` |
+| adult | `{theme}/adult/{variantId}.png` |
+
+`{theme}` = `deepsea`(기본 경로) 또는 `mermaid`(mermaid/ 하위)
 
 ### 말풍선 (무드 스프라이트)
 
 | 조건 | 스프라이트 |
 |------|-----------|
 | 게임 오버 | 숨김 |
-| 수면 | `mood/sleep.png` |
-| 건강 < 30 | `mood/sick.png` |
-| 슬픔/보통/좋음 | `mood/sad|neutral|happy.png` |
+| 수면 | `{theme}/mood/sleep.png` |
+| 건강 < 30 | `{theme}/mood/sick.png` |
+| 슬픔/보통/좋음 | `{theme}/mood/sad\|neutral\|happy.png` |
+
+### 더러움·돌봄 FX
+
+| 요소 | 스프라이트 |
+|------|-----------|
+| 배변물·파리 | `ui/poop.png`, `ui/fly.png` (청결 < 70, egg 제외) |
+| 돌봄 궤도 FX | `ui/feed|play|clean|sleep|wake.png` (액션 1회당 1개) |
 
 스프라이트 off 또는 로드 실패 시 이모지 fallback.
 
@@ -85,9 +157,11 @@ python3 scripts/generate_all_sprites.py --install
 
 | tier | 조건 (진화 시점) | 톤 |
 |------|------------------|-----|
-| pretty | 4 stat min ≥ 65, avg ≥ 72 | 빛나는 심해어, 긍정 대사 |
-| normal | min ≥ 40, avg ≥ 50 | 보통 심해어, 중립 대사 |
-| defective | 그 외 | 불량 심해어, 부정 대사 |
+| pretty | 4 stat min ≥ 65, avg ≥ 72 | 빛나는 종, 긍정 대사 |
+| normal | min ≥ 40, avg ≥ 50 | 보통 종, 중립 대사 |
+| defective | 그 외 | 불량 종, 부정 대사 |
+
+티어·variant ID는 심해어·인어 **동일**. 스프라이트·라벨만 테마별.
 
 ## 효과음
 
@@ -120,7 +194,15 @@ python3 -m http.server 8080
 ./scripts/bump-version.sh   # git short SHA로 app-version 동기화
 ```
 
-스프라이트 URL에도 동일 버전 쿼리가 붙습니다 (`sprites.js`).
+스프라이트 URL·importmap JS 모듈에도 동일 버전 쿼리가 붙습니다 (`sprites.js`, `index.html`).
+
+### QA 스모크 (자동)
+
+```bash
+bash scripts/qa-smoke.sh
+```
+
+PNG 47종·디렉터리·`speciesTheme`·핵심 JS/CSS 심볼 등을 검사합니다.
 
 ### 개발 테스트 모드
 
@@ -143,13 +225,17 @@ http://localhost:8080/?dev=1
 요약 (수동 확인):
 
 - [ ] 메인 진화 PNG + 말풍선 무드 PNG 동시 표시
+- [ ] 새 펫 시 심해어 / 인어 랜덤 (단계 라벨·스프라이트 확인)
 - [ ] `?dev=1` 스프라이트 off → 이모지 fallback
 - [ ] 진화 단계별 PNG 전환 (dev 나이 +1일)
 - [ ] 성체 pretty/defective → 다른 adult PNG
-- [ ] 도감 카드 PNG + 미수집 locked PNG
+- [ ] 도감 카드·상세 (스프라이트·flavor text)
 - [ ] 게임 오버·졸업 오버레이 PNG
+- [ ] 액션 버튼 PNG + Galmuri 라벨
+- [ ] 돌봄 FX 궤도 스프라이트
+- [ ] 청결 낮을 때 배변물·파리
 - [ ] 🔊/🔇, safe-area, 오프라인 반영
-- [ ] 재우기/깨우기·돌보기 버튼 (최근 버그 회귀 — A섹션)
+- [ ] 재우기/깨우기·돌보기 버튼 회귀
 - [ ] Phase 5B 모션·FX (G섹션)
 
 ## 밸런스
@@ -161,8 +247,9 @@ http://localhost:8080/?dev=1
 | 청결 감소 | 0.016/초 |
 | 건강 감소 | 0.016/초 (tiered) |
 | 방치 게임 오버 | 평균 < 10, 10분 |
+| 더러움 시작 | 청결 < 70 (egg 제외) |
 
-수치 조정: `js/pet.js`의 `DECAY_RATES`, `HEALTH_DECAY_RATE`
+수치 조정: `js/pet.js` (`DECAY_RATES`, `HEALTH_DECAY_RATE`), `js/mess.js` (`MESS_THRESHOLD`)
 
 ## GitHub Pages 배포
 
@@ -174,25 +261,50 @@ http://localhost:8080/?dev=1
 
 배포 URL: https://myoungwonkim.github.io/tamagotchi/
 
+### 디자인 시안 (docs/, 게임 미반영)
+
+| 문서 | 내용 |
+|------|------|
+| [docs/index.html](docs/index.html) | 시안 목록 허브 |
+| [docs/ui-theme-preview.html](docs/ui-theme-preview.html) | UI 테마 A·B·C·D |
+| [docs/ui-theme-bd-preview.html](docs/ui-theme-bd-preview.html) | UI 테마 B+D 조합 |
+| [docs/ui-theme-sub-preview.html](docs/ui-theme-sub-preview.html) | 잠수함 테마 mockup |
+| [docs/encyclopedia-size-preview.html](docs/encyclopedia-size-preview.html) | 도감 스프라이트 크기 |
+| [docs/encyclopedia-layout-preview.html](docs/encyclopedia-layout-preview.html) | 도감 레이아웃 |
+| [docs/message-position-preview.html](docs/message-position-preview.html) | 메시지 위치 |
+
 ## 프로젝트 구조
 
 ```
 tamagotchi/
-  assets/sprites/   # 심해어 PNG 21종
+  assets/
+    fonts/              Galmuri11-Bold.woff2 (액션 라벨)
+    sprites/            심해어 PNG 28종 + mermaid/ 인어 19종
   index.html
   css/style.css
   js/
-    sprites.js        # 스프라이트 URL, preload, useSprites 설정
-    pet.js            # getMoodKind, decay
-    evolution.js      # 진화 단계 + spriteId
-    adultVariants.js  # 성체 variant + spriteId
-    dialogue.js       # 성체 tier별 대사
-    encyclopedia.js   # 도감 localStorage
-    audio.js          # Web Audio SFX, 음소거
-    actions.js        # 돌봄 버튼
-    effects.js        # 진화·무드·idle·돌보기 FX
-    storage.js        # localStorage
-    ui.js             # setPetGraphic, 도감·FAB UI
-    main.js           # 게임 루프
-    dev.js            # ?dev=1 테스트 패널
+    speciesThemes.js    deepsea/mermaid 테마·라벨·랜덤 선택
+    sprites.js          테마별 스프라이트 URL, preload, useSprites
+    pet.js              speciesTheme, getMoodKind, decay
+    evolution.js        진화 단계 + spriteId
+    adultVariants.js    성체 variant + tier (테마 무관)
+    dialogue.js         성체 tier별 대사
+    encyclopedia.js     도감 localStorage + flavor text
+    mess.js             배변물·파리 레이어
+    audio.js            Web Audio SFX, 음소거
+    actions.js          돌봄 버튼
+    effects.js          진화·무드·idle·돌봄 FX
+    storage.js          localStorage, speciesTheme 정규화
+    ui.js               setPetGraphic, 도감·FAB UI
+    main.js             게임 루프
+    dev.js              ?dev=1 테스트 패널
+  scripts/
+    generate_all_sprites.py       심해어 28종 생성
+    generate_mermaid_preview.py   인어 19종 생성·설치
+    generate_action_preview.py    액션 버튼 시안
+    generate_mess_preview.py      배변물·파리 시안
+    generate_defective_eye_preview.py  불량 눈 시안
+    qa-smoke.sh                     자동 QA
+    bump-version.sh                 app-version 동기화
+  docs/                 QA·시안·가이드
 ```

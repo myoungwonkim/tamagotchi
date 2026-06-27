@@ -452,7 +452,11 @@ function showEncyclopediaDetail(variant, entry) {
   const petName = entry.petName?.trim() || "이름 없음";
   elements.encyclopediaDetailName.textContent = petName;
   elements.encyclopediaDetailSpecies.textContent = entry.label ?? variant.label;
-  elements.encyclopediaDetailDesc.textContent = getVariantDescription(variant.id, petName);
+  elements.encyclopediaDetailDesc.textContent = getVariantDescription(
+    variant.id,
+    petName,
+    theme,
+  );
 
   elements.encyclopediaList.hidden = true;
   elements.encyclopediaDetail.hidden = false;
