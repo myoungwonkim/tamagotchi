@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI 테마 시안 — B×D 확장</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #121214;
+    color: #ccc;
+    padding: 24px 14px 56px;
+    line-height: 1.45;
+  }
+
+  .page-head {
+    max-width: 1140px;
+    margin: 0 auto 20px;
+    text-align: center;
+  }
+
+  .page-head h1 { font-size: 1.0625rem; font-weight: 700; color: #ece8e0; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #8a8680; max-width: 680px; margin: 0 auto; }
+
+  .ref-row {
+    max-width: 1140px;
+    margin: 0 auto 28px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .ref-chip {
+    font-size: 0.75rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1e1e22;
+    color: #a8a4a0;
+  }
+
+  .ref-chip strong { color: #e0dcd4; display: block; margin-bottom: 4px; font-size: 0.8125rem; }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px;
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  .theme-card {
+    background: #1c1c20;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid #2e2e34;
+  }
+
+  .theme-card__tag {
+    display: inline-block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+
+  .theme-card h2 { font-size: 0.9375rem; font-weight: 700; color: #f0ece4; margin-bottom: 4px; }
+  .theme-card__desc { font-size: 0.75rem; color: #8a8680; margin-bottom: 10px; min-height: 2.6em; }
+  .theme-card__mix { font-size: 0.6875rem; color: #6a6864; margin-bottom: 8px; }
+  .theme-card__mix b { color: #a8a060; font-weight: 600; }
+  .theme-card__notes { font-size: 0.6875rem; color: #6a6864; margin-top: 10px; padding-left: 1rem; }
+  .theme-card__notes li + li { margin-top: 3px; }
+
+  /* ===== 공통 목업 ===== */
+  .phone {
+    --radius: 0;
+    --text-xl: 1rem;
+    --text-sm: 0.75rem;
+    --text-xs: 0.6875rem;
+    --sprite-size: clamp(5.5rem, 42%, 7rem);
+    --font-ui: "SF Mono", "Menlo", "MS Gothic", monospace;
+    --cream: #d8c8a8;
+    --cream-rust: #a89878;
+    --amber: #b8a070;
+    --navy: #101028;
+    --void: #0c0e10;
+
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid var(--phone-border, #333);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .app-mock {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px 12px;
+    gap: 10px;
+  }
+
+  .header-mock { text-align: center; padding: 4px 36px 6px; position: relative; }
+
+  .icon-btn {
+    position: absolute; top: 0;
+    width: 32px; height: 32px;
+    border: var(--icon-border, 1px solid #333);
+    border-radius: 0;
+    background: var(--icon-bg, var(--surface));
+    color: var(--icon-fg, var(--text));
+    font-size: 0.8125rem;
+    cursor: default;
+  }
+  .icon-btn--left { left: 0; }
+  .icon-btn--right { right: 0; }
+
+  .pet-name {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-shadow: var(--title-shadow, none);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pet-meta { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
+  .pet-stage { font-size: var(--text-xs); font-weight: 600; color: var(--accent); margin-top: 1px; }
+
+  .pet-area {
+    position: relative;
+    flex: 1;
+    min-height: 200px;
+    background: var(--pet-bg, #000);
+    border-radius: var(--pet-radius, 0);
+    border: var(--pet-border, none);
+    box-shadow: var(--pet-shadow, none);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .pet-area img {
+    width: var(--sprite-size);
+    height: var(--sprite-size);
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 1;
+    position: relative;
+  }
+
+  .fx-scanlines::after,
+  .fx-dust::before,
+  .fx-rust::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .fx-scanlines::after {
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.14) 2px, rgba(0,0,0,0.14) 4px);
+  }
+
+  .fx-dust::before {
+    opacity: var(--dust-opacity, 0.3);
+    background-image: radial-gradient(circle, rgba(255,255,255,0.45) 0.45px, transparent 0.45px);
+    background-size: 7px 7px;
+  }
+
+  .fx-rust::before {
+    opacity: 0.15;
+    background:
+      radial-gradient(ellipse at 10% 90%, rgba(160,100,50,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 10%, rgba(100,80,60,0.4) 0%, transparent 40%);
+  }
+
+  .message {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 4;
+    text-align: center;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 6px 10px;
+    background: var(--msg-bg);
+    color: var(--msg-text);
+    border-bottom: var(--msg-border, none);
+  }
+
+  .stats {
+    background: var(--stats-bg, var(--surface));
+    border: var(--stats-border, none);
+    border-radius: var(--stats-radius, 0);
+    padding: var(--stats-pad, 10px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--stats-gap, 7px);
+    box-shadow: var(--stats-shadow, none);
+  }
+
+  .stat {
+    display: grid;
+    grid-template-columns: 40px 1fr 28px;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-xs);
+    border: var(--stat-row-border, none);
+    padding: var(--stat-row-pad, 0);
+  }
+
+  .stat label { color: var(--text-muted); font-weight: 500; }
+  .stat-val { text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+  .stat-bar {
+    height: var(--bar-h, 8px);
+    background: var(--bar-track);
+    border: var(--bar-border, none);
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .stat-fill { height: 100%; width: var(--w, 70%); border-radius: 0; }
+  .stat-fill--h { --w: 62%; background: var(--bar-hunger); }
+  .stat-fill--p { --w: 48%; background: var(--bar-happy); }
+  .stat-fill--c { --w: 35%; background: var(--bar-clean); }
+  .stat-fill--x { --w: 88%; background: var(--bar-health); }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    min-height: 58px;
+    border: var(--action-border, 1px solid #333);
+    border-radius: 0;
+    background: var(--action-bg, var(--surface));
+    color: var(--text);
+    cursor: default;
+    box-shadow: var(--action-inset, none);
+  }
+
+  .action-btn img {
+    width: 32px; height: 32px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    opacity: var(--icon-opacity, 1);
+  }
+
+  .action-btn span { font-size: var(--text-xs); font-weight: 600; }
+
+  .palette { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+  .palette i { display: block; width: 18px; height: 18px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.08); }
+
+  .tag-bd { background: #2a2830; color: #b8a070; border: 1px solid #484038; }
+  .tag-pick { background: #483828; color: #e8c890; border: 1px solid #685838; }
+
+  .pick-banner {
+    max-width: 1140px;
+    margin: 28px auto 0;
+    padding: 14px 16px;
+    background: #1a1814;
+    border: 1px solid #3a3428;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    color: #a8a090;
+  }
+  .pick-banner strong { color: #d8c090; }
+
+  /* ===== BD-1 침수 세가 창: B 골격 + D 내부 ===== */
+  .theme-bd1 {
+    --bg: #0c0e14;
+    --surface: #10141c;
+    --text: #a8a498;
+    --text-muted: #5a5850;
+    --accent: #b8a070;
+    --pet-bg: #060810;
+    --pet-border: 3px solid #a89878;
+    --pet-shadow: inset 0 0 0 1px #000, inset 0 0 24px rgba(0,0,0,0.6);
+    --msg-bg: #10141c;
+    --msg-text: #c8b888;
+    --msg-border: 2px solid #887868;
+    --stats-bg: #10141c;
+    --stats-border: 3px solid #a89878;
+    --bar-track: #0a0c10;
+    --bar-border: 1px solid #3a3830;
+    --bar-hunger: #8a6040;
+    --bar-happy: #6a7060;
+    --bar-clean: #4a5a68;
+    --bar-health: #5a6858;
+    --bar-h: 5px;
+    --action-bg: #14181c;
+    --action-border: 2px solid #887868;
+    --icon-bg: #14181c;
+    --icon-border: 2px solid #887868;
+    --phone-border: #887868;
+    --dust-opacity: 0.25;
+  }
+
+  .theme-bd1 .pet-area { --pet-extra: scan+dust+rust; }
+  .theme-bd1 .stat-bar {
+    background: repeating-linear-gradient(90deg, #0a0c10 0, #0a0c10 3px, #10141c 3px, #10141c 4px);
+  }
+
+  /* ===== BD-2 계측 프레임: D 기반 + B 포인트 ===== */
+  .theme-bd2 {
+    --bg: #0c0e10;
+    --surface: #14181c;
+    --text: #9aa4ae;
+    --text-muted: #4e5860;
+    --accent: #40a0b8;
+    --pet-bg: #080a0c;
+    --pet-border: 1px solid #3a4248;
+    --msg-bg: #101418;
+    --msg-text: #9aa4ae;
+    --msg-border: 1px solid #3a4248;
+    --stats-bg: transparent;
+    --stats-border: none;
+    --stats-pad: 0;
+    --stats-gap: 5px;
+    --stat-row-border: 2px solid #d8c8a8;
+    --stat-row-pad: 6px 8px;
+    --bar-track: #1a1e22;
+    --bar-hunger: #c04040;
+    --bar-happy: #c09030;
+    --bar-clean: #40a8c8;
+    --bar-health: #48a848;
+    --bar-h: 4px;
+    --action-bg: #14181c;
+    --action-border: 1px solid #3a4248;
+    --icon-bg: #14181c;
+    --icon-border: 1px solid #3a4248;
+    --phone-border: #3a4248;
+    --dust-opacity: 0.35;
+  }
+
+  .theme-bd2 .stats { background: #101418; border: 1px solid #3a4248; padding: 8px; }
+  .theme-bd2 .stat { background: #0c0e10; }
+
+  /* ===== BD-3 염수 CRT: 스캔라인+앰버 인광 ===== */
+  .theme-bd3 {
+    --bg: #0a0c18;
+    --surface: #101428;
+    --text: #c8b878;
+    --text-muted: #6a6450;
+    --accent: #e04848;
+    --pet-bg: #000010;
+    --pet-border: 3px solid #988868;
+    --pet-shadow: inset 0 0 32px rgba(180,140,60,0.06);
+    --msg-bg: #101020;
+    --msg-text: #d8c080;
+    --msg-border: 2px solid #786848;
+    --stats-bg: #101020;
+    --stats-border: 3px solid #988868;
+    --bar-track: #080810;
+    --bar-border: 1px solid #484038;
+    --bar-hunger: #d04040;
+    --bar-happy: #d0a030;
+    --bar-clean: #48b8d8;
+    --bar-health: #50c050;
+    --bar-h: 10px;
+    --action-bg: #181830;
+    --action-border: 2px solid #988868;
+    --icon-bg: #181830;
+    --icon-border: 2px solid #988868;
+    --phone-border: #786848;
+    --title-shadow: 2px 2px 0 #000;
+    --dust-opacity: 0.2;
+  }
+
+  .theme-bd3 .stat-bar {
+    background: repeating-linear-gradient(90deg, #080810 0, #080810 4px, #101020 4px, #101020 5px);
+  }
+
+  .theme-bd3 .action-btn--feed { background: #281818; }
+  .theme-bd3 .action-btn--play { background: #282018; }
+  .theme-bd3 .action-btn--clean { background: #182028; }
+  .theme-bd3 .action-btn--sleep { background: #181828; }
+
+  /* ===== BD-4 침수 아케이드: B 패널 + D 금속 ===== */
+  .theme-bd4 {
+    --bg: #141618;
+    --surface: #1c1e22;
+    --text: #b0a898;
+    --text-muted: #5a5854;
+    --accent: #d04848;
+    --pet-bg: #080a0c;
+    --pet-border: 4px solid #c8b898;
+    --pet-shadow:
+      inset 0 0 0 2px #1a1a1a,
+      inset 0 0 48px rgba(0,0,0,0.7),
+      0 0 0 1px #3a3830;
+    --msg-bg: #1a1c20;
+    --msg-text: #c8c0b0;
+    --msg-border: 3px solid #c8b898;
+    --stats-bg: #1a1c20;
+    --stats-border: 4px solid #c8b898;
+    --stats-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+    --bar-track: #0a0c0e;
+    --bar-border: 1px solid #4a4840;
+    --bar-hunger: #a04038;
+    --bar-happy: #a08030;
+    --bar-clean: #3888a0;
+    --bar-health: #408848;
+    --bar-h: 8px;
+    --action-bg: #222428;
+    --action-border: 3px solid #988878;
+    --action-inset: inset 0 1px 0 rgba(255,255,255,0.04);
+    --icon-bg: #222428;
+    --icon-border: 3px solid #988878;
+    --icon-opacity: 0.85;
+    --phone-border: #4a4840;
+    --dust-opacity: 0.28;
+  }
+
+  .theme-bd4 .app-mock {
+    background: linear-gradient(180deg, #1e2024 0%, #141618 100%);
+    border: 1px solid #3a3834;
+    margin: 4px;
+  }
+
+  /* ===== BD-5 관측 로그 (추천 혼합) ===== */
+  .theme-bd5 {
+    --bg: #0c0e12;
+    --surface: #12161c;
+    --text: #a8a89c;
+    --text-muted: #505860;
+    --accent: #b8a070;
+    --pet-bg: #060810;
+    --pet-border: 3px solid #b8a888;
+    --pet-shadow: inset 0 0 0 1px #000;
+    --msg-bg: #0e1218;
+    --msg-text: #c8b880;
+    --msg-border: 1px solid #4a4438;
+    --stats-bg: #0e1218;
+    --stats-border: 1px solid #2a3038;
+    --bar-track: #1a1e24;
+    --bar-hunger: #906838;
+    --bar-happy: #687868;
+    --bar-clean: #486878;
+    --bar-health: #587058;
+    --bar-h: 4px;
+    --action-bg: #12161c;
+    --action-border: 1px solid #3a4048;
+    --icon-bg: #12161c;
+    --icon-border: 1px solid #3a4048;
+    --phone-border: #2a3038;
+    --dust-opacity: 0.22;
+  }
+
+  .theme-bd5 .pet-name { color: #d8d0c0; text-shadow: 1px 1px 0 #000; }
+  .theme-bd5 .pet-stage { color: #68a8b8; }
+  .theme-bd5 .stat label::before { content: "› "; color: #585860; }
+  .theme-bd5 .action-btn span { color: #888890; font-weight: 500; letter-spacing: 0.06em; }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.75rem;
+    color: #6a6864;
+  }
+  .back-link a { color: #988868; }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>B × D 확장 시안</h1>
+    <p>페미콤 심해(B)의 창·테두리·스캔라인과, 염수 침식(D)의 침수 금속·계측기·앰버 포인트를 섞은 5종입니다. 게임 미반영.</p>
+  </header>
+
+  <div class="ref-row">
+    <div class="ref-chip"><strong>B — 페미콤 심해</strong>크림 프레임, 16색, 스캔라인, 세그먼트 스탯, 고딕·고대비</div>
+    <div class="ref-chip"><strong>D — 염수 침식</strong>무채색 침수, 부유물, 모노스페이스, 낡은 전구색, 얇은 막대</div>
+  </div>
+
+  <div class="gallery">
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-bd">B+D</span>
+      <h2>BD-1 — 침수 세가 창</h2>
+      <p class="theme-card__mix"><b>B</b> 3px 창 골격 · <b>D</b> 침식 크림·먼지·얇은 막대</p>
+      <p class="theme-card__desc">페미콤 대화창 형태는 유지하되, 테두리를 녹슨 크림으로 바꾸고 안쪽은 D처럼 침묵.</p>
+      <div class="phone theme-bd1 fx-scanlines fx-dust fx-rust" data-mock></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#0c0e14"></i><i style="background:#a89878"></i>
+        <i style="background:#b8a070"></i><i style="background:#10141c"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>가장 직관적인 B+D 50:50</li>
+        <li>스탯 색도 채도 낮춤 — 네온 느낌 제거</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-bd">B+D</span>
+      <h2>BD-2 — 계측 프레임</h2>
+      <p class="theme-card__mix"><b>D</b> 침수 패널·먼지 · <b>B</b> 행마다 크림 프레임·원색 막대</p>
+      <p class="theme-card__desc">전체는 D 계측기. 스탯 한 줄마다만 페미콤 선택지 박스를 씌움.</p>
+      <div class="phone theme-bd2 fx-dust" data-mock></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#0c0e10"></i><i style="background:#d8c8a8"></i>
+        <i style="background:#40a8c8"></i><i style="background:#9aa4ae"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>정보 UI는 D, 강조만 B 원색</li>
+        <li>펫 영역은 프레임 없이 심해 공허</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-bd">B+D</span>
+      <h2>BD-3 — 염수 CRT</h2>
+      <p class="theme-card__mix"><b>B</b> 스캔라인·세그먼트·그림자 · <b>D</b> 앰버 인광·침식 테두리</p>
+      <p class="theme-card__desc">낡은 CRT 모니터가 염수에 잠긴 느낌. 텍스트는 앰버, 막대만 B 원색.</p>
+      <div class="phone theme-bd3 fx-scanlines fx-dust" data-mock></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#0a0c18"></i><i style="background:#c8b878"></i>
+        <i style="background:#988868"></i><i style="background:#d04040"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>레트로 감성이 가장 강함</li>
+        <li>장시간 플레이 시 눈 피로 주의 — 옵션으로 스캔라인 끄기 고려</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-bd">B+D</span>
+      <h2>BD-4 — 침수 아케이드</h2>
+      <p class="theme-card__mix"><b>B</b> 두꺼운 베젤·창 UI · <b>D</b> 금속·먼지·채도 죽은 버튼</p>
+      <p class="theme-card__desc">심해에 가라앉은 아케이드 기계. 페미콤 베젤이 두껍고 표면은 D 금속 질감.</p>
+      <div class="phone theme-bd4 fx-dust fx-rust" data-mock></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#141618"></i><i style="background:#c8b898"></i>
+        <i style="background:#b0a898"></i><i style="background:#080a0c"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>‘오락실+공포’ 톤 — 기괴 펫과 궁합 좋음</li>
+        <li>버튼 아이콘 opacity 낮춰 낡음 표현</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-pick">추천</span>
+      <h2>BD-5 — 관측 로그</h2>
+      <p class="theme-card__mix"><b>B</b> 펫 창 프레임·이름 그림자 · <b>D</b> 로그 본문·얇은 막대·앰버</p>
+      <p class="theme-card__desc">잠수정에서 심해 생물을 기록하는 터미널. B는 ‘관측창’에만, 나머지는 D.</p>
+      <div class="phone theme-bd5 fx-scanlines fx-dust" data-mock></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#0c0e12"></i><i style="background:#b8a888"></i>
+        <i style="background:#b8a070"></i><i style="background:#68a8b8"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>B+D 중 게임 적용 밸런스 최적</li>
+        <li>스탯 라벨 › 접두 — 로그 느낌</li>
+        <li>어종만 시안(cyan) 포인트 — B 색 최소 사용</li>
+      </ul>
+    </article>
+
+  </div>
+
+  <div class="pick-banner">
+    <strong>1순위: BD-5 관측 로그</strong> — B의 레트로는 펫 창에만, D의 음침함은 전체 톤에.
+    더 레트로하게 가려면 <strong>BD-3</strong>, 베젤·아케이드 느낌은 <strong>BD-4</strong>, 가장 무난한 혼합은 <strong>BD-1</strong>입니다.
+  </div>
+
+  <p class="back-link"><a href="ui-theme-preview.html">← 전체 테마 시안 (A·B·C·D)으로 돌아가기</a></p>
+
+  <script>
+    const PET = "../assets/sprites/adult/grumpy.png";
+    const ICONS = {
+      feed: "../assets/sprites/ui/feed.png",
+      play: "../assets/sprites/ui/play.png",
+      clean: "../assets/sprites/ui/clean.png",
+      sleep: "../assets/sprites/ui/sleep.png",
+    };
+
+    const MOCK = `
+      <div class="app-mock">
+        <header class="header-mock">
+          <button type="button" class="icon-btn icon-btn--left" aria-hidden="true">📖</button>
+          <button type="button" class="icon-btn icon-btn--right" aria-hidden="true">🔊</button>
+          <h3 class="pet-name">송곳니어</h3>
+          <p class="pet-meta">47일째</p>
+          <p class="pet-stage">성체 · 송곳니어</p>
+        </header>
+        <div class="pet-area fx-scanlines fx-dust">
+          <p class="message">후회할 거야, 키운 거.</p>
+          <img src="${PET}" alt="송곳니어" width="128" height="128">
+        </div>
+        <section class="stats">
+          <div class="stat"><label>배고픔</label><div class="stat-bar"><div class="stat-fill stat-fill--h"></div></div><span class="stat-val">062</span></div>
+          <div class="stat"><label>행복</label><div class="stat-bar"><div class="stat-fill stat-fill--p"></div></div><span class="stat-val">048</span></div>
+          <div class="stat"><label>청결</label><div class="stat-bar"><div class="stat-fill stat-fill--c"></div></div><span class="stat-val">035</span></div>
+          <div class="stat"><label>건강</label><div class="stat-bar"><div class="stat-fill stat-fill--x"></div></div><span class="stat-val">088</span></div>
+        </section>
+        <footer class="actions">
+          <button type="button" class="action-btn action-btn--feed"><img src="${ICONS.feed}" alt=""><span>먹이</span></button>
+          <button type="button" class="action-btn action-btn--play"><img src="${ICONS.play}" alt=""><span>놀이</span></button>
+          <button type="button" class="action-btn action-btn--clean"><img src="${ICONS.clean}" alt=""><span>청소</span></button>
+          <button type="button" class="action-btn action-btn--sleep"><img src="${ICONS.sleep}" alt=""><span>재우기</span></button>
+        </footer>
+      </div>
+    `;
+
+    document.querySelectorAll("[data-mock]").forEach((el) => { el.innerHTML = MOCK; });
+  </script>
+</body>
+</html>

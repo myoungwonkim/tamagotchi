@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI 테마 시안 — 심해 다마고치</title>
+  <style>
+  /* ===== 공통 레이아웃 ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #1a1a1a;
+    color: #ddd;
+    padding: 24px 14px 56px;
+    line-height: 1.45;
+  }
+
+  .page-head {
+    max-width: 1100px;
+    margin: 0 auto 28px;
+    text-align: center;
+  }
+
+  .page-head h1 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #f2f0ec;
+    margin-bottom: 8px;
+  }
+
+  .page-head p {
+    font-size: 0.8125rem;
+    color: #9a9590;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .criteria {
+    max-width: 1100px;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .criteria span {
+    font-size: 0.6875rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #444;
+    color: #bbb;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .theme-card {
+    background: #242424;
+    border-radius: 14px;
+    padding: 14px;
+    border: 1px solid #333;
+  }
+
+  .theme-card__tag {
+    display: inline-block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  .theme-card h2 {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #f5f3ef;
+    margin-bottom: 4px;
+  }
+
+  .theme-card__desc {
+    font-size: 0.75rem;
+    color: #9a9590;
+    margin-bottom: 10px;
+    min-height: 2.8em;
+  }
+
+  .theme-card__notes {
+    font-size: 0.6875rem;
+    color: #7d7872;
+    margin-top: 10px;
+    padding-left: 1rem;
+  }
+
+  .theme-card__notes li + li { margin-top: 3px; }
+
+  /* ===== 폰 목업 ===== */
+  .phone {
+    --radius: 16px;
+    --text-xl: 1.125rem;
+    --text-sm: 0.75rem;
+    --text-xs: 0.6875rem;
+    --sprite-size: clamp(5.5rem, 42%, 7rem);
+    --font-ui: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid var(--phone-border, #444);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .app-mock {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px 12px;
+    gap: 10px;
+  }
+
+  .header-mock {
+    text-align: center;
+    padding: 4px 36px 6px;
+    position: relative;
+  }
+
+  .icon-btn {
+    position: absolute;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--icon-radius, 10px);
+    background: var(--icon-bg, var(--surface));
+    color: var(--icon-fg, var(--text));
+    font-size: 0.875rem;
+    box-shadow: var(--icon-shadow, none);
+    border: var(--icon-border, none);
+    cursor: default;
+  }
+
+  .icon-btn--left { left: 0; }
+  .icon-btn--right { right: 0; }
+
+  .pet-name {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: var(--title-tracking, 0);
+  }
+
+  .pet-meta {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .pet-stage {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 1px;
+  }
+
+  .pet-area {
+    position: relative;
+    flex: 1;
+    min-height: 200px;
+    background: var(--pet-bg, var(--surface));
+    border-radius: var(--pet-radius, var(--radius));
+    box-shadow: var(--pet-shadow, none);
+    border: var(--pet-border, none);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .pet-area::after {
+    content: var(--pet-overlay, none);
+  }
+
+  .message {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 2;
+    text-align: center;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 6px 10px;
+    background: var(--msg-bg);
+    color: var(--msg-text);
+    border-bottom: var(--msg-border, none);
+    border-radius: var(--msg-radius, var(--radius) var(--radius) 0 0);
+  }
+
+  .pet-area img {
+    width: var(--sprite-size);
+    height: var(--sprite-size);
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 1;
+  }
+
+  .stats {
+    background: var(--stats-bg, var(--surface));
+    border-radius: var(--stats-radius, var(--radius));
+    padding: 10px;
+    border: var(--stats-border, none);
+    box-shadow: var(--stats-shadow, none);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .stat {
+    display: grid;
+    grid-template-columns: 40px 1fr 28px;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-xs);
+  }
+
+  .stat label { color: var(--text-muted); font-weight: 500; }
+  .stat-val { text-align: right; color: var(--text-muted); }
+
+  .stat-bar {
+    height: var(--bar-h, 10px);
+    background: var(--bar-track);
+    border-radius: var(--bar-radius, 5px);
+    overflow: hidden;
+    border: var(--bar-border, none);
+  }
+
+  .stat-fill {
+    height: 100%;
+    border-radius: var(--bar-fill-radius, var(--bar-radius, 5px));
+    width: var(--w, 70%);
+  }
+
+  .stat-fill--h { --w: 62%; background: var(--bar-hunger); }
+  .stat-fill--p { --w: 48%; background: var(--bar-happy); }
+  .stat-fill--c { --w: 35%; background: var(--bar-clean); }
+  .stat-fill--x { --w: 88%; background: var(--bar-health); }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--action-gap, 8px);
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    min-height: 58px;
+    border: var(--action-border, none);
+    border-radius: var(--action-radius, var(--radius));
+    background: var(--action-bg, var(--surface));
+    box-shadow: var(--action-shadow, none);
+    color: var(--text);
+    cursor: default;
+  }
+
+  .action-btn img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .action-btn span {
+    font-size: var(--text-xs);
+    font-weight: 600;
+  }
+
+  /* ===== 현재 ===== */
+  .theme-current {
+    --bg: #fef6e4;
+    --surface: #fff;
+    --text: #2d2a26;
+    --text-muted: #6b6560;
+    --accent: #e05a8a;
+    --pet-bg: #fff;
+    --pet-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --msg-bg: rgba(255,255,255,0.94);
+    --msg-text: #2d2a26;
+    --stats-bg: #fff;
+    --stats-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --bar-track: #eee8df;
+    --bar-hunger: #ff9f43;
+    --bar-happy: #f582ae;
+    --bar-clean: #58c4dc;
+    --bar-health: #7bc47f;
+    --action-bg: #fff;
+    --action-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --icon-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --phone-border: #e8c4a8;
+  }
+
+  .theme-current .action-btn--feed { background: #fff3e6; }
+  .theme-current .action-btn--play { background: #fde8f0; }
+  .theme-current .action-btn--clean { background: #e8f7fb; }
+  .theme-current .action-btn--sleep { background: #e8eef8; }
+
+  .tag-current { background: #6b6560; color: #fff; }
+
+  /* ===== A — 심해 암반 ===== */
+  .theme-abyss {
+    --font-ui: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --radius: 4px;
+    --bg: #070b10;
+    --surface: #111822;
+    --text: #a8b4c0;
+    --text-muted: #5c6878;
+    --accent: #4a8f72;
+    --pet-bg: radial-gradient(ellipse 80% 70% at 50% 60%, #162030 0%, #0a1018 70%);
+    --pet-border: 1px solid #1e2a3a;
+    --pet-radius: 4px;
+    --msg-bg: #0e161f;
+    --msg-text: #8fa89a;
+    --msg-border: 1px solid #243040;
+    --msg-radius: 4px 4px 0 0;
+    --stats-bg: #0e141c;
+    --stats-border: 1px solid #1c2836;
+    --bar-track: #1a2430;
+    --bar-hunger: #6b5a3a;
+    --bar-happy: #3d6b58;
+    --bar-clean: #2a4a62;
+    --bar-health: #4a6a4a;
+    --bar-h: 6px;
+    --bar-radius: 1px;
+    --action-bg: #121a24;
+    --action-border: 1px solid #243040;
+    --action-radius: 4px;
+    --icon-bg: #121a24;
+    --icon-border: 1px solid #243040;
+    --icon-radius: 4px;
+    --title-tracking: 0.02em;
+    --phone-border: #1a2838;
+  }
+
+  .theme-abyss .pet-area::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(60,120,90,0.06) 0%, transparent 40%),
+      radial-gradient(circle at 75% 25%, rgba(40,80,120,0.05) 0%, transparent 35%);
+    pointer-events: none;
+  }
+
+  .tag-abyss { background: #1a3040; color: #6a9a88; border: 1px solid #2a4858; }
+
+  /* ===== B — 페미콤 심해 ===== */
+  .theme-pce {
+    --font-ui: "Hiragino Kaku Gothic ProN", "MS Gothic", "Apple SD Gothic Neo", monospace;
+    --radius: 0;
+    --text-xl: 1rem;
+    --bg: #101028;
+    --surface: #181840;
+    --text: #f0f0f8;
+    --text-muted: #8888b0;
+    --accent: #f04848;
+    --pet-bg: #000018;
+    --pet-border: 3px solid #d8c8a8;
+    --pet-radius: 0;
+    --pet-shadow: inset 0 0 0 1px #000;
+    --msg-bg: #181840;
+    --msg-text: #f0f0f8;
+    --msg-border: 2px solid #d8c8a8;
+    --msg-radius: 0;
+    --stats-bg: #181840;
+    --stats-border: 3px solid #d8c8a8;
+    --stats-radius: 0;
+    --bar-track: #000018;
+    --bar-border: 1px solid #484878;
+    --bar-hunger: #f04848;
+    --bar-happy: #f0a030;
+    --bar-clean: #40c8e8;
+    --bar-health: #48c848;
+    --bar-h: 12px;
+    --bar-radius: 0;
+    --bar-fill-radius: 0;
+    --action-bg: #282858;
+    --action-border: 2px solid #d8c8a8;
+    --action-radius: 0;
+    --action-gap: 6px;
+    --icon-bg: #282858;
+    --icon-border: 2px solid #d8c8a8;
+    --icon-radius: 0;
+    --phone-border: #d8c8a8;
+  }
+
+  .theme-pce .pet-area::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.12) 2px,
+      rgba(0,0,0,0.12) 4px
+    );
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .theme-pce .stat-bar {
+    background: repeating-linear-gradient(
+      90deg,
+      #000018 0,
+      #000018 3px,
+      #101028 3px,
+      #101028 4px
+    );
+  }
+
+  .theme-pce .pet-name {
+    text-shadow: 2px 2px 0 #000;
+    color: #fff;
+  }
+
+  .theme-pce .action-btn--feed { background: #381818; }
+  .theme-pce .action-btn--play { background: #383018; }
+  .theme-pce .action-btn--clean { background: #183038; }
+  .theme-pce .action-btn--sleep { background: #182838; }
+
+  .tag-pce { background: #f04848; color: #fff; }
+
+  /* ===== C — 압력창 (추천) ===== */
+  .theme-hull {
+    --font-ui: "Iowan Old Style", "Palatino Linotype", "Apple SD Gothic Neo", serif;
+    --radius: 2px;
+    --bg: #2c3138;
+    --surface: #e8e4da;
+    --text: #1a1c20;
+    --text-muted: #5a5e64;
+    --accent: #2a726e;
+    --pet-bg: #dce4e8;
+    --pet-border: 6px solid #2c3138;
+    --pet-radius: 50%;
+    --pet-shadow:
+      inset 0 0 40px rgba(20,40,60,0.15),
+      0 0 0 2px #1a1e24;
+    --msg-bg: #f4f2ec;
+    --msg-text: #1a1c20;
+    --msg-border: 1px solid #c8c4ba;
+    --stats-bg: #f0ece4;
+    --stats-border: 1px solid #c8c4ba;
+    --bar-track: #d4d0c8;
+    --bar-hunger: #a06830;
+    --bar-happy: #2a726e;
+    --bar-clean: #4a7a9a;
+    --bar-health: #4a7a50;
+    --bar-h: 8px;
+    --action-bg: #e8e4da;
+    --action-border: 1px solid #b8b4aa;
+    --action-radius: 2px;
+    --icon-bg: #e8e4da;
+    --icon-border: 1px solid #b8b4aa;
+    --icon-radius: 2px;
+    --phone-border: #1a1e24;
+  }
+
+  .theme-hull .app-mock {
+    margin: 6px;
+    background: var(--surface);
+    border: 2px solid #1a1e24;
+    box-shadow: inset 0 0 0 1px #fff8;
+  }
+
+  .theme-hull .pet-area {
+    width: 88%;
+    margin: 0 auto;
+    aspect-ratio: 1;
+    min-height: auto;
+    max-height: 180px;
+  }
+
+  .tag-hull { background: #2a726e; color: #f0ece4; }
+
+  /* ===== D — 염수 침식 ===== */
+  .theme-salt {
+    --font-ui: "SF Mono", "Menlo", "Apple SD Gothic Neo", monospace;
+    --radius: 0;
+    --text-xl: 1rem;
+    --bg: #0c0e10;
+    --surface: #14181c;
+    --text: #9aa4ae;
+    --text-muted: #4e5860;
+    --accent: #b8a070;
+    --pet-bg: #080a0c;
+    --pet-border: 1px solid #242a30;
+    --pet-radius: 0;
+    --msg-bg: #101418;
+    --msg-text: #8a949e;
+    --msg-border: 1px solid #242a30;
+    --stats-bg: #101418;
+    --stats-border: 1px solid #242a30;
+    --bar-track: #1a1e22;
+    --bar-hunger: #8a6840;
+    --bar-happy: #6a7a68;
+    --bar-clean: #4a5a68;
+    --bar-health: #5a6a58;
+    --bar-h: 4px;
+    --bar-radius: 0;
+    --action-bg: #14181c;
+    --action-border: 1px solid #242a30;
+    --action-radius: 0;
+    --icon-bg: #14181c;
+    --icon-border: 1px solid #242a30;
+    --icon-radius: 0;
+    --phone-border: #242a30;
+  }
+
+  .theme-salt .pet-area::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background-image:
+      radial-gradient(circle, #fff 0.5px, transparent 0.5px);
+    background-size: 8px 8px;
+    pointer-events: none;
+  }
+
+  .theme-salt .pet-name,
+  .theme-salt .stat-val {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  .tag-salt { background: #242a30; color: #b8a070; border: 1px solid #3a4248; }
+
+  /* ===== 팔레트 칩 ===== */
+  .palette {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .palette i {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .pick-banner {
+    max-width: 1100px;
+    margin: 32px auto 0;
+    padding: 16px 18px;
+    background: #2a3230;
+    border: 1px solid #3a5248;
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    color: #c8d4cc;
+  }
+
+  .pick-banner strong { color: #8ab8a4; }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>UI 테마 시안</h1>
+    <p>게임 본편 미반영 · 실제 스프라이트·버튼 아이콘으로 구성한 목업입니다. 마음에 드는 방향을 골라 주시면 그 테마부터 적용합니다.</p>
+  </header>
+
+  <div class="criteria">
+    <span>AI 느낌 배제</span>
+    <span>심해 음침함</span>
+    <span>페미콤 1종+</span>
+    <span>자유 시안 1종+</span>
+  </div>
+
+  <div class="gallery">
+
+    <!-- 현재 -->
+    <article class="theme-card">
+      <span class="theme-card__tag tag-current">기준</span>
+      <h2>현재</h2>
+      <p class="theme-card__desc">따뜻한 크림·핑크 액센트. 친근하지만 심해·기괴함과는 거리가 있음.</p>
+      <div class="phone theme-current" id="mock-current"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#fef6e4"></i>
+        <i style="background:#fff"></i>
+        <i style="background:#f582ae"></i>
+        <i style="background:#2d2a26"></i>
+      </div>
+    </article>
+
+    <!-- A 심해 암반 -->
+    <article class="theme-card">
+      <span class="theme-card__tag tag-abyss">심해</span>
+      <h2>A — 심해 암반</h2>
+      <p class="theme-card__desc">거의 검은 수압, 발광 플랑크톤만 살짝. 둥근 카드·파스텔 제거, 각진 패널.</p>
+      <div class="phone theme-abyss" id="mock-abyss"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#070b10"></i>
+        <i style="background:#111822"></i>
+        <i style="background:#4a8f72"></i>
+        <i style="background:#a8b4c0"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>핑크 대신 침잠 녹색 포인트</li>
+        <li>스탯 막대 낮고 각짐 — 계기판 느낌</li>
+      </ul>
+    </article>
+
+    <!-- B 페미콤 -->
+    <article class="theme-card">
+      <span class="theme-card__tag tag-pce">페미콤</span>
+      <h2>B — 페미콤 심해</h2>
+      <p class="theme-card__desc">PC엔진 RPG 창·선택지 UI. 크림색 테두리, 16색 팔레트, 스캔라인.</p>
+      <div class="phone theme-pce" id="mock-pce"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#101028"></i>
+        <i style="background:#d8c8a8"></i>
+        <i style="background:#f04848"></i>
+        <i style="background:#40c8e8"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>border-radius 0, 픽셀 스프라이트와 톤 일치</li>
+        <li>이름에 2px 텍스트 그림자</li>
+        <li>스탯 막대 세그먼트 분할</li>
+      </ul>
+    </article>
+
+    <!-- C 추천 -->
+    <article class="theme-card">
+      <span class="theme-card__tag tag-hull">추천</span>
+      <h2>C — 압력창</h2>
+      <p class="theme-card__desc">잠수정 관측창. 바깥은 차가운 강철, 안은 종이·도자기 같은 따뜻한 밝기.</p>
+      <div class="phone theme-hull" id="mock-hull"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#2c3138"></i>
+        <i style="background:#e8e4da"></i>
+        <i style="background:#2a726e"></i>
+        <i style="background:#dce4e8"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>원형 관측창 — 펫이 ‘밖 심해’에 있는 느낌</li>
+        <li>세리프 제목 + 산업용 패널 — AI 일러스트 톤 회피</li>
+        <li>가독성·모바일 터치 유지</li>
+      </ul>
+    </article>
+
+    <!-- D 염수 -->
+    <article class="theme-card">
+      <span class="theme-card__tag tag-salt">심해</span>
+      <h2>D — 염수 침식</h2>
+      <p class="theme-card__desc">오래 담근 장비. 모노스페이스 숫자, 부유물 점박이, 색은 거의 죽었지만 가끔 낡은 전구색.</p>
+      <div class="phone theme-salt" id="mock-salt"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#0c0e10"></i>
+        <i style="background:#14181c"></i>
+        <i style="background:#b8a070"></i>
+        <i style="background:#9aa4ae"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>연구 로그·계측기 UI 연상</li>
+        <li>기괴 펫(송곳니어)과 잘 맞는 불쾌한 중립</li>
+      </ul>
+    </article>
+
+  </div>
+
+  <div class="pick-banner">
+    <strong>개인적 1순위: C — 압력창</strong> — 픽셀 펫과 싸우지 않고, 심해·음침함·‘사람이 만든 UI’ 느낌을 동시에 잡기 쉽습니다.
+    페미콤 감성을 더 원하시면 <strong>B</strong>를, 최대한 어둡게 가려면 <strong>A</strong> 또는 <strong>D</strong> 조합도 가능합니다.
+  </div>
+
+  <script>
+    const PET = "../assets/sprites/adult/grumpy.png";
+    const ICONS = {
+      feed: "../assets/sprites/ui/feed.png",
+      play: "../assets/sprites/ui/play.png",
+      clean: "../assets/sprites/ui/clean.png",
+      sleep: "../assets/sprites/ui/sleep.png",
+    };
+
+    const MOCK_HTML = `
+      <div class="app-mock">
+        <header class="header-mock">
+          <button type="button" class="icon-btn icon-btn--left" aria-hidden="true">📖</button>
+          <button type="button" class="icon-btn icon-btn--right" aria-hidden="true">🔊</button>
+          <h3 class="pet-name">송곳니어</h3>
+          <p class="pet-meta">47일째</p>
+          <p class="pet-stage">성체 · 송곳니어</p>
+        </header>
+        <div class="pet-area">
+          <p class="message">후회할 거야, 키운 거.</p>
+          <img src="${PET}" alt="송곳니어" width="128" height="128">
+        </div>
+        <section class="stats" aria-label="상태">
+          <div class="stat"><label>배고픔</label><div class="stat-bar"><div class="stat-fill stat-fill--h"></div></div><span class="stat-val">62</span></div>
+          <div class="stat"><label>행복</label><div class="stat-bar"><div class="stat-fill stat-fill--p"></div></div><span class="stat-val">48</span></div>
+          <div class="stat"><label>청결</label><div class="stat-bar"><div class="stat-fill stat-fill--c"></div></div><span class="stat-val">35</span></div>
+          <div class="stat"><label>건강</label><div class="stat-bar"><div class="stat-fill stat-fill--x"></div></div><span class="stat-val">88</span></div>
+        </section>
+        <footer class="actions">
+          <button type="button" class="action-btn action-btn--feed"><img src="${ICONS.feed}" alt=""><span>먹이</span></button>
+          <button type="button" class="action-btn action-btn--play"><img src="${ICONS.play}" alt=""><span>놀이</span></button>
+          <button type="button" class="action-btn action-btn--clean"><img src="${ICONS.clean}" alt=""><span>청소</span></button>
+          <button type="button" class="action-btn action-btn--sleep"><img src="${ICONS.sleep}" alt=""><span>재우기</span></button>
+        </footer>
+      </div>
+    `;
+
+    for (const id of ["mock-current", "mock-abyss", "mock-pce", "mock-hull", "mock-salt"]) {
+      document.getElementById(id).innerHTML = MOCK_HTML;
+    }
+  </script>
+</body>
+</html>

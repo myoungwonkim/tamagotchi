@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#121214">
+  <title>UI 시안 — 심해 다마고치</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #121214;
+      color: #e8e4dc;
+      min-height: 100dvh;
+      padding:
+        calc(20px + env(safe-area-inset-top))
+        calc(18px + env(safe-area-inset-right))
+        calc(28px + env(safe-area-inset-bottom))
+        calc(18px + env(safe-area-inset-left));
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .lead {
+      font-size: 0.875rem;
+      color: #8a8680;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6a6864;
+      margin-bottom: 10px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .link-card {
+      display: block;
+      padding: 16px 18px;
+      background: #1c1c20;
+      border: 1px solid #333;
+      border-radius: 12px;
+      color: inherit;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .link-card:active {
+      background: #242428;
+      border-color: #b8a070;
+    }
+
+    .link-card strong {
+      display: block;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #f0ece4;
+    }
+
+    .link-card span {
+      font-size: 0.8125rem;
+      color: #8a8680;
+    }
+
+    .link-card--primary {
+      border-color: #685838;
+      background: #1a1814;
+    }
+
+    .link-card--primary strong { color: #e8c890; }
+
+    .note {
+      font-size: 0.75rem;
+      color: #5a5854;
+      padding: 14px 16px;
+      background: #18181c;
+      border-radius: 10px;
+      border: 1px solid #2a2a30;
+    }
+
+    .note code {
+      font-size: 0.6875rem;
+      color: #988868;
+      word-break: break-all;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 24px;
+      font-size: 0.8125rem;
+      color: #988868;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>UI 테마 시안</h1>
+  <p class="lead">휴대폰에서 스크롤하며 비교해 보세요. 게임 본편에는 아직 반영되지 않았습니다.</p>
+
+  <p class="section-title">B × D 확장 (최신)</p>
+  <nav class="links">
+    <a class="link-card link-card--primary" href="ui-theme-bd-preview.html">
+      <strong>B×D 확장 시안 5종</strong>
+      <span>침수 세가 창 · 계측 프레임 · 염수 CRT · 침수 아케이드 · 관측 로그</span>
+    </a>
+  </nav>
+
+  <p class="section-title">전체 테마</p>
+  <nav class="links">
+    <a class="link-card" href="ui-theme-preview.html">
+      <strong>전체 테마 시안 5종</strong>
+      <span>현재 · 심해 암반 · 페미콤 · 압력창 · 염수 침식</span>
+    </a>
+  </nav>
+
+  <p class="section-title">기타 시안</p>
+  <nav class="links">
+    <a class="link-card" href="encyclopedia-layout-preview.html">
+      <strong>도감 레이아웃</strong>
+      <span>3×3 스크롤 없이 맞추기</span>
+    </a>
+    <a class="link-card" href="encyclopedia-size-preview.html">
+      <strong>도감 스프라이트 크기</strong>
+      <span>상세·그리드 크기 비교</span>
+    </a>
+    <a class="link-card" href="message-position-preview.html">
+      <strong>말풍선 위치</strong>
+      <span>펫 겹침 해소 옵션</span>
+    </a>
+  </nav>
+
+  <p class="note">
+    이 페이지 주소를 북마크해 두면 됩니다.<br>
+    <code id="page-url"></code>
+  </p>
+
+  <a class="back" href="../">← 게임으로 돌아가기</a>
+
+  <script>
+    document.getElementById("page-url").textContent = location.href;
+  </script>
+</body>
+</html>
