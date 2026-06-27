@@ -77,7 +77,7 @@ function handleAdultEvolution({ notify = true } = {}) {
   addToEncyclopedia(pet);
 
   if (notify) {
-    showMessage(`${withSubjectParticle(pet.name)} 어른으로 진화했어요! 도감에 등록됐어요!`, 5000);
+    showMessage(`${withSubjectParticle(pet.name)} 어른으로 진화했어요! 탐사 일지에 등록됐어요!`, 5000);
     playSfx("evolve");
   }
 }

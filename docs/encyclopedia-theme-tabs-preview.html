@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>도감 어종 탭 시안 — 심해어 / 심해인어</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a2838;
+      --surface: #243040;
+      --text: #d8e4ec;
+      --text-muted: #7a8a98;
+      --accent: #58b8c8;
+      --accent-dark: #3a98a8;
+      --radius: 12px;
+      --border-subtle: #3a5060;
+      --encyclopedia-card-bg: #283848;
+      --encyclopedia-card-active: #304858;
+      --overlay-secondary: #283848;
+      --encyclopedia-grid-sprite-size: clamp(3rem, 15vw, 4rem);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      --text-xl: 1.25rem;
+      --text-lg: 1rem;
+      --text-md: 0.875rem;
+      --text-sm: 0.8125rem;
+      --text-xs: 0.75rem;
+      --weight-bold: 700;
+      --weight-semibold: 600;
+      --weight-medium: 500;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: #101820;
+      color: var(--text);
+      padding: 20px 14px 48px;
+      line-height: 1.45;
+    }
+
+    .page-head { max-width: 900px; margin: 0 auto 24px; text-align: center; }
+    .page-head h1 { font-size: 1.0625rem; color: #eef4f8; margin-bottom: 6px; }
+    .page-head p { font-size: 0.75rem; color: #7a8898; max-width: 520px; margin: 0 auto; }
+
+    .notice {
+      max-width: 900px; margin: 0 auto 24px;
+      background: #1a2838; border: 1px solid var(--border-subtle); border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8;
+    }
+    .notice strong { color: var(--accent); }
+
+    .compare {
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+      max-width: 900px; margin: 0 auto 28px;
+    }
+
+    .panel-label {
+      font-size: 0.625rem; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; margin-bottom: 8px; text-align: center;
+    }
+    .panel-label--current { color: #c88848; }
+    .panel-label--proposed { color: var(--accent); }
+
+    .phone {
+      width: 320px; background: var(--bg); border: 2px solid var(--border-subtle);
+      border-radius: 18px; overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    }
+
+    .overlay-mock {
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.45);
+      min-height: 420px;
+      display: flex; align-items: flex-start; justify-content: center;
+    }
+
+    .overlay-card {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 296px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .overlay-card--wide { padding: 16px 14px 12px; }
+
+    .dex-header {
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .overlay-title {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      margin-bottom: 5px;
+      letter-spacing: -0.02em;
+      line-height: var(--leading-tight, 1.2);
+    }
+
+    .overlay-subtitle {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      font-weight: var(--weight-medium);
+      line-height: 1.35;
+    }
+
+    .overlay-text {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+  /* ── 현재: 단일 목록 ── */
+    .encyclopedia-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .encyclopedia-card {
+      background: var(--encyclopedia-card-bg);
+      border-radius: 10px;
+      padding: 6px 4px 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid transparent;
+    }
+
+    .encyclopedia-card--locked { opacity: 0.42; }
+    .encyclopedia-card--collected { cursor: pointer; }
+    .encyclopedia-card--collected:active { background: var(--encyclopedia-card-active); }
+
+    .encyclopedia-card__img {
+      width: var(--encyclopedia-grid-sprite-size);
+      height: var(--encyclopedia-grid-sprite-size);
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+
+    .encyclopedia-card__name {
+      font-size: 0.625rem;
+      font-weight: var(--weight-semibold);
+      margin-top: 3px;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .encyclopedia-card__species {
+      font-size: 0.5625rem;
+      color: var(--text-muted);
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .theme-badge {
+      display: inline-block;
+      font-size: 0.5rem;
+      padding: 1px 4px;
+      border-radius: 3px;
+      margin-top: 2px;
+    }
+    .theme-badge--deepsea { background: #304050; color: #88a0b0; }
+    .theme-badge--mermaid { background: #283848; color: #80deea; }
+
+    .overlay-btn {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      background: var(--overlay-secondary);
+      color: var(--text);
+      font-family: inherit;
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      cursor: default;
+    }
+
+  /* ── 제안: 어종 탭 (A 다듬음) ── */
+    .theme-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .theme-tab {
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      background: #1e2c3c;
+      color: var(--text-muted);
+      padding: 10px 8px;
+      font-family: inherit;
+      font-size: 0.6875rem;
+      font-weight: var(--weight-semibold);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      line-height: 1.25;
+    }
+
+    .theme-tab[aria-selected="true"] {
+      background: #304858;
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .theme-tab--deepsea[aria-selected="true"] { box-shadow: inset 0 0 0 1px rgba(200, 136, 72, 0.25); }
+    .theme-tab--mermaid[aria-selected="true"] { box-shadow: inset 0 0 0 1px rgba(128, 222, 234, 0.2); }
+
+    .theme-page { margin-bottom: 4px; }
+
+    .theme-page[hidden] { display: none; }
+
+    .encyclopedia-detail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .encyclopedia-detail[hidden] { display: none; }
+
+    .encyclopedia-detail__img {
+      width: clamp(7rem, 40vw, 9rem);
+      height: clamp(7rem, 40vw, 9rem);
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+
+    .encyclopedia-detail__name {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+    }
+
+    .encyclopedia-detail__species {
+      font-size: var(--text-sm);
+      color: var(--accent);
+      font-weight: var(--weight-semibold);
+    }
+
+    .encyclopedia-detail__desc {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      line-height: 1.55;
+      text-align: left;
+      max-height: 120px;
+      overflow-y: auto;
+      padding: 0 2px;
+    }
+
+    .detail-back { margin-top: 4px; }
+
+    .spec {
+      max-width: 900px; margin: 0 auto;
+      font-size: 0.6875rem; color: #7a8898;
+      background: #141c24; border: 1px solid #2a3848; border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .spec h2 { font-size: 0.75rem; color: var(--accent); margin-bottom: 8px; }
+    .spec ul { margin-left: 1.1rem; }
+    .spec li { margin-bottom: 4px; }
+
+    .title-picks {
+      max-width: 900px; margin: 0 auto 24px;
+      background: #141c24; border: 1px solid #2a3848; border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .title-picks h2 { font-size: 0.75rem; color: var(--accent); margin-bottom: 8px; }
+    .title-picks p { font-size: 0.6875rem; color: #7a8898; margin-bottom: 10px; }
+    .title-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .title-chip {
+      border: 1px solid var(--border-subtle); border-radius: 999px;
+      background: #1e2c3c; color: var(--text-muted);
+      padding: 6px 12px; font-family: inherit; font-size: 0.6875rem;
+      font-weight: var(--weight-semibold); cursor: pointer;
+    }
+    .title-chip[aria-pressed="true"] {
+      background: #304858; border-color: var(--accent); color: var(--text);
+    }
+    .title-chip--rec::after {
+      content: " ★";
+      color: #ffd54f;
+      font-size: 0.5625rem;
+    }
+
+    .layout-note {
+      max-width: 900px; margin: 0 auto 16px;
+      font-size: 0.6875rem; color: #98a8b8; text-align: center;
+    }
+    .layout-note strong { color: #80deea; }
+
+    .stamp {
+      display: inline-block; margin-top: 20px; padding: 5px 12px;
+      background: var(--accent); color: #0c1426;
+      font-size: 0.625rem; font-weight: 700; border-radius: 4px;
+    }
+
+    .back-link {
+      display: block; text-align: center; margin-top: 16px;
+      font-size: 0.75rem; color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>도감 — 어종별 페이지 시안</h1>
+    <p>심해어 / 심해인어 탭으로 분리 · <a href="encyclopedia-theme-variants-preview.html" style="color:var(--accent)">6종 시안 모음 →</a> · <strong>게임 미반영</strong></p>
+  </div>
+
+  <div class="notice">
+    <strong>현재</strong> — 변종 ID 기준 9칸 하나. 심해어·인어가 섞여 보이거나, 한쪽만 수집해도 같은 칸이 채워짐.<br>
+    <strong>제안 A (다듬음)</strong> — 제목·탭·그리드 3단 분리. 수집 수는 부제에만 표시 (탭과 중복 제거).
+  </div>
+
+  <p class="layout-note">
+    <strong>간격 조정</strong> — 제목 블록 하단 구분선 + 14px 여백 후 탭 · 탭 아래 12px 후 그리드
+  </p>
+
+  <div class="compare">
+    <div>
+      <p class="panel-label panel-label--current">현재 게임</p>
+      <div class="phone">
+        <div class="overlay-mock">
+          <div class="overlay-card overlay-card--wide">
+            <h2 class="overlay-title">도감</h2>
+            <p class="overlay-text">수집 4 / 9</p>
+            <div class="encyclopedia-grid" id="current-grid"></div>
+            <button type="button" class="overlay-btn">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="panel-label panel-label--proposed">A 시안 — 상단 탭 (다듬음)</p>
+      <div class="phone">
+        <div class="overlay-mock">
+          <div class="overlay-card overlay-card--wide encyclopedia-panel" id="proposed-panel">
+            <div class="encyclopedia-list" id="proposed-list">
+              <header class="dex-header">
+                <h2 class="overlay-title" id="dex-title">탐사 일지</h2>
+                <p class="overlay-subtitle" id="dex-subtitle">심해어 · 수집 3 / 9</p>
+              </header>
+              <div class="theme-tabs" role="tablist" aria-label="어종 선택">
+                <button type="button" class="theme-tab theme-tab--deepsea" role="tab" id="tab-deepsea" aria-selected="true" aria-controls="page-deepsea">🐟 심해어</button>
+                <button type="button" class="theme-tab theme-tab--mermaid" role="tab" id="tab-mermaid" aria-selected="false" aria-controls="page-mermaid">🧜 심해인어</button>
+              </div>
+              <div class="theme-page" id="page-deepsea" role="tabpanel" aria-labelledby="tab-deepsea">
+                <div class="encyclopedia-grid" id="grid-deepsea"></div>
+              </div>
+              <div class="theme-page" id="page-mermaid" role="tabpanel" aria-labelledby="tab-mermaid" hidden>
+                <div class="encyclopedia-grid" id="grid-mermaid"></div>
+              </div>
+              <button type="button" class="overlay-btn">닫기</button>
+            </div>
+
+            <div class="encyclopedia-detail" id="proposed-detail" hidden>
+              <img class="encyclopedia-detail__img" id="detail-img" alt="">
+              <h3 class="encyclopedia-detail__name" id="detail-name"></h3>
+              <p class="encyclopedia-detail__species" id="detail-species"></p>
+              <p class="encyclopedia-detail__desc" id="detail-desc"></p>
+              <button type="button" class="overlay-btn detail-back" id="btn-detail-back">목록으로</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="title-picks">
+    <h2>제목 후보 — 클릭해서 시안에 반영</h2>
+    <p>헤더 아이콘(탐사 일지 클립보드)과 톤을 맞추면 <strong>탐사 일지</strong>를 추천합니다.</p>
+    <div class="title-chips" id="title-chips"></div>
+  </div>
+
+  <div class="spec">
+    <h2>A 시안 요약</h2>
+    <ul>
+      <li><strong>헤더</strong> — 큰 제목 + 어종·수집 부제 (탭과 분리)</li>
+      <li><strong>탭</strong> — 어종 이름만 (수집 수 중복 표기 제거)</li>
+      <li>탭마다 <strong>3×3 그리드</strong> · 최대 18종 수집</li>
+      <li>제목 추천: <strong>탐사 일지</strong> &gt; 심해 명부 &gt; 포획 기록 &gt; 해저 아카이브</li>
+    </ul>
+    <p style="text-align:center"><span class="stamp">STAGING ONLY</span></p>
+  </div>
+
+  <a class="back-link" href="index.html">← 시안 허브로</a>
+
+  <script>
+    const VARIANTS = [
+      "golden", "fluffy", "sparkle", "standard", "farm", "plain", "scruffy", "grumpy", "sickly",
+    ];
+
+    const LABELS = {
+      deepsea: {
+        golden: "등불어", fluffy: "달빛 해파리", sparkle: "발광 오징어",
+        standard: "산호어", farm: "해조어", plain: "진흙어",
+        scruffy: "썩은 아귀", grumpy: "송곳니어", sickly: "기생어",
+      },
+      mermaid: {
+        golden: "진주 인어", fluffy: "달빛 실크 인어", sparkle: "별빛 인어",
+        standard: "산호 인어", farm: "해초 인어", plain: "늪 인어",
+        scruffy: "헝클 어인", grumpy: "투성 어인", sickly: "반점 어인",
+      },
+    };
+
+    const MOCK = {
+      deepsea: {
+        golden: { petName: "빛이", desc: "빛이의 등에는 영원히 꺼지지 않는 할로겐이 붙어 있어요…" },
+        standard: { petName: "먼지", desc: "먼지는 산호초 옆에서 평범하게 살아요…" },
+        grumpy: { petName: "퉁퉁", desc: "퉁퉁의 송곳니는 생각보다 부드러워요…" },
+      },
+      mermaid: {
+        golden: { petName: "코랄", desc: "코랄의 장미 티아라는 매일 아침 닦아야 빛이 나요…" },
+        fluffy: { petName: "실크", desc: "실크는 은빛 달 망토를 두른 왕자예요…" },
+        sparkle: { petName: "별이", desc: "별이의 보랏빛 꼬리에는 청록 별 점이 박혀 있어요…" },
+        plain: { petName: "이슬", desc: "이슬은 머스타드 가디건과 잿빛 꼬리가 잘 어울리는…" },
+      },
+    };
+
+    const CURRENT_MIXED = [
+      { theme: "deepsea", id: "golden", petName: "빛이" },
+      { theme: "mermaid", id: "fluffy", petName: "실크" },
+      { theme: "deepsea", id: "standard", petName: "먼지" },
+      { theme: "mermaid", id: "sparkle", petName: "별이" },
+    ];
+
+    function spriteSrc(theme, id) {
+      const base = theme === "mermaid"
+        ? `../assets/sprites/mermaid/adult/${id}.png`
+        : `../assets/sprites/adult/${id}.png`;
+      return base;
+    }
+
+    function lockedSrc() {
+      return "../assets/sprites/ui/locked.png";
+    }
+
+    function countCollected(theme) {
+      return Object.keys(MOCK[theme]).length;
+    }
+
+    const TITLE_OPTIONS = [
+      { id: "log", label: "탐사 일지", rec: true, note: "헤더 아이콘·잠수함 톤과 통일 ★" },
+      { id: "registry", label: "심해 명부", rec: false, note: "등록·수집 느낌" },
+      { id: "catch", label: "포획 기록", rec: false, note: "키운 친구 기록 강조" },
+      { id: "archive", label: "해저 아카이브", rec: false, note: "SF 보관함 톤" },
+      { id: "classic", label: "도감", rec: false, note: "현재 게임 (비교용)" },
+    ];
+
+    const THEME_LABEL = { deepsea: "심해어", mermaid: "심해인어" };
+    let activeTheme = "deepsea";
+
+    function updateSubtitle() {
+      const n = countCollected(activeTheme);
+      document.getElementById("dex-subtitle").textContent =
+        `${THEME_LABEL[activeTheme]} · 수집 ${n} / 9`;
+    }
+
+    function renderCard(theme, id, interactive) {
+      const entry = MOCK[theme][id];
+      const collected = Boolean(entry);
+      const card = document.createElement("div");
+      card.className = `encyclopedia-card${collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
+
+      const img = document.createElement("img");
+      img.className = "encyclopedia-card__img";
+      img.alt = "";
+      img.src = collected ? spriteSrc(theme, id) : lockedSrc();
+
+      const name = document.createElement("span");
+      name.className = "encyclopedia-card__name";
+      name.textContent = collected ? entry.petName : "???";
+
+      const species = document.createElement("span");
+      species.className = "encyclopedia-card__species";
+      species.textContent = collected ? LABELS[theme][id] : "???";
+
+      card.append(img, name, species);
+
+      if (interactive && collected) {
+        card.addEventListener("click", () => openDetail(theme, id));
+      }
+
+      return card;
+    }
+
+    function renderGrid(container, theme, interactive) {
+      container.innerHTML = "";
+      for (const id of VARIANTS) {
+        container.append(renderCard(theme, id, interactive));
+      }
+    }
+
+    function renderCurrentGrid() {
+      const grid = document.getElementById("current-grid");
+      const collectedIds = new Set();
+      for (const id of VARIANTS) {
+        const slot = CURRENT_MIXED.find((e) => e.id === id);
+        const card = document.createElement("div");
+        const has = Boolean(slot);
+        if (has) collectedIds.add(id);
+
+        card.className = `encyclopedia-card${has ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
+
+        const img = document.createElement("img");
+        img.className = "encyclopedia-card__img";
+        img.alt = "";
+        img.src = has ? spriteSrc(slot.theme, id) : lockedSrc();
+
+        const name = document.createElement("span");
+        name.className = "encyclopedia-card__name";
+        name.textContent = has ? slot.petName : "???";
+
+        const species = document.createElement("span");
+        species.className = "encyclopedia-card__species";
+        species.textContent = has ? LABELS[slot.theme][id] : "???";
+
+        if (has) {
+          const badge = document.createElement("span");
+          badge.className = `theme-badge theme-badge--${slot.theme}`;
+          badge.textContent = slot.theme === "mermaid" ? "인어" : "심해어";
+          card.append(img, name, species, badge);
+        } else {
+          card.append(img, name, species);
+        }
+
+        grid.append(card);
+      }
+    }
+
+    function openDetail(theme, id) {
+      const entry = MOCK[theme][id];
+      document.getElementById("proposed-list").hidden = true;
+      document.getElementById("proposed-detail").hidden = false;
+      document.getElementById("detail-img").src = spriteSrc(theme, id);
+      document.getElementById("detail-name").textContent = entry.petName;
+      document.getElementById("detail-species").textContent = LABELS[theme][id];
+      document.getElementById("detail-desc").textContent = entry.desc;
+    }
+
+    function closeDetail() {
+      document.getElementById("proposed-list").hidden = false;
+      document.getElementById("proposed-detail").hidden = true;
+    }
+
+    function selectTab(theme) {
+      activeTheme = theme;
+      const isDeep = theme === "deepsea";
+      document.getElementById("tab-deepsea").setAttribute("aria-selected", isDeep ? "true" : "false");
+      document.getElementById("tab-mermaid").setAttribute("aria-selected", isDeep ? "false" : "true");
+      document.getElementById("page-deepsea").hidden = !isDeep;
+      document.getElementById("page-mermaid").hidden = isDeep;
+      updateSubtitle();
+    }
+
+    function renderTitleChips() {
+      const host = document.getElementById("title-chips");
+      for (const opt of TITLE_OPTIONS) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `title-chip${opt.rec ? " title-chip--rec" : ""}`;
+        btn.textContent = opt.label;
+        btn.title = opt.note;
+        btn.setAttribute("aria-pressed", opt.rec ? "true" : "false");
+        btn.addEventListener("click", () => {
+          document.getElementById("dex-title").textContent = opt.label;
+          host.querySelectorAll(".title-chip").forEach((b) => b.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+        });
+        host.append(btn);
+      }
+    }
+
+    document.getElementById("tab-deepsea").addEventListener("click", () => selectTab("deepsea"));
+    document.getElementById("tab-mermaid").addEventListener("click", () => selectTab("mermaid"));
+    document.getElementById("btn-detail-back").addEventListener("click", closeDetail);
+
+    renderTitleChips();
+    updateSubtitle();
+
+    renderCurrentGrid();
+    renderGrid(document.getElementById("grid-deepsea"), "deepsea", true);
+    renderGrid(document.getElementById("grid-mermaid"), "mermaid", true);
+  </script>
+</body>
+</html>

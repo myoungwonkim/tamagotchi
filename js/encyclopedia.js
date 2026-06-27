@@ -30,12 +30,32 @@ function saveEncyclopedia(data) {
   }
 }
 
-export function getCollectedCount() {
-  return loadEncyclopedia().entries.length;
+export function getCollectedCount(speciesTheme) {
+  const data = loadEncyclopedia();
+  if (speciesTheme == null) {
+    return data.entries.length;
+  }
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  const collected = new Set();
+  for (const entry of data.entries) {
+    if (normalizeSpeciesTheme(entry.speciesTheme) === theme) {
+      collected.add(entry.variantId);
+    }
+  }
+  return collected.size;
 }
 
-export function getCollectedVariantIds() {
-  return new Set(loadEncyclopedia().entries.map((e) => e.variantId));
+export function getCollectedVariantIds(speciesTheme) {
+  const data = loadEncyclopedia();
+  if (speciesTheme == null) {
+    return new Set(data.entries.map((e) => e.variantId));
+  }
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  return new Set(
+    data.entries
+      .filter((e) => normalizeSpeciesTheme(e.speciesTheme) === theme)
+      .map((e) => e.variantId),
+  );
 }
 
 export function addToEncyclopedia(pet) {
@@ -79,14 +99,22 @@ export function clearEncyclopedia() {
   }
 }
 
-export function getEncyclopediaSlots() {
+export function getEncyclopediaSlots(speciesTheme) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
   const data = loadEncyclopedia();
-  const collected = new Set(data.entries.map((e) => e.variantId));
-  return ADULT_VARIANTS.map((variant) => ({
-    variant,
-    collected: collected.has(variant.id),
-    entries: data.entries.filter((e) => e.variantId === variant.id),
-  }));
+  return ADULT_VARIANTS.map((variant) => {
+    const entries = data.entries.filter(
+      (e) =>
+        e.variantId === variant.id &&
+        normalizeSpeciesTheme(e.speciesTheme) === theme,
+    );
+    return {
+      variant,
+      speciesTheme: theme,
+      collected: entries.length > 0,
+      entries,
+    };
+  });
 }
 
 export function formatAchievedDate(timestamp) {

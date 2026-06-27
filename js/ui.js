@@ -1,7 +1,7 @@
 import { getAgeDays, getGameOverReason } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
-import { getStageLabelForTheme } from "./speciesThemes.js";
+import { getStageLabelForTheme, normalizeSpeciesTheme } from "./speciesThemes.js";
 import {
   getEncyclopediaSlots,
   getCollectedCount,
@@ -47,7 +47,9 @@ const elements = {
   encyclopediaPanel: document.querySelector(".encyclopedia-panel"),
   encyclopediaList: document.getElementById("encyclopedia-list"),
   encyclopediaGrid: document.getElementById("encyclopedia-grid"),
-  encyclopediaCount: document.getElementById("encyclopedia-count"),
+  encyclopediaSubtitle: document.getElementById("encyclopedia-subtitle"),
+  encyclopediaTabDeepsea: document.getElementById("encyclopedia-tab-deepsea"),
+  encyclopediaTabMermaid: document.getElementById("encyclopedia-tab-mermaid"),
   encyclopediaDetail: document.getElementById("encyclopedia-detail"),
   encyclopediaDetailGraphic: document.getElementById("encyclopedia-detail-graphic"),
   encyclopediaDetailName: document.getElementById("encyclopedia-detail-name"),
@@ -407,7 +409,7 @@ export function hideNameModal() {
 
 export function showGraduateModal(pet) {
   elements.graduateText.textContent =
-    `지금 키우는 ${pet.name}은 도감에 남고, 새 알부터 시작할까요?`;
+    `지금 키우는 ${pet.name}은 탐사 일지에 남고, 새 알부터 시작할까요?`;
   setOverlayGraphic(
     elements.graduateGraphic,
     getStageSpriteMeta("baby", "🐠", "새 펫"),
@@ -440,6 +442,86 @@ function hideEncyclopediaDetail() {
   elements.encyclopediaDetail.hidden = true;
 }
 
+const ENCYCLOPEDIA_THEME_LABEL = {
+  deepsea: "심해어",
+  mermaid: "심해인어",
+};
+
+let encyclopediaActiveTheme = "deepsea";
+let encyclopediaTabsBound = false;
+
+function updateEncyclopediaSubtitle(theme) {
+  const normalized = normalizeSpeciesTheme(theme);
+  const count = getCollectedCount(normalized);
+  elements.encyclopediaSubtitle.textContent =
+    `${ENCYCLOPEDIA_THEME_LABEL[normalized]} · 수집 ${count} / ${ADULT_VARIANTS.length}`;
+}
+
+function selectEncyclopediaTheme(theme) {
+  encyclopediaActiveTheme = normalizeSpeciesTheme(theme);
+  const isDeepsea = encyclopediaActiveTheme === "deepsea";
+  elements.encyclopediaTabDeepsea?.setAttribute("aria-selected", isDeepsea ? "true" : "false");
+  elements.encyclopediaTabMermaid?.setAttribute("aria-selected", isDeepsea ? "false" : "true");
+  updateEncyclopediaSubtitle(encyclopediaActiveTheme);
+  renderEncyclopediaGrid(encyclopediaActiveTheme);
+}
+
+function bindEncyclopediaTabs() {
+  if (encyclopediaTabsBound) return;
+  encyclopediaTabsBound = true;
+  elements.encyclopediaTabDeepsea?.addEventListener("click", () => {
+    selectEncyclopediaTheme("deepsea");
+  });
+  elements.encyclopediaTabMermaid?.addEventListener("click", () => {
+    selectEncyclopediaTheme("mermaid");
+  });
+}
+
+function renderEncyclopediaGrid(speciesTheme) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  const slots = getEncyclopediaSlots(theme);
+  elements.encyclopediaGrid.innerHTML = "";
+
+  for (const slot of slots) {
+    const card = document.createElement("div");
+    card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
+
+    const entry = slot.entries[0];
+    const graphic = slot.collected
+      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant, theme))
+      : createEncyclopediaGraphic(null, true);
+
+    const name = document.createElement("span");
+    name.className = "encyclopedia-card__name";
+    name.textContent = slot.collected && entry
+      ? entry.petName?.trim() || "이름 없음"
+      : "???";
+
+    const species = document.createElement("span");
+    species.className = "encyclopedia-card__species";
+    species.textContent = slot.collected ? (entry?.label ?? slot.variant.label) : "???";
+
+    card.append(graphic, name, species);
+
+    if (slot.collected && entry) {
+      card.setAttribute("role", "button");
+      card.tabIndex = 0;
+      card.setAttribute("aria-label", `${entry.petName || "이름 없음"} 탐사 일지 상세 보기`);
+
+      const openDetail = () => showEncyclopediaDetail(slot.variant, entry);
+      card.addEventListener("click", openDetail);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openDetail();
+        }
+      });
+    }
+
+    elements.encyclopediaGrid.append(card);
+  }
+}
+
 function showEncyclopediaDetail(variant, entry) {
   const theme = entry.speciesTheme;
   elements.encyclopediaDetailGraphic.innerHTML = "";
@@ -465,55 +547,8 @@ function showEncyclopediaDetail(variant, entry) {
 
 export function renderEncyclopedia() {
   hideEncyclopediaDetail();
-
-  const slots = getEncyclopediaSlots();
-  const collectedVariants = new Set(
-    slots.filter((s) => s.collected).map((s) => s.variant.id),
-  );
-
-  elements.encyclopediaCount.textContent =
-    `수집 ${collectedVariants.size} / ${ADULT_VARIANTS.length}`;
-
-  elements.encyclopediaGrid.innerHTML = "";
-
-  for (const slot of slots) {
-    const card = document.createElement("div");
-    card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
-
-    const entry = slot.entries[0];
-    const graphic = slot.collected
-      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant, entry?.speciesTheme))
-      : createEncyclopediaGraphic(null, true);
-
-    const name = document.createElement("span");
-    name.className = "encyclopedia-card__name";
-    name.textContent = slot.collected && entry
-      ? entry.petName?.trim() || "이름 없음"
-      : "???";
-
-    const species = document.createElement("span");
-    species.className = "encyclopedia-card__species";
-    species.textContent = slot.collected ? (entry?.label ?? slot.variant.label) : "???";
-
-    card.append(graphic, name, species);
-
-    if (slot.collected && entry) {
-      card.setAttribute("role", "button");
-      card.tabIndex = 0;
-      card.setAttribute("aria-label", `${entry.petName || "이름 없음"} 도감 상세 보기`);
-
-      const openDetail = () => showEncyclopediaDetail(slot.variant, entry);
-      card.addEventListener("click", openDetail);
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          openDetail();
-        }
-      });
-    }
-
-    elements.encyclopediaGrid.append(card);
-  }
+  bindEncyclopediaTabs();
+  selectEncyclopediaTheme(encyclopediaActiveTheme);
 }
 
 export function showEncyclopedia() {
@@ -576,6 +611,6 @@ export function getElements() {
   return elements;
 }
 
-export function getCollectedCountForDisplay() {
-  return getCollectedCount();
+export function getCollectedCountForDisplay(speciesTheme) {
+  return getCollectedCount(speciesTheme);
 }

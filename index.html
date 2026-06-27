@@ -7,14 +7,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="심해를 키우는 웹 다마고치 — 모바일 브라우저에서 플레이">
-  <meta name="app-version" content="848677f">
+  <meta name="app-version" content="c6e35a5">
   <title>다마고치</title>
-  <link rel="stylesheet" href="css/style.css?v=848677f">
+  <link rel="stylesheet" href="css/style.css?v=c6e35a5">
 </head>
 <body>
   <div class="app">
     <header class="header">
-      <button type="button" class="encyclopedia-btn" id="btn-encyclopedia" aria-label="도감">
+      <button type="button" class="encyclopedia-btn" id="btn-encyclopedia" aria-label="탐사 일지">
         <img class="header-icon" src="assets/sprites/ui/encyclopedia.png" alt="" width="28" height="28" decoding="async">
       </button>
       <button type="button" class="mute-btn" id="btn-mute" aria-label="소리 끄기" aria-pressed="false">
@@ -94,9 +94,17 @@
     <div class="overlay" id="encyclopedia-overlay" hidden>
       <div class="overlay-card overlay-card--wide encyclopedia-panel">
         <div class="encyclopedia-list" id="encyclopedia-list">
-          <h2 class="overlay-title">도감</h2>
-          <p class="overlay-text" id="encyclopedia-count">수집 0 / 9</p>
-          <div class="encyclopedia-grid" id="encyclopedia-grid"></div>
+          <header class="encyclopedia-header">
+            <h2 class="overlay-title" id="encyclopedia-title">탐사 일지</h2>
+            <p class="encyclopedia-subtitle" id="encyclopedia-subtitle">심해어 · 수집 0 / 9</p>
+          </header>
+          <div class="encyclopedia-tabs" role="tablist" aria-label="어종 선택">
+            <button type="button" class="encyclopedia-tab encyclopedia-tab--deepsea" role="tab" id="encyclopedia-tab-deepsea" aria-selected="true" aria-controls="encyclopedia-page">🐟 심해어</button>
+            <button type="button" class="encyclopedia-tab encyclopedia-tab--mermaid" role="tab" id="encyclopedia-tab-mermaid" aria-selected="false" aria-controls="encyclopedia-page">🧜 심해인어</button>
+          </div>
+          <div class="encyclopedia-page" id="encyclopedia-page" role="tabpanel">
+            <div class="encyclopedia-grid" id="encyclopedia-grid"></div>
+          </div>
           <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-close-encyclopedia">닫기</button>
         </div>
         <div class="encyclopedia-detail" id="encyclopedia-detail" hidden>
@@ -113,7 +121,7 @@
       <div class="overlay-card">
         <div class="overlay-graphic" id="graduate-graphic" aria-hidden="true"></div>
         <h2 class="overlay-title">새 펫을 키울까요?</h2>
-        <p class="overlay-text" id="graduate-text">지금 키우는 친구는 도감에 남고, 새 알부터 시작해요.</p>
+        <p class="overlay-text" id="graduate-text">지금 키우는 친구는 탐사 일지에 남고, 새 알부터 시작해요.</p>
         <button type="button" class="overlay-btn" id="btn-graduate-confirm">새 펫 시작</button>
         <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-graduate-cancel">계속 키우기</button>
       </div>

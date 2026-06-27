@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>도감 어종 분리 — 시안 6종</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a2838;
+      --surface: #243040;
+      --text: #d8e4ec;
+      --text-muted: #7a8a98;
+      --accent: #58b8c8;
+      --radius: 12px;
+      --border-subtle: #3a5060;
+      --card-bg: #283848;
+      --card-active: #304858;
+      --btn-secondary: #283848;
+      --sprite: clamp(2.35rem, 11vw, 3rem);
+      --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #101820;
+      color: var(--text);
+      padding: 18px 12px 48px;
+      line-height: 1.45;
+    }
+
+    .head { max-width: 960px; margin: 0 auto 20px; text-align: center; }
+    .head h1 { font-size: 1.0625rem; color: #eef4f8; margin-bottom: 6px; }
+    .head p { font-size: 0.75rem; color: #7a8898; }
+
+    .toc {
+      max-width: 960px; margin: 0 auto 24px;
+      display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    }
+    .toc a {
+      font-size: 0.625rem; color: var(--accent); text-decoration: none;
+      padding: 5px 10px; border: 1px solid var(--border-subtle); border-radius: 999px;
+    }
+
+    .gallery {
+      max-width: 960px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
+    }
+
+    .variant {
+      background: #141c24; border: 1px solid #2a3848; border-radius: 14px;
+      padding: 14px 12px 16px;
+    }
+    .variant--pick { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(88,184,200,0.2); }
+
+    .variant__tag {
+      font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 4px;
+    }
+    .variant h2 { font-size: 0.875rem; margin-bottom: 4px; }
+    .variant__why { font-size: 0.6875rem; color: #7a8898; margin-bottom: 12px; min-height: 2.6em; }
+
+    .phone {
+      background: var(--bg); border: 2px solid var(--border-subtle); border-radius: 16px;
+      overflow: hidden; margin: 0 auto; max-width: 296px;
+    }
+    .overlay-mock {
+      padding: 10px; background: rgba(0,0,0,0.42);
+      min-height: 380px; display: flex; align-items: flex-start; justify-content: center;
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius); width: 100%; padding: 14px 12px 10px;
+      text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .card__title { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+    .card__sub { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+
+    .dex-header {
+      padding-bottom: 12px; margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle); text-align: center;
+    }
+    .dex-header .card__title { font-size: 1.125rem; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .dex-header .card__sub { margin-bottom: 0; font-size: 0.6875rem; }
+
+    .grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 8px;
+    }
+    .slot {
+      background: var(--card-bg); border-radius: 8px; padding: 4px 2px 3px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .slot--off { opacity: 0.38; }
+    .slot img {
+      width: var(--sprite); height: var(--sprite); object-fit: contain;
+      image-rendering: pixelated;
+    }
+    .slot__name { font-size: 0.5625rem; font-weight: 600; margin-top: 2px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .slot__sp { font-size: 0.5rem; color: var(--text-muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .btn-close {
+      width: 100%; min-height: 40px; border: 1px solid var(--border-subtle);
+      border-radius: 8px; background: var(--btn-secondary); color: var(--text);
+      font-family: inherit; font-size: 0.8125rem; font-weight: 600;
+    }
+
+    /* A: top tabs (refined) */
+    .tabs-top { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .tab-btn {
+      border: 1px solid var(--border-subtle); border-radius: 8px; background: #1e2c3c;
+      color: var(--text-muted); padding: 10px 6px; font-family: inherit;
+      font-size: 0.625rem; font-weight: 600; cursor: pointer; line-height: 1.25;
+    }
+    .tab-btn[aria-selected="true"] { background: #304858; border-color: var(--accent); color: var(--text); }
+
+    /* B: segment pill */
+    .segment {
+      display: flex; padding: 3px; gap: 3px; margin-bottom: 8px;
+      background: #1a2430; border-radius: 999px; border: 1px solid var(--border-subtle);
+    }
+    .segment button {
+      flex: 1; border: none; border-radius: 999px; padding: 6px 4px;
+      font-family: inherit; font-size: 0.5625rem; font-weight: 600;
+      background: transparent; color: var(--text-muted); cursor: pointer;
+    }
+    .segment button[aria-selected="true"] { background: var(--accent); color: #0c1426; }
+
+    /* C: hub */
+    .hub { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+    .hub-card {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      background: var(--card-bg); border: 1px solid var(--border-subtle);
+      border-radius: 10px; cursor: pointer; text-align: left; width: 100%;
+      font-family: inherit; color: inherit;
+    }
+    .hub-card:active { background: var(--card-active); }
+    .hub-card img { width: 40px; height: 40px; image-rendering: pixelated; flex-shrink: 0; }
+    .hub-card strong { display: block; font-size: 0.8125rem; }
+    .hub-card span { font-size: 0.625rem; color: var(--text-muted); }
+    .hub-back {
+      display: flex; align-items: center; gap: 4px; margin-bottom: 6px;
+      font-size: 0.6875rem; color: var(--accent); background: none; border: none;
+      font-family: inherit; cursor: pointer; padding: 0;
+    }
+    .hub-view[hidden] { display: none; }
+
+    /* D: swipe */
+    .swipe-wrap { margin-bottom: 8px; }
+    .swipe-track {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .swipe-track::-webkit-scrollbar { display: none; }
+    .swipe-page {
+      flex: 0 0 100%; scroll-snap-align: start; padding: 0 1px;
+    }
+    .swipe-label {
+      font-size: 0.625rem; font-weight: 600; color: var(--accent);
+      margin-bottom: 4px; text-align: left;
+    }
+    .dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 6px; }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #3a5060; border: none; padding: 0;
+    }
+    .dot[aria-current="true"] { background: var(--accent); }
+
+    /* E: accordion */
+    .acc { margin-bottom: 8px; text-align: left; }
+    .acc-item { border: 1px solid var(--border-subtle); border-radius: 8px; margin-bottom: 5px; overflow: hidden; }
+    .acc-head {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 10px; background: #1e2c3c; border: none; font-family: inherit;
+      font-size: 0.6875rem; font-weight: 600; color: var(--text); cursor: pointer;
+    }
+    .acc-head span { font-size: 0.5625rem; color: var(--text-muted); font-weight: 500; }
+    .acc-body { padding: 6px 6px 8px; background: #1a2838; }
+    .acc-body[hidden] { display: none; }
+
+    /* F: bottom tabs */
+    .dex-body { min-height: 260px; margin-bottom: 8px; }
+    .tabs-bottom {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .tabs-bottom button {
+      padding: 8px 4px; border: none; background: #1e2c3c; color: var(--text-muted);
+      font-family: inherit; font-size: 0.5625rem; font-weight: 600; cursor: pointer;
+      border-right: 1px solid var(--border-subtle);
+    }
+    .tabs-bottom button:last-child { border-right: none; }
+    .tabs-bottom button[aria-selected="true"] { background: #304858; color: var(--text); }
+
+    .foot {
+      max-width: 960px; margin: 28px auto 0; text-align: center;
+      font-size: 0.6875rem; color: #7a8898;
+    }
+    .stamp {
+      display: inline-block; margin-top: 10px; padding: 5px 12px;
+      background: var(--accent); color: #0c1426; font-size: 0.625rem; font-weight: 700;
+      border-radius: 4px;
+    }
+    .back { display: block; text-align: center; margin-top: 14px; font-size: 0.75rem; color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <h1>도감 어종 분리 — 시안 6종</h1>
+    <p>심해어 / 심해인어 각 9종 · SUB-3 UI · 인터랙티브 mock · <strong>게임 미반영</strong></p>
+  </div>
+
+  <nav class="toc" aria-label="시안 목록">
+    <a href="#v-a">A 상단 탭</a>
+    <a href="#v-b">B 세그먼트</a>
+    <a href="#v-c">C 허브</a>
+    <a href="#v-d">D 스와이프</a>
+    <a href="#v-e">E 아코디언</a>
+    <a href="#v-f">F 하단 탭</a>
+  </nav>
+
+  <div class="gallery" id="gallery"></div>
+
+  <p class="foot">
+    공통: <code>variantId + speciesTheme</code> 복합 수집 · 탭/페이지마다 3×3 그리드<br>
+    <span class="stamp">STAGING ONLY</span>
+  </p>
+  <a class="back" href="index.html">← 시안 허브</a>
+
+  <script>
+    const VARIANTS = ["golden","fluffy","sparkle","standard","farm","plain","scruffy","grumpy","sickly"];
+    const LABELS = {
+      deepsea: { golden:"등불어",fluffy:"달빛 해파리",sparkle:"발광 오징어",standard:"산호어",farm:"해조어",plain:"진흙어",scruffy:"썩은 아귀",grumpy:"송곳니어",sickly:"기생어" },
+      mermaid: { golden:"진주 인어",fluffy:"달빛 실크 인어",sparkle:"별빛 인어",standard:"산호 인어",farm:"해초 인어",plain:"늪 인어",scruffy:"헝클 어인",grumpy:"투성 어인",sickly:"반점 어인" },
+    };
+    const NAMES = {
+      deepsea: { golden:"빛이",standard:"먼지",grumpy:"퉁퉁" },
+      mermaid: { golden:"코랄",fluffy:"실크",sparkle:"별이",plain:"이슬" },
+    };
+    const HUB_ICON = { deepsea: "golden", mermaid: "golden" };
+
+    function src(theme, id) {
+      return theme === "mermaid"
+        ? `../assets/sprites/mermaid/adult/${id}.png`
+        : `../assets/sprites/adult/${id}.png`;
+    }
+    const LOCKED = "../assets/sprites/ui/locked.png";
+    function count(theme) { return Object.keys(NAMES[theme]).length; }
+
+    function makeGrid(theme) {
+      const g = document.createElement("div");
+      g.className = "grid";
+      for (const id of VARIANTS) {
+        const on = NAMES[theme][id];
+        const slot = document.createElement("div");
+        slot.className = `slot${on ? "" : " slot--off"}`;
+        slot.innerHTML = `
+          <img src="${on ? src(theme, id) : LOCKED}" alt="">
+          <span class="slot__name">${on || "???"}</span>
+          <span class="slot__sp">${on ? LABELS[theme][id] : "???"}</span>`;
+        g.append(slot);
+      }
+      return g;
+    }
+
+    function shell(title, sub, bodyEl, extraClass = "") {
+      const wrap = document.createElement("article");
+      wrap.className = `variant ${extraClass}`;
+      wrap.innerHTML = `<div class="variant__tag">${title.split(" ")[0]}</div><h2>${title}</h2><p class="variant__why">${sub}</p>`;
+      const phone = document.createElement("div");
+      phone.className = "phone";
+      phone.innerHTML = `<div class="overlay-mock"><div class="card"></div></div>`;
+      const card = phone.querySelector(".card");
+      card.innerHTML = `<div class="card__title">도감</div><div class="card__sub">${sub.includes("·") ? "" : "어종별 수집"}</div>`;
+      const subEl = card.querySelector(".card__sub");
+      if (subEl && !subEl.textContent) subEl.remove();
+      card.insertBefore(bodyEl, card.querySelector(".btn-close") || null);
+      const close = document.createElement("button");
+      close.type = "button";
+      close.className = "btn-close";
+      close.textContent = "닫기";
+      card.append(close);
+      wrap.append(phone);
+      return wrap;
+    }
+
+    function mountTabs(container, position, subtitleEl = null) {
+      let theme = "deepsea";
+      const body = document.createElement("div");
+      body.className = "dex-body";
+      const gridHost = document.createElement("div");
+      const THEME_KO = { deepsea: "심해어", mermaid: "심해인어" };
+      const syncSub = () => {
+        if (subtitleEl) subtitleEl.textContent = `${THEME_KO[theme]} · 수집 ${count(theme)} / 9`;
+      };
+      const render = () => { gridHost.innerHTML = ""; gridHost.append(makeGrid(theme)); syncSub(); };
+      render();
+
+      const tabs = document.createElement("div");
+      if (position === "top") {
+        tabs.className = "tabs-top";
+        tabs.innerHTML = `
+          <button type="button" class="tab-btn" data-t="deepsea" aria-selected="true">🐟 심해어</button>
+          <button type="button" class="tab-btn" data-t="mermaid" aria-selected="false">🧜 심해인어</button>`;
+      } else {
+        tabs.className = "tabs-bottom";
+        tabs.innerHTML = `
+          <button type="button" data-t="deepsea" aria-selected="true">🐟 심해어 3/9</button>
+          <button type="button" data-t="mermaid" aria-selected="false">🧜 인어 4/9</button>`;
+      }
+      tabs.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          theme = btn.dataset.t;
+          tabs.querySelectorAll("button").forEach((b) => b.setAttribute("aria-selected", b === btn ? "true" : "false"));
+          render();
+        });
+      });
+
+      body.append(gridHost);
+      if (position === "top") {
+        container.append(tabs, body);
+      } else {
+        container.append(body, tabs);
+      }
+    }
+
+    function shellA() {
+      const wrap = document.createElement("article");
+      wrap.className = "variant variant--pick";
+      wrap.innerHTML = `<div class="variant__tag">A</div><h2>A · 상단 탭 (다듬음)</h2><p class="variant__why">제목 블록 분리 · 부제에 수집 · <strong>탐사 일지</strong> 제목</p>`;
+      const phone = document.createElement("div");
+      phone.className = "phone";
+      phone.innerHTML = `<div class="overlay-mock"><div class="card"></div></div>`;
+      const card = phone.querySelector(".card");
+      const header = document.createElement("header");
+      header.className = "dex-header";
+      header.innerHTML = `<div class="card__title">탐사 일지</div><p class="card__sub">심해어 · 수집 3 / 9</p>`;
+      const sub = header.querySelector(".card__sub");
+      const inner = document.createElement("div");
+      mountTabs(inner, "top", sub);
+      card.append(header, inner);
+      const close = document.createElement("button");
+      close.type = "button";
+      close.className = "btn-close";
+      close.textContent = "닫기";
+      card.append(close);
+      wrap.append(phone);
+      return wrap;
+    }
+
+    // A — top tabs (refined)
+    (function () {
+      const el = shellA();
+      el.id = "v-a";
+      document.getElementById("gallery").append(el);
+    })();
+
+    // B — segment
+    (function () {
+      let theme = "deepsea";
+      const body = document.createElement("div");
+      const seg = document.createElement("div");
+      seg.className = "segment";
+      seg.innerHTML = `
+        <button type="button" data-t="deepsea" aria-selected="true">심해어</button>
+        <button type="button" data-t="mermaid" aria-selected="false">심해인어</button>`;
+      const gridHost = document.createElement("div");
+      const sub = document.createElement("p");
+      sub.className = "card__sub";
+      sub.id = "seg-sub";
+      sub.textContent = "수집 3 / 9";
+      const render = () => {
+        gridHost.innerHTML = "";
+        gridHost.append(makeGrid(theme));
+        sub.textContent = `수집 ${count(theme)} / 9`;
+      };
+      seg.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          theme = btn.dataset.t;
+          seg.querySelectorAll("button").forEach((b) => b.setAttribute("aria-selected", b === btn ? "true" : "false"));
+          render();
+        });
+      });
+      render();
+      body.append(seg, sub, gridHost);
+      const el = shell("B · 세그먼트 필", "공간 절약 · iOS 스타일 토글", body);
+      el.id = "v-b";
+      document.getElementById("gallery").append(el);
+    })();
+
+    // C — hub
+    (function () {
+      const body = document.createElement("div");
+      const hub = document.createElement("div");
+      hub.className = "hub-view";
+      hub.innerHTML = `
+        <div class="hub">
+          <button type="button" class="hub-card" data-t="deepsea">
+            <img src="${src("deepsea", "golden")}" alt="">
+            <div><strong>심해어 도감</strong><span>수집 3 / 9 · 등불어·산호어…</span></div>
+          </button>
+          <button type="button" class="hub-card" data-t="mermaid">
+            <img src="${src("mermaid", "golden")}" alt="">
+            <div><strong>심해인어 도감</strong><span>수집 4 / 9 · 진주·별빛…</span></div>
+          </button>
+        </div>`;
+      const list = document.createElement("div");
+      list.className = "hub-view";
+      list.hidden = true;
+      const back = document.createElement("button");
+      back.type = "button";
+      back.className = "hub-back";
+      back.textContent = "← 어종 선택";
+      const title = document.createElement("p");
+      title.className = "card__sub";
+      title.style.marginBottom = "6px";
+      const gridHost = document.createElement("div");
+      list.append(back, title, gridHost);
+      body.append(hub, list);
+
+      hub.querySelectorAll(".hub-card").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const t = btn.dataset.t;
+          title.textContent = t === "mermaid" ? "🧜 심해인어 · 수집 4/9" : "🐟 심해어 · 수집 3/9";
+          gridHost.innerHTML = "";
+          gridHost.append(makeGrid(t));
+          hub.hidden = true;
+          list.hidden = false;
+        });
+      });
+      back.addEventListener("click", () => { hub.hidden = false; list.hidden = true; });
+
+      const el = shell("C · 허브 랜딩", "어종 선택 → 9칸 · 계층이 분명", body);
+      el.id = "v-c";
+      document.getElementById("gallery").append(el);
+    })();
+
+    // D — swipe
+    (function () {
+      const body = document.createElement("div");
+      body.className = "swipe-wrap";
+      const track = document.createElement("div");
+      track.className = "swipe-track";
+      track.id = "swipe-track";
+      for (const [t, label] of [["deepsea", "🐟 심해어 3/9"], ["mermaid", "🧜 심해인어 4/9"]]) {
+        const page = document.createElement("div");
+        page.className = "swipe-page";
+        page.innerHTML = `<div class="swipe-label">${label}</div>`;
+        page.append(makeGrid(t));
+        track.append(page);
+      }
+      const dots = document.createElement("div");
+      dots.className = "dots";
+      dots.innerHTML = `<button type="button" class="dot" aria-current="true" data-i="0"></button><button type="button" class="dot" data-i="1"></button>`;
+      track.addEventListener("scroll", () => {
+        const i = Math.round(track.scrollLeft / track.clientWidth);
+        dots.querySelectorAll(".dot").forEach((d, j) => d.setAttribute("aria-current", j === i ? "true" : "false"));
+      });
+      dots.querySelectorAll(".dot").forEach((d) => {
+        d.addEventListener("click", () => track.scrollTo({ left: Number(d.dataset.i) * track.clientWidth, behavior: "smooth" }));
+      });
+      body.append(track, dots);
+      const el = shell("D · 스와이프", "좌우 넘김 · 모바일 제스처 친화", body);
+      el.id = "v-d";
+      document.getElementById("gallery").append(el);
+    })();
+
+    // E — accordion
+    (function () {
+      const body = document.createElement("div");
+      body.className = "acc";
+      for (const [t, label, n] of [["deepsea","🐟 심해어","3"],["mermaid","🧜 심해인어","4"]]) {
+        const item = document.createElement("div");
+        item.className = "acc-item";
+        const head = document.createElement("button");
+        head.type = "button";
+        head.className = "acc-head";
+        head.innerHTML = `${label} <span>수집 ${n}/9</span>`;
+        const panel = document.createElement("div");
+        panel.className = "acc-body";
+        panel.hidden = t !== "deepsea";
+        panel.append(makeGrid(t));
+        head.addEventListener("click", () => {
+          const open = panel.hidden;
+          body.querySelectorAll(".acc-body").forEach((p) => { p.hidden = true; });
+          panel.hidden = !open;
+        });
+        item.append(head, panel);
+        body.append(item);
+      }
+      const el = shell("E · 아코디언", "한 화면에 둘 다 · 펼쳐서 비교", body);
+      el.id = "v-e";
+      document.getElementById("gallery").append(el);
+    })();
+
+    // F — bottom tabs
+    (function () {
+      const body = document.createElement("div");
+      mountTabs(body, "bottom");
+      const el = shell("F · 하단 탭", "엄지 존 가까움 · 그리드 넓게", body);
+      el.id = "v-f";
+      document.getElementById("gallery").append(el);
+    })();
+  </script>
+</body>
+</html>
