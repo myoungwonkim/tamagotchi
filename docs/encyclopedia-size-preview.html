@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>도감 펫 크기 시안</title>
+  <style>
+    :root {
+      --bg: #fef6e4;
+      --surface: #ffffff;
+      --text: #2d2a26;
+      --text-muted: #6b6560;
+      --accent: #f582ae;
+      --accent-dark: #e05a8a;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      --text-xs: 0.75rem;
+      --text-sm: 0.8125rem;
+      --text-lg: 1.125rem;
+      --weight-medium: 500;
+      --weight-semibold: 600;
+      --weight-bold: 700;
+      --leading-tight: 1.25;
+      --leading-relaxed: 1.45;
+      /* 게임 성체(.pet-display[data-stage="adult"])와 동일 */
+      --sprite-evolution-size: clamp(11rem, 58vw, 16rem);
+      /* 그리드용 — 성체 비율 유지, 3열에 맞게 축소 */
+      --encyclopedia-grid-sprite-size: clamp(4.5rem, 24vw, 6.5rem);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: #e8e4dc;
+      color: var(--text);
+      padding: 24px 16px 48px;
+      line-height: 1.4;
+    }
+
+    h1.page-title {
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: var(--weight-bold);
+      margin-bottom: 8px;
+    }
+
+    p.page-desc {
+      text-align: center;
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-title {
+      font-size: 0.8125rem;
+      font-weight: var(--weight-bold);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 32px 0 12px;
+      max-width: 960px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 16px;
+      border: 2px solid transparent;
+    }
+
+    .panel--current { border-color: #c44; }
+    .panel--proposed { border-color: var(--accent); }
+
+    .panel__badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.04em;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    .panel--current .panel__badge { background: #c44; }
+    .panel--proposed .panel__badge { background: var(--accent-dark); }
+
+    .panel__note {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* 공통 오버레이 카드 (게임과 동일 톤) */
+    .overlay-card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 20px 16px;
+      box-shadow: 0 4px 20px rgba(45, 42, 38, 0.08);
+      text-align: center;
+    }
+
+    /* —— 현재 도감 상세 CSS 그대로 —— */
+    .detail--current .encyclopedia-detail__graphic {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+    }
+
+    .detail--current .encyclopedia-detail__img {
+      width: 2.75rem;
+      height: 2.75rem;
+      object-fit: contain;
+    }
+
+    /* —— 제안: 게임 성체 스프라이트 크기 —— */
+    .detail--proposed .encyclopedia-detail__graphic {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: var(--sprite-evolution-size);
+      padding: 4px 0 8px;
+    }
+
+    .detail--proposed .encyclopedia-detail__img {
+      width: var(--sprite-evolution-size);
+      height: var(--sprite-evolution-size);
+      object-fit: contain;
+    }
+
+    .encyclopedia-detail__name {
+      margin: 0;
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      line-height: var(--leading-tight);
+    }
+
+    .encyclopedia-detail__species {
+      margin: 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--accent-dark);
+      line-height: var(--leading-tight);
+    }
+
+    .encyclopedia-detail__desc {
+      margin: 8px 0 0;
+      width: 100%;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-muted);
+      line-height: var(--leading-relaxed);
+      text-align: left;
+      padding: 10px 12px;
+      background: rgba(45, 42, 38, 0.04);
+      border-radius: 10px;
+    }
+
+    .overlay-btn {
+      margin-top: 14px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: #e8e0d4;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text);
+      cursor: default;
+    }
+
+    /* —— 그리드 —— */
+    .encyclopedia-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .encyclopedia-card {
+      background: #faf7f2;
+      border-radius: 12px;
+      padding: 10px 6px;
+      min-height: 108px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .grid--current .encyclopedia-card__graphic {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.75rem;
+    }
+
+    .grid--current .encyclopedia-card__img {
+      width: 1.75rem;
+      height: 1.75rem;
+      object-fit: contain;
+    }
+
+    .grid--proposed .encyclopedia-card {
+      min-height: 132px;
+      padding: 12px 6px;
+      gap: 4px;
+    }
+
+    .grid--proposed .encyclopedia-card__graphic {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--encyclopedia-grid-sprite-size);
+    }
+
+    .grid--proposed .encyclopedia-card__img {
+      width: var(--encyclopedia-grid-sprite-size);
+      height: var(--encyclopedia-grid-sprite-size);
+      object-fit: contain;
+    }
+
+    .encyclopedia-card__name {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .encyclopedia-card__species {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--text-muted);
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* 게임 화면 참고 */
+    .game-ref {
+      max-width: 360px;
+      margin: 0 auto;
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 16px;
+      border: 2px dashed rgba(45, 42, 38, 0.2);
+    }
+
+    .game-ref__label {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .pet-area-mock {
+      background: linear-gradient(180deg, #e8f4fc 0%, #d4e8f5 100%);
+      border-radius: 16px;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .pet-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: min(100%, var(--sprite-evolution-size));
+      min-height: var(--sprite-evolution-size);
+    }
+
+    .pet-display img {
+      width: var(--sprite-evolution-size);
+      height: var(--sprite-evolution-size);
+      object-fit: contain;
+    }
+
+    .css-snippet {
+      max-width: 960px;
+      margin: 24px auto 0;
+      padding: 14px 16px;
+      background: #2d2a26;
+      color: #f5f0e8;
+      border-radius: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.6875rem;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">도감 펫 그래픽 크기</h1>
+  <p class="page-desc">
+    게임 본편에는 아직 반영하지 않았습니다. 상세 화면은 성체 플레이 화면과 같은
+    <code>--sprite-evolution-size</code>를 쓰고, 그리드는 3열 레이아웃에 맞게 같은 비율로 키웁니다.
+  </p>
+
+  <p class="section-title">상세 화면 (스크린샷과 동일 — 송곳니어)</p>
+  <div class="compare-row">
+    <div class="panel panel--current">
+      <span class="panel__badge">현재</span>
+      <p class="panel__note">2.75rem × 2.75rem (약 44px)</p>
+      <div class="overlay-card detail--current">
+        <div class="encyclopedia-detail__graphic">
+          <img class="encyclopedia-detail__img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어">
+        </div>
+        <h2 class="encyclopedia-detail__name">송곳니어</h2>
+        <p class="encyclopedia-detail__species">송곳니어</p>
+        <p class="encyclopedia-detail__desc">송곳니어의 송곳니는 생각보다 부드러워요. 표정만 험악할 뿐, 사실은 쓰다듬어 달라고 입을 벌리고 기다립니다. 첫인상은 '물리면 안 됨'이지만, 실제로 물린 적 있는 생물은 아직 없어요. 대신 눈빛으로 협박은 자주 합니다.</p>
+        <button type="button" class="overlay-btn">목록으로</button>
+      </div>
+    </div>
+
+    <div class="panel panel--proposed">
+      <span class="panel__badge">제안</span>
+      <p class="panel__note">clamp(11rem, 58vw, 16rem) — 게임 성체와 동일</p>
+      <div class="overlay-card detail--proposed">
+        <div class="encyclopedia-detail__graphic">
+          <img class="encyclopedia-detail__img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어">
+        </div>
+        <h2 class="encyclopedia-detail__name">송곳니어</h2>
+        <p class="encyclopedia-detail__species">송곳니어</p>
+        <p class="encyclopedia-detail__desc">송곳니어의 송곳니는 생각보다 부드러워요. 표정만 험악할 뿐, 사실은 쓰다듬어 달라고 입을 벌리고 기다립니다. 첫인상은 '물리면 안 됨'이지만, 실제로 물린 적 있는 생물은 아직 없어요. 대신 눈빛으로 협박은 자주 합니다.</p>
+        <button type="button" class="overlay-btn">목록으로</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">참고 — 게임 플레이 화면 성체 크기</p>
+  <div class="game-ref">
+    <p class="game-ref__label">pet-area 안 성체 스프라이트 (비교용)</p>
+    <div class="pet-area-mock">
+      <div class="pet-display" data-stage="adult">
+        <img src="../assets/sprites/adult/grumpy.png" alt="송곳니어">
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">목록 그리드 (3열)</p>
+  <div class="compare-row">
+    <div class="panel panel--current">
+      <span class="panel__badge">현재</span>
+      <p class="panel__note">1.75rem × 1.75rem</p>
+      <div class="encyclopedia-grid grid--current">
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card__graphic"><img class="encyclopedia-card__img" src="../assets/sprites/adult/grumpy.png" alt=""></div>
+          <span class="encyclopedia-card__name">송곳니어</span>
+          <span class="encyclopedia-card__species">송곳니어</span>
+        </div>
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card__graphic"><img class="encyclopedia-card__img" src="../assets/sprites/adult/golden.png" alt=""></div>
+          <span class="encyclopedia-card__name">등불어</span>
+          <span class="encyclopedia-card__species">등불어</span>
+        </div>
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card__graphic"><img class="encyclopedia-card__img" src="../assets/sprites/adult/fluffy.png" alt=""></div>
+          <span class="encyclopedia-card__name">달빛 해파리</span>
+          <span class="encyclopedia-card__species">달빛 해파리</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel--proposed">
+      <span class="panel__badge">제안</span>
+      <p class="panel__note">clamp(4.5rem, 24vw, 6.5rem) — 성체 비율, 3열에 맞게 축소</p>
+      <div class="encyclopedia-grid grid--proposed">
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card__graphic"><img class="encyclopedia-card__img" src="../assets/sprites/adult/grumpy.png" alt=""></div>
+          <span class="encyclopedia-card__name">송곳니어</span>
+          <span class="encyclopedia-card__species">송곳니어</span>
+        </div>
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card__graphic"><img class="encyclopedia-card__img" src="../assets/sprites/adult/golden.png" alt=""></div>
+          <span class="encyclopedia-card__name">등불어</span>
+          <span class="encyclopedia-card__species">등불어</span>
+        </div>
+        <div class="encyclopedia-card">
+          <div class="encyclopedia-card__graphic"><img class="encyclopedia-card__img" src="../assets/sprites/adult/fluffy.png" alt=""></div>
+          <span class="encyclopedia-card__name">달빛 해파리</span>
+          <span class="encyclopedia-card__species">달빛 해파리</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <pre class="css-snippet">/* 제안 — style.css 반영 시 */
+
+:root {
+  --encyclopedia-grid-sprite-size: clamp(4.5rem, 24vw, 6.5rem);
+}
+
+.encyclopedia-card__graphic {
+  min-height: var(--encyclopedia-grid-sprite-size);
+}
+.encyclopedia-card__img {
+  width: var(--encyclopedia-grid-sprite-size);
+  height: var(--encyclopedia-grid-sprite-size);
+}
+
+.encyclopedia-detail__graphic {
+  width: 100%;
+  min-height: var(--sprite-evolution-size);
+  padding: 4px 0 8px;
+}
+.encyclopedia-detail__img {
+  width: var(--sprite-evolution-size);
+  height: var(--sprite-evolution-size);
+}</pre>
+</body>
+</html>

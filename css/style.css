@@ -36,6 +36,7 @@
   --sprite-evolution-size: clamp(4.75rem, 24vw, 6rem);
   --sprite-mood-size: clamp(2.25rem, 10vw, 2.75rem);
   --sprite-overlay-size: clamp(5rem, 28vw, 7rem);
+  --encyclopedia-grid-sprite-size: clamp(4.5rem, 24vw, 6.5rem);
 }
 
 html {
@@ -742,13 +743,13 @@ img.pet-sprite[hidden] {
 .encyclopedia-card {
   background: #faf7f2;
   border-radius: 12px;
-  padding: 10px 6px;
-  min-height: 108px;
+  padding: 12px 6px;
+  min-height: 132px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .encyclopedia-card--locked {
@@ -771,7 +772,7 @@ img.pet-sprite[hidden] {
 }
 
 .encyclopedia-card__emoji {
-  font-size: 1.75rem;
+  font-size: var(--encyclopedia-grid-sprite-size);
   line-height: 1.1;
 }
 
@@ -779,12 +780,12 @@ img.pet-sprite[hidden] {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 1.75rem;
+  min-height: var(--encyclopedia-grid-sprite-size);
 }
 
 .encyclopedia-card__img {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: var(--encyclopedia-grid-sprite-size);
+  height: var(--encyclopedia-grid-sprite-size);
   object-fit: contain;
 }
 
@@ -838,17 +839,20 @@ img.pet-sprite[hidden] {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.75rem;
+  width: 100%;
+  --sprite-evolution-size: clamp(11rem, 58vw, 16rem);
+  min-height: var(--sprite-evolution-size);
+  padding: 4px 0 8px;
 }
 
 .encyclopedia-detail__graphic .encyclopedia-card__emoji {
-  font-size: 2.75rem;
+  font-size: var(--sprite-evolution-size);
   line-height: 1;
 }
 
 .encyclopedia-detail__img {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: var(--sprite-evolution-size);
+  height: var(--sprite-evolution-size);
   object-fit: contain;
 }
 
