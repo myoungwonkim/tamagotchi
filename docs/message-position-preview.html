@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>말풍선 위치 시안 — 펫 겹침 해소</title>
+  <style>
+    :root {
+      --bg: #fef6e4;
+      --surface: #ffffff;
+      --text: #2d2a26;
+      --text-muted: #6b6560;
+      --accent: #f582ae;
+      --accent-dark: #e05a8a;
+      --shadow: 0 4px 20px rgba(45, 42, 38, 0.08);
+      --radius: 16px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      --text-md: 0.875rem;
+      --text-sm: 0.8125rem;
+      --weight-medium: 500;
+      --weight-semibold: 600;
+      --weight-bold: 700;
+      --leading-relaxed: 1.45;
+      --sprite-evolution-size: clamp(11rem, 58vw, 16rem);
+      --sprite-mood-size: clamp(2.5rem, 11vw, 3.1rem);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: #e8e4dc;
+      color: var(--text);
+      padding: 24px 16px 48px;
+      line-height: 1.4;
+    }
+
+    h1.page-title {
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: var(--weight-bold);
+      margin-bottom: 8px;
+    }
+
+    p.page-desc {
+      text-align: center;
+      font-size: var(--text-md);
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .candidate {
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 14px;
+      border: 2px solid transparent;
+    }
+
+    .candidate:hover { border-color: var(--accent); }
+
+    .candidate--current { border-color: #c44; }
+
+    .candidate__badge {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.04em;
+      color: #fff;
+      background: var(--accent-dark);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .candidate__badge--warn { background: #b44; }
+    .candidate__badge--muted { background: var(--text-muted); }
+
+    .candidate__name {
+      font-size: 1rem;
+      font-weight: var(--weight-bold);
+      margin-bottom: 4px;
+    }
+
+    .candidate__summary {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      min-height: 2.6em;
+    }
+
+    .mock-app {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 10px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .mock-header {
+      text-align: center;
+      padding: 4px 0 10px;
+    }
+
+    .mock-header .name {
+      font-size: 1.125rem;
+      font-weight: var(--weight-bold);
+    }
+
+    .mock-header .meta {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .mock-header .stage {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--accent-dark);
+    }
+
+    .mock-main {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mock-pet-area {
+      position: relative;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      min-height: clamp(260px, 42dvh, 320px);
+      padding: 12px 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mock-pet-display {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: var(--sprite-evolution-size);
+      min-height: var(--sprite-evolution-size);
+    }
+
+    .mock-pet-img {
+      width: var(--sprite-evolution-size);
+      height: var(--sprite-evolution-size);
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      display: block;
+    }
+
+    .mock-mood {
+      position: absolute;
+      top: 4%;
+      right: max(-2.75rem, calc(var(--sprite-evolution-size) * -0.28));
+      width: calc(var(--sprite-mood-size) + 0.65rem);
+      height: calc(var(--sprite-mood-size) + 0.65rem);
+      background: var(--surface);
+      border: 2px solid rgba(45, 42, 38, 0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      z-index: 2;
+    }
+
+    .mock-mess {
+      position: absolute;
+      bottom: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      opacity: 0.85;
+      z-index: 1;
+    }
+
+    /* 공통 말풍선 스타일 (현재 게임 C) */
+    .msg-base {
+      text-align: center;
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-relaxed);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(45, 42, 38, 0.08);
+      box-shadow: 0 4px 16px rgba(45, 42, 38, 0.1);
+      pointer-events: none;
+    }
+
+    /* 현재 — pet-area 상단 오버레이 (겹침 발생) */
+    .msg-current {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      z-index: 5;
+    }
+
+    /* A — pet-area 밖, 헤더와 펫 사이 */
+    .msg-a {
+      width: 100%;
+    }
+
+    /* B — pet-area 상단 전용 구역 + 펫 아래로 */
+    .mock-pet-area--b {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 0;
+      gap: 0;
+    }
+
+    .msg-b-band {
+      flex-shrink: 0;
+      margin: 0;
+      border-radius: var(--radius) var(--radius) 0 0;
+      border-bottom: 1px solid rgba(45, 42, 38, 0.06);
+      box-shadow: none;
+    }
+
+    .mock-pet-area--b .mock-pet-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 8px 16px;
+      min-height: 0;
+    }
+
+    /* C — 상단 얇은 띠 (1줄, pet-area 최상단) */
+    .msg-c {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 5;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 8px 12px;
+      font-size: var(--text-sm);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mock-pet-area--c {
+      padding-top: 44px;
+    }
+
+    /* D — 좌상단 말풍선 (꼬리 + 펫과 분리) */
+    .msg-d-wrap {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      right: 28%;
+      z-index: 5;
+    }
+
+    .msg-d {
+      position: relative;
+      text-align: left;
+      padding: 10px 12px;
+    }
+
+    .msg-d::after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      bottom: -9px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 9px 8px 0 8px;
+      border-color: rgba(255, 255, 255, 0.94) transparent transparent transparent;
+    }
+
+    .mock-pet-area--d {
+      align-items: flex-end;
+      padding-bottom: 20px;
+      padding-top: 56px;
+    }
+
+    /* E — 헤더 하단 배너 (pet-area 밖, 이름 아래) */
+    .msg-e {
+      width: 100%;
+      border-radius: 10px;
+      border-left: 3px solid var(--accent);
+      text-align: left;
+      padding: 9px 12px;
+    }
+
+    .overlap-hint {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .overlap-hint::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      height: 42px;
+      border: 2px dashed rgba(180, 68, 68, 0.45);
+      border-radius: 12px;
+      background: rgba(180, 68, 68, 0.06);
+    }
+
+    .overlap-label {
+      position: absolute;
+      top: 52px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.625rem;
+      font-weight: var(--weight-bold);
+      color: #b44;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .safe-zone {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      height: 48px;
+      border: 2px dashed rgba(46, 125, 50, 0.35);
+      border-radius: 10px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .legend {
+      max-width: 1200px;
+      margin: 28px auto 0;
+      padding: 16px;
+      background: var(--surface);
+      border-radius: 12px;
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .legend strong { color: var(--text); }
+
+    @keyframes msgPop {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-base { animation: msgPop 0.45s ease; }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">말풍선 위치 시안 — 펫 겹침 해소</h1>
+  <p class="page-desc">
+    스크린샷과 동일 조건(성체 송곳니어 · 「후회할 거야, 키운 거.」)으로 배치만 비교합니다.
+    <strong>게임에는 반영되지 않았습니다.</strong>
+  </p>
+
+  <div class="grid">
+    <!-- 현재 -->
+    <section class="candidate candidate--current">
+      <span class="candidate__badge candidate__badge--warn">현재 · C</span>
+      <h2 class="candidate__name">pet-area 상단 오버레이</h2>
+      <p class="candidate__summary">top: 10px 고정. 성체처럼 큰 스프라이트일 때 대사가 펫 머리와 겹침.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">1</div>
+          <div class="meta">14일째</div>
+          <div class="stage">송곳니어</div>
+        </div>
+        <div class="mock-main">
+          <div class="mock-pet-area">
+            <p class="msg-base msg-current">후회할 거야, 키운 거.</p>
+            <div class="overlap-hint"></div>
+            <span class="overlap-label">펫과 겹침</span>
+            <div class="mock-pet-display">
+              <span class="mock-mood">😢</span>
+              <img class="mock-pet-img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어" width="176" height="176">
+            </div>
+            <span class="mock-mess">💩</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- A -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 A · 추천</span>
+      <h2 class="candidate__name">pet-area 위 (분리)</h2>
+      <p class="candidate__summary">대사를 펫 박스 밖으로. 겹침 없음, 시선 흐름은 위→아래.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">1</div>
+          <div class="meta">14일째</div>
+          <div class="stage">송곳니어</div>
+        </div>
+        <div class="mock-main">
+          <p class="msg-base msg-a">후회할 거야, 키운 거.</p>
+          <div class="mock-pet-area">
+            <div class="mock-pet-display">
+              <span class="mock-mood">😢</span>
+              <img class="mock-pet-img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어" width="176" height="176">
+            </div>
+            <span class="mock-mess">💩</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 B</span>
+      <h2 class="candidate__name">상단 전용 구역</h2>
+      <p class="candidate__summary">pet-area 안에서 위쪽 띠만 대사, 아래는 펫 전용. 한 박스 유지.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">1</div>
+          <div class="meta">14일째</div>
+          <div class="stage">송곳니어</div>
+        </div>
+        <div class="mock-main">
+          <div class="mock-pet-area mock-pet-area--b">
+            <p class="msg-base msg-b-band">후회할 거야, 키운 거.</p>
+            <div class="mock-pet-stage">
+              <div class="mock-pet-display">
+                <span class="mock-mood">😢</span>
+                <img class="mock-pet-img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어" width="176" height="176">
+              </div>
+              <span class="mock-mess">💩</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- C -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 C</span>
+      <h2 class="candidate__name">상단 얇은 띠</h2>
+      <p class="candidate__summary">최상단 1줄 띠 + 펫 영역 padding-top. 오버레이지만 겹침 최소화.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">1</div>
+          <div class="meta">14일째</div>
+          <div class="stage">송곳니어</div>
+        </div>
+        <div class="mock-main">
+          <div class="mock-pet-area mock-pet-area--c">
+            <p class="msg-base msg-c">후회할 거야, 키운 거.</p>
+            <div class="mock-pet-display">
+              <span class="mock-mood">😢</span>
+              <img class="mock-pet-img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어" width="176" height="176">
+            </div>
+            <span class="mock-mess">💩</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- D -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 D</span>
+      <h2 class="candidate__name">좌상단 말풍선</h2>
+      <p class="candidate__summary">좁은 말풍선 + 꼬리. 펫은 아래쪽에 두어 대사와 분리.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">1</div>
+          <div class="meta">14일째</div>
+          <div class="stage">송곳니어</div>
+        </div>
+        <div class="mock-main">
+          <div class="mock-pet-area mock-pet-area--d">
+            <div class="msg-d-wrap">
+              <p class="msg-base msg-d">후회할 거야, 키운 거.</p>
+            </div>
+            <div class="mock-pet-display">
+              <span class="mock-mood">😢</span>
+              <img class="mock-pet-img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어" width="176" height="176">
+            </div>
+            <span class="mock-mess">💩</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- E -->
+    <section class="candidate">
+      <span class="candidate__badge">후보 E</span>
+      <h2 class="candidate__name">헤더 하단 배너</h2>
+      <p class="candidate__summary">이름·단계 바로 아래. pet-area와 완전 분리, 알림 느낌.</p>
+      <div class="mock-app">
+        <div class="mock-header">
+          <div class="name">1</div>
+          <div class="meta">14일째</div>
+          <div class="stage">송곳니어</div>
+        </div>
+        <div class="mock-main">
+          <p class="msg-base msg-e">후회할 거야, 키운 거.</p>
+          <div class="mock-pet-area">
+            <div class="mock-pet-display">
+              <span class="mock-mood">😢</span>
+              <img class="mock-pet-img" src="../assets/sprites/adult/grumpy.png" alt="송곳니어" width="176" height="176">
+            </div>
+            <span class="mock-mess">💩</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="legend">
+    <strong>비교 조건:</strong> 성체 송곳니어 · 대사 「후회할 거야, 키운 거.」 · 무드 😢 · 똥 1개<br>
+    <strong>현재 문제:</strong> C 오버레이(top: 10px)는 큰 스프라이트에서 펫 머리와 겹침 (빨간 점선)<br>
+    <strong>선택:</strong> 채팅에 <strong>현재 / A / B / C / D / E</strong> 또는 조합을 알려주세요.<br>
+    <strong>열기:</strong> 로컬 서버 실행 후
+    <code>http://127.0.0.1:8777/docs/message-position-preview.html</code>
+    (또는 <code>python3 -m http.server 8080</code> 후 <code>/docs/message-position-preview.html</code>)
+  </div>
+</body>
+</html>

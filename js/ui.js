@@ -376,10 +376,12 @@ function updateGameOver(pet) {
 export function showMessage(text, durationMs = 4000) {
   elements.message.textContent = text;
   elements.message.hidden = false;
+  elements.petArea?.classList.add("pet-area--message");
 
   if (messageTimeout) clearTimeout(messageTimeout);
   messageTimeout = setTimeout(() => {
     elements.message.hidden = true;
+    elements.petArea?.classList.remove("pet-area--message");
   }, durationMs);
 }
 
