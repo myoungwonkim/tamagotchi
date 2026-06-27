@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>UI 시안 — 수중 탐색정</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #0e141c;
+    color: #c8d0d8;
+    padding: 24px 14px 56px;
+    line-height: 1.45;
+  }
+
+  .page-head { max-width: 1140px; margin: 0 auto 20px; text-align: center; }
+  .page-head h1 { font-size: 1.0625rem; font-weight: 700; color: #e8eef4; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #7a8898; max-width: 640px; margin: 0 auto; }
+
+  .criteria {
+    max-width: 1140px; margin: 0 auto 22px;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  }
+  .criteria span {
+    font-size: 0.6875rem; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid #2a3848; color: #8a98a8;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px;
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  .theme-card {
+    background: #141c24;
+    border-radius: 14px;
+    padding: 14px;
+    border: 1px solid #243040;
+  }
+
+  .theme-card__tag {
+    display: inline-block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  .theme-card h2 { font-size: 0.9375rem; font-weight: 700; color: #eef4f8; margin-bottom: 4px; }
+  .theme-card__desc { font-size: 0.75rem; color: #7a8898; margin-bottom: 10px; min-height: 2.6em; }
+  .theme-card__notes { font-size: 0.6875rem; color: #5a6878; margin-top: 10px; padding-left: 1rem; }
+  .theme-card__notes li + li { margin-top: 3px; }
+
+  .tag-base { background: #3a4858; color: #d0d8e0; }
+  .tag-sub { background: #1a3040; color: #88b8c8; border: 1px solid #2a5060; }
+  .tag-pick { background: #2a4038; color: #a8d8c0; border: 1px solid #3a6050; }
+
+  /* ===== 폰 목업 (현재 레이아웃 동일) ===== */
+  .phone {
+    --radius: 16px;
+    --text-xl: 1.125rem;
+    --text-sm: 0.75rem;
+    --text-xs: 0.6875rem;
+    --sprite-size: clamp(5.5rem, 42%, 7rem);
+    --font-ui: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    border-radius: 18px;
+    overflow: hidden;
+    border: var(--hull-border, 2px solid #333);
+    box-shadow: var(--hull-shadow, 0 8px 28px rgba(0,0,0,0.35));
+    min-height: 540px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .app-mock {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px 12px;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-mock { text-align: center; padding: 2px 36px 4px; position: relative; }
+
+  .icon-btn {
+    position: absolute; top: 0;
+    width: 32px; height: 32px;
+    border: var(--icon-border, none);
+    border-radius: var(--icon-radius, 10px);
+    background: var(--icon-bg, var(--surface));
+    box-shadow: var(--icon-shadow, none);
+    font-size: 0.875rem;
+    cursor: default;
+  }
+  .icon-btn--left { left: 0; }
+  .icon-btn--right { right: 0; }
+
+  .depth-readout {
+    font-size: 0.5625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--depth-color, transparent);
+    margin-bottom: 4px;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--depth-font, inherit);
+  }
+
+  .pet-name { font-size: var(--text-xl); font-weight: 700; line-height: 1.2; }
+  .pet-meta { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
+  .pet-stage { font-size: var(--text-xs); font-weight: 600; color: var(--accent); margin-top: 1px; }
+
+  .pet-area {
+    position: relative;
+    flex: 1;
+    min-height: 200px;
+    background: var(--pet-bg, var(--surface));
+    border-radius: var(--pet-radius, var(--radius));
+    border: var(--pet-border, none);
+    box-shadow: var(--pet-shadow, none);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .pet-area--porthole {
+    width: 78%;
+    margin: 0 auto;
+    aspect-ratio: 1;
+    min-height: auto;
+    max-height: 195px;
+    border-radius: 50%;
+  }
+
+  .pet-area--porthole::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: var(--ring-border, 6px solid #8a7860);
+    box-shadow: var(--ring-shadow, inset 0 0 12px rgba(0,0,0,0.4));
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .pet-area--porthole::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: inset 0 0 24px rgba(10,30,50,0.25);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .rivets::before,
+  .rivets::after {
+    content: "● ●";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.375rem;
+    letter-spacing: 0.35rem;
+    color: var(--rivet-color, transparent);
+    opacity: 0.5;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .rivets::before { top: 6px; }
+  .rivets::after { bottom: 6px; }
+
+  .pet-area img {
+    width: var(--sprite-size);
+    height: var(--sprite-size);
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 1;
+    position: relative;
+  }
+
+  .message {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 5;
+    text-align: center;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 6px 10px;
+    background: var(--msg-bg);
+    color: var(--msg-text);
+    border-bottom: var(--msg-border, none);
+    border-radius: var(--msg-radius, var(--radius) var(--radius) 0 0);
+  }
+
+  .pet-area--porthole .message {
+    top: auto;
+    bottom: 8%;
+    left: 10%;
+    right: 10%;
+    border-radius: 4px;
+    border: var(--msg-border, none);
+    font-size: 0.625rem;
+  }
+
+  .stats {
+    background: var(--stats-bg, var(--surface));
+    border-radius: var(--stats-radius, var(--radius));
+    padding: 10px;
+    border: var(--stats-border, none);
+    box-shadow: var(--stats-shadow, none);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .stat {
+    display: grid;
+    grid-template-columns: 44px 1fr 32px;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-xs);
+  }
+
+  .stat label { color: var(--text-muted); font-weight: 500; }
+  .stat-val {
+    text-align: right;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--val-size, var(--text-xs));
+  }
+
+  .stat-bar {
+    height: var(--bar-h, 10px);
+    background: var(--bar-track);
+    border-radius: var(--bar-radius, 5px);
+    overflow: hidden;
+    border: var(--bar-border, none);
+  }
+
+  .stat-fill { height: 100%; border-radius: var(--bar-fill-radius, 5px); }
+  .stat-fill--h { width: 62%; background: var(--bar-hunger); }
+  .stat-fill--p { width: 48%; background: var(--bar-happy); }
+  .stat-fill--c { width: 35%; background: var(--bar-clean); }
+  .stat-fill--x { width: 88%; background: var(--bar-health); }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--action-gap, 8px);
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    min-height: 58px;
+    border: var(--action-border, none);
+    border-radius: var(--action-radius, var(--radius));
+    background: var(--action-bg, var(--surface));
+    box-shadow: var(--action-shadow, none);
+    cursor: default;
+    color: var(--text);
+  }
+
+  .action-btn img {
+    width: 32px; height: 32px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .action-btn span { font-size: var(--text-xs); font-weight: 600; }
+
+  .palette { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+  .palette i { display: block; width: 18px; height: 18px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.08); }
+
+  .pick-banner {
+    max-width: 1140px;
+    margin: 28px auto 0;
+    padding: 14px 16px;
+    background: #141c20;
+    border: 1px solid #2a4048;
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    color: #8a98a8;
+  }
+  .pick-banner strong { color: #a8d0c8; }
+
+  .back-link { display: block; text-align: center; margin-top: 18px; font-size: 0.75rem; }
+  .back-link a { color: #88a8b8; text-decoration: none; }
+
+  /* ===== 현재 (기준) ===== */
+  .theme-current {
+    --bg: #fef6e4;
+    --surface: #fff;
+    --text: #2d2a26;
+    --text-muted: #6b6560;
+    --accent: #e05a8a;
+    --pet-bg: #fff;
+    --pet-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --msg-bg: rgba(255,255,255,0.94);
+    --msg-text: #2d2a26;
+    --stats-bg: #fff;
+    --stats-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --bar-track: #eee8df;
+    --bar-hunger: #ff9f43;
+    --bar-happy: #f582ae;
+    --bar-clean: #58c4dc;
+    --bar-health: #7bc47f;
+    --action-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --icon-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --phone-border: #e8c4a8;
+    --depth-color: transparent;
+  }
+  .theme-current .action-btn--feed { background: #fff3e6; }
+  .theme-current .action-btn--play { background: #fde8f0; }
+  .theme-current .action-btn--clean { background: #e8f7fb; }
+  .theme-current .action-btn--sleep { background: #e8eef8; }
+
+  /* ===== SUB-1 황동 구체 ===== */
+  .theme-sub1 {
+    --bg: #2a2824;
+    --surface: #e8e0d4;
+    --text: #1a1814;
+    --text-muted: #5a5448;
+    --accent: #9a6830;
+    --pet-bg: linear-gradient(180deg, #b8d0dc 0%, #88a8b8 55%, #486878 100%);
+    --pet-radius: 50%;
+    --ring-border: 8px solid #a08050;
+    --ring-shadow: inset 0 0 16px rgba(0,0,0,0.35), 0 0 0 2px #5a4028;
+    --rivet-color: #6a5030;
+    --msg-bg: rgba(232,224,212,0.95);
+    --msg-text: #2a2018;
+    --msg-border: 1px solid #a08050;
+    --stats-bg: #e0d8cc;
+    --stats-border: 2px solid #8a6840;
+    --stats-radius: 8px;
+    --bar-track: #c8c0b4;
+    --bar-hunger: #a05828;
+    --bar-happy: #7a8858;
+    --bar-clean: #4888a0;
+    --bar-health: #588858;
+    --action-bg: #d8d0c4;
+    --action-border: 1px solid #9a7848;
+    --action-radius: 8px;
+    --icon-bg: #d8d0c4;
+    --icon-border: 1px solid #9a7848;
+    --icon-radius: 8px;
+    --depth-color: #8a7858;
+    --depth-font: "SF Mono", Menlo, monospace;
+    --hull-border: 3px solid #4a4030;
+    --hull-shadow: inset 0 0 0 1px #6a5840, 0 8px 24px rgba(0,0,0,0.5);
+  }
+
+  /* ===== SUB-2 알빈 함교 ===== */
+  .theme-sub2 {
+    --bg: #d8dce0;
+    --surface: #f0f2f4;
+    --text: #1a2028;
+    --text-muted: #5a6470;
+    --accent: #2878a0;
+    --pet-bg: linear-gradient(165deg, #c8dce8 0%, #98b8c8 100%);
+    --pet-border: 4px solid #a8b0b8;
+    --pet-shadow: inset 0 0 20px rgba(40,80,100,0.12);
+    --pet-radius: 4px;
+    --msg-bg: #e8f0f4;
+    --msg-text: #1a2830;
+    --msg-border: 1px solid #b0c0c8;
+    --stats-bg: #f0f2f4;
+    --stats-border: 1px solid #c0c8d0;
+    --stats-radius: 4px;
+    --bar-track: #d0d8e0;
+    --bar-h: 8px;
+    --bar-radius: 2px;
+    --bar-hunger: #d07830;
+    --bar-happy: #5090b8;
+    --bar-clean: #38a0c0;
+    --bar-health: #48a060;
+    --action-bg: #e8ecf0;
+    --action-border: 1px solid #c0c8d0;
+    --action-radius: 4px;
+    --icon-bg: #e8ecf0;
+    --icon-border: 1px solid #c0c8d0;
+    --icon-radius: 4px;
+    --depth-color: #2878a0;
+    --depth-font: "SF Mono", Menlo, monospace;
+    --phone-border: #a0a8b0;
+    --font-ui: "SF Pro Text", -apple-system, sans-serif;
+  }
+
+  .theme-sub2 .stat label { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ===== SUB-3 수압 계기판 (현재 구조 진화) ===== */
+  .theme-sub3 {
+    --bg: #1a2838;
+    --surface: #243040;
+    --text: #d8e4ec;
+    --text-muted: #7a8a98;
+    --accent: #58b8c8;
+    --pet-bg: radial-gradient(ellipse at 50% 30%, #2a5068 0%, #142030 70%);
+    --pet-border: 2px solid #4a6878;
+    --pet-radius: 12px;
+    --pet-shadow: inset 0 0 32px rgba(0,20,40,0.5);
+    --msg-bg: rgba(36,48,64,0.96);
+    --msg-text: #c8dce8;
+    --msg-border: 1px solid #3a5060;
+    --stats-bg: #1e2c3c;
+    --stats-border: 1px solid #3a5060;
+    --stats-radius: 10px;
+    --bar-track: #141c28;
+    --bar-border: 1px solid #3a5060;
+    --bar-h: 6px;
+    --bar-hunger: #c88848;
+    --bar-happy: #68a8b8;
+    --bar-clean: #48a0c0;
+    --bar-health: #68a878;
+    --action-bg: #283848;
+    --action-border: 1px solid #3a5060;
+    --action-radius: 10px;
+    --icon-bg: #283848;
+    --icon-border: 1px solid #3a5060;
+    --depth-color: #58b8c8;
+    --depth-font: "SF Mono", Menlo, monospace;
+    --phone-border: #3a5060;
+    --radius: 12px;
+  }
+
+  .theme-sub3 .stat-val { color: #58b8c8; --val-size: 0.625rem; }
+  .theme-sub3 .action-btn--feed { background: #304050; }
+  .theme-sub3 .action-btn--play { background: #2a3848; }
+  .theme-sub3 .action-btn--clean { background: #283848; }
+  .theme-sub3 .action-btn--sleep { background: #243040; }
+
+  /* ===== SUB-4 소나르 돔 ===== */
+  .theme-sub4 {
+    --bg: #0a1018;
+    --surface: #101820;
+    --text: #b8c8d0;
+    --text-muted: #4a5a68;
+    --accent: #48d8a0;
+    --pet-bg: radial-gradient(circle at 50% 50%, #0a2830 0%, #000810 75%);
+    --pet-radius: 50%;
+    --ring-border: 4px solid #2a3840;
+    --ring-shadow: 0 0 12px rgba(72,216,160,0.15), inset 0 0 24px rgba(0,0,0,0.8);
+    --msg-bg: #0e1820;
+    --msg-text: #68c8a0;
+    --msg-border: 1px solid #2a4840;
+    --stats-bg: #0e141c;
+    --stats-border: 1px solid #243030;
+    --stats-radius: 0;
+    --bar-track: #081018;
+    --bar-h: 4px;
+    --bar-radius: 0;
+    --bar-fill-radius: 0;
+    --bar-hunger: #48a868;
+    --bar-happy: #38b888;
+    --bar-clean: #30a8c8;
+    --bar-health: #50c070;
+    --action-bg: #141c24;
+    --action-border: 1px solid #2a3840;
+    --action-radius: 0;
+    --icon-bg: #141c24;
+    --icon-border: 1px solid #2a3840;
+    --icon-radius: 0;
+    --depth-color: #48d8a0;
+    --depth-font: "SF Mono", Menlo, monospace;
+    --phone-border: #1a2830;
+    --font-ui: "SF Mono", Menlo, monospace;
+  }
+
+  .theme-sub4 .pet-area--porthole::after {
+    background:
+      repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(72,216,160,0.03) 2deg, transparent 4deg),
+      inset 0 0 24px rgba(0,0,0,0.6);
+  }
+
+  .theme-sub4 .pet-name { color: #d0e8e0; letter-spacing: 0.06em; }
+
+  /* ===== SUB-5 낡은 탐사정 ===== */
+  .theme-sub5 {
+    --bg: #282420;
+    --surface: #34302c;
+    --text: #c8c0b4;
+    --text-muted: #6a6458;
+    --accent: #c84838;
+    --pet-bg: linear-gradient(180deg, #4a5860 0%, #283038 100%);
+    --pet-border: 5px solid #5a5448;
+    --pet-radius: 50%;
+    --ring-border: 5px solid #5a5448;
+    --ring-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    --msg-bg: rgba(40,36,32,0.95);
+    --msg-text: #d8d0c0;
+    --msg-border: 1px solid #4a4438;
+    --stats-bg: #302c28;
+    --stats-border: 2px solid #4a4438;
+    --stats-radius: 2px;
+    --bar-track: #1a1814;
+    --bar-hunger: #a05030;
+    --bar-happy: #8a8070;
+    --bar-clean: #507080;
+    --bar-health: #608060;
+    --action-bg: #3a3630;
+    --action-border: 1px solid #5a5448;
+    --action-radius: 2px;
+    --icon-bg: #3a3630;
+    --icon-border: 1px solid #5a5448;
+    --depth-color: #c84838;
+    --depth-font: "SF Mono", Menlo, monospace;
+    --phone-border: #4a4438;
+    --hull-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 6px 20px rgba(0,0,0,0.5);
+  }
+
+  .theme-sub5 .pet-area--porthole::after {
+    box-shadow:
+      inset 0 0 30px rgba(80,100,110,0.2),
+      inset -8px -4px 16px rgba(255,255,255,0.04);
+  }
+
+  .theme-sub5 .stats { position: relative; }
+  .theme-sub5 .stats::before {
+    content: "HULL INTEGRITY";
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    color: #6a6458;
+    background: #302c28;
+    padding: 0 4px;
+  }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>수중 탐색정 UI 시안</h1>
+    <p>현재 게임 레이아웃·버튼 배치를 유지한 채, 잠수정·탐사함·관측구 느낌만 바꿨습니다. 게임 미반영.</p>
+  </header>
+
+  <div class="criteria">
+    <span>현재 구조 유지</span>
+    <span>관측창·수압·계기판</span>
+    <span>픽셀 스프라이트 호환</span>
+  </div>
+
+  <div class="gallery">
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-base">기준</span>
+      <h2>현재</h2>
+      <p class="theme-card__desc">크림·핑크 모바일 UI. 탐색정 느낌 없음 — 비교용.</p>
+      <div class="phone theme-current" data-mock data-variant="box"></div>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-sub">탐색정</span>
+      <h2>SUB-1 — 황동 구체</h2>
+      <p class="theme-card__desc">1930년대 황동 잠수구. 둥근 관측창, 리벳, 안은 따뜻한 금속·밖은 푸른 수중.</p>
+      <div class="phone theme-sub1" data-mock data-variant="porthole rivets"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#2a2824"></i><i style="background:#a08050"></i>
+        <i style="background:#88a8b8"></i><i style="background:#e8e0d4"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>현재 UI의 둥근 카드 → 황동 링 관측창으로 치환</li>
+        <li>말풍선은 창 안쪽 하단에 배치</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-sub">탐색정</span>
+      <h2>SUB-2 — 알빈 함교</h2>
+      <p class="theme-card__desc">현대 심해 연구잠수정. 밝은 회색 패널, 직각, 수심·수압 디스플레이.</p>
+      <div class="phone theme-sub2" data-mock data-variant="box"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#d8dce0"></i><i style="background:#2878a0"></i>
+        <i style="background:#f0f2f4"></i><i style="background:#98b8c8"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>현재 버전과 가장 가까운 ‘현실적’ 탐색정</li>
+        <li>가독성 최우선 — 야간·수중 촬영 다큐 톤</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-pick">추천</span>
+      <h2>SUB-3 — 수압 계기판</h2>
+      <p class="theme-card__desc">현재 레이아웃을 심해함 내부로. 청회색 선체, 스탯은 수압 게이지, 숫자는 계기값.</p>
+      <div class="phone theme-sub3" data-mock data-variant="box"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#1a2838"></i><i style="background:#58b8c8"></i>
+        <i style="background:#243040"></i><i style="background:#2a5068"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>현재 구조 그대로 + 색·질감만 탐색정화</li>
+        <li>게임 적용 난이도·효과 밸런스 최적</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-sub">탐색정</span>
+      <h2>SUB-4 — 소나르 돔</h2>
+      <p class="theme-card__desc">소나어 돔 안에서 관측. 녹색 인광, 원형 스캔, 함교 터미널 느낌.</p>
+      <div class="phone theme-sub4" data-mock data-variant="porthole"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#0a1018"></i><i style="background:#48d8a0"></i>
+        <i style="background:#0a2830"></i><i style="background:#b8c8d0"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>음침함·기괴 펫과 궁합</li>
+        <li>모노스페이스 UI — 계기판 연상</li>
+      </ul>
+    </article>
+
+    <article class="theme-card">
+      <span class="theme-card__tag tag-sub">탐색정</span>
+      <h2>SUB-5 — 낡은 탐사정</h2>
+      <p class="theme-card__desc">오래된 국가 탐사 잠수정. 녹슨 선체, 비상 수심계 빨강, 유막 낀 관측창.</p>
+      <div class="phone theme-sub5" data-mock data-variant="porthole"></div>
+      <div class="palette" aria-hidden="true">
+        <i style="background:#282420"></i><i style="background:#c84838"></i>
+        <i style="background:#5a5448"></i><i style="background:#c8c0b4"></i>
+      </div>
+      <ul class="theme-card__notes">
+        <li>스탯 패널에 HULL INTEGRITY 라벨</li>
+        <li>불량 심해어·송곳니어 세계관과 맞음</li>
+      </ul>
+    </article>
+
+  </div>
+
+  <div class="pick-banner">
+    <strong>1순위: SUB-3 수압 계기판</strong> — 현재 UI에서 색·타이포·게이지만 바꿔도 탐색정 느낌이 납니다.
+    관측창 연출을 강조하려면 <strong>SUB-1</strong>, 현실 연구정 느낌은 <strong>SUB-2</strong>, 분위기 극대화는 <strong>SUB-4·5</strong>입니다.
+  </div>
+
+  <p class="back-link"><a href="index.html">← 시안 허브로</a></p>
+
+  <script>
+    const PET = "../assets/sprites/adult/grumpy.png";
+    const ICONS = {
+      feed: "../assets/sprites/ui/feed.png",
+      play: "../assets/sprites/ui/play.png",
+      clean: "../assets/sprites/ui/clean.png",
+      sleep: "../assets/sprites/ui/sleep.png",
+    };
+
+    function buildMock(variant) {
+      const classes = variant.split(" ");
+      const porthole = classes.includes("porthole");
+      const rivets = classes.includes("rivets");
+      const petClass = ["pet-area", porthole ? "pet-area--porthole" : "", rivets ? "rivets" : ""].filter(Boolean).join(" ");
+
+      return `
+        <div class="app-mock">
+          <header class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" aria-hidden="true">📖</button>
+            <button type="button" class="icon-btn icon-btn--right" aria-hidden="true">🔊</button>
+            <p class="depth-readout">DEPTH 2,847m · 285 atm</p>
+            <h3 class="pet-name">송곳니어</h3>
+            <p class="pet-meta">47일째 · 관측 대상</p>
+            <p class="pet-stage">성체 · 송곳니어</p>
+          </header>
+          <div class="${petClass}">
+            ${porthole ? "" : '<p class="message">후회할 거야, 키운 거.</p>'}
+            <img src="${PET}" alt="송곳니어" width="128" height="128">
+            ${porthole ? '<p class="message">후회할 거야, 키운 거.</p>' : ""}
+          </div>
+          <section class="stats" aria-label="상태">
+            <div class="stat"><label>배고픔</label><div class="stat-bar"><div class="stat-fill stat-fill--h"></div></div><span class="stat-val">062</span></div>
+            <div class="stat"><label>행복</label><div class="stat-bar"><div class="stat-fill stat-fill--p"></div></div><span class="stat-val">048</span></div>
+            <div class="stat"><label>청결</label><div class="stat-bar"><div class="stat-fill stat-fill--c"></div></div><span class="stat-val">035</span></div>
+            <div class="stat"><label>건강</label><div class="stat-bar"><div class="stat-fill stat-fill--x"></div></div><span class="stat-val">088</span></div>
+          </section>
+          <footer class="actions">
+            <button type="button" class="action-btn action-btn--feed"><img src="${ICONS.feed}" alt=""><span>먹이</span></button>
+            <button type="button" class="action-btn action-btn--play"><img src="${ICONS.play}" alt=""><span>놀이</span></button>
+            <button type="button" class="action-btn action-btn--clean"><img src="${ICONS.clean}" alt=""><span>청소</span></button>
+            <button type="button" class="action-btn action-btn--sleep"><img src="${ICONS.sleep}" alt=""><span>재우기</span></button>
+          </footer>
+        </div>
+      `;
+    }
+
+    document.querySelectorAll("[data-mock]").forEach((el) => {
+      el.innerHTML = buildMock(el.dataset.variant || "box");
+    });
+  </script>
+</body>
+</html>
