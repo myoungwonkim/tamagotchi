@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#121820">
+  <title>UI 최종 3선 — 미리보기</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #101820;
+    color: #c8d4dc;
+    padding:
+      calc(20px + env(safe-area-inset-top))
+      calc(14px + env(safe-area-inset-right))
+      calc(40px + env(safe-area-inset-bottom))
+      calc(14px + env(safe-area-inset-left));
+    line-height: 1.45;
+  }
+
+  .page-head { max-width: 1100px; margin: 0 auto 20px; text-align: center; }
+  .page-head h1 { font-size: 1.125rem; font-weight: 700; color: #eef4f8; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #7a8898; max-width: 520px; margin: 0 auto; }
+
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1000px) {
+    .gallery {
+      max-width: 1100px;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .pick-card { flex: 1; max-width: 340px; }
+  }
+
+  .pick-card {
+    background: #141c24;
+    border: 1px solid #2a3848;
+    border-radius: 16px;
+    padding: 14px;
+  }
+
+  .pick-card--featured { border-color: #3a5868; box-shadow: 0 0 0 1px rgba(88,184,200,0.15); }
+
+  .pick-card__rank {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .rank-base { color: #98a8b8; }
+  .rank-evolve { color: #58b8c8; }
+  .rank-immersive { color: #88d0e8; }
+
+  .pick-card h2 { font-size: 1rem; font-weight: 700; color: #f0f4f8; margin-bottom: 4px; }
+  .pick-card__why { font-size: 0.75rem; color: #7a8898; margin-bottom: 12px; min-height: 2.8em; }
+
+  .pick-card__traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .pick-card__traits span {
+    font-size: 0.625rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #1a2430;
+    color: #88a0b0;
+    border: 1px solid #2a3848;
+  }
+
+  /* ===== 공통: 현재/SUB-3 레이아웃 ===== */
+  .phone-classic {
+    --radius: 16px;
+    --text-xl: 1.125rem;
+    --text-xs: 0.6875rem;
+    --sprite-size: clamp(5.5rem, 46%, 7.5rem);
+    --font-ui: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid var(--phone-border, #444);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-mock {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px 12px;
+    gap: 10px;
+  }
+
+  .header-mock { text-align: center; padding: 2px 36px 4px; position: relative; }
+
+  .icon-btn {
+    position: absolute; top: 0;
+    width: 32px; height: 32px;
+    border: var(--icon-border, none);
+    border-radius: var(--icon-radius, 10px);
+    background: var(--icon-bg, var(--surface));
+    box-shadow: var(--icon-shadow, none);
+    font-size: 0.875rem;
+    cursor: default;
+  }
+  .icon-btn--left { left: 0; }
+  .icon-btn--right { right: 0; }
+
+  .depth-readout {
+    font-size: 0.5625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--depth-color, transparent);
+    margin-bottom: 4px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pet-name { font-size: var(--text-xl); font-weight: 700; line-height: 1.2; }
+  .pet-meta { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
+  .pet-stage { font-size: var(--text-xs); font-weight: 600; color: var(--accent); margin-top: 1px; }
+
+  .pet-area {
+    position: relative;
+    flex: 1;
+    min-height: 200px;
+    background: var(--pet-bg, var(--surface));
+    border-radius: var(--pet-radius, var(--radius));
+    border: var(--pet-border, none);
+    box-shadow: var(--pet-shadow, none);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .pet-area img {
+    width: var(--sprite-size);
+    height: var(--sprite-size);
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 1;
+  }
+
+  .message {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 5;
+    text-align: center;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 6px 10px;
+    background: var(--msg-bg);
+    color: var(--msg-text);
+    border-bottom: var(--msg-border, none);
+    border-radius: var(--msg-radius, var(--radius) var(--radius) 0 0);
+  }
+
+  .stats {
+    background: var(--stats-bg, var(--surface));
+    border-radius: var(--stats-radius, var(--radius));
+    padding: 10px;
+    border: var(--stats-border, none);
+    box-shadow: var(--stats-shadow, none);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .stat {
+    display: grid;
+    grid-template-columns: 44px 1fr 32px;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-xs);
+  }
+
+  .stat label { color: var(--text-muted); font-weight: 500; }
+  .stat-val {
+    text-align: right;
+    color: var(--val-color, var(--text-muted));
+    font-variant-numeric: tabular-nums;
+    font-size: var(--val-size, var(--text-xs));
+  }
+
+  .stat-bar {
+    height: var(--bar-h, 10px);
+    background: var(--bar-track);
+    border-radius: var(--bar-radius, 5px);
+    overflow: hidden;
+    border: var(--bar-border, none);
+  }
+
+  .stat-fill { height: 100%; border-radius: var(--bar-fill-radius, 5px); }
+  .stat-fill--h { width: 62%; background: var(--bar-hunger); }
+  .stat-fill--p { width: 48%; background: var(--bar-happy); }
+  .stat-fill--c { width: 35%; background: var(--bar-clean); }
+  .stat-fill--x { width: 88%; background: var(--bar-health); }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    min-height: 58px;
+    border: var(--action-border, none);
+    border-radius: var(--action-radius, var(--radius));
+    background: var(--action-bg, var(--surface));
+    box-shadow: var(--action-shadow, none);
+    cursor: default;
+    color: var(--text);
+  }
+
+  .action-btn img {
+    width: 32px; height: 32px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .action-btn span { font-size: var(--text-xs); font-weight: 600; }
+
+  /* 현재 */
+  .theme-current {
+    --bg: #fef6e4;
+    --surface: #fff;
+    --text: #2d2a26;
+    --text-muted: #6b6560;
+    --accent: #e05a8a;
+    --pet-bg: #fff;
+    --pet-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --msg-bg: rgba(255,255,255,0.94);
+    --msg-text: #2d2a26;
+    --stats-bg: #fff;
+    --stats-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --bar-track: #eee8df;
+    --bar-hunger: #ff9f43;
+    --bar-happy: #f582ae;
+    --bar-clean: #58c4dc;
+    --bar-health: #7bc47f;
+    --action-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --icon-shadow: 0 4px 20px rgba(45,42,38,0.08);
+    --phone-border: #e8c4a8;
+  }
+  .theme-current .action-btn--feed { background: #fff3e6; }
+  .theme-current .action-btn--play { background: #fde8f0; }
+  .theme-current .action-btn--clean { background: #e8f7fb; }
+  .theme-current .action-btn--sleep { background: #e8eef8; }
+
+  /* SUB-3 */
+  .theme-sub3 {
+    --bg: #1a2838;
+    --surface: #243040;
+    --text: #d8e4ec;
+    --text-muted: #7a8a98;
+    --accent: #58b8c8;
+    --pet-bg: radial-gradient(ellipse at 50% 30%, #2a5068 0%, #142030 70%);
+    --pet-border: 2px solid #4a6878;
+    --pet-radius: 12px;
+    --pet-shadow: inset 0 0 32px rgba(0,20,40,0.5);
+    --msg-bg: rgba(36,48,64,0.96);
+    --msg-text: #c8dce8;
+    --msg-border: 1px solid #3a5060;
+    --stats-bg: #1e2c3c;
+    --stats-border: 1px solid #3a5060;
+    --stats-radius: 10px;
+    --bar-track: #141c28;
+    --bar-border: 1px solid #3a5060;
+    --bar-h: 6px;
+    --bar-hunger: #c88848;
+    --bar-happy: #68a8b8;
+    --bar-clean: #48a0c0;
+    --bar-health: #68a878;
+    --action-bg: #283848;
+    --action-border: 1px solid #3a5060;
+    --action-radius: 10px;
+    --icon-bg: #283848;
+    --icon-border: 1px solid #3a5060;
+    --icon-radius: 10px;
+    --depth-color: #58b8c8;
+    --phone-border: #3a5060;
+    --radius: 12px;
+    --val-color: #58b8c8;
+    --val-size: 0.625rem;
+  }
+  .theme-sub3 .action-btn--feed { background: #304050; }
+  .theme-sub3 .action-btn--play { background: #2a3848; }
+  .theme-sub3 .action-btn--clean { background: #283848; }
+  .theme-sub3 .action-btn--sleep { background: #243040; }
+
+  /* ===== L3 전면 뷰포트 ===== */
+  .phone-l3 {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid #2a4050;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    background: #000810;
+    font-size: 0.6875rem;
+    color: #b8c8d0;
+  }
+
+  .l3-immersive {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #000810;
+  }
+
+  .l3-viewport {
+    flex: 1;
+    min-height: 300px;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 60%, #1a3848 0%, #040810 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .l3-viewport img {
+    width: clamp(7rem, 58%, 10.5rem);
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 1;
+  }
+
+  .l3-overlay-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 10px 12px;
+    background: linear-gradient(180deg, rgba(8,16,24,0.92) 0%, transparent 100%);
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .l3-overlay-top .name { font-size: 0.875rem; font-weight: 700; color: #fff; }
+  .l3-overlay-top .meta { font-size: 0.5625rem; color: #88a8b8; }
+
+  .l3-overlay-bubble {
+    position: absolute;
+    top: 52px;
+    left: 12px; right: 12px;
+    z-index: 2;
+    text-align: center;
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: #d8ecf4;
+    background: rgba(8,20,32,0.88);
+    border: 1px solid #3a5868;
+    padding: 6px 10px;
+  }
+
+  .l3-strip {
+    display: flex;
+    gap: 2px;
+    background: #0a1018;
+    border-top: 2px solid #2a4050;
+    padding: 8px 6px;
+  }
+
+  .l3-strip-stat {
+    flex: 1;
+    text-align: center;
+    padding: 4px 2px;
+    background: #101820;
+    border: 1px solid #1a2830;
+  }
+
+  .l3-strip-stat b {
+    display: block;
+    font-size: 0.75rem;
+    color: #58b8c8;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+
+  .l3-strip-stat small { font-size: 0.5rem; color: #588898; }
+
+  .l3-dock {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px 14px;
+    background: #101820;
+    border-top: 1px solid #1a2830;
+  }
+
+  .l3-dock-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    color: #8898a8;
+    font-size: 0.5625rem;
+    cursor: default;
+    padding: 4px 8px;
+  }
+
+  .l3-dock-btn img {
+    width: 32px; height: 32px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .footnote {
+    max-width: 380px;
+    margin: 24px auto 0;
+    font-size: 0.75rem;
+    color: #5a6878;
+    text-align: center;
+  }
+
+  .back-link { display: block; text-align: center; margin-top: 14px; font-size: 0.75rem; }
+  .back-link a { color: #68a8b8; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>최종 3선</h1>
+    <p>친숙함과 재미 기준으로 고른 시안만 모았습니다. 세로로 스크롤하며 비교해 보세요.</p>
+  </header>
+
+  <div class="gallery">
+
+    <article class="pick-card">
+      <p class="pick-card__rank rank-base">① 기준선</p>
+      <h2>현재</h2>
+      <p class="pick-card__why">익숙한 크림·핑크 UI. 학습 비용 없음.</p>
+      <div class="pick-card__traits">
+        <span>친숙 ★★★★★</span>
+        <span>구조 유지</span>
+      </div>
+      <div class="phone-classic theme-current" data-layout="classic"></div>
+    </article>
+
+    <article class="pick-card pick-card--featured">
+      <p class="pick-card__rank rank-evolve">② 추천 · 구조 유지</p>
+      <h2>SUB-3 수압 계기판</h2>
+      <p class="pick-card__why">배치는 그대로, 탐색정 테마만 입힘. 적용이 쉽고 분위기 전환 큼.</p>
+      <div class="pick-card__traits">
+        <span>친숙 ★★★★☆</span>
+        <span>탐색정</span>
+        <span>CSS 위주</span>
+      </div>
+      <div class="phone-classic theme-sub3" data-layout="classic"></div>
+    </article>
+
+    <article class="pick-card pick-card--featured">
+      <p class="pick-card__rank rank-immersive">③ 추천 · 레이아웃 변경</p>
+      <h2>L3 전면 뷰포트</h2>
+      <p class="pick-card__why">큰 관측창 + 하단 조작. 몰입감·연출 극대화.</p>
+      <div class="pick-card__traits">
+        <span>친숙 ★★★☆☆</span>
+        <span>몰입 ★★★★★</span>
+        <span>펫 크게</span>
+      </div>
+      <div class="phone-l3" data-layout="l3"></div>
+    </article>
+
+  </div>
+
+  <p class="footnote">게임 본편 미반영 · 송곳니어 스프라이트 사용</p>
+  <p class="back-link"><a href="index.html">← 전체 시안 허브</a></p>
+
+  <script>
+    const PET = "../assets/sprites/adult/grumpy.png";
+    const ICONS = {
+      feed: "../assets/sprites/ui/feed.png",
+      play: "../assets/sprites/ui/play.png",
+      clean: "../assets/sprites/ui/clean.png",
+      sleep: "../assets/sprites/ui/sleep.png",
+    };
+
+    const CLASSIC = `
+      <div class="app-mock">
+        <header class="header-mock">
+          <button type="button" class="icon-btn icon-btn--left" aria-hidden="true">📖</button>
+          <button type="button" class="icon-btn icon-btn--right" aria-hidden="true">🔊</button>
+          <p class="depth-readout">DEPTH 2,847m · 285 atm</p>
+          <h3 class="pet-name">송곳니어</h3>
+          <p class="pet-meta">47일째</p>
+          <p class="pet-stage">성체 · 송곳니어</p>
+        </header>
+        <div class="pet-area">
+          <p class="message">후회할 거야, 키운 거.</p>
+          <img src="${PET}" alt="송곳니어" width="128" height="128">
+        </div>
+        <section class="stats">
+          <div class="stat"><label>배고픔</label><div class="stat-bar"><div class="stat-fill stat-fill--h"></div></div><span class="stat-val">062</span></div>
+          <div class="stat"><label>행복</label><div class="stat-bar"><div class="stat-fill stat-fill--p"></div></div><span class="stat-val">048</span></div>
+          <div class="stat"><label>청결</label><div class="stat-bar"><div class="stat-fill stat-fill--c"></div></div><span class="stat-val">035</span></div>
+          <div class="stat"><label>건강</label><div class="stat-bar"><div class="stat-fill stat-fill--x"></div></div><span class="stat-val">088</span></div>
+        </section>
+        <footer class="actions">
+          <button type="button" class="action-btn action-btn--feed"><img src="${ICONS.feed}" alt=""><span>먹이</span></button>
+          <button type="button" class="action-btn action-btn--play"><img src="${ICONS.play}" alt=""><span>놀이</span></button>
+          <button type="button" class="action-btn action-btn--clean"><img src="${ICONS.clean}" alt=""><span>청소</span></button>
+          <button type="button" class="action-btn action-btn--sleep"><img src="${ICONS.sleep}" alt=""><span>재우기</span></button>
+        </footer>
+      </div>
+    `;
+
+    const L3 = `
+      <div class="l3-immersive">
+        <div class="l3-viewport">
+          <div class="l3-overlay-top">
+            <div>
+              <div class="name">송곳니어</div>
+              <div class="meta">47일 · 성체 · 2,847m</div>
+            </div>
+            <div class="meta">📖 🔊</div>
+          </div>
+          <p class="l3-overlay-bubble">후회할 거야, 키운 거.</p>
+          <img src="${PET}" alt="송곳니어">
+        </div>
+        <div class="l3-strip">
+          <div class="l3-strip-stat"><b>62</b><small>배고픔</small></div>
+          <div class="l3-strip-stat"><b>48</b><small>행복</small></div>
+          <div class="l3-strip-stat"><b>35</b><small>청결</small></div>
+          <div class="l3-strip-stat"><b>88</b><small>건강</small></div>
+        </div>
+        <div class="l3-dock">
+          <button type="button" class="l3-dock-btn"><img src="${ICONS.feed}" alt=""><span>먹이</span></button>
+          <button type="button" class="l3-dock-btn"><img src="${ICONS.play}" alt=""><span>놀이</span></button>
+          <button type="button" class="l3-dock-btn"><img src="${ICONS.clean}" alt=""><span>청소</span></button>
+          <button type="button" class="l3-dock-btn"><img src="${ICONS.sleep}" alt=""><span>재우기</span></button>
+        </div>
+      </div>
+    `;
+
+    document.querySelectorAll('[data-layout="classic"]').forEach((el) => {
+      el.innerHTML = CLASSIC;
+      if (el.classList.contains("theme-current")) {
+        el.querySelector(".depth-readout").style.visibility = "hidden";
+      }
+    });
+
+    document.querySelector('[data-layout="l3"]').innerHTML = L3;
+  </script>
+</body>
+</html>
