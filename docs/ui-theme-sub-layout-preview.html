@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a1018">
+  <title>UI 시안 — 탐색정 레이아웃 재구성</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #080c10;
+    color: #b8c4d0;
+    padding: 20px 12px 48px;
+    line-height: 1.4;
+  }
+
+  .page-head { max-width: 1200px; margin: 0 auto 18px; text-align: center; }
+  .page-head h1 { font-size: 1.0625rem; font-weight: 700; color: #e8eef4; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #6a7888; max-width: 680px; margin: 0 auto; }
+
+  .badge-row {
+    max-width: 1200px; margin: 0 auto 20px;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  }
+  .badge-row span {
+    font-size: 0.6875rem; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid #243040; color: #688898;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .layout-card {
+    background: #101820;
+    border: 1px solid #243040;
+    border-radius: 14px;
+    padding: 14px;
+  }
+
+  .layout-card__tag {
+    font-size: 0.625rem; font-weight: 700; letter-spacing: 0.06em;
+    color: #58b8c8; margin-bottom: 4px; display: block;
+  }
+
+  .layout-card h2 { font-size: 0.9375rem; color: #eef4f8; margin-bottom: 4px; }
+  .layout-card__desc { font-size: 0.75rem; color: #6a7888; margin-bottom: 10px; min-height: 2.4em; }
+  .layout-card__struct { font-size: 0.6875rem; color: #488898; margin-bottom: 10px; }
+  .layout-card__notes { font-size: 0.6875rem; color: #506068; margin-top: 10px; padding-left: 1rem; }
+  .layout-card__notes li + li { margin-top: 3px; }
+
+  /* ===== 공통 폰 프레임 ===== */
+  .phone {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    min-height: 580px;
+    background: #0a1018;
+    border: 2px solid #2a4050;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    font-size: 0.6875rem;
+    color: #b8c8d0;
+  }
+
+  .phone img.sprite {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    object-fit: contain;
+  }
+
+  .phone img.icon {
+    width: 28px; height: 28px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .mono { font-family: "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  /* ===== L1: 함교 HUD — 펫 중앙, 스탯 코너, 하단 레버 ===== */
+  .l1-hud {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background: radial-gradient(ellipse at 50% 40%, #142030 0%, #0a1018 70%);
+    position: relative;
+  }
+
+  .l1-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 12px 0;
+    font-size: 0.5625rem;
+    letter-spacing: 0.06em;
+    color: #58b8c8;
+  }
+
+  .l1-top strong { display: block; font-size: 0.8125rem; color: #e8f0f4; letter-spacing: 0; margin-top: 2px; }
+
+  .l1-center {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .l1-viewport {
+    width: min(88%, 240px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 5px solid #3a5060;
+    box-shadow: 0 0 0 2px #1a2830, inset 0 0 40px rgba(0,20,40,0.6);
+    background: radial-gradient(circle at 40% 35%, #2a5068, #081018 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .l1-viewport img.sprite { width: 58%; height: 58%; }
+
+  .l1-viewport .bubble {
+    position: absolute;
+    bottom: 12%;
+    left: 8%; right: 8%;
+    text-align: center;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    color: #c8e0e8;
+    background: rgba(8,16,24,0.85);
+    border: 1px solid #3a5868;
+    padding: 4px 6px;
+    border-radius: 3px;
+  }
+
+  .l1-hud-corner {
+    position: absolute;
+    width: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .l1-hud-corner--tl { top: 48px; left: 8px; }
+  .l1-hud-corner--tr { top: 48px; right: 8px; align-items: flex-end; }
+
+  .l1-gauge {
+    background: rgba(10,20,30,0.8);
+    border: 1px solid #2a4050;
+    padding: 3px 5px;
+    width: 100%;
+  }
+  .l1-gauge label { font-size: 0.5rem; color: #588898; display: block; }
+  .l1-gauge-bar { height: 3px; background: #141c24; margin-top: 2px; }
+  .l1-gauge-fill { height: 100%; background: #58b8c8; }
+
+  .l1-bottom {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 2px solid #2a4050;
+    background: #101820;
+  }
+
+  .l1-lever {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 4px;
+    border: none;
+    background: transparent;
+    color: #8898a8;
+    border-right: 1px solid #1a2830;
+    cursor: default;
+    font-size: 0.5625rem;
+  }
+  .l1-lever:last-child { border-right: none; }
+  .l1-lever:active { background: #1a2830; color: #a8d8e8; }
+
+  /* ===== L2: 좌우 콘솔 — 뷰포트 | 계기+조작 ===== */
+  .l2-split {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    min-height: 0;
+  }
+
+  .l2-view {
+    background: linear-gradient(180deg, #1a3040 0%, #0a1820 100%);
+    border-right: 3px solid #2a4050;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 8px;
+  }
+
+  .l2-view .depth { font-size: 0.5rem; color: #58b8c8; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .l2-view .name { font-size: 0.8125rem; font-weight: 700; color: #e8f0f4; margin-bottom: 8px; }
+
+  .l2-viewport {
+    flex: 1;
+    min-height: 140px;
+    border: 2px solid #4a6070;
+    background: #081018;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .l2-viewport img.sprite { width: 70%; max-height: 120px; }
+
+  .l2-viewport .bubble {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    font-size: 0.5625rem;
+    padding: 4px 6px;
+    background: rgba(16,32,48,0.95);
+    border-bottom: 1px solid #3a5060;
+    color: #a8c8d8;
+    text-align: center;
+  }
+
+  .l2-console {
+    display: flex;
+    flex-direction: column;
+    background: #141c24;
+    padding: 8px 6px;
+    gap: 6px;
+  }
+
+  .l2-stat-stack { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+
+  .l2-stat {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 0 6px;
+    padding: 5px 6px;
+    background: #0e141c;
+    border-left: 3px solid var(--c, #58b8c8);
+  }
+
+  .l2-stat label { grid-column: 1; font-size: 0.5625rem; color: #688898; }
+  .l2-stat span { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: 0.75rem; color: #58b8c8; }
+  .l2-stat .bar { grid-column: 1; height: 4px; background: #1a2430; }
+  .l2-stat .fill { height: 100%; background: var(--c); width: var(--w); }
+
+  .l2-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .l2-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 6px;
+    background: #1a2830;
+    border: 1px solid #3a5060;
+    color: #a8b8c8;
+    font-size: 0.5625rem;
+    cursor: default;
+  }
+
+  /* ===== L3: 전면 뷰포트 — 펫 75%, 오버레이 HUD ===== */
+  .l3-immersive {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #000810;
+  }
+
+  .l3-viewport {
+    flex: 1;
+    min-height: 320px;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 60%, #1a3848 0%, #040810 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .l3-viewport img.sprite {
+    width: clamp(7rem, 55%, 10rem);
+    height: auto;
+    z-index: 1;
+  }
+
+  .l3-overlay-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 10px 12px;
+    background: linear-gradient(180deg, rgba(8,16,24,0.92) 0%, transparent 100%);
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .l3-overlay-top .name { font-size: 0.875rem; font-weight: 700; color: #fff; }
+  .l3-overlay-top .meta { font-size: 0.5625rem; color: #88a8b8; }
+
+  .l3-overlay-bubble {
+    position: absolute;
+    top: 52px;
+    left: 12px; right: 12px;
+    z-index: 2;
+    text-align: center;
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: #d8ecf4;
+    background: rgba(8,20,32,0.88);
+    border: 1px solid #3a5868;
+    padding: 6px 10px;
+  }
+
+  .l3-strip {
+    display: flex;
+    gap: 2px;
+    background: #0a1018;
+    border-top: 2px solid #2a4050;
+    padding: 8px 6px;
+  }
+
+  .l3-strip-stat {
+    flex: 1;
+    text-align: center;
+    padding: 4px 2px;
+    background: #101820;
+    border: 1px solid #1a2830;
+  }
+
+  .l3-strip-stat b { display: block; font-size: 0.75rem; color: #58b8c8; }
+  .l3-strip-stat small { font-size: 0.5rem; color: #588898; }
+
+  .l3-dock {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 8px 14px;
+    background: #101820;
+    border-top: 1px solid #1a2830;
+  }
+
+  .l3-dock-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    color: #8898a8;
+    font-size: 0.5625rem;
+    cursor: default;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+
+  .l3-dock-btn:active { background: #1a2830; }
+
+  /* ===== L4: 포르톨 시계 — 펫 중앙, 스탯 4방 ===== */
+  .l4-dial {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 10px;
+    background: #1a2028;
+    gap: 10px;
+  }
+
+  .l4-header {
+    text-align: center;
+    font-size: 0.5625rem;
+    color: #688898;
+    letter-spacing: 0.1em;
+  }
+
+  .l4-header h3 { font-size: 0.875rem; color: #e8ece8; letter-spacing: 0; margin-top: 2px; }
+
+  .l4-dial-face {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 260px;
+  }
+
+  .l4-ring {
+    position: absolute;
+    width: 92%;
+    max-width: 260px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px solid #4a5058;
+    background: #242830;
+    box-shadow: inset 0 0 24px rgba(0,0,0,0.5);
+  }
+
+  .l4-porthole {
+    width: 58%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, #3a5868 0%, #142028 100%);
+    border: 6px solid #5a6068;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    position: relative;
+  }
+
+  .l4-porthole img.sprite { width: 72%; }
+
+  .l4-quadrant {
+    position: absolute;
+    width: 64px;
+    text-align: center;
+    font-size: 0.5rem;
+  }
+
+  .l4-quadrant b { display: block; font-size: 0.6875rem; color: #58b8c8; margin-top: 2px; }
+  .l4-quadrant small { color: #588898; }
+
+  .l4-quadrant--n { top: 0; left: 50%; transform: translateX(-50%); }
+  .l4-quadrant--s { bottom: 0; left: 50%; transform: translateX(-50%); }
+  .l4-quadrant--w { left: 0; top: 50%; transform: translateY(-50%); }
+  .l4-quadrant--e { right: 0; top: 50%; transform: translateY(-50%); }
+
+  .l4-bubble {
+    position: absolute;
+    bottom: -28px;
+    left: 10%; right: 10%;
+    font-size: 0.5625rem;
+    text-align: center;
+    color: #c8d8e0;
+    background: #1a2028;
+    border: 1px solid #3a4048;
+    padding: 5px;
+    z-index: 2;
+  }
+
+  .l4-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .l4-act {
+    padding: 10px 4px;
+    background: #242830;
+    border: 1px solid #3a4048;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-size: 0.5rem;
+    color: #8898a8;
+    cursor: default;
+  }
+
+  .l4-act img.icon { width: 22px; height: 22px; }
+
+  /* ===== L5: 잠수 일지 — 세로 스크롤 로그 ===== */
+  .l5-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 14px 16px;
+    background: #e8e4d8;
+    color: #2a2820;
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  }
+
+  .l5-log-header {
+    border-bottom: 2px solid #2a2820;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    font-size: 0.5625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5a5448;
+  }
+
+  .l5-log-header h3 {
+    font-size: 1rem;
+    color: #1a1814;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-top: 4px;
+  }
+
+  .l5-sketch {
+    border: 2px solid #2a2820;
+    background: #dce4e8;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .l5-sketch::before {
+    content: "FIG. 1 — SPECIMEN";
+    position: absolute;
+    top: 4px; left: 6px;
+    font-size: 0.5rem;
+    color: #5a5448;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+
+  .l5-sketch img.sprite { width: 120px; height: 120px; margin-top: 8px; }
+
+  .l5-quote {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: #3a3830;
+    border-left: 3px solid #5a5448;
+    padding: 6px 10px;
+    margin-bottom: 14px;
+    background: rgba(255,255,255,0.35);
+  }
+
+  .l5-entry {
+    display: grid;
+    grid-template-columns: 80px 1fr 36px;
+    gap: 6px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed #8a8478;
+    font-size: 0.75rem;
+  }
+
+  .l5-entry label { color: #5a5448; font-size: 0.6875rem; }
+
+  .l5-entry .bar {
+    height: 6px;
+    background: #c8c4b8;
+    border: 1px solid #2a2820;
+  }
+
+  .l5-entry .fill { height: 100%; background: #2a5858; width: var(--w); }
+  .l5-entry span { text-align: right; font-family: "SF Mono", Menlo, monospace; font-size: 0.6875rem; }
+
+  .l5-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .l5-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px;
+    background: #2a2820;
+    color: #e8e4d8;
+    border: none;
+    font-family: inherit;
+    font-size: 0.75rem;
+    cursor: default;
+  }
+
+  .l5-btn img.icon { filter: brightness(1.2); }
+
+  /* ===== L6: 전투 잠수함 — 상단 스코프 + 하단 어뢰 패널 ===== */
+  .l6-sub {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    background: #0c1014;
+  }
+
+  .l6-status {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: #141820;
+    border-bottom: 1px solid #2a3038;
+    font-size: 0.5625rem;
+    color: #688898;
+  }
+
+  .l6-scope {
+    margin: 10px;
+    border: 4px solid #3a4048;
+    border-radius: 50% / 40%;
+    background: #081018;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+  }
+
+  .l6-scope::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(88,184,200,0.2);
+    border-radius: 50% / 40%;
+    pointer-events: none;
+  }
+
+  .l6-scope img.sprite { width: 55%; z-index: 1; }
+
+  .l6-scope .crosshair {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .l6-scope .crosshair::before,
+  .l6-scope .crosshair::after {
+    content: "";
+    position: absolute;
+    background: rgba(88,184,200,0.25);
+  }
+
+  .l6-scope .crosshair::before {
+    left: 50%; top: 15%; bottom: 15%;
+    width: 1px;
+    transform: translateX(-50%);
+  }
+
+  .l6-scope .crosshair::after {
+    top: 50%; left: 15%; right: 15%;
+    height: 1px;
+    transform: translateY(-50%);
+  }
+
+  .l6-tubes {
+    display: flex;
+    gap: 6px;
+    padding: 0 10px 8px;
+    justify-content: center;
+  }
+
+  .l6-tube {
+    flex: 1;
+    max-width: 72px;
+    text-align: center;
+    padding: 6px 4px;
+    background: #1a2028;
+    border: 2px solid #3a4048;
+    border-radius: 4px 4px 12px 12px;
+  }
+
+  .l6-tube label { font-size: 0.5rem; color: #588898; display: block; }
+  .l6-tube b { font-size: 0.6875rem; color: #58b8c8; display: block; margin-top: 2px; }
+  .l6-tube .mini-bar { height: 3px; background: #0a1018; margin-top: 4px; }
+  .l6-tube .mini-fill { height: 100%; background: #48a868; width: var(--w); }
+
+  .l6-panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 3px solid #3a4048;
+    background: #181c20;
+  }
+
+  .l6-key {
+    padding: 12px 4px;
+    border: none;
+    background: #242830;
+    border-right: 1px solid #1a1018;
+    color: #a8b0b8;
+    font-size: 0.5625rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: default;
+  }
+
+  .l6-key:last-child { border-right: none; }
+  .l6-key:active { background: #3a4850; color: #e8f0f4; }
+
+  .pick-banner {
+    max-width: 1200px;
+    margin: 28px auto 0;
+    padding: 14px 16px;
+    background: #101820;
+    border: 1px solid #2a4050;
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    color: #688898;
+  }
+
+  .pick-banner strong { color: #88c8d8; }
+
+  .back-link { display: block; text-align: center; margin-top: 16px; font-size: 0.75rem; }
+  .back-link a { color: #68a8b8; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>탐색정 — 레이아웃 재구성 시안</h1>
+    <p>현재 게임 UI 구조(헤더·펫·스탯·2×2 버튼)를 <strong>바꾼</strong> 6종입니다. 수중 탐색정 컨셉 유지. 게임 미반영.</p>
+  </header>
+
+  <div class="badge-row">
+    <span>구조 변경</span>
+    <span>탐색정·잠수함</span>
+    <span>모바일 세로 기준</span>
+  </div>
+
+  <div class="gallery">
+
+    <article class="layout-card">
+      <span class="layout-card__tag">L1 · HUD</span>
+      <h2>함교 오버레이</h2>
+      <p class="layout-card__struct">스탯 → 모서리 미니 게이지 · 펫 → 중앙 원형 · 버튼 → 하단 1×4 레버</p>
+      <p class="layout-card__desc">FPS/비행 시뮬 함교. 헤더 없이 HUD만. 정보 밀도 높음.</p>
+      <div class="phone" id="phone-l1"></div>
+      <ul class="layout-card__notes">
+        <li>펫 이름·수심은 상단 좌우 코너</li>
+        <li>말풍선은 관측창 내부</li>
+      </ul>
+    </article>
+
+    <article class="layout-card">
+      <span class="layout-card__tag">L2 · SPLIT</span>
+      <h2>좌우 콘솔</h2>
+      <p class="layout-card__struct">좌: 뷰포트+말풍선 · 우: 스탯 세로 + 2×2 버튼</p>
+      <p class="layout-card__desc">실제 잠수정 조종석 — 화면과 계기가 분리된 배치.</p>
+      <div class="phone" id="phone-l2"></div>
+      <ul class="layout-card__notes">
+        <li>한 손 엄지로 오른쪽 조작에 최적화</li>
+        <li>가로 모드에서도 자연스러움</li>
+      </ul>
+    </article>
+
+    <article class="layout-card">
+      <span class="layout-card__tag">L3 · IMMERSIVE</span>
+      <h2>전면 뷰포트</h2>
+      <p class="layout-card__struct">펫 75% · HUD 오버레이 · 스탯 1×4 스트립 · 아이콘 독</p>
+      <p class="layout-card__desc">관측에 몰입. 스탯·버튼은 최소 UI로 하단에만.</p>
+      <div class="phone" id="phone-l3"></div>
+      <ul class="layout-card__notes">
+        <li>성체 펫 크기 극대화에 유리</li>
+        <li>도감·음소거는 오버레이 버튼으로 처리 가정</li>
+      </ul>
+    </article>
+
+    <article class="layout-card">
+      <span class="layout-card__tag">L4 · DIAL</span>
+      <h2>포르톨 시계</h2>
+      <p class="layout-card__struct">스탯 → N/S/E/W 4방 · 펫 → 중앙 · 버튼 → 원형 4개</p>
+      <p class="layout-card__desc">압력 게이지판처럼 펫 주위에 수치가 둘러싸는 배치.</p>
+      <div class="phone" id="phone-l4"></div>
+      <ul class="layout-card__notes">
+        <li>스탯 4개만 둥글게 — 공간 효율</li>
+        <li>버튼이 둥글어 ‘밸브’ 연상</li>
+      </ul>
+    </article>
+
+    <article class="layout-card">
+      <span class="layout-card__tag">L5 · LOG</span>
+      <h2>잠수 일지</h2>
+      <p class="layout-card__struct">세로 스크롤 · 표본 스케치 · 인용 · 스탯 줄글 · 2×2 버튼</p>
+      <p class="layout-card__desc">탐사 보고서 UI. 펫은 ‘표본 도면’ 블록, 대사는 인용문.</p>
+      <div class="phone" id="phone-l5"></div>
+      <ul class="layout-card__notes">
+        <li>현재 UI와 가장 다른 정보 구조</li>
+        <li>도감·대사 톤과 세계관 통합 용이</li>
+      </ul>
+    </article>
+
+    <article class="layout-card">
+      <span class="layout-card__tag">L6 · SCOPE</span>
+      <h2>잠망경·어뢰관</h2>
+      <p class="layout-card__struct">타원 스코프 · 하단 4 튜브(스탯) · 1×4 키패드</p>
+      <p class="layout-card__desc">군용 잠수함 잠망경 + 어뢰 발사管 메타포. 십자선 오버레이.</p>
+      <div class="phone" id="phone-l6"></div>
+      <ul class="layout-card__notes">
+        <li>기괴·긴장감 연출에 특화</li>
+        <li>스탯이 ‘管’ 형태로 시각화</li>
+      </ul>
+    </article>
+
+  </div>
+
+  <div class="pick-banner">
+    <strong>구조 변경 시 참고:</strong>
+    L3(몰입) · L2(조종석) · L5(내러티브)가 게임성·세계관과 잘 맞습니다.
+    기존 구조 시안은 <a href="ui-theme-sub-preview.html" style="color:#68a8b8">수중 탐색정(구조 유지)</a> 페이지를 보세요.
+  </div>
+
+  <p class="back-link"><a href="index.html">← 시안 허브로</a></p>
+
+  <script>
+    const PET = "../assets/sprites/adult/grumpy.png";
+    const ICONS = {
+      feed: "../assets/sprites/ui/feed.png",
+      play: "../assets/sprites/ui/play.png",
+      clean: "../assets/sprites/ui/clean.png",
+      sleep: "../assets/sprites/ui/sleep.png",
+    };
+
+    document.getElementById("phone-l1").innerHTML = `
+      <div class="l1-hud">
+        <div class="l1-top">
+          <div><span class="mono">DEPTH 2847m</span><strong>송곳니어</strong></div>
+          <div style="text-align:right"><span class="mono">47d · ADULT</span><strong style="color:#8898a8">📖 🔊</strong></div>
+        </div>
+        <div class="l1-center">
+          <div class="l1-hud-corner l1-hud-corner--tl">
+            <div class="l1-gauge"><label>배고픔</label><div class="l1-gauge-bar"><div class="l1-gauge-fill" style="width:62%"></div></div></div>
+            <div class="l1-gauge"><label>행복</label><div class="l1-gauge-bar"><div class="l1-gauge-fill" style="width:48%"></div></div></div>
+          </div>
+          <div class="l1-hud-corner l1-hud-corner--tr">
+            <div class="l1-gauge"><label>청결</label><div class="l1-gauge-bar"><div class="l1-gauge-fill" style="width:35%"></div></div></div>
+            <div class="l1-gauge"><label>건강</label><div class="l1-gauge-bar"><div class="l1-gauge-fill" style="width:88%"></div></div></div>
+          </div>
+          <div class="l1-viewport">
+            <img class="sprite" src="${PET}" alt="">
+            <p class="bubble">후회할 거야, 키운 거.</p>
+          </div>
+        </div>
+        <div class="l1-bottom">
+          <button type="button" class="l1-lever"><img class="icon" src="${ICONS.feed}" alt="">먹이</button>
+          <button type="button" class="l1-lever"><img class="icon" src="${ICONS.play}" alt="">놀이</button>
+          <button type="button" class="l1-lever"><img class="icon" src="${ICONS.clean}" alt="">청소</button>
+          <button type="button" class="l1-lever"><img class="icon" src="${ICONS.sleep}" alt="">재우기</button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("phone-l2").innerHTML = `
+      <div class="l2-split">
+        <div class="l2-view">
+          <div class="depth mono">2847m / 285atm</div>
+          <div class="name">송곳니어</div>
+          <div class="l2-viewport">
+            <p class="bubble">후회할 거야, 키운 거.</p>
+            <img class="sprite" src="${PET}" alt="">
+          </div>
+        </div>
+        <div class="l2-console">
+          <div class="l2-stat-stack">
+            <div class="l2-stat" style="--c:#c88848;--w:62%"><label>배고픔</label><span class="mono">62</span><div class="bar"><div class="fill"></div></div></div>
+            <div class="l2-stat" style="--c:#68a8b8;--w:48%"><label>행복</label><span class="mono">48</span><div class="bar"><div class="fill"></div></div></div>
+            <div class="l2-stat" style="--c:#48a0c0;--w:35%"><label>청결</label><span class="mono">35</span><div class="bar"><div class="fill"></div></div></div>
+            <div class="l2-stat" style="--c:#68a878;--w:88%"><label>건강</label><span class="mono">88</span><div class="bar"><div class="fill"></div></div></div>
+          </div>
+          <div class="l2-actions">
+            <button type="button" class="l2-btn"><img class="icon" src="${ICONS.feed}" alt="">먹이</button>
+            <button type="button" class="l2-btn"><img class="icon" src="${ICONS.play}" alt="">놀이</button>
+            <button type="button" class="l2-btn"><img class="icon" src="${ICONS.clean}" alt="">청소</button>
+            <button type="button" class="l2-btn"><img class="icon" src="${ICONS.sleep}" alt="">재우기</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("phone-l3").innerHTML = `
+      <div class="l3-immersive">
+        <div class="l3-viewport">
+          <div class="l3-overlay-top">
+            <div><div class="name">송곳니어</div><div class="meta">47일 · 성체 · 2847m</div></div>
+            <div class="meta">📖 🔊</div>
+          </div>
+          <p class="l3-overlay-bubble">후회할 거야, 키운 거.</p>
+          <img class="sprite" src="${PET}" alt="">
+        </div>
+        <div class="l3-strip">
+          <div class="l3-strip-stat"><b class="mono">62</b><small>배고픔</small></div>
+          <div class="l3-strip-stat"><b class="mono">48</b><small>행복</small></div>
+          <div class="l3-strip-stat"><b class="mono">35</b><small>청결</small></div>
+          <div class="l3-strip-stat"><b class="mono">88</b><small>건강</small></div>
+        </div>
+        <div class="l3-dock">
+          <button type="button" class="l3-dock-btn"><img class="icon" src="${ICONS.feed}" alt=""><span>먹이</span></button>
+          <button type="button" class="l3-dock-btn"><img class="icon" src="${ICONS.play}" alt=""><span>놀이</span></button>
+          <button type="button" class="l3-dock-btn"><img class="icon" src="${ICONS.clean}" alt=""><span>청소</span></button>
+          <button type="button" class="l3-dock-btn"><img class="icon" src="${ICONS.sleep}" alt=""><span>재우기</span></button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("phone-l4").innerHTML = `
+      <div class="l4-dial">
+        <div class="l4-header">HABITAT PRESSURE DIAL · <span class="mono">2847m</span><h3>송곳니어</h3></div>
+        <div class="l4-dial-face">
+          <div class="l4-ring"></div>
+          <div class="l4-quadrant l4-quadrant--n"><small>배고픔</small><b class="mono">62</b></div>
+          <div class="l4-quadrant l4-quadrant--s"><small>행복</small><b class="mono">48</b></div>
+          <div class="l4-quadrant l4-quadrant--w"><small>청결</small><b class="mono">35</b></div>
+          <div class="l4-quadrant l4-quadrant--e"><small>건강</small><b class="mono">88</b></div>
+          <div class="l4-porthole"><img class="sprite" src="${PET}" alt=""></div>
+          <p class="l4-bubble">후회할 거야, 키운 거.</p>
+        </div>
+        <div class="l4-actions">
+          <button type="button" class="l4-act"><img class="icon" src="${ICONS.feed}" alt="">먹이</button>
+          <button type="button" class="l4-act"><img class="icon" src="${ICONS.play}" alt="">놀이</button>
+          <button type="button" class="l4-act"><img class="icon" src="${ICONS.clean}" alt="">청소</button>
+          <button type="button" class="l4-act"><img class="icon" src="${ICONS.sleep}" alt="">재우기</button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("phone-l5").innerHTML = `
+      <div class="l5-log">
+        <div class="l5-log-header">
+          Dive Log · Expedition 47
+          <h3>Subject: 송곳니어</h3>
+        </div>
+        <div class="l5-sketch">
+          <img class="sprite" src="${PET}" alt="">
+        </div>
+        <p class="l5-quote">「후회할 거야, 키운 거.」</p>
+        <div class="l5-entry" style="--w:62%"><label>배고픔</label><div class="bar"><div class="fill"></div></div><span>62</span></div>
+        <div class="l5-entry" style="--w:48%"><label>행복</label><div class="bar"><div class="fill"></div></div><span>48</span></div>
+        <div class="l5-entry" style="--w:35%"><label>청결</label><div class="bar"><div class="fill"></div></div><span>35</span></div>
+        <div class="l5-entry" style="--w:88%"><label>건강</label><div class="bar"><div class="fill"></div></div><span>88</span></div>
+        <div class="l5-actions">
+          <button type="button" class="l5-btn"><img class="icon" src="${ICONS.feed}" alt="">먹이</button>
+          <button type="button" class="l5-btn"><img class="icon" src="${ICONS.play}" alt="">놀이</button>
+          <button type="button" class="l5-btn"><img class="icon" src="${ICONS.clean}" alt="">청소</button>
+          <button type="button" class="l5-btn"><img class="icon" src="${ICONS.sleep}" alt="">재우기</button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("phone-l6").innerHTML = `
+      <div class="l6-sub">
+        <div class="l6-status">
+          <span class="mono">PERISCOPE · ACTIVE</span>
+          <span class="mono">송곳니어 · 47d</span>
+        </div>
+        <div class="l6-scope">
+          <div class="crosshair"></div>
+          <img class="sprite" src="${PET}" alt="">
+        </div>
+        <p style="text-align:center;font-size:0.625rem;color:#688898;padding:0 12px 6px">후회할 거야, 키운 거.</p>
+        <div class="l6-tubes">
+          <div class="l6-tube"><label>배고픔</label><b class="mono">62</b><div class="mini-bar"><div class="mini-fill" style="--w:62%"></div></div></div>
+          <div class="l6-tube"><label>행복</label><b class="mono">48</b><div class="mini-bar"><div class="mini-fill" style="--w:48%;background:#68a8b8"></div></div></div>
+          <div class="l6-tube"><label>청결</label><b class="mono">35</b><div class="mini-bar"><div class="mini-fill" style="--w:35%;background:#48a0c0"></div></div></div>
+          <div class="l6-tube"><label>건강</label><b class="mono">88</b><div class="mini-bar"><div class="mini-fill" style="--w:88%"></div></div></div>
+        </div>
+        <div class="l6-panel">
+          <button type="button" class="l6-key"><img class="icon" src="${ICONS.feed}" alt="">먹이</button>
+          <button type="button" class="l6-key"><img class="icon" src="${ICONS.play}" alt="">놀이</button>
+          <button type="button" class="l6-key"><img class="icon" src="${ICONS.clean}" alt="">청소</button>
+          <button type="button" class="l6-key"><img class="icon" src="${ICONS.sleep}" alt="">재우기</button>
+        </div>
+      </div>
+    `;
+  </script>
+</body>
+</html>
