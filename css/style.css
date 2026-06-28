@@ -773,6 +773,11 @@ img.pet-sprite[hidden] {
   overflow-y: auto;
 }
 
+/* 3탭 도감 — 닫기 버튼까지 스크롤 없이 (디자인 유지, 높이만 소폭 확장) */
+.overlay-card--wide.encyclopedia-panel:not(.encyclopedia-panel--detail) {
+  max-height: min(88dvh, 640px);
+}
+
 .overlay-btn--secondary {
   margin-top: 10px;
   background: var(--overlay-secondary);
