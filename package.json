@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite --port 5173 --host",
     "build": "vite build && node scripts/copy-ait-static.mjs",
+    "build:store-assets": "python3 scripts/build_ait_store_assets.py",
     "preview": "vite preview --port 5173"
   },
   "dependencies": {

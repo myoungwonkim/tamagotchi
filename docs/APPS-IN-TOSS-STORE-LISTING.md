@@ -51,6 +51,32 @@
 
 ---
 
+## 스토어 이미지 에셋 (`assets/ait-store/`)
+
+앱인토스 콘텐츠 가이드 규격에 맞춰 생성된 PNG입니다.
+
+| 파일 | 규격 | 용도 |
+|------|------|------|
+| `app-logo-light.png` | 600×600 | 앱 로고 (라이트) — 캐릭터 풀블리드, 텍스트 없음 |
+| `app-logo-dark.png` | 600×600 | 앱 로고 (다크) |
+| `thumbnail-1932x828.png` | 1932×828 | 가로형 썸네일 — **실제 플레이 UI 캡처** (3펫·말풍선·스탯·버튼) |
+| `thumbnail-1000x1000.png` | 1000×1000 | 정방형 썸네일 — 플레이 UI 캡처 크롭 |
+| `capture-portrait-thumbnail.png` | 636×1048 | 썸네일용 캡처 원본 (`?capture=thumbnail`) |
+| `screenshot-portrait-01-main.png` | 636×1048 | 스크린샷 — 메인 돌보기 (실제 게임 캡처) |
+| `screenshot-portrait-02-evolution.png` | 636×1048 | 스크린샷 — 성체 진화 (실제 게임 캡처) |
+| `screenshot-portrait-03-encyclopedia.png` | 636×1048 | 스크린샷 — 탐사 일지 (실제 게임 캡처) |
+| `screenshot-landscape-01.png` | 1504×741 | 스크린샷 — 가로형 (키아트 크롭) |
+
+재생성 (Playwright + Chromium 필요, 최초 1회 `python3 -m playwright install chromium`):
+
+```bash
+python3 scripts/build_ait_store_assets.py
+```
+
+콘솔 업로드 후 `app-logo-light.png` URL을 `granite.config.ts` `brand.icon`에 입력하세요.
+
+---
+
 ## 스크린샷 캡션 (5장 이상 권장)
 
 | # | 화면 | 캡션 |
@@ -70,4 +96,4 @@
 - [ ] `granite.config.ts` `displayName`과 콘솔 일치
 - [ ] 고객문의 이메일 = **nolsoop.games@gmail.com**
 - [ ] GRAC 신청서 게임명 일치
-- [ ] 개인정보 처리방침 URL (localStorage만 사용 명시)
+- [ ] 썸네일·스크린샷 업로드 → [assets/ait-store/](../assets/ait-store/)

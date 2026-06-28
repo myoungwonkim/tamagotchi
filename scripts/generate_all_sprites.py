@@ -763,26 +763,30 @@ def sprite_encyclopedia():
 
 
 def sprite_sound_on():
-    """함체 스피커 + 소나 파동."""
+    """함체 스피커 + 소나 파동 — 밝은 링으로 헤더 대비 확보."""
     g = blank()
-    fill_circle(g, 13, 16, 8, PANEL, K)
-    fill_circle(g, 13, 16, 6, PANEL2, K)
+    fill_circle(g, 13, 16, 9, BRASS, K)
+    fill_circle(g, 13, 16, 7, PAPER, K)
+    fill_circle(g, 13, 16, 5, PAPER2, K)
     for dx, dy in ((11, 14), (15, 14), (11, 18), (15, 18)):
-        px(g, dx, dy, (28, 36, 44, 255))
+        px(g, dx, dy, (72, 92, 108, 255))
     px(g, 13, 16, ACCENT)
-    for r, col in ((4, ACCENT2), (6, ACCENT), (8, GLOW)):
+    px(g, 12, 15, GLOW)
+    px(g, 14, 17, GLOW)
+    for r, col in ((4, GLOW), (6, ACCENT), (8, ACCENT2)):
         for x, y in _arc_pts(19, 16, r, -50, 50):
             px(g, x, y, col)
     return g
 
 
 def sprite_sound_off():
-    """음소거 — 파동 흐림 + 슬래시."""
+    """음소거 — 밝은 스피커 + 흐린 파동 + 슬래시."""
     g = blank()
-    fill_circle(g, 13, 16, 8, PANEL, K)
-    fill_circle(g, 13, 16, 6, PANEL2, K)
+    fill_circle(g, 13, 16, 9, BRASS, K)
+    fill_circle(g, 13, 16, 7, PAPER, K)
+    fill_circle(g, 13, 16, 5, PAPER2, K)
     for dx, dy in ((11, 14), (15, 14), (11, 18), (15, 18)):
-        px(g, dx, dy, (28, 36, 44, 255))
+        px(g, dx, dy, (72, 92, 108, 255))
     px(g, 13, 16, MUTED)
     for r in (4, 6, 8):
         for x, y in _arc_pts(19, 16, r, -50, 50, step=2):

@@ -56,6 +56,7 @@ import {
   syncSleepControls,
   setAdsPromptApi,
 } from "./ui.js";
+import { getStoreCaptureScene, isStoreCaptureMode, setupStoreCapture } from "./storeCapture.js";
 
 const OFFLINE_MESSAGE_MS = 30 * 60 * 1000;
 const OFFLINE_NOTICE_MS = 5 * 60 * 1000;
@@ -179,6 +180,16 @@ function applyAwayTime(elapsed, { notify = false } = {}) {
 }
 
 async function init() {
+  const captureScene = getStoreCaptureScene();
+  if (captureScene) {
+    bindEvents();
+    setupMuteButton();
+    pet = setupStoreCapture(captureScene);
+    await refreshAllGraphics(pet);
+    window.__STORE_CAPTURE_READY__ = true;
+    return;
+  }
+
   setAdsPromptApi({
     canOfferEmergencyCare,
     canOfferNeglectReset,
@@ -454,6 +465,7 @@ function bindEvents() {
 }
 
 function mountDevToolsIfEnabled() {
+  if (isStoreCaptureMode()) return;
   if (!new URLSearchParams(location.search).has("dev")) return;
 
   import("./dev.js").then(({ mountDevPanel }) => {

@@ -607,6 +607,8 @@ export function renderEncyclopedia() {
 export function showEncyclopedia() {
   renderEncyclopedia();
   elements.encyclopediaOverlay.hidden = false;
+  elements.encyclopediaPanel?.scrollTo(0, 0);
+  elements.encyclopediaOverlay.scrollTo?.(0, 0);
 }
 
 export function hideEncyclopedia() {

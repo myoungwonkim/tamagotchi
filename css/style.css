@@ -107,9 +107,9 @@ body {
   right: 0;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(88, 184, 200, 0.4);
   border-radius: 10px;
-  background: var(--surface);
+  background: #304858;
   box-shadow: var(--shadow);
   cursor: pointer;
   touch-action: manipulation;
@@ -130,9 +130,9 @@ body {
   left: 0;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(88, 184, 200, 0.4);
   border-radius: 10px;
-  background: var(--surface);
+  background: #304858;
   box-shadow: var(--shadow);
   cursor: pointer;
   touch-action: manipulation;
@@ -751,6 +751,9 @@ img.pet-sprite[hidden] {
 
 #encyclopedia-overlay {
   padding: 12px;
+  align-items: flex-start;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .overlay-card {
@@ -868,8 +871,6 @@ img.pet-sprite[hidden] {
 
 .overlay-card.encyclopedia-panel:not(.encyclopedia-panel--detail) {
   padding: 16px 14px 12px;
-  max-height: none;
-  overflow: visible;
 }
 
 .encyclopedia-header {
@@ -897,13 +898,18 @@ img.pet-sprite[hidden] {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin-bottom: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 4px 0 8px;
+  background: var(--surface);
 }
 
 .encyclopedia-tab {
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(88, 184, 200, 0.3);
   border-radius: 8px;
-  background: #1e2c3c;
-  color: var(--text-muted);
+  background: #283848;
+  color: var(--text);
   padding: 10px 8px;
   font-family: inherit;
   font-size: var(--text-xs);
@@ -1317,4 +1323,185 @@ img.pet-sprite[hidden] {
 
 .dev-panel__btn:active {
   background: var(--overlay-secondary-active);
+}
+
+/* Store asset capture (?capture=main|evolution|encyclopedia) */
+body.capture-mode {
+  background: var(--bg);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+body.capture-mode .app {
+  max-width: 100%;
+  width: 100%;
+  min-height: 100dvh;
+}
+
+body.capture-mode .dev-panel {
+  display: none !important;
+}
+
+body.capture-mode .boot-error {
+  display: none !important;
+}
+
+/* Thumbnail capture — 3 pets + moods, brighter in-game UI */
+body.capture-mode.capture-thumbnail {
+  --bg: #6eb4c4;
+  --surface: #2e4a5c;
+  --stats-surface: #284458;
+  --pet-viewport-bg: radial-gradient(ellipse at 50% 32%, #4a90a8 0%, #2a5870 72%);
+  --border-subtle: #5a8090;
+}
+
+body.capture-mode.capture-thumbnail .pet-display[hidden] {
+  display: none !important;
+}
+
+body.capture-mode.capture-thumbnail .header {
+  padding-top: 10px;
+  padding-bottom: 6px;
+}
+
+body.capture-mode.capture-thumbnail .main {
+  gap: 10px;
+}
+
+body.capture-mode.capture-thumbnail .pet-area {
+  min-height: 210px;
+  flex: 0 0 auto;
+  padding: 8px 6px 6px;
+}
+
+body.capture-mode.capture-thumbnail .stats {
+  padding: 10px 12px;
+}
+
+body.capture-mode.capture-thumbnail .actions {
+  padding: 8px 10px 12px;
+}
+
+body.capture-mode.capture-thumbnail .message {
+  font-size: 0.82rem;
+  padding: 6px 10px;
+}
+
+/* Wide viewport (1932×828) — pets left, stats right, actions bottom */
+@media (min-width: 900px) {
+  body.capture-mode.capture-thumbnail {
+    min-height: 828px;
+    height: 828px;
+    align-items: stretch;
+  }
+
+  body.capture-mode.capture-thumbnail .app {
+    min-height: 828px;
+    height: 828px;
+    max-width: 1932px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 10px 16px 12px;
+    gap: 8px;
+  }
+
+  body.capture-mode.capture-thumbnail .header {
+    padding: 4px 0 2px;
+  }
+
+  body.capture-mode.capture-thumbnail .main {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 12px;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  body.capture-mode.capture-thumbnail .pet-area {
+    grid-column: 1;
+    min-height: 0;
+    height: 100%;
+    padding: 10px 8px;
+  }
+
+  body.capture-mode.capture-thumbnail .stats {
+    grid-column: 2;
+    align-self: center;
+    margin: 0;
+  }
+
+  body.capture-mode.capture-thumbnail .reward-prompts,
+  body.capture-mode.capture-thumbnail .new-pet-fab {
+    display: none !important;
+  }
+
+  body.capture-mode.capture-thumbnail .actions {
+    padding: 6px 0 0;
+  }
+
+  body.capture-mode.capture-thumbnail .thumbnail-showcase {
+    min-height: 0;
+    height: 100%;
+    align-items: center;
+    padding: 8px 4px;
+  }
+
+  body.capture-mode.capture-thumbnail .thumbnail-slot {
+    --sprite-evolution-size: clamp(3.5rem, 8vw, 6.5rem);
+    --sprite-mood-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  }
+
+  body.capture-mode.capture-thumbnail .thumbnail-slot--hero {
+    --sprite-evolution-size: clamp(4.25rem, 9.5vw, 7.5rem);
+    --sprite-mood-size: clamp(1.6rem, 4vw, 2.5rem);
+  }
+}
+
+.thumbnail-showcase {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  width: 100%;
+  min-height: clamp(220px, 40dvh, 360px);
+  padding: 16px 6px 10px;
+  gap: 2px;
+}
+
+.thumbnail-slot {
+  position: relative;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  max-width: 34%;
+  --sprite-evolution-size: clamp(4.25rem, 20vw, 6.75rem);
+  --sprite-mood-size: clamp(1.65rem, 7.5vw, 2.35rem);
+}
+
+.thumbnail-slot--hero {
+  --sprite-evolution-size: clamp(5.25rem, 26vw, 8.5rem);
+  --sprite-mood-size: clamp(1.9rem, 8.5vw, 2.75rem);
+}
+
+.thumbnail-pet-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbnail-pet-wrap .pet-evolution-img {
+  width: var(--sprite-evolution-size);
+  height: var(--sprite-evolution-size);
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.thumbnail-pet-wrap .pet-mood-bubble {
+  position: absolute;
+  top: -4%;
+  right: max(-2rem, calc(var(--sprite-evolution-size) * -0.22));
 }

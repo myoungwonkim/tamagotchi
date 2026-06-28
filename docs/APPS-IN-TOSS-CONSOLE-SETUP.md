@@ -16,7 +16,7 @@
 | 앱 아이콘 URL | `brand.icon` | 콘솔 업로드 이미지 우클릭 → 링크 복사 |
 | primaryColor | `brand.primaryColor` | `#58b8c8` |
 
-스토어 문구 전체: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)
+스토어 문구·이미지: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md) · 에셋 폴더 [assets/ait-store/](../assets/ait-store/)
 
 ## 2. 사업자·정산
 
