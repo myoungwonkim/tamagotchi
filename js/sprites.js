@@ -81,6 +81,8 @@ export function getSpriteUrl(category, id, speciesTheme = DEFAULT_SPECIES_THEME)
     base = `${SPRITE_BASE}/ui/${id}.${ext}`;
   } else if (theme === "mermaid") {
     base = `${SPRITE_BASE}/mermaid/${category}/${id}.${ext}`;
+  } else if (theme === "vent") {
+    base = `${SPRITE_BASE}/vent/${category}/${id}.${ext}`;
   } else {
     base = `${SPRITE_BASE}/${category}/${id}.${ext}`;
   }

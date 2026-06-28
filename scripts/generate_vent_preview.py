@@ -520,6 +520,13 @@ def export_species_json(out_dir: Path):
 
 
 def main():
+    import argparse
+    import shutil
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--install", action="store_true", help="Copy sprites to assets/sprites/vent/")
+    args = parser.parse_args()
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for rel, fn in SPRITES.items():
         save_grid(fn(), OUT_DIR / f"{rel}.png")
@@ -532,6 +539,19 @@ def main():
     print(f"Evolution sheet -> {evo_sheet}")
     print(f"Sketches -> {sketches}")
     print(f"JSON -> {species_json}")
+
+    if args.install:
+        game_dir = ROOT / "assets" / "sprites" / "vent"
+        mood_src = ROOT / "assets" / "sprites" / "mood"
+        for rel in SPRITES:
+            dest = game_dir / f"{rel}.png"
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(OUT_DIR / f"{rel}.png", dest)
+        mood_dest = game_dir / "mood"
+        mood_dest.mkdir(parents=True, exist_ok=True)
+        for mood in mood_src.glob("*.png"):
+            shutil.copy2(mood, mood_dest / mood.name)
+        print(f"Installed vent sprites -> {game_dir} (+ mood from deepsea)")
 
 
 if __name__ == "__main__":

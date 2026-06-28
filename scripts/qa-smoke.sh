@@ -21,14 +21,19 @@ echo
 echo "[assets]"
 PNG_COUNT=$(find assets/sprites -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
 MERMAID_COUNT=$(find assets/sprites/mermaid -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
-if [ "$PNG_COUNT" -eq 50 ]; then ok "50 PNG sprites (28 deepsea + 19 mermaid + 3 ui header)"; else bad "PNG count=$PNG_COUNT (expected 50)"; fi
+VENT_COUNT=$(find assets/sprites/vent -name '*.png' 2>/dev/null | wc -l | tr -d ' ')
+if [ "$PNG_COUNT" -eq 69 ]; then ok "69 PNG sprites (31 deepsea + 19 mermaid + 19 vent)"; else bad "PNG count=$PNG_COUNT (expected 69)"; fi
 if [ "$MERMAID_COUNT" -eq 19 ]; then ok "19 mermaid pet sprites"; else bad "mermaid PNG count=$MERMAID_COUNT (expected 19)"; fi
+if [ "$VENT_COUNT" -eq 19 ]; then ok "19 vent pet sprites"; else bad "vent PNG count=$VENT_COUNT (expected 19)"; fi
 
 for cat in evolution adult mood ui; do
   if [ -d "assets/sprites/$cat" ]; then ok "dir assets/sprites/$cat"; else bad "missing assets/sprites/$cat"; fi
 done
 for cat in evolution adult mood; do
   if [ -d "assets/sprites/mermaid/$cat" ]; then ok "dir assets/sprites/mermaid/$cat"; else bad "missing assets/sprites/mermaid/$cat"; fi
+done
+for cat in evolution adult mood; do
+  if [ -d "assets/sprites/vent/$cat" ]; then ok "dir assets/sprites/vent/$cat"; else bad "missing assets/sprites/vent/$cat"; fi
 done
 rg -q 'speciesTheme' js/pet.js js/storage.js js/sprites.js && ok 'speciesTheme field' || bad 'speciesTheme field'
 for id in poop fly feed play clean sleep wake encyclopedia sound-on sound-off; do
@@ -43,6 +48,7 @@ grep -q 'action-icon' index.html && ok 'action sprite icons' || bad 'action spri
 grep -q 'care-fx' index.html && ok '#care-fx layer' || bad '#care-fx layer'
 grep -q 'id="pet-area"' index.html && rg -q 'id="message"' index.html && ok 'message in pet-area' || bad 'message in pet-area'
 grep -q 'encyclopedia-list' index.html && grep -q 'encyclopedia-detail' index.html && ok 'encyclopedia list/detail panels' || bad 'encyclopedia list/detail panels'
+grep -q 'encyclopedia-tab-vent' index.html && ok 'encyclopedia vent tab' || bad 'encyclopedia vent tab'
 grep -q 'encyclopedia-card__species' index.html || rg -q 'encyclopedia-card__species' css/style.css && ok 'encyclopedia species label' || bad 'encyclopedia species label'
 rg -q 'encyclopedia-panel--detail' css/style.css && ok 'encyclopedia compact detail panel' || bad 'encyclopedia compact detail panel'
 grep -q 'style.css?v=' index.html && ok 'css cache query' || bad 'css cache query'

@@ -1,7 +1,7 @@
 import { getAgeDays, getGameOverReason, getAverageCare } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
-import { getStageLabelForTheme, normalizeSpeciesTheme } from "./speciesThemes.js";
+import { getStageLabelForTheme, normalizeSpeciesTheme, SPECIES_THEMES } from "./speciesThemes.js";
 import {
   getEncyclopediaSlots,
   getCollectedCount,
@@ -58,6 +58,7 @@ const elements = {
   encyclopediaSubtitle: document.getElementById("encyclopedia-subtitle"),
   encyclopediaTabDeepsea: document.getElementById("encyclopedia-tab-deepsea"),
   encyclopediaTabMermaid: document.getElementById("encyclopedia-tab-mermaid"),
+  encyclopediaTabVent: document.getElementById("encyclopedia-tab-vent"),
   encyclopediaDetail: document.getElementById("encyclopedia-detail"),
   encyclopediaDetailGraphic: document.getElementById("encyclopedia-detail-graphic"),
   encyclopediaDetailName: document.getElementById("encyclopedia-detail-name"),
@@ -498,6 +499,13 @@ function hideEncyclopediaDetail() {
 const ENCYCLOPEDIA_THEME_LABEL = {
   deepsea: "심해어",
   mermaid: "심해인어",
+  vent: "열수구",
+};
+
+const ENCYCLOPEDIA_TAB_ELEMENTS = {
+  deepsea: () => elements.encyclopediaTabDeepsea,
+  mermaid: () => elements.encyclopediaTabMermaid,
+  vent: () => elements.encyclopediaTabVent,
 };
 
 let encyclopediaActiveTheme = "deepsea";
@@ -512,9 +520,13 @@ function updateEncyclopediaSubtitle(theme) {
 
 function selectEncyclopediaTheme(theme) {
   encyclopediaActiveTheme = normalizeSpeciesTheme(theme);
-  const isDeepsea = encyclopediaActiveTheme === "deepsea";
-  elements.encyclopediaTabDeepsea?.setAttribute("aria-selected", isDeepsea ? "true" : "false");
-  elements.encyclopediaTabMermaid?.setAttribute("aria-selected", isDeepsea ? "false" : "true");
+  for (const speciesTheme of SPECIES_THEMES) {
+    const tab = ENCYCLOPEDIA_TAB_ELEMENTS[speciesTheme]?.();
+    tab?.setAttribute(
+      "aria-selected",
+      encyclopediaActiveTheme === speciesTheme ? "true" : "false",
+    );
+  }
   updateEncyclopediaSubtitle(encyclopediaActiveTheme);
   renderEncyclopediaGrid(encyclopediaActiveTheme);
 }
@@ -522,12 +534,11 @@ function selectEncyclopediaTheme(theme) {
 function bindEncyclopediaTabs() {
   if (encyclopediaTabsBound) return;
   encyclopediaTabsBound = true;
-  elements.encyclopediaTabDeepsea?.addEventListener("click", () => {
-    selectEncyclopediaTheme("deepsea");
-  });
-  elements.encyclopediaTabMermaid?.addEventListener("click", () => {
-    selectEncyclopediaTheme("mermaid");
-  });
+  for (const speciesTheme of SPECIES_THEMES) {
+    ENCYCLOPEDIA_TAB_ELEMENTS[speciesTheme]?.()?.addEventListener("click", () => {
+      selectEncyclopediaTheme(speciesTheme);
+    });
+  }
 }
 
 function renderEncyclopediaGrid(speciesTheme) {
