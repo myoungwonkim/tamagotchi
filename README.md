@@ -228,6 +228,7 @@ npm run build                  # dist/ → .ait 번들 업로드용
 
 | 문서 | 내용 |
 |------|------|
+| [docs/APPS-IN-TOSS-STORE-LISTING.md](docs/APPS-IN-TOSS-STORE-LISTING.md) | 스토어 등록 문구 (확정) |
 | [docs/APPS-IN-TOSS-CONSOLE-SETUP.md](docs/APPS-IN-TOSS-CONSOLE-SETUP.md) | 콘솔·정산·광고 그룹 |
 | [docs/GRAC-RATING-CHECKLIST.md](docs/GRAC-RATING-CHECKLIST.md) | 게임물 등급 심의 |
 | [docs/MONETIZATION.md](docs/MONETIZATION.md) | 광고 지점·보상 정책 |

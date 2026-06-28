@@ -1,0 +1,86 @@
+{
+  "evolution/egg": {
+    "labelKo": "열수 알",
+    "note": "egg",
+    "anatomy": "광물 알집·반투명 배아·열수 기포",
+    "variantId": "egg"
+  },
+  "evolution/baby": {
+    "labelKo": "유충",
+    "note": "nauplius",
+    "anatomy": "둥근 3부지·더듬이만·다리 없음",
+    "variantId": "baby"
+  },
+  "evolution/child": {
+    "labelKo": "새우치",
+    "note": "mysis",
+    "anatomy": "측면 등 살짝 굽음·다리 2쌍",
+    "variantId": "child"
+  },
+  "evolution/teen": {
+    "labelKo": "청년 새우",
+    "note": "juvenile",
+    "anatomy": "굽은 등·다리 4쌍·eyespot 막 형성",
+    "variantId": "teen"
+  },
+  "evolution/dead": {
+    "labelKo": "퇴적",
+    "note": "—",
+    "anatomy": "쓰러진 새우 실루엣",
+    "variantId": "dead"
+  },
+  "adult/golden": {
+    "labelKo": "열수 해마",
+    "note": "seahorse (vent)",
+    "anatomy": "S자 몸·주둥이·꼬리 말림",
+    "variantId": "golden"
+  },
+  "adult/fluffy": {
+    "labelKo": "눈없는 새우",
+    "note": "Rimicaris exoculata",
+    "anatomy": "측면·굽은 등·등 eyespot·다리",
+    "variantId": "fluffy"
+  },
+  "adult/sparkle": {
+    "labelKo": "예티 게",
+    "note": "Kiwa hirsuta",
+    "anatomy": "큰 집게·작은 다리 8·setae",
+    "variantId": "sparkle"
+  },
+  "adult/standard": {
+    "labelKo": "담수어",
+    "note": "zoarcid",
+    "anatomy": "v1 어두운 어류 실루엣",
+    "variantId": "standard"
+  },
+  "adult/farm": {
+    "labelKo": "벤트 게",
+    "note": "Bythograea thermydron",
+    "anatomy": "큰 집게·작은 다리·박테리아",
+    "variantId": "farm"
+  },
+  "adult/plain": {
+    "labelKo": "황 새우",
+    "note": "vent shrimp",
+    "anatomy": "작은 측면·굽은 등·다리",
+    "variantId": "plain"
+  },
+  "adult/scruffy": {
+    "labelKo": "녹슨 새우",
+    "note": "stressed shrimp",
+    "anatomy": "측면·녹슨 얼룩·다리",
+    "variantId": "scruffy"
+  },
+  "adult/grumpy": {
+    "labelKo": "분홍 장어",
+    "note": "Thermarces cerberus",
+    "anatomy": "뱀형 긴 몸·갈고리 이빨",
+    "variantId": "grumpy"
+  },
+  "adult/sickly": {
+    "labelKo": "기생 새우",
+    "note": "parasitized shrimp",
+    "anatomy": "측면·기생 반점",
+    "variantId": "sickly"
+  }
+}

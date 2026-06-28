@@ -9,9 +9,14 @@
 | 콘솔 필드 | granite.config.ts | 예시 |
 |-----------|-------------------|------|
 | appName (수정 불가) | `appName` | `deepsea-tamagotchi` |
-| 앱 이름 | `brand.displayName` | `심해 다마고치` |
+| 앱 이름 | `brand.displayName` | `어비스펫: 심해 가상 펫` |
+| 부제 | 콘솔 앱 정보 | `심해 가상펫 육성 및 수집 게임` |
+| 영어 앱 이름 | 콘솔 앱 정보 | `Abyss Pet` |
+| 고객문의 이메일 | 콘솔 앱 정보 | `nolsoop.games@gmail.com` |
 | 앱 아이콘 URL | `brand.icon` | 콘솔 업로드 이미지 우클릭 → 링크 복사 |
 | primaryColor | `brand.primaryColor` | `#58b8c8` |
+
+스토어 문구 전체: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)
 
 ## 2. 사업자·정산
 

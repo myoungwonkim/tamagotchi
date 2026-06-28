@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1418">
+  <title>열수구(vent) 시안 v3</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #141018; --surface: #221820; --surface2: #2a2028;
+      --text: #f0e8e4; --muted: #9a8890; --vent: #ff7828; --vent2: #ffb84a;
+      --plume: #b9232a; --border: #4a3840; --accent: #7ec8e8;
+      --pretty: #ffb84a; --normal: #88c898; --defective: #c87878;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    }
+    body { font-family: var(--font); background: #0c080c; color: var(--text); line-height: 1.55; padding: 20px 14px 56px; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .hero { text-align: center; margin-bottom: 24px; padding: 22px 16px; background: linear-gradient(160deg,#2a1818,#141018); border: 1px solid var(--border); border-radius: var(--radius); }
+    .badge { display: inline-block; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--vent); background: rgba(255,120,40,.12); border: 1px solid rgba(255,120,40,.35); border-radius: 999px; padding: 4px 10px; margin-bottom: 8px; }
+    .hero h1 { font-size: 1.25rem; margin-bottom: 6px; }
+    .hero p { font-size: 0.8125rem; color: var(--muted); max-width: 560px; margin: 0 auto; }
+    .notice { background: rgba(255,120,40,.08); border: 1px solid rgba(255,120,40,.22); border-radius: 8px; padding: 12px 14px; font-size: 0.75rem; color: #c8a898; margin-bottom: 28px; }
+    .notice strong { color: var(--vent2); }
+    section { margin-bottom: 36px; }
+    h2 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 12px; color: var(--vent2); }
+    h2 span { font-size: 0.6875rem; font-weight: 600; color: var(--muted); margin-left: 6px; }
+    .sheet-img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); image-rendering: pixelated; image-rendering: crisp-edges; margin-bottom: 12px; }
+    .evo-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: flex-start; margin-bottom: 12px; }
+    .evo-card { width: 108px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 6px; position: relative; }
+    .evo-card img { width: 80px; height: 80px; image-rendering: pixelated; image-rendering: crisp-edges; margin-bottom: 6px; }
+    .evo-card .day { font-size: 0.625rem; color: var(--vent2); font-weight: 700; }
+    .evo-card .name { font-size: 0.75rem; font-weight: 700; margin: 2px 0; }
+    .evo-card .feat { font-size: 0.5625rem; color: var(--muted); line-height: 1.35; }
+    .evo-arrow { color: var(--vent); font-size: 1.125rem; align-self: center; padding: 0 2px; }
+    .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+    .evolution-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 14px; }
+    .evolution-section h2 { margin-bottom: 14px; }
+    .ref-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 0.75rem; }
+    .ref-card h3 { font-size: 0.8125rem; color: var(--vent2); margin-bottom: 2px; }
+    .ref-card .sci { font-style: italic; color: var(--accent); font-size: 0.6875rem; margin-bottom: 6px; }
+    .ref-card ul { margin-left: 1em; color: #c8b8b0; }
+    .ref-card li { margin-bottom: 3px; }
+    .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 560px) { .tier-grid { grid-template-columns: repeat(2, 1fr); } }
+    .variant-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 8px; text-align: center; }
+    .variant-card img { width: 80px; height: 80px; image-rendering: pixelated; image-rendering: crisp-edges; margin-bottom: 6px; }
+    .variant-card .tier { font-size: 0.5625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .tier--pretty { color: var(--pretty); } .tier--normal { color: var(--normal); } .tier--defective { color: var(--defective); }
+    .variant-card .label { font-size: 0.8125rem; font-weight: 700; }
+    .variant-card .sci { font-size: 0.625rem; color: var(--accent); font-style: italic; margin: 2px 0 4px; }
+    .variant-card .feat { font-size: 0.625rem; color: var(--muted); line-height: 1.4; padding: 0 4px; }
+    .matrix { width: 100%; border-collapse: collapse; font-size: 0.6875rem; }
+    .matrix th, .matrix td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+    .matrix th { background: var(--surface2); color: var(--vent2); }
+    .matrix td { color: #c8b8b0; }
+    .matrix code { color: var(--accent); font-size: 0.625rem; }
+    footer { text-align: center; font-size: 0.6875rem; color: var(--muted); margin-top: 20px; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="badge">Staging v3 · 게임 미반영</div>
+      <h1>🌋 열수구 테마 — v3 시안</h1>
+      <p>관충 전부 제거. <strong>측면 새우(굽은 등·다리)</strong> · <strong>해마</strong> · <strong>큰 집게+작은 다리 게</strong> · <strong>담수어 v1</strong> · <strong>긴 장어</strong>.</p>
+    </header>
+
+    <section class="evolution-section" id="evolution">
+      <h2>진화 단계 <span>알 → 청년 새우 · 5일 규칙과 동일</span></h2>
+      <img class="sheet-img" src="vent-theme-preview/_evolution-sheet.png?v=3" alt="Evolution egg to teen">
+      <div class="evo-row" id="evo-row">
+        <div class="evo-card">
+          <img src="vent-theme-preview/sprites/evolution/egg.png?v=3" alt="열수 알">
+          <div class="day">0일</div>
+          <div class="name">열수 알</div>
+          <div class="feat">광물 알집·반투명 배아</div>
+        </div>
+        <span class="evo-arrow" aria-hidden="true">→</span>
+        <div class="evo-card">
+          <img src="vent-theme-preview/sprites/evolution/baby.png?v=3" alt="유충">
+          <div class="day">1일</div>
+          <div class="name">유충</div>
+          <div class="feat">3부지·더듬i만</div>
+        </div>
+        <span class="evo-arrow" aria-hidden="true">→</span>
+        <div class="evo-card">
+          <img src="vent-theme-preview/sprites/evolution/child.png?v=3" alt="새우치">
+          <div class="day">2~3일</div>
+          <div class="name">새우치</div>
+          <div class="feat">측면·등 굽음·다리 2쌍</div>
+        </div>
+        <span class="evo-arrow" aria-hidden="true">→</span>
+        <div class="evo-card">
+          <img src="vent-theme-preview/sprites/evolution/teen.png?v=3" alt="청년 새우">
+          <div class="day">4일</div>
+          <div class="name">청년 새우</div>
+          <div class="feat">다리 4쌍·eyespot</div>
+        </div>
+      </div>
+      <div class="ref-grid" style="margin-top:12px">
+        <div class="ref-card"><h3>열수 알</h3><ul><li>광물 알집 + 반투명 배아</li><li>열수 기포·주황 점</li></ul></div>
+        <div class="ref-card"><h3>유충</h3><ul><li>둥근 3부지(Nauplius)</li><li>더듬i만, 복부 다리 없음</li></ul></div>
+        <div class="ref-card"><h3>새우치</h3><ul><li>측면 실루엣 시작</li><li>등 살짝 굽음 · 다리 2쌍</li></ul></div>
+        <div class="ref-card"><h3>청년 새우</h3><ul><li>굽은 등 완성 · 다리 4쌍</li><li>등 eyespot·박테리아 힌트</li></ul></div>
+      </div>
+    </section>
+
+    <p class="notice">
+      <strong>시안 전용 · 로컬에서만 열기.</strong> GitHub Pages에는 아직 없음.<br>
+      재생성: <code>python3 scripts/generate_vent_preview.py</code><br>
+      미리보기: 프로젝트 루트에서 <code>python3 -m http.server 8080</code> → <a href="/docs/vent-theme-preview.html">http://localhost:8080/docs/vent-theme-preview.html</a>
+    </p>
+
+    <section>
+      <h2>레퍼런스 스케치 <span>성체 9종</span></h2>
+      <img class="sheet-img" src="vent-theme-preview/_reference-sketches.png" alt="Reference sketches">
+      <img class="sheet-img" src="vent-theme-preview/_sheet.png" alt="Full sprite sheet">
+    </section>
+
+    <section>
+      <h2>v3 변경 요약</h2>
+      <div class="ref-grid">
+        <div class="ref-card"><h3>관충 제거</h3><ul><li>관·관엽 전부 삭제</li><li>golden → 열수 해마</li></ul></div>
+        <div class="ref-card"><h3>새우</h3><ul><li>측면 · 등 굽음 · 다리 3~4쌍</li></ul></div>
+        <div class="ref-card"><h3>게</h3><ul><li>집게 크게 · 작은 다리 8개</li></ul></div>
+        <div class="ref-card"><h3>담수어</h3><ul><li>v1 어두운 zoarcid 복원</li></ul></div>
+        <div class="ref-card"><h3>장어</h3><ul><li>뱀형 긴 몸 + 갈고리 이빨</li></ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>성체 9종 픽셀 시안</h2>
+      <div class="tier-grid" id="tier-grid"></div>
+    </section>
+
+    <section>
+      <h2>variant 매핑표</h2>
+      <table class="matrix">
+        <thead>
+          <tr><th>variantId</th><th>티어</th><th>한국어명</th><th>학명</th><th>픽셀에 반영한 특징</th></tr>
+        </thead>
+        <tbody id="matrix-body"></tbody>
+      </table>
+    </section>
+
+    <footer>vent theme draft v3 · staging only</footer>
+  </div>
+
+  <script>
+    const EVOLUTION = [
+      { id: "egg", day: "0일", name: "열수 알", feat: "광물 알집·반투명 배아" },
+      { id: "baby", day: "1일", name: "유충", feat: "3부지·더듬i만" },
+      { id: "child", day: "2~3일", name: "새우치", feat: "측면·등 굽음·다리 2쌍" },
+      { id: "teen", day: "4일", name: "청년 새우", feat: "다리 4쌍·eyespot" },
+    ];
+
+    const evoRow = document.getElementById("evo-row");
+    if (evoRow && !evoRow.children.length) {
+      EVOLUTION.forEach((s, i) => {
+        if (i > 0) {
+          const arrow = document.createElement("span");
+          arrow.className = "evo-arrow";
+          arrow.textContent = "→";
+          evoRow.append(arrow);
+        }
+        const card = document.createElement("div");
+        card.className = "evo-card";
+        card.innerHTML = `
+          <img src="vent-theme-preview/sprites/evolution/${s.id}.png?v=3" alt="${s.name}">
+          <div class="day">${s.day}</div>
+          <div class="name">${s.name}</div>
+          <div class="feat">${s.feat}</div>`;
+        evoRow.append(card);
+      });
+    }
+
+    const VARIANTS = [
+      { id: "golden", tier: "pretty", label: "열수 해마", sci: "seahorse (vent)", feat: "S자 몸·주둥이·꼬리 말림" },
+      { id: "fluffy", tier: "pretty", label: "눈없는 새우", sci: "Rimicaris exoculata", feat: "측면·굽은 등·등 eyespot·다리 3쌍" },
+      { id: "sparkle", tier: "pretty", label: "예티 게", sci: "Kiwa hirsuta", feat: "큰 집게·작은 다리 8·setae" },
+      { id: "standard", tier: "normal", label: "담수어", sci: "zoarcid", feat: "v1 어두운 어류 실루엣 (복원)" },
+      { id: "farm", tier: "normal", label: "벤트 게", sci: "Bythograea thermydron", feat: "큰 집게·작은 다리·박테리아" },
+      { id: "plain", tier: "normal", label: "황 새우", sci: "vent shrimp", feat: "작은 측면·굽은 등·다리" },
+      { id: "scruffy", tier: "defective", label: "녹슨 새우", sci: "stressed shrimp", feat: "측면·녹슨 얼룩·다리" },
+      { id: "grumpy", tier: "defective", label: "분홍 장어", sci: "Thermarces cerberus", feat: "뱀형 긴 몸·갈고리 이빨" },
+      { id: "sickly", tier: "defective", label: "기생 새우", sci: "parasitized shrimp", feat: "측면·기생 반점·다리" },
+    ];
+
+    const grid = document.getElementById("tier-grid");
+    const tbody = document.getElementById("matrix-body");
+
+    for (const v of VARIANTS) {
+      const card = document.createElement("div");
+      card.className = "variant-card";
+      card.innerHTML = `
+        <div class="tier tier--${v.tier}">${v.tier}</div>
+        <img src="vent-theme-preview/sprites/adult/${v.id}.png" alt="${v.label}">
+        <div class="label">${v.label}</div>
+        <div class="sci">${v.sci}</div>
+        <div class="feat">${v.feat}</div>`;
+      grid.append(card);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td><code>${v.id}</code></td><td>${v.tier}</td><td>${v.label}</td><td><em>${v.sci}</em></td><td>${v.feat}</td>`;
+      tbody.append(tr);
+    }
+  </script>
+</body>
+</html>

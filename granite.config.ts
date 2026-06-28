@@ -3,7 +3,7 @@ import { defineConfig } from "@apps-in-toss/web-framework/config";
 export default defineConfig({
   appName: "deepsea-tamagotchi",
   brand: {
-    displayName: "심해 다마고치",
+    displayName: "어비스펫: 심해 가상 펫",
     primaryColor: "#58b8c8",
     icon: "",
   },
