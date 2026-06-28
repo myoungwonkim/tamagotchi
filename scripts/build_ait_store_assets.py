@@ -43,13 +43,18 @@ CAPTURES = [
     ("main", 636, 1048, "screenshot-portrait-01-main.png"),
     ("evolution", 636, 1048, "screenshot-portrait-02-evolution.png"),
     ("encyclopedia", 636, 1048, "screenshot-portrait-03-encyclopedia.png"),
-    ("thumbnail", 636, 1048, "capture-portrait-thumbnail.png"),
 ]
 
-# 가로형 썸네일 — wide layout CSS, direct 1932×828 capture (no letterbox crop)
-LANDSCAPE_CAPTURES = [
-    ("thumbnail", 1932, 828, "thumbnail-1932x828.png"),
-]
+THUMB_W, THUMB_H = 1932, 828
+THUMB_LEFT_RATIO = 0.60
+# 진화(좌 60%) cover·좌앵커 / 도감(우 40%) 모달 cover·채움
+THUMB_STITCH = dict(
+    left_w=int(THUMB_W * THUMB_LEFT_RATIO),
+    right_w=THUMB_W - int(THUMB_W * THUMB_LEFT_RATIO),
+    left_focal_y=0.54,
+    right_focal_y=0.52,
+    right_zoom=1.16,
+)
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -139,15 +144,24 @@ def make_logo_dark() -> Image.Image:
     return img
 
 
-def cover_resize(img: Image.Image, tw: int, th: int, *, focal_y: float = 0.5) -> Image.Image:
-    """Scale and crop to fill target (object-fit: cover) with a vertical focal point."""
+def cover_resize(
+    img: Image.Image,
+    tw: int,
+    th: int,
+    *,
+    focal_y: float = 0.5,
+    focal_x: float = 0.5,
+) -> Image.Image:
+    """Scale and crop to fill target (object-fit: cover) with focal point."""
     sw, sh = img.size
     scale = max(tw / sw, th / sh)
     nw, nh = int(sw * scale), int(sh * scale)
     scaled = img.resize((nw, nh), Image.LANCZOS)
-    left = (nw - tw) // 2
-    focal = max(0.0, min(1.0, focal_y))
-    fy = int(sh * focal * scale)
+    focal_x = max(0.0, min(1.0, focal_x))
+    focal_y = max(0.0, min(1.0, focal_y))
+    fx = int(sw * focal_x * scale)
+    fy = int(sh * focal_y * scale)
+    left = max(0, min(nw - tw, fx - tw // 2))
     top = max(0, min(nh - th, fy - th // 2))
     return scaled.crop((left, top, left + tw, top + th))
 
@@ -162,6 +176,170 @@ def polish_thumbnail(img: Image.Image) -> Image.Image:
 def crop_gameplay_strip(portrait: Image.Image, *, top_ratio: float, bottom_ratio: float) -> Image.Image:
     w, h = portrait.size
     return portrait.crop((0, int(h * top_ratio), w, int(h * bottom_ratio)))
+
+
+def cover_resize_anchor_left(
+    img: Image.Image,
+    tw: int,
+    th: int,
+    *,
+    focal_y: float = 0.5,
+) -> Image.Image:
+    """Cover crop — 좌측 가장자리는 항상 유지(아이콘·테두리 잘림 방지)."""
+    sw, sh = img.size
+    scale = max(tw / sw, th / sh)
+    nw, nh = int(sw * scale), int(sh * scale)
+    scaled = img.resize((nw, nh), Image.LANCZOS)
+    focal_y = max(0.0, min(1.0, focal_y))
+    fy = int(sh * focal_y * scale)
+    top = max(0, min(nh - th, fy - th // 2))
+    crop_w = min(nw, tw)
+    panel = scaled.crop((0, top, crop_w, top + th))
+    if panel.width < tw:
+        out = Image.new("RGB", (tw, th), BG)
+        out.paste(panel, (0, 0))
+        return out
+    return panel
+
+
+def cover_resize_zoom(
+    img: Image.Image,
+    tw: int,
+    th: int,
+    *,
+    focal_y: float = 0.5,
+    focal_x: float = 0.5,
+    zoom: float = 1.0,
+) -> Image.Image:
+    """Cover crop with extra zoom."""
+    sw, sh = img.size
+    scale = max(tw / sw, th / sh) * zoom
+    nw, nh = int(sw * scale), int(sh * scale)
+    scaled = img.resize((nw, nh), Image.LANCZOS)
+    focal_x = max(0.0, min(1.0, focal_x))
+    focal_y = max(0.0, min(1.0, focal_y))
+    fx = int(sw * focal_x * scale)
+    fy = int(sh * focal_y * scale)
+    left = max(0, min(nw - tw, fx - tw // 2))
+    top = max(0, min(nh - th, fy - th // 2))
+    return scaled.crop((left, top, left + tw, top + th))
+
+
+def contain_resize(
+    img: Image.Image,
+    tw: int,
+    th: int,
+    *,
+    align: str = "center",
+    zoom: float = 1.0,
+) -> Image.Image:
+    """Scale to fit inside target — crop 없이 전체가 보이도록."""
+    sw, sh = img.size
+    scale = min(tw / sw, th / sh) * zoom
+    nw, nh = int(sw * scale), int(sh * scale)
+    scaled = img.resize((nw, nh), Image.LANCZOS)
+    out = Image.new("RGB", (tw, th), BG)
+    if align == "left":
+        x = 0
+    elif align == "right":
+        x = tw - nw
+    else:
+        x = (tw - nw) // 2
+    y = (th - nh) // 2
+    out.paste(scaled, (x, y))
+    return out
+
+
+def polish_thumbnail_light(img: Image.Image) -> Image.Image:
+    img = ImageEnhance.Brightness(img).enhance(1.04)
+    img = ImageEnhance.Contrast(img).enhance(1.05)
+    return img
+
+
+def prepare_evolution_for_thumb(img: Image.Image) -> Image.Image:
+    """헤더~펫 구간 — 가로 전체 유지(좌측 잘림 방지)."""
+    w, h = img.size
+    return img.crop((0, int(h * 0.02), w, int(h * 0.56)))
+
+
+def prepare_encyclopedia_for_thumb(img: Image.Image) -> Image.Image:
+    """탐사 일지 모달 카드만 — 배경·스탯 UI 제외."""
+    w, h = img.size
+
+    def is_card_pixel(r: int, g: int, b: int) -> bool:
+        return 35 <= r <= 50 and 50 <= g <= 70 and 65 <= b <= 85
+
+    minx, miny, maxx, maxy = w, h, 0, 0
+    for y in range(int(h * 0.06), int(h * 0.88)):
+        for x in range(w):
+            r, g, b = img.getpixel((x, y))
+            if is_card_pixel(r, g, b):
+                minx = min(minx, x)
+                miny = min(miny, y)
+                maxx = max(maxx, x)
+                maxy = max(maxy, y)
+
+    if maxx <= minx or maxy <= miny:
+        return img.crop((int(w * 0.14), int(h * 0.04), int(w * 0.86), int(h * 0.88)))
+
+    title_pad = max(16, int(h * 0.034))
+    side_pad = max(8, int(w * 0.02))
+    card_h = maxy - miny
+    bottom = min(h, maxy - int(card_h * 0.27))
+    # 닫기 버튼(청록색) 행 위에서 자르기
+    for y in range(maxy, miny + int(card_h * 0.35), -1):
+        teal = sum(
+            1
+            for x in range(minx + 20, maxx - 20, 6)
+            if img.getpixel((x, y))[1] > 165 and img.getpixel((x, y))[2] > 155
+        )
+        if teal > 6:
+            bottom = min(bottom, y - 24)
+            break
+    return img.crop((
+        max(0, minx - side_pad),
+        max(0, miny - title_pad),
+        min(w, maxx + side_pad),
+        bottom,
+    ))
+
+
+def stitch_screenshots(
+    left: Image.Image,
+    right: Image.Image,
+    *,
+    left_w: int,
+    right_w: int,
+    left_focal_y: float,
+    right_focal_y: float,
+    right_zoom: float = 1.0,
+) -> Image.Image:
+    panel_l = cover_resize_anchor_left(
+        left, left_w, THUMB_H, focal_y=left_focal_y
+    )
+    panel_r = cover_resize_zoom(
+        right,
+        right_w,
+        THUMB_H,
+        focal_y=right_focal_y,
+        focal_x=0.50,
+        zoom=right_zoom,
+    )
+    out = Image.new("RGB", (THUMB_W, THUMB_H), BG)
+    out.paste(panel_l, (0, 0))
+    out.paste(panel_r, (left_w, 0))
+    return polish_thumbnail_light(out)
+
+
+def make_thumbnail_horizontal_stitch() -> Image.Image:
+    """진화 화면 + 탐사 일지 화면을 실제 캡처에서 이어붙임."""
+    evo = prepare_evolution_for_thumb(
+        Image.open(OUT / "screenshot-portrait-02-evolution.png").convert("RGB")
+    )
+    enc = prepare_encyclopedia_for_thumb(
+        Image.open(OUT / "screenshot-portrait-03-encyclopedia.png").convert("RGB")
+    )
+    return stitch_screenshots(evo, enc, **THUMB_STITCH)
 
 
 def make_thumbnail_horizontal_from_portrait(portrait: Image.Image) -> Image.Image:
@@ -224,30 +402,27 @@ def make_thumbnail_square() -> Image.Image:
 
 
 def build_marketing_thumbnails() -> None:
-    thumb_path = OUT / "thumbnail-1932x828.png"
-    if not thumb_path.exists():
-        portrait_path = OUT / "capture-portrait-thumbnail.png"
-        if portrait_path.exists():
-            portrait = Image.open(portrait_path).convert("RGB")
-            make_thumbnail_horizontal_from_portrait(portrait).save(thumb_path, "PNG")
-        print("build thumbnail-1932x828.png 1932x828 (crop fallback)")
+    evo_path = OUT / "screenshot-portrait-02-evolution.png"
+    enc_path = OUT / "screenshot-portrait-03-encyclopedia.png"
+    if evo_path.exists() and enc_path.exists():
+        thumb = make_thumbnail_horizontal_stitch()
+        print("build thumbnail-1932x828.png 1932x828 (evolution + encyclopedia stitch)")
+    elif evo_path.exists():
+        thumb = make_thumbnail_horizontal_from_portrait(Image.open(evo_path).convert("RGB"))
+        print("build thumbnail-1932x828.png 1932x828 (evolution crop fallback)")
     else:
-        polish_thumbnail(Image.open(thumb_path).convert("RGB")).save(thumb_path, "PNG")
-        print("build thumbnail-1932x828.png 1932x828 (direct capture)")
+        thumb = polish_thumbnail(radial_bg((THUMB_W, THUMB_H), PET_VIEWPORT_INNER, PET_VIEWPORT_OUTER))
+        print("build thumbnail-1932x828.png 1932x828 (placeholder)")
 
-    portrait_path = OUT / "capture-portrait-thumbnail.png"
-    if portrait_path.exists():
-        square = make_thumbnail_square_from_portrait(Image.open(portrait_path).convert("RGB"))
+    thumb.save(OUT / "thumbnail-1932x828.png", "PNG")
+
+    if evo_path.exists():
+        square = make_thumbnail_square_from_portrait(Image.open(evo_path).convert("RGB"))
     else:
         square = make_thumbnail_square()
 
     square.save(OUT / "thumbnail-1000x1000.png", "PNG")
-    print("build thumbnail-1000x1000.png 1000x1000 (gameplay capture)")
-
-    drafts = ROOT / "assets" / "ait-store" / "drafts-simple"
-    drafts.mkdir(parents=True, exist_ok=True)
-    Image.open(thumb_path).save(drafts / "draft-01-compliant.png", "PNG")
-    print("build drafts-simple/draft-01-compliant.png")
+    print("build thumbnail-1000x1000.png 1000x1000 (evolution capture)")
 
 
 def build_landscape_screenshot() -> None:
@@ -314,8 +489,6 @@ def capture_with_playwright() -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch()
         for scene, width, height, filename in CAPTURES:
-            run_capture(browser, scene, width, height, filename)
-        for scene, width, height, filename in LANDSCAPE_CAPTURES:
             run_capture(browser, scene, width, height, filename)
         browser.close()
 

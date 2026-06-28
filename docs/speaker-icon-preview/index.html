@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>스피커 아이콘 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #101820; color: #c8d4dc;
+      padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 420px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #eef4f8; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+    .toc {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
+    }
+    .toc a {
+      font-size: 0.6875rem; padding: 5px 10px; border-radius: 999px;
+      border: 1px solid #3a5060; color: #98b0c0; text-decoration: none;
+      background: #1a2838;
+    }
+    .toc a:hover { border-color: #58b8c8; color: #d8e4ec; }
+    .variant {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 12px;
+      padding: 14px; margin-bottom: 16px;
+    }
+    .variant__head h2 {
+      font-size: 0.875rem; color: #eef4f8; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .variant__head p { font-size: 0.6875rem; color: #7a8898; margin-bottom: 12px; }
+    .tag {
+      font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 2px 7px; border-radius: 4px;
+      background: rgba(88,184,200,.18); color: #58b8c8; border: 1px solid rgba(88,184,200,.35);
+    }
+    .tag:empty { display: none; }
+    .pair {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;
+    }
+    figure {
+      text-align: center; background: #243040; border-radius: 8px; padding: 10px 6px;
+      border: 1px solid #2a3848;
+    }
+    figure img { image-rendering: pixelated; }
+    figcaption { font-size: 0.625rem; color: #88a0b0; margin-top: 6px; }
+    .phones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .phone {
+      background: #142030; border: 1px solid #2a3848; border-radius: 12px; overflow: hidden;
+    }
+    .phone__inner { padding: 8px 6px 10px; }
+    .header-mock {
+      position: relative; text-align: center; padding: 2px 40px 8px; min-height: 48px;
+    }
+    .icon-btn {
+      position: absolute; top: 0; width: 40px; height: 40px;
+      border: 1px solid rgba(88, 184, 200, 0.4); border-radius: 10px;
+      background: #304858; display: flex; align-items: center; justify-content: center;
+    }
+    .icon-btn--left { left: 0; }
+    .icon-btn--right { right: 0; }
+    .icon-btn img { width: 28px; height: 28px; image-rendering: pixelated; }
+    .pet-name { font-size: 0.9375rem; font-weight: 700; color: #d8e4ec; }
+    .pet-meta { font-size: 0.625rem; color: #7a8a98; margin-top: 1px; }
+    .label-row { font-size: 0.5625rem; color: #6a7888; margin-bottom: 4px; text-align: center; }
+    .stamp {
+      display: inline-block; margin-top: 8px; padding: 4px 10px;
+      background: #3a5060; color: #98b0c0; font-size: 0.5625rem; font-weight: 700;
+      border-radius: 4px;
+    }
+    footer { text-align: center; font-size: 0.6875rem; color: #6a7888; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>스피커 아이콘 시안</h1>
+    <p class="lead">32×32 픽셀 · 헤더 28px 표시 · <strong>스테이징 전용</strong></p>
+    <div class="notice">
+      <strong>문제</strong> — 현재 아이콘은 원형 함체+소나 파동이라 스피커로 잘 안 읽힘.<br>
+      <strong>목표</strong> — ON/OFF 상태가 직관적으로 구분되는 디자인 후보 비교.
+    </div>
+    <nav class="toc">
+      <a href="#current">A · 현재</a><a href="#classic">B · 클래식</a><a href="#bars">C · 볼륨 막대</a><a href="#bold">D · 굵은 실루엣</a><a href="#horn">E · 메가폰</a><a href="#bell">F · 벨</a>
+    </nav>
+    
+    <section class="variant" id="current">
+      <div class="variant__head">
+        <h2>A · 현재<span class="tag">현재</span></h2>
+        <p>함체 인터컴 + 소나 파동 — 테마는 맞지만 스피커로 안 읽힘</p>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="variants/current/on.png" width="96" height="96" alt="">
+          <figcaption>소리 켜짐</figcaption>
+        </figure>
+        <figure>
+          <img src="variants/current/off.png" width="96" height="96" alt="">
+          <figcaption>소리 꺼짐 (음소거)</figcaption>
+        </figure>
+      </div>
+      <div class="phones">
+        <div>
+          <div class="label-row"><span>소리 ON</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/current/on.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+        <div>
+          <div class="label-row"><span>소리 OFF</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/current/off.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="variant" id="classic">
+      <div class="variant__head">
+        <h2>B · 클래식<span class="tag">추천</span></h2>
+        <p>▶︎ 스피커 몸체 + 소리 파동 — 앱·OS에서 가장 흔한 패턴</p>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="variants/classic/on.png" width="96" height="96" alt="">
+          <figcaption>소리 켜짐</figcaption>
+        </figure>
+        <figure>
+          <img src="variants/classic/off.png" width="96" height="96" alt="">
+          <figcaption>소리 꺼짐 (음소거)</figcaption>
+        </figure>
+      </div>
+      <div class="phones">
+        <div>
+          <div class="label-row"><span>소리 ON</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/classic/on.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+        <div>
+          <div class="label-row"><span>소리 OFF</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/classic/off.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="variant" id="bars">
+      <div class="variant__head">
+        <h2>C · 볼륨 막대<span class="tag">추천</span></h2>
+        <p>스피커 + 세로 막대 — 소리 크기·켜짐이 한눈에 구분</p>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="variants/bars/on.png" width="96" height="96" alt="">
+          <figcaption>소리 켜짐</figcaption>
+        </figure>
+        <figure>
+          <img src="variants/bars/off.png" width="96" height="96" alt="">
+          <figcaption>소리 꺼짐 (음소거)</figcaption>
+        </figure>
+      </div>
+      <div class="phones">
+        <div>
+          <div class="label-row"><span>소리 ON</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/bars/on.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+        <div>
+          <div class="label-row"><span>소리 OFF</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/bars/off.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="variant" id="bold">
+      <div class="variant__head">
+        <h2>D · 굵은 실루엣</h2>
+        <p>큰 스피커 + 굵은 파동 — 28px 헤더에서 가독성 최우선</p>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="variants/bold/on.png" width="96" height="96" alt="">
+          <figcaption>소리 켜짐</figcaption>
+        </figure>
+        <figure>
+          <img src="variants/bold/off.png" width="96" height="96" alt="">
+          <figcaption>소리 꺼짐 (음소거)</figcaption>
+        </figure>
+      </div>
+      <div class="phones">
+        <div>
+          <div class="label-row"><span>소리 ON</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/bold/on.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+        <div>
+          <div class="label-row"><span>소리 OFF</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/bold/off.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="variant" id="horn">
+      <div class="variant__head">
+        <h2>E · 메가폰</h2>
+        <p>확성기 형태 — 소리가 나가는 방향이 직관적</p>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="variants/horn/on.png" width="96" height="96" alt="">
+          <figcaption>소리 켜짐</figcaption>
+        </figure>
+        <figure>
+          <img src="variants/horn/off.png" width="96" height="96" alt="">
+          <figcaption>소리 꺼짐 (음소거)</figcaption>
+        </figure>
+      </div>
+      <div class="phones">
+        <div>
+          <div class="label-row"><span>소리 ON</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/horn/on.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+        <div>
+          <div class="label-row"><span>소리 OFF</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/horn/off.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="variant" id="bell">
+      <div class="variant__head">
+        <h2>F · 벨</h2>
+        <p>알림 벨 + 파동 — 효과음·알림음 연상 (게임 SFX에도 어울림)</p>
+      </div>
+      <div class="pair">
+        <figure>
+          <img src="variants/bell/on.png" width="96" height="96" alt="">
+          <figcaption>소리 켜짐</figcaption>
+        </figure>
+        <figure>
+          <img src="variants/bell/off.png" width="96" height="96" alt="">
+          <figcaption>소리 꺼짐 (음소거)</figcaption>
+        </figure>
+      </div>
+      <div class="phones">
+        <div>
+          <div class="label-row"><span>소리 ON</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/bell/on.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+        <div>
+          <div class="label-row"><span>소리 OFF</span></div>
+          <div class="phone"><div class="phone__inner"><div class="header-mock">
+            <button type="button" class="icon-btn icon-btn--left" disabled><img src="../header-icons-preview/encyclopedia.png" alt=""></button>
+            <button type="button" class="icon-btn icon-btn--right" disabled><img src="variants/bell/off.png" alt=""></button>
+            <p class="pet-name">치치</p><p class="pet-meta">3일째 · 성체</p>
+          </div></div></div>
+        </div>
+      </div>
+    </section>
+    <footer>
+      재생성: <code>python3 scripts/generate_speaker_icon_drafts.py</code><br>
+      <span class="stamp">STAGING ONLY</span>
+    </footer>
+  </div>
+</body>
+</html>

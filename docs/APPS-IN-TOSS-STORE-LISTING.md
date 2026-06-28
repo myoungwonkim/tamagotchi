@@ -59,9 +59,8 @@
 |------|------|------|
 | `app-logo-light.png` | 600×600 | 앱 로고 (라이트) — 캐릭터 풀블리드, 텍스트 없음 |
 | `app-logo-dark.png` | 600×600 | 앱 로고 (다크) |
-| `thumbnail-1932x828.png` | 1932×828 | 가로형 썸네일 — **실제 플레이 UI 캡처** (3펫·말풍선·스탯·버튼) |
-| `thumbnail-1000x1000.png` | 1000×1000 | 정방형 썸네일 — 플레이 UI 캡처 크롭 |
-| `capture-portrait-thumbnail.png` | 636×1048 | 썸네일용 캡처 원본 (`?capture=thumbnail`) |
+| `thumbnail-1932x828.png` | 1932×828 | 가로형 썸네일 — 진화+탐사 일지 이어붙임 (48:52, 펫 중앙 보정) |
+| `thumbnail-1000x1000.png` | 1000×1000 | 정방형 썸네일 — 진화 화면 캡처 크롭 |
 | `screenshot-portrait-01-main.png` | 636×1048 | 스크린샷 — 메인 돌보기 (실제 게임 캡처) |
 | `screenshot-portrait-02-evolution.png` | 636×1048 | 스크린샷 — 성체 진화 (실제 게임 캡처) |
 | `screenshot-portrait-03-encyclopedia.png` | 636×1048 | 스크린샷 — 탐사 일지 (실제 게임 캡처) |

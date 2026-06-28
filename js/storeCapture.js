@@ -4,30 +4,40 @@ import { ADULT_VARIANTS } from "./adultVariants.js";
 import { clearEncyclopedia } from "./encyclopedia.js";
 import { clearPet } from "./storage.js";
 import { clearDeathSnapshot } from "./deathSnapshot.js";
+import { getVariantLabelForTheme } from "./speciesThemes.js";
 import { renderPet, showMessage, showEncyclopedia, setGameActive } from "./ui.js";
 
 const ENCYCLOPEDIA_KEY = "tamagotchi-encyclopedia";
 const SETTINGS_KEY = "tamagotchi-settings";
 const PET_KEY = "tamagotchi-pet";
 
+const CAPTURE_ENCYCLOPEDIA_NAMES = {
+  golden: "루미",
+  fluffy: "달이",
+  sparkle: "별이",
+  standard: "산호",
+  farm: "해초",
+  plain: "진흙",
+  scruffy: "아귀",
+  grumpy: "뾰족",
+  sickly: "균이",
+};
+
 function seedEncyclopedia() {
   clearEncyclopedia();
   const now = Date.now();
-  const collected = ["golden", "sparkle", "standard", "plain", "scruffy"];
-  const entries = collected.map((variantId, index) => {
-    const variant = ADULT_VARIANTS.find((v) => v.id === variantId);
-    return {
-      id: `capture-${variantId}`,
-      petName: ["루미", "별이", "산호", "진흙", "아귀"][index],
-      petBornAt: now - (index + 1) * MS_PER_DAY,
-      variantId,
-      tier: variant.tier,
-      emoji: variant.emoji,
-      speciesTheme: "deepsea",
-      label: variant.label,
-      achievedAt: now - index * MS_PER_DAY,
-    };
-  });
+  const entries = ADULT_VARIANTS.map((variant, index) => ({
+    id: `capture-${variant.id}`,
+    petName: CAPTURE_ENCYCLOPEDIA_NAMES[variant.id] ?? `친구${index + 1}`,
+    petBornAt: now - (index + 1) * MS_PER_DAY,
+    variantId: variant.id,
+    tier: variant.tier,
+    emoji: variant.emoji,
+    spriteId: variant.spriteId,
+    speciesTheme: "deepsea",
+    label: getVariantLabelForTheme(variant.id, "deepsea"),
+    achievedAt: now - index * MS_PER_DAY,
+  }));
   localStorage.setItem(ENCYCLOPEDIA_KEY, JSON.stringify({ entries }));
 }
 
@@ -122,6 +132,7 @@ export function setupStoreCapture(scene) {
     seedEncyclopedia();
     setGameActive(true);
     renderPet(pet);
+    document.getElementById("btn-new-pet-side")?.setAttribute("hidden", "");
     showEncyclopedia();
     return pet;
   }
