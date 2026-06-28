@@ -43,6 +43,7 @@ CAPTURES = [
     ("main", 636, 1048, "screenshot-portrait-01-main.png"),
     ("evolution", 636, 1048, "screenshot-portrait-02-evolution.png"),
     ("encyclopedia", 636, 1048, "screenshot-portrait-03-encyclopedia.png"),
+    ("gameover", 636, 1048, "screenshot-portrait-04-gameover.png"),
 ]
 
 THUMB_W, THUMB_H = 1932, 828
@@ -478,6 +479,8 @@ def capture_with_playwright() -> None:
         page.wait_for_timeout(800)
         if scene == "encyclopedia":
             page.wait_for_selector("#encyclopedia-overlay:not([hidden])", timeout=10000)
+        if scene == "gameover":
+            page.wait_for_selector("#game-over-overlay:not([hidden])", timeout=10000)
         path = OUT / filename
         page.screenshot(path=str(path), type="png", full_page=False)
         context.close()

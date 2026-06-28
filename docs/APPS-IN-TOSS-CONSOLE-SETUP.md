@@ -8,7 +8,7 @@
 
 | 콘솔 필드 | granite.config.ts | 예시 |
 |-----------|-------------------|------|
-| appName (수정 불가) | `appName` | `deepsea-tamagotchi` |
+| appName (수정 불가) | `appName` | `abysspet` |
 | 앱 이름 | `brand.displayName` | `어비스펫: 심해 가상 펫` |
 | 부제 | 콘솔 앱 정보 | `심해 가상펫 육성 및 수집 게임` |
 | 영어 앱 이름 | 콘솔 앱 정보 | `Abyss Pet` |
@@ -16,7 +16,8 @@
 | 앱 아이콘 URL | `brand.icon` | 콘솔 업로드 이미지 우클릭 → 링크 복사 |
 | primaryColor | `brand.primaryColor` | `#58b8c8` |
 
-스토어 문구·이미지: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md) · 에셋 폴더 [assets/ait-store/](../assets/ait-store/)
+스토어 문구·이미지: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md) · 에셋 폴더 [assets/ait-store/](../assets/ait-store/)  
+**한 장 실행서:** [ABYSSPET-LAUNCH-RUNBOOK.md](./ABYSSPET-LAUNCH-RUNBOOK.md)
 
 ## 2. 사업자·정산
 
@@ -31,8 +32,8 @@
 
 | 광고 그룹 이름 | 유형 | 콘솔 리워드 설정 | 코드 상수 |
 |----------------|------|------------------|-----------|
-| `gameover_interstitial` | 전면형 | — | `AD_GROUP_INTERSTITIAL` |
-| `reward_revive` | 보상형 | 부활 1회 / 수량 1 | `AD_GROUP_REWARDED` |
+| `abysspet_gameover_interstitial` | 전면형 | — | `AD_GROUP_INTERSTITIAL` |
+| `abysspet_reward_revive` | 보상형 | 부활 1회 / 수량 1 | `AD_GROUP_REWARDED` |
 
 3. 발급된 **광고 그룹 ID**를 `.env.ait`에 입력 (아래 참고)
 4. ID 반영 후 **최대 2시간** 대기 (AdMob 연동)
@@ -50,7 +51,7 @@ VITE_AD_REWARDED_ID=ait-ad-test-rewarded-id
 
 ```bash
 npm install
-npm run build          # dist/ + .ait 번들
+npm run build:ait      # dist/ + .ait 번들
 ```
 
 콘솔 → **출시하기** → `.ait` 업로드 → QR 실기기 테스트 → 검수 요청
@@ -58,7 +59,7 @@ npm run build          # dist/ + .ait 번들
 ## 5. 검수 제출 서류
 
 - [ ] 등급분류증명서 (GRAC)
-- [ ] 개인정보 처리방침 URL (localStorage만 사용 명시)
+- [ ] 개인정보 처리방침 URL: `https://myoungwonkim.github.io/tamagotchi/docs/privacy.html`
 - [ ] 게임 설명·광고 노출 정책 → [MONETIZATION.md](./MONETIZATION.md) 링크
 
 ## 6. 출시 후

@@ -3,8 +3,8 @@
 ## 빌드·환경
 
 - [ ] `npm install` 성공
-- [ ] `npm run build` → `dist/` 생성, `.ait` 번들 생성
-- [ ] `granite.config.ts` appName / displayName / icon = 콘솔과 일치
+- [ ] `npm run build:ait` → `dist/` 생성, `.ait` 번들 생성
+- [ ] `granite.config.ts` appName = `abysspet`, displayName / icon = 콘솔과 일치
 - [ ] 첫 화면 **10초 이내** (저사양 기기)
 - [ ] GitHub Pages 정적 빌드 회귀 (`python3 -m http.server` + `index.html`)
 
@@ -39,7 +39,7 @@
 ## 운영 ID 전환
 
 - [ ] `.env.ait`에 콘솔 광고 그룹 ID 입력
-- [ ] `npm run build` 재빌드
+- [ ] `npm run build:ait` 재빌드
 - [ ] 토스앱 QR 최종 테스트
 - [ ] **4단계 검수** 제출 (운영·기능·디자인·보안)
 - [ ] GRAC 등급분류증명서 첨부

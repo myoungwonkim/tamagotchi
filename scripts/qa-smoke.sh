@@ -58,6 +58,10 @@ grep -q 'injectJsImportMap' index.html && ok 'js importmap cache bust' || bad 'j
 grep -q 'btn-revive-ad' index.html && ok 'revive ad button' || bad 'revive ad button'
 grep -q 'reward-prompts' index.html && ok 'reward prompt bar' || bad 'reward prompt bar'
 test -f granite.config.ts && ok 'granite.config.ts' || bad 'granite.config.ts'
+rg -q 'appName: "abysspet"' granite.config.ts && ok 'granite appName abysspet' || bad 'granite appName not abysspet'
+test -f docs/privacy.html && ok 'privacy.html' || bad 'privacy.html'
+test -f docs/ABYSSPET-LAUNCH-RUNBOOK.md && ok 'ABYSSPET-LAUNCH-RUNBOOK.md' || bad 'ABYSSPET-LAUNCH-RUNBOOK.md'
+test -f docs/GRAC-SUBMISSION-PACK.md && ok 'GRAC-SUBMISSION-PACK.md' || bad 'GRAC-SUBMISSION-PACK.md'
 test -f package.json && ok 'package.json (ait)' || bad 'package.json'
 test -f docs/MONETIZATION.md && ok 'MONETIZATION.md' || bad 'MONETIZATION.md'
 
@@ -70,7 +74,7 @@ rg -q 'getVariantDescription' js/encyclopedia.js && ok 'encyclopedia description
 rg -q 'SLEEP_TOGGLE_GUARD_MS' js/actions.js && ok 'sleep toggle guard' || bad 'sleep toggle guard'
 rg -q 'lastActionAtByKey' js/actions.js && ok 'per-action cooldown' || bad 'per-action cooldown'
 rg -q 'pet-mood-fallback' js/ui.js && ok 'mood fallback selector' || bad 'mood fallback selector'
-rg -q 'syncMessLayer' js/mess.js js/ui.js && ok 'mess layer sync' || bad 'mess layer sync'
+rg -q 'scene === "gameover"' js/storeCapture.js && ok 'store capture gameover' || bad 'store capture gameover'
 
 DEFAULT_PNG=$(python3 - <<'PY'
 import re

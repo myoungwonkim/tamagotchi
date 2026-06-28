@@ -3,7 +3,7 @@ import { EVOLUTION_ADULT_MIN_AGE_MS } from "./evolution.js";
 import { ADULT_VARIANTS } from "./adultVariants.js";
 import { clearEncyclopedia } from "./encyclopedia.js";
 import { clearPet } from "./storage.js";
-import { clearDeathSnapshot } from "./deathSnapshot.js";
+import { clearDeathSnapshot, captureDeathSnapshot } from "./deathSnapshot.js";
 import { getVariantLabelForTheme } from "./speciesThemes.js";
 import { renderPet, showMessage, showEncyclopedia, setGameActive } from "./ui.js";
 
@@ -134,6 +134,21 @@ export function setupStoreCapture(scene) {
     renderPet(pet);
     document.getElementById("btn-new-pet-side")?.setAttribute("hidden", "");
     showEncyclopedia();
+    return pet;
+  }
+
+  if (scene === "gameover") {
+    pet = adultPet("치치");
+    pet.isAlive = false;
+    pet.bornAt = Date.now() - 5 * MS_PER_DAY;
+    captureDeathSnapshot(pet);
+    setGameActive(false);
+    renderPet(pet);
+    const reviveBtn = document.getElementById("btn-revive-ad");
+    if (reviveBtn) {
+      reviveBtn.hidden = false;
+      reviveBtn.disabled = false;
+    }
     return pet;
   }
 

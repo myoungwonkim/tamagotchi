@@ -217,25 +217,29 @@ http://localhost:8080/?dev=1
 
 ## 앱인토스 (Apps in Toss) 출시
 
-토스 미니앱 WebView 포팅 + 인앱 광고(전면형·보상형) 연동.
+토스 미니앱 WebView 포팅 + 인앱 광고(전면형·보상형) 연동.  
+앱 식별자: **`abysspet`** (`intoss://abysspet`)
 
 ```bash
 npm install
 cp .env.ait.example .env.ait   # 콘솔 광고 그룹 ID 입력
 npm run dev                    # 샌드박스 + vite (포트 5173)
-npm run build                  # dist/ → .ait 번들 업로드용
+npm run build:ait              # dist/ + .ait 번들 (콘솔 업로드용)
 ```
 
 | 문서 | 내용 |
 |------|------|
+| [docs/ABYSSPET-LAUNCH-RUNBOOK.md](docs/ABYSSPET-LAUNCH-RUNBOOK.md) | **출시 실행서** (사용자 체크리스트) |
 | [docs/APPS-IN-TOSS-STORE-LISTING.md](docs/APPS-IN-TOSS-STORE-LISTING.md) | 스토어 등록 문구 (확정) |
 | [docs/APPS-IN-TOSS-CONSOLE-SETUP.md](docs/APPS-IN-TOSS-CONSOLE-SETUP.md) | 콘솔·정산·광고 그룹 |
 | [docs/GRAC-RATING-CHECKLIST.md](docs/GRAC-RATING-CHECKLIST.md) | 게임물 등급 심의 |
+| [docs/GRAC-SUBMISSION-PACK.md](docs/GRAC-SUBMISSION-PACK.md) | GRAC 제출용 게임 설명서 |
+| [docs/privacy.html](docs/privacy.html) | 개인정보 처리방침 (검수 URL) |
 | [docs/MONETIZATION.md](docs/MONETIZATION.md) | 광고 지점·보상 정책 |
 | [docs/APPS-IN-TOSS-LAUNCH.md](docs/APPS-IN-TOSS-LAUNCH.md) | 출시·QA 체크리스트 |
 | [docs/AD-TUNING.md](docs/AD-TUNING.md) | 출시 후 eCPM·빈도 튜닝 |
 
-`granite.config.ts`의 `appName`·`displayName`·`icon`은 콘솔과 **동일**해야 합니다.
+`granite.config.ts`의 `appName`(`abysspet`)·`displayName`·`icon`은 콘솔과 **동일**해야 합니다.
 
 ## 모바일 테스트
 

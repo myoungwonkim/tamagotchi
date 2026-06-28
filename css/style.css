@@ -1330,7 +1330,7 @@ img.pet-sprite[hidden] {
   background: var(--overlay-secondary-active);
 }
 
-/* Store asset capture (?capture=main|evolution|encyclopedia) */
+/* Store asset capture (?capture=main|evolution|encyclopedia|gameover) */
 body.capture-mode {
   background: var(--bg);
   min-height: 100dvh;

@@ -4,7 +4,7 @@
 
 | 항목 | 값 |
 |------|-----|
-| appName (수정 불가) | `deepsea-tamagotchi` |
+| appName (수정 불가) | `abysspet` |
 | 한국어 앱 이름 | **어비스펫: 심해 가상 펫** |
 | 영어 앱 이름 | **Abyss Pet** |
 | 부제 | **심해 가상펫 육성 및 수집 게임** |
@@ -64,6 +64,7 @@
 | `screenshot-portrait-01-main.png` | 636×1048 | 스크린샷 — 메인 돌보기 (실제 게임 캡처) |
 | `screenshot-portrait-02-evolution.png` | 636×1048 | 스크린샷 — 성체 진화 (실제 게임 캡처) |
 | `screenshot-portrait-03-encyclopedia.png` | 636×1048 | 스크린샷 — 탐사 일지 (실제 게임 캡처) |
+| `screenshot-portrait-04-gameover.png` | 636×1048 | 스크린샷 — 게임 오버·부활 (실제 게임 캡처) |
 | `screenshot-landscape-01.png` | 1504×741 | 스크린샷 — 가로형 (키아트 크롭) |
 
 재생성 (Playwright + Chromium 필요, 최초 1회 `python3 -m playwright install chromium`):
@@ -90,7 +91,7 @@ python3 scripts/build_ait_store_assets.py
 
 ## 체크리스트
 
-- [ ] 콘솔 `앱 이름` = **어비스펫: 심해 가상 펫**
+- [ ] 콘솔 `appName` = **`abysspet`**
 - [ ] 콘솔 `부제` = **심해 가상펫 육성 및 수집 게임**
 - [ ] `granite.config.ts` `displayName`과 콘솔 일치
 - [ ] 고객문의 이메일 = **nolsoop.games@gmail.com**
