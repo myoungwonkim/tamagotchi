@@ -209,15 +209,8 @@ body {
   display: none;
 }
 
-.pet-area--message {
-  padding-top: 52px;
-}
-
 .pet-area {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   background: var(--pet-viewport-bg);
   border: 2px solid #4a6878;
@@ -309,7 +302,10 @@ body {
 }
 
 .pet-display {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -344,8 +340,8 @@ body {
 }
 
 .pet-display[data-stage="adult"] {
-  --sprite-evolution-size: clamp(11rem, 58vw, 16rem);
-  --sprite-mood-size: clamp(3rem, 13vw, 3.85rem);
+  --sprite-evolution-size: clamp(8.5rem, 44vw, 11.25rem);
+  --sprite-mood-size: clamp(2.7rem, 11.5vw, 3.35rem);
 }
 
 .pet-display[data-stage="dead"] {

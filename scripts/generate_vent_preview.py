@@ -50,13 +50,6 @@ PARASITE = (130, 90, 140, 255)
 SICK = (180, 210, 120, 255)
 
 
-def vent_chimney(g, cx=16, base=27):
-    fill_ellipse(g, cx, base, 5, 2, ROCK2, K)
-    for x in range(cx - 3, cx + 4):
-        px(g, x, base - 1, LAVA2)
-        px(g, x, base - 2, LAVA)
-
-
 def shrimp_body_curve(head_x, body_y, length=11, hump=3):
     """측면 새우 — 등(hump)이 위로 굽은 곡선 좌표."""
     pts = []
@@ -270,28 +263,24 @@ def draw_teen_shrimp(g):
 def sprite_egg():
     g = blank()
     draw_vent_egg(g)
-    vent_chimney(g, base=28)
     return g
 
 
 def sprite_baby():
     g = blank()
     draw_nauplius(g)
-    vent_chimney(g)
     return g
 
 
 def sprite_child():
     g = blank()
     draw_mysis(g)
-    vent_chimney(g)
     return g
 
 
 def sprite_teen():
     g = blank()
     draw_teen_shrimp(g)
-    vent_chimney(g)
     return g
 
 
@@ -309,7 +298,6 @@ def sprite_golden():
     """pretty — 열수 해마."""
     g = blank()
     draw_seahorse(g)
-    vent_chimney(g)
     return g
 
 
@@ -317,7 +305,6 @@ def sprite_fluffy():
     """pretty — Rimicaris 측면 새우."""
     g = blank()
     draw_shrimp_side(g, eyespot=True, bacteria=True, hump=3)
-    vent_chimney(g)
     return g
 
 
@@ -325,7 +312,6 @@ def sprite_sparkle():
     """pretty — Kiwa 예티 게."""
     g = blank()
     draw_crab(g, 16, 17, hairy=True, claw_r=3)
-    vent_chimney(g)
     return g
 
 
@@ -333,7 +319,6 @@ def sprite_standard():
     """normal — 담수어 v1."""
     g = blank()
     draw_fish_v1(g)
-    vent_chimney(g)
     return g
 
 
@@ -341,7 +326,6 @@ def sprite_farm():
     """normal — 벤트 게."""
     g = blank()
     draw_crab(g, 16, 17, bacteria=True, claw_r=3)
-    vent_chimney(g)
     return g
 
 
@@ -349,7 +333,6 @@ def sprite_plain():
     """normal — 작은 측면 새우."""
     g = blank()
     draw_shrimp_side(g, head_x=19, body_y=19, length=8, hump=2, small=True)
-    vent_chimney(g)
     return g
 
 
@@ -357,7 +340,6 @@ def sprite_scruffy():
     """defective — 녹슨/낡은 새우."""
     g = blank()
     draw_shrimp_side(g, head_x=22, body_y=18, length=10, hump=2, rust=True)
-    vent_chimney(g)
     return g
 
 
@@ -365,7 +347,6 @@ def sprite_grumpy():
     """defective — 긴 분홍 장어."""
     g = blank()
     draw_eel_long(g, x0=3, y0=15, length=26)
-    vent_chimney(g)
     return g
 
 
@@ -373,7 +354,6 @@ def sprite_sickly():
     """defective — 기생 새우."""
     g = blank()
     draw_shrimp_side(g, head_x=22, body_y=18, length=10, hump=2, sick=True)
-    vent_chimney(g)
     return g
 
 
