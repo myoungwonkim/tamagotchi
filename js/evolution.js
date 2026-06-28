@@ -1,7 +1,6 @@
-import { MS_PER_DAY } from "./pet.js";
-
 /** 알 → 성체 총 누적 시간 (일) */
 export const EVOLUTION_TOTAL_DAYS = 5;
+const MS_PER_DAY = 86400000;
 const ORIGINAL_TOTAL_DAYS = 14;
 
 function minAgeMs(originalMinDays) {

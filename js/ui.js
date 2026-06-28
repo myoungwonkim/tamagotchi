@@ -1,4 +1,4 @@
-import { getAgeDays, getGameOverReason } from "./pet.js";
+import { getAgeDays, getGameOverReason, getAverageCare } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
 import { getStageLabelForTheme, normalizeSpeciesTheme } from "./speciesThemes.js";
@@ -25,6 +25,9 @@ import {
 } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
 import { syncMessLayer, scheduleMessLayer, clearMessLayer } from "./mess.js";
+import { AD_TUNING } from "./adConfig.js";
+import { canOfferRevive } from "./ads.js";
+import { getDeathSnapshot } from "./deathSnapshot.js";
 
 const elements = {
   petName: document.getElementById("pet-name"),
@@ -41,6 +44,11 @@ const elements = {
   gameOverGraphic: document.getElementById("game-over-graphic"),
   gameOverTitle: document.getElementById("game-over-title"),
   gameOverText: document.getElementById("game-over-text"),
+  btnReviveAd: document.getElementById("btn-revive-ad"),
+  btnNewPet: document.getElementById("btn-new-pet"),
+  rewardPrompts: document.getElementById("reward-prompts"),
+  btnRewardEmergency: document.getElementById("btn-reward-emergency"),
+  btnRewardNeglect: document.getElementById("btn-reward-neglect"),
   nameOverlay: document.getElementById("name-overlay"),
   nameInput: document.getElementById("name-input"),
   encyclopediaOverlay: document.getElementById("encyclopedia-overlay"),
@@ -255,6 +263,7 @@ export function renderPet(pet) {
 
   updateButtons(pet);
   updateGameOver(pet);
+  updateRewardPrompts(pet);
   updateNewPetFab(pet);
   preloadSpritesForPet(pet);
 }
@@ -376,6 +385,50 @@ function updateGameOver(pet) {
     gameOverSoundNotified = true;
     playSfx("gameover");
   }
+
+  const snapshot = getDeathSnapshot();
+  const showRevive = snapshot && canOfferRevive(snapshot.deathId);
+  if (elements.btnReviveAd) {
+    elements.btnReviveAd.hidden = !showRevive;
+    elements.btnReviveAd.disabled = !showRevive;
+  }
+}
+
+function updateRewardPrompts(pet) {
+  const wrap = elements.rewardPrompts;
+  if (!wrap) return;
+
+  if (!pet?.isAlive || pet.isSleeping) {
+    wrap.hidden = true;
+    if (elements.btnRewardEmergency) elements.btnRewardEmergency.hidden = true;
+    if (elements.btnRewardNeglect) elements.btnRewardNeglect.hidden = true;
+    return;
+  }
+
+  const minStat = Math.min(pet.hunger, pet.happiness, pet.cleanliness);
+  const avg = getAverageCare(pet);
+
+  const showEmergency =
+    adsPromptApi?.canOfferEmergencyCare?.() &&
+    minStat < AD_TUNING.emergencyCareStatThreshold;
+  const showNeglect =
+    adsPromptApi?.canOfferNeglectReset?.() &&
+    avg < AD_TUNING.neglectPromptAvgThreshold &&
+    pet.neglectStartedAt !== null;
+
+  wrap.hidden = !(showEmergency || showNeglect);
+  if (elements.btnRewardEmergency) elements.btnRewardEmergency.hidden = !showEmergency;
+  if (elements.btnRewardNeglect) elements.btnRewardNeglect.hidden = !showNeglect;
+}
+
+let adsPromptApi = null;
+
+export function setAdsPromptApi(api) {
+  adsPromptApi = api;
+}
+
+export function refreshRewardPrompts(pet) {
+  updateRewardPrompts(pet);
 }
 
 export function showMessage(text, durationMs = 4000) {

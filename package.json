@@ -1,0 +1,16 @@
+{
+  "name": "deepsea-tamagotchi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173 --host",
+    "build": "vite build && node scripts/copy-ait-static.mjs",
+    "preview": "vite preview --port 5173"
+  },
+  "dependencies": {
+    "@apps-in-toss/web-framework": "^1.7.0"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}

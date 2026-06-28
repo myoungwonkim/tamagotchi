@@ -3,3 +3,7 @@ Thumbs.db
 .tools/
 .sprite-staging/
 .sprite-staging-*/
+node_modules/
+dist/
+.env.ait
+*.ait

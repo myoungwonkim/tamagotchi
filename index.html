@@ -40,6 +40,11 @@
 
       <button type="button" class="new-pet-fab" id="btn-new-pet-side" hidden>새 펫 키우기</button>
 
+      <div class="reward-prompts" id="reward-prompts" hidden>
+        <button type="button" class="reward-prompt-btn" id="btn-reward-emergency" hidden>광고 보고 응급 돌봄</button>
+        <button type="button" class="reward-prompt-btn" id="btn-reward-neglect" hidden>광고 보고 방치 타이머 초기화</button>
+      </div>
+
       <section class="stats" aria-label="펫 상태">
         <div class="stat">
           <label for="bar-hunger">배고픔</label>
@@ -132,6 +137,7 @@
         <div class="overlay-graphic" id="game-over-graphic" aria-hidden="true"></div>
         <h2 class="overlay-title" id="game-over-title">치치가 떠났어요...</h2>
         <p class="overlay-text" id="game-over-text">더 잘 돌봐줄 수 있을까요?</p>
+        <button type="button" class="overlay-btn overlay-btn--reward" id="btn-revive-ad" hidden>광고 보고 부활</button>
         <button type="button" class="overlay-btn" id="btn-new-pet">새 펫 키우기</button>
       </div>
     </div>
@@ -174,7 +180,8 @@
       const files = [
         "pet.js", "actions.js", "storage.js", "evolution.js", "speciesThemes.js", "adultVariants.js",
         "encyclopedia.js", "dialogue.js", "audio.js", "sprites.js", "effects.js",
-        "korean.js", "ui.js", "mess.js", "dev.js", "main.js",
+        "korean.js", "ui.js", "mess.js", "dev.js", "adConfig.js", "tossEnv.js",
+        "deathSnapshot.js", "ads.js", "main.js",
       ];
       const scoped = {};
       for (const file of files) {

@@ -31,7 +31,7 @@ for cat in evolution adult mood; do
   if [ -d "assets/sprites/mermaid/$cat" ]; then ok "dir assets/sprites/mermaid/$cat"; else bad "missing assets/sprites/mermaid/$cat"; fi
 done
 rg -q 'speciesTheme' js/pet.js js/storage.js js/sprites.js && ok 'speciesTheme field' || bad 'speciesTheme field'
-for id in poop fly feed play clean sleep wake; do
+for id in poop fly feed play clean sleep wake encyclopedia sound-on sound-off; do
   if [ -f "assets/sprites/ui/$id.png" ]; then ok "ui sprite $id.png"; else bad "missing assets/sprites/ui/$id.png"; fi
 done
 
@@ -49,9 +49,15 @@ grep -q 'style.css?v=' index.html && ok 'css cache query' || bad 'css cache quer
 grep -q 'import(`./js/main.js?v=' index.html && ok 'js dynamic import cache' || bad 'js dynamic import'
 grep -q 'injectJsImportMap' index.html && ok 'js importmap cache bust' || bad 'js importmap cache bust'
 
+grep -q 'btn-revive-ad' index.html && ok 'revive ad button' || bad 'revive ad button'
+grep -q 'reward-prompts' index.html && ok 'reward prompt bar' || bad 'reward prompt bar'
+test -f granite.config.ts && ok 'granite.config.ts' || bad 'granite.config.ts'
+test -f package.json && ok 'package.json (ait)' || bad 'package.json'
+test -f docs/MONETIZATION.md && ok 'MONETIZATION.md' || bad 'MONETIZATION.md'
+
 # --- JS hooks ---
 echo "[js]"
-for sym in syncSleepControls playCareEffect playEvolutionTransition playMoodTransition applyIdleClasses getSpriteFormat; do
+for sym in syncSleepControls playCareEffect playEvolutionTransition playMoodTransition applyIdleClasses getSpriteFormat initAds tryShowInterstitial captureDeathSnapshot; do
   if rg -q "$sym" js/ 2>/dev/null; then ok "$sym"; else bad "missing $sym"; fi
 done
 rg -q 'getVariantDescription' js/encyclopedia.js && ok 'encyclopedia descriptions' || bad 'encyclopedia descriptions'
@@ -71,7 +77,7 @@ PY
 
 # --- CSS ---
 echo "[css]"
-for cls in pet-area--sleeping evolvePop moodFade careFxFeed idleBob prefers-reduced-motion new-pet-fab actions--care-blocked action-label action-icon; do
+for cls in pet-area--sleeping evolvePop moodFade careFxFeed idleBob prefers-reduced-motion new-pet-fab actions--care-blocked action-label action-icon reward-prompt-btn overlay-btn--reward; do
   if rg -q "$cls" css/style.css 2>/dev/null; then ok "css: $cls"; else bad "css missing: $cls"; fi
 done
 

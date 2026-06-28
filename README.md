@@ -213,6 +213,29 @@ http://localhost:8080/?dev=1
 
 테스트 패널: 게임 오버, 오프라인, 나이 +1일, 진화, 성체 pretty/defective, 도감 초기화, idle 대사, **스프라이트 on/off**, **스프라이트 포맷 svg/png**
 
+광고 UI 모의 테스트: `http://localhost:8080/?toss=1&mockAds=1`
+
+## 앱인토스 (Apps in Toss) 출시
+
+토스 미니앱 WebView 포팅 + 인앱 광고(전면형·보상형) 연동.
+
+```bash
+npm install
+cp .env.ait.example .env.ait   # 콘솔 광고 그룹 ID 입력
+npm run dev                    # 샌드박스 + vite (포트 5173)
+npm run build                  # dist/ → .ait 번들 업로드용
+```
+
+| 문서 | 내용 |
+|------|------|
+| [docs/APPS-IN-TOSS-CONSOLE-SETUP.md](docs/APPS-IN-TOSS-CONSOLE-SETUP.md) | 콘솔·정산·광고 그룹 |
+| [docs/GRAC-RATING-CHECKLIST.md](docs/GRAC-RATING-CHECKLIST.md) | 게임물 등급 심의 |
+| [docs/MONETIZATION.md](docs/MONETIZATION.md) | 광고 지점·보상 정책 |
+| [docs/APPS-IN-TOSS-LAUNCH.md](docs/APPS-IN-TOSS-LAUNCH.md) | 출시·QA 체크리스트 |
+| [docs/AD-TUNING.md](docs/AD-TUNING.md) | 출시 후 eCPM·빈도 튜닝 |
+
+`granite.config.ts`의 `appName`·`displayName`·`icon`은 콘솔과 **동일**해야 합니다.
+
 ## 모바일 테스트
 
 1. PC와 폰이 같은 Wi-Fi에 연결
@@ -318,7 +341,7 @@ tamagotchi/
     sprites/            심해어 PNG 28종 + mermaid/ 인어 19종
   index.html
   css/style.css
-  js/
+    js/
     speciesThemes.js    deepsea/mermaid 테마·라벨·랜덤 선택
     sprites.js          테마별 스프라이트 URL, preload, useSprites
     pet.js              speciesTheme, getMoodKind, decay
@@ -332,6 +355,10 @@ tamagotchi/
     effects.js          진화·무드·idle·돌봄 FX
     storage.js          localStorage, speciesTheme 정규화
     ui.js               setPetGraphic, 도감·FAB UI
+    ads.js              앱인토스 인앱 광고 (전면·보상형)
+    adConfig.js         광고 빈도·그룹 ID
+    tossEnv.js          토스 WebView 환경 감지
+    deathSnapshot.js    부활용 사망 스냅샷
     main.js             게임 루프
     dev.js              ?dev=1 테스트 패널
   scripts/

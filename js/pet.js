@@ -151,6 +151,30 @@ export function checkGameOver(pet) {
   return false;
 }
 
+export function resetNeglectTimer(pet) {
+  if (!pet?.isAlive) return false;
+  pet.neglectStartedAt = null;
+  pet.lastUpdated = Date.now();
+  return true;
+}
+
+const EMERGENCY_CARE_OPTIONS = [
+  { key: "hunger", delta: 30 },
+  { key: "happiness", delta: 25 },
+  { key: "cleanliness", delta: 40 },
+];
+
+export function applyEmergencyCare(pet) {
+  if (!pet?.isAlive || pet.isSleeping) return null;
+  const pick = EMERGENCY_CARE_OPTIONS[Math.floor(Math.random() * EMERGENCY_CARE_OPTIONS.length)];
+  pet[pick.key] = clamp(pet[pick.key] + pick.delta);
+  if (getAverageCare(pet) >= 10) {
+    pet.neglectStartedAt = null;
+  }
+  pet.lastUpdated = Date.now();
+  return pick;
+}
+
 export function tickPet(pet, elapsedMs = 1000) {
   applyTimeDelta(pet, elapsedMs);
   pet.lastUpdated = Date.now();

@@ -16,6 +16,8 @@ const SFX_PRESETS = {
 let audioContext = null;
 let muted = false;
 let unlocked = false;
+let adsSuspended = false;
+let preAdMuted = null;
 
 function loadSettings() {
   try {
@@ -90,7 +92,7 @@ function playTone(frequency, duration, type, gain, startAt) {
 }
 
 export function playSfx(name, options = {}) {
-  if (muted) return;
+  if (muted || adsSuspended) return;
 
   if (!audioContext) {
     if (!unlocked) return;
@@ -127,4 +129,21 @@ export function updateMuteButton(button) {
   }
   button.setAttribute("aria-label", muted ? "소리 켜기" : "소리 끄기");
   button.setAttribute("aria-pressed", muted ? "true" : "false");
+}
+
+/** 인앱 광고 재생 중 Web Audio 일시 정지 (앱인토스 정책) */
+export function suspendAudioForAds() {
+  adsSuspended = true;
+  preAdMuted = muted;
+  if (audioContext?.state === "running") {
+    audioContext.suspend().catch(() => {});
+  }
+}
+
+export function resumeAudioAfterAds() {
+  adsSuspended = false;
+  if (audioContext?.state === "suspended" && !preAdMuted) {
+    audioContext.resume().catch(() => {});
+  }
+  preAdMuted = null;
 }

@@ -1112,6 +1112,43 @@ img.pet-sprite[hidden] {
   background: var(--accent-dark);
 }
 
+.overlay-btn--reward {
+  background: #2a4858;
+  color: #a8e8f0;
+  border: 1px solid #58b8c8;
+  margin-bottom: 8px;
+}
+
+.overlay-btn--reward:active {
+  background: #1e3848;
+}
+
+.reward-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.reward-prompt-btn {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #3a5868;
+  border-radius: 8px;
+  background: #243040;
+  color: #a8e0e8;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.reward-prompt-btn:active {
+  background: #1a2838;
+}
+
 @keyframes bounce {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }

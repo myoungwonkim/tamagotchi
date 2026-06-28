@@ -1,4 +1,4 @@
-import { applyTimeDelta, checkGameOver, createNewPet, tickPet } from "./pet.js";
+import { applyTimeDelta, checkGameOver, createNewPet, tickPet, applyEmergencyCare, resetNeglectTimer } from "./pet.js";
 import { feed, play, clean, toggleSleep, resetActionCooldown } from "./actions.js";
 import { savePet, loadPet, clearPet } from "./storage.js";
 import {
@@ -20,6 +20,24 @@ import { toggleSpritesEnabled, toggleSpriteFormat } from "./sprites.js";
 import { playCareEffect } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
 import {
+  initAds,
+  tryShowInterstitial,
+  showRewardedRevive,
+  showRewardedEmergencyCare,
+  showRewardedNeglectReset,
+  canOfferRevive,
+  markReviveUsed,
+  canOfferEmergencyCare,
+  canOfferNeglectReset,
+  INTERSTITIAL_TRIGGERS,
+} from "./ads.js";
+import {
+  captureDeathSnapshot,
+  getDeathSnapshot,
+  applyDeathSnapshotToPet,
+  clearDeathSnapshot,
+} from "./deathSnapshot.js";
+import {
   renderPet,
   showMessage,
   showNameModal,
@@ -36,6 +54,7 @@ import {
   getElements,
   setGameActive,
   syncSleepControls,
+  setAdsPromptApi,
 } from "./ui.js";
 
 const OFFLINE_MESSAGE_MS = 30 * 60 * 1000;
@@ -72,13 +91,31 @@ function getAwayMessage(elapsed, name) {
   return null;
 }
 
-function handleAdultEvolution({ notify = true } = {}) {
+function runGameOverCheck() {
+  if (!pet?.isAlive) return false;
+  const died = checkGameOver(pet);
+  if (died) {
+    captureDeathSnapshot(pet);
+  }
+  return died;
+}
+
+function noteDeathIfNeeded(wasAlive) {
+  if (wasAlive && pet && !pet.isAlive) {
+    captureDeathSnapshot(pet);
+  }
+}
+
+async function handleAdultEvolution({ notify = true } = {}) {
   resolveAdultVariant(pet);
   addToEncyclopedia(pet);
 
   if (notify) {
     showMessage(`${withSubjectParticle(pet.name)} 어른으로 진화했어요! 탐사 일지에 등록됐어요!`, 5000);
     playSfx("evolve");
+    window.setTimeout(() => {
+      tryShowInterstitial(INTERSTITIAL_TRIGGERS.T2_ADULT_EVOLVE);
+    }, 5200);
   }
 }
 
@@ -116,7 +153,9 @@ function maybeShowIdleDialogue() {
 function applyAwayTime(elapsed, { notify = false } = {}) {
   if (!pet || !pet.isAlive || elapsed <= 0) return;
 
+  const wasAlive = pet.isAlive;
   applyTimeDelta(pet, elapsed);
+  noteDeathIfNeeded(wasAlive);
   pet.lastUpdated = Date.now();
   lastTickAt = Date.now();
 
@@ -125,17 +164,27 @@ function applyAwayTime(elapsed, { notify = false } = {}) {
     if (message) {
       showMessage(message);
       playSfx("message");
+      if (elapsed >= OFFLINE_MESSAGE_MS) {
+        window.setTimeout(() => {
+          tryShowInterstitial(INTERSTITIAL_TRIGGERS.T4_LONG_RETURN);
+        }, 4500);
+      }
     }
   }
 
-  checkGameOver(pet);
   handleEvolution();
   maybeShowIdleDialogue();
   renderPet(pet);
   savePet(pet);
 }
 
-function init() {
+async function init() {
+  setAdsPromptApi({
+    canOfferEmergencyCare,
+    canOfferNeglectReset,
+  });
+  await initAds();
+
   const saved = loadPet();
 
   if (saved) {
@@ -145,6 +194,9 @@ function init() {
       applyOfflineTime();
     } else {
       lastTickAt = Date.now();
+      if (!getDeathSnapshot()) {
+        captureDeathSnapshot(pet);
+      }
     }
     handleEvolution({ notify: false });
     if (getEvolutionStage(pet).id === "adult") {
@@ -199,7 +251,9 @@ function gameTick() {
 
   if (elapsed <= 0) return;
 
+  const wasAlive = pet.isAlive;
   tickPet(pet, elapsed);
+  noteDeathIfNeeded(wasAlive);
   handleEvolution();
   maybeShowIdleDialogue();
   renderPet(pet);
@@ -211,6 +265,12 @@ const ACTION_MESSAGES = {
   play: () => "재미있게 놀았어요!",
   clean: () => "깨끗해졌어요!",
   sleep: (p) => (p.isSleeping ? "잠들었어요..." : "깨어났어요!"),
+};
+
+const EMERGENCY_LABELS = {
+  hunger: "배고픔",
+  happiness: "행복",
+  cleanliness: "청결",
 };
 
 function getActionMessage(pet, messageKey) {
@@ -233,7 +293,7 @@ function handleAction(actionFn, messageKey) {
     syncSleepControls(pet);
   }
 
-  checkGameOver(pet);
+  runGameOverCheck();
   pet.lastUpdated = Date.now();
   renderPet(pet);
   savePet(pet);
@@ -255,6 +315,7 @@ function handleAction(actionFn, messageKey) {
 
 function startNewPet(name) {
   clearPet();
+  clearDeathSnapshot();
   resetActionCooldown();
   resetDialogueTimer();
   pet = createNewPet(name);
@@ -265,11 +326,58 @@ function startNewPet(name) {
   savePet(pet);
 }
 
-function graduateToNewPet() {
+async function graduateToNewPet() {
   if (!pet) return;
   addToEncyclopedia(pet);
   hideGraduateModal();
+  await tryShowInterstitial(INTERSTITIAL_TRIGGERS.T3_GRADUATE);
   showNameModal();
+}
+
+async function openNewPetAfterGameOver() {
+  await tryShowInterstitial(INTERSTITIAL_TRIGGERS.T1_GAME_OVER);
+  showNameModal();
+}
+
+async function handleReviveAd() {
+  if (!pet) return;
+  const snapshot = getDeathSnapshot();
+  if (!snapshot || !canOfferRevive(snapshot.deathId)) return;
+
+  unlockAudioOnce();
+  const rewarded = await showRewardedRevive();
+  if (!rewarded) return;
+
+  applyDeathSnapshotToPet(pet, snapshot);
+  markReviveUsed(snapshot.deathId);
+  lastTickAt = Date.now();
+  renderPet(pet);
+  savePet(pet);
+  showMessage(`${withSubjectParticle(pet.name)} 다시 살아났어요!`, 4000);
+}
+
+async function handleEmergencyCareAd() {
+  if (!pet?.isAlive || !canOfferEmergencyCare()) return;
+  unlockAudioOnce();
+  const rewarded = await showRewardedEmergencyCare();
+  if (!rewarded) return;
+  const applied = applyEmergencyCare(pet);
+  if (!applied) return;
+  pet.lastUpdated = Date.now();
+  renderPet(pet);
+  savePet(pet);
+  showMessage(`응급 돌봄! ${EMERGENCY_LABELS[applied.key]}이(가) 올랐어요.`, 4000);
+}
+
+async function handleNeglectResetAd() {
+  if (!pet?.isAlive || !canOfferNeglectReset()) return;
+  unlockAudioOnce();
+  const rewarded = await showRewardedNeglectReset();
+  if (!rewarded) return;
+  resetNeglectTimer(pet);
+  renderPet(pet);
+  savePet(pet);
+  showMessage("방치 타이머가 초기화됐어요. 서둘러 돌봐 주세요!", 4000);
 }
 
 function setupMuteButton() {
@@ -291,14 +399,23 @@ function bindEvents() {
     handler();
   };
 
+  const withAudioAsync = (handler) => async () => {
+    unlockAudioOnce();
+    await handler();
+  };
+
   buttons.feed.addEventListener("click", withAudio(() => handleAction(feed, "feed")));
   buttons.play.addEventListener("click", withAudio(() => handleAction(play, "play")));
   buttons.clean.addEventListener("click", withAudio(() => handleAction(clean, "clean")));
   buttons.sleep.addEventListener("click", withAudio(() => handleAction(toggleSleep, "sleep")));
 
-  document.getElementById("btn-new-pet").addEventListener("click", withAudio(() => {
-    showNameModal();
-  }));
+  document.getElementById("btn-new-pet")?.addEventListener("click", withAudioAsync(openNewPetAfterGameOver));
+
+  document.getElementById("btn-revive-ad")?.addEventListener("click", withAudioAsync(handleReviveAd));
+
+  document.getElementById("btn-reward-emergency")?.addEventListener("click", withAudioAsync(handleEmergencyCareAd));
+
+  document.getElementById("btn-reward-neglect")?.addEventListener("click", withAudioAsync(handleNeglectResetAd));
 
   document.getElementById("btn-start-pet").addEventListener("click", withAudio(() => {
     const name = getEnteredName() || "치치";
@@ -329,9 +446,7 @@ function bindEvents() {
     showGraduateModal(pet);
   }));
 
-  document.getElementById("btn-graduate-confirm")?.addEventListener("click", withAudio(() => {
-    graduateToNewPet();
-  }));
+  document.getElementById("btn-graduate-confirm")?.addEventListener("click", withAudioAsync(graduateToNewPet));
 
   document.getElementById("btn-graduate-cancel")?.addEventListener("click", withAudio(() => {
     hideGraduateModal();
@@ -346,7 +461,7 @@ function mountDevToolsIfEnabled() {
       simulateHealthGameOver() {
         if (!pet) return;
         pet.health = 0;
-        checkGameOver(pet);
+        runGameOverCheck();
         renderPet(pet);
         savePet(pet);
       },
