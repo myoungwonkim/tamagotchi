@@ -762,39 +762,49 @@ def sprite_encyclopedia():
     return g
 
 
+def _draw_speaker_box_cone(g, ox=6, oy=10, body_w=6, body_h=12, cone_tip=20, fill=PAPER, fill2=PAPER2):
+    """클래식 스피커 — 왼쪽 사각형 + 오른쪽 삼각형."""
+    x0, y0 = ox, oy
+    x1, y1 = ox + body_w, oy + body_h
+    draw_poly(g, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)], fill, K)
+    mid = (y0 + y1) // 2
+    draw_poly(g, [(x1, y0), (cone_tip, mid - 1), (cone_tip, mid + 1), (x1, y1)], fill2, K)
+    for y in range(y0 + 2, y1 - 1, 3):
+        px(g, x0 + 2, y, fill2)
+
+
+def _draw_volume_bars(g, x0=17, cy=16, *, bright=True):
+    heights = (5, 9, 13)
+    cols = (ACCENT2, ACCENT, GLOW) if bright else (MUTED, MUTED, MUTED)
+    for i, (h, col) in enumerate(zip(heights, cols)):
+        x = x0 + i * 4
+        for dy in range(h):
+            px(g, x, cy - h // 2 + dy, col)
+            px(g, x + 1, cy - h // 2 + dy, col)
+
+
+def _draw_mute_slash(g, x0=17, y0=9, x1=28, y1=23):
+    draw_line(g, x0, y0, x1, y1, MUTE_SLASH)
+    draw_line(g, x0 + 1, y0, x1 + 1, y1, (160, 72, 64, 255))
+    px(g, x0 - 1, y0 - 1, K)
+    px(g, x1 + 1, y1 + 1, K)
+
+
 def sprite_sound_on():
-    """함체 스피커 + 소나 파동 — 밝은 링으로 헤더 대비 확보."""
+    """스피커 + 볼륨 막대 — ON/OFF 직관적 구분."""
     g = blank()
-    fill_circle(g, 13, 16, 9, BRASS, K)
-    fill_circle(g, 13, 16, 7, PAPER, K)
-    fill_circle(g, 13, 16, 5, PAPER2, K)
-    for dx, dy in ((11, 14), (15, 14), (11, 18), (15, 18)):
-        px(g, dx, dy, (72, 92, 108, 255))
-    px(g, 13, 16, ACCENT)
-    px(g, 12, 15, GLOW)
-    px(g, 14, 17, GLOW)
-    for r, col in ((4, GLOW), (6, ACCENT), (8, ACCENT2)):
-        for x, y in _arc_pts(19, 16, r, -50, 50):
-            px(g, x, y, col)
+    _draw_speaker_box_cone(g, ox=5, oy=11, body_w=5, body_h=10, cone_tip=14)
+    _draw_volume_bars(g, x0=17, cy=16, bright=True)
+    px(g, 7, 13, GLOW)
     return g
 
 
 def sprite_sound_off():
-    """음소거 — 밝은 스피커 + 흐린 파동 + 슬래시."""
+    """음소거 — 흐린 스피커·막대 + 슬래시."""
     g = blank()
-    fill_circle(g, 13, 16, 9, BRASS, K)
-    fill_circle(g, 13, 16, 7, PAPER, K)
-    fill_circle(g, 13, 16, 5, PAPER2, K)
-    for dx, dy in ((11, 14), (15, 14), (11, 18), (15, 18)):
-        px(g, dx, dy, (72, 92, 108, 255))
-    px(g, 13, 16, MUTED)
-    for r in (4, 6, 8):
-        for x, y in _arc_pts(19, 16, r, -50, 50, step=2):
-            px(g, x, y, MUTED)
-    draw_line(g, 18, 10, 26, 22, MUTE_SLASH)
-    draw_line(g, 19, 10, 27, 22, (160, 72, 64, 255))
-    px(g, 17, 9, K)
-    px(g, 26, 23, K)
+    _draw_speaker_box_cone(g, ox=5, oy=11, body_w=5, body_h=10, cone_tip=14, fill=MUTED, fill2=MUTED)
+    _draw_volume_bars(g, x0=17, cy=16, bright=False)
+    _draw_mute_slash(g, x0=16, y0=10, x1=27, y1=22)
     return g
 
 

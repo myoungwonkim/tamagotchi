@@ -30,7 +30,7 @@ def grid_to_image(g):
 
 SPRITES = {
     "encyclopedia": ("도감 · 탐사 일지", sprite_encyclopedia),
-    "sound-on": ("스피커 ON · 함체 송출", sprite_sound_on),
+    "sound-on": ("스피커 ON · 볼륨 막대", sprite_sound_on),
     "sound-off": ("스피커 OFF · 음소거", sprite_sound_off),
 }
 
@@ -138,7 +138,7 @@ def build_html():
     <p class="lead">SUB-3 수압 계기판 · 32×32 픽셀 · <strong>게임 반영됨</strong></p>
     <div class="notice">
       <strong>도감</strong> — 탐사 일지 + 소나 blip ·
-      <strong>스피커</strong> — 함체 인터컴 on/off
+      <strong>스피커</strong> — 볼륨 막대 on/off
     </div>
     <img class="sheet" src="_preview-header-icons.png" alt="아이콘 시트">
     <h2>아이콘</h2>
