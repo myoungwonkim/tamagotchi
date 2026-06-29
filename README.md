@@ -59,8 +59,7 @@
 - **종 테마:** 새 펫 시작 시 `deepsea`(심해어) / `mermaid`(인어) **50% 랜덤**
 - **진화 규칙 동일:** 나이·케어 기반 tier / variant 9종 풀은 심해어와 같음
 - **테마별 라벨:** 단계명·변종명·이모지가 테마에 맞게 표시 (`js/speciesThemes.js`)
-- **인어 스프라이트 19종:** `assets/sprites/mermaid/` (진화 5 + 성체 9 + 무드 5)
-- **인어 성체 9종:** 티어 콘셉트 디자인 (pretty/normal — 사람 상체+물고기 꼬리, defective — 물고기 상체+사람 다리·발)
+- **인어 스프라이트 19종:** `assets/sprites/mermaid/` — 측면 프로필 v2 (상체+대각선 꼬리)
 - **도감 설명:** `speciesTheme`별 flavor text (심해어 / 인어 각 9종)
 - **UI 아이콘 공용:** 먹이·청소·배변물·헤더(도감·스피커 on/off) 등 12종은 심해어·인어 공통
 
@@ -111,14 +110,14 @@ PNG 재생성:
 python3 scripts/generate_all_sprites.py --install
 
 # 인어 19종 → assets/sprites/mermaid/
-python3 scripts/generate_mermaid_preview.py --install
+python3 scripts/generate_mermaid_side_preview.py --install
 ```
 
 스테이징 미리보기 (게임 미반영):
 
 ```bash
 python3 scripts/generate_all_sprites.py              # → .sprite-staging-deepsea/
-python3 scripts/generate_mermaid_preview.py          # → .sprite-staging-mermaid/preview.html
+python3 scripts/generate_mermaid_side_preview.py       # → docs/mermaid-side-preview/
 python3 scripts/generate_action_preview.py           # 액션 버튼 시안
 python3 scripts/generate_mess_preview.py             # 배변물·파리 시안
 python3 scripts/generate_defective_eye_preview.py    # 불량 눈 시안
@@ -368,7 +367,7 @@ tamagotchi/
     dev.js              ?dev=1 테스트 패널
   scripts/
     generate_all_sprites.py       심해어 28종 생성
-    generate_mermaid_preview.py   인어 19종 생성·설치
+    generate_mermaid_side_preview.py   인어 측면 v2 19종 생성·설치
     generate_action_preview.py    액션 버튼 시안
     generate_mess_preview.py      배변물·파리 시안
     generate_defective_eye_preview.py  불량 눈 시안

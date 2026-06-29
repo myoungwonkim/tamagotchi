@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>심해인어 측면 스케치 v2</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c1426; --surface: #1a2838; --border: #3a5060;
+      --ink: #c8e4ec; --ink2: #58b8c8; --accent: #80deea;
+      --pretty: #ffd59a; --normal: #8fd4a8; --defective: #e8a0a0; --paper: #1e2c3c;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: var(--bg); color: #c8d4dc; padding: 20px 14px 56px; line-height: 1.5;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; }
+    h1 { font-size: 1.125rem; color: var(--accent); margin-bottom: 6px; }
+    .lead { font-size: 0.8125rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 16px; font-size: 0.75rem; color: #98a8b8; margin-bottom: 12px;
+    }
+    .notice strong { color: var(--ink2); }
+    .fix-list {
+      font-size: 0.6875rem; color: #7a8898; margin-bottom: 24px; padding-left: 1.1em;
+    }
+    .fix-list li { margin-bottom: 4px; }
+    .badge {
+      display: inline-block; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.06em;
+      color: var(--ink2); background: rgba(88,184,200,.12); border: 1px solid rgba(88,184,200,.35);
+      border-radius: 999px; padding: 4px 10px; margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 0.875rem; color: var(--ink2); margin: 28px 0 12px;
+      border-bottom: 1px solid #2a3848; padding-bottom: 6px;
+    }
+    h2 span { font-size: 0.6875rem; font-weight: 500; color: #6a7888; margin-left: 6px; }
+    .evo-strip {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center;
+      gap: 6px 4px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 10px;
+    }
+    .evo-arrow { color: var(--ink2); font-size: 1.25rem; padding: 0 2px; opacity: 0.7; align-self: center; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 10px 14px; text-align: center;
+    }
+    .card svg {
+      width: 100%; max-width: 200px; height: auto; display: block; margin: 0 auto 8px;
+      background: var(--paper); border-radius: 8px; border: 1px solid #2a3848;
+    }
+    .card h3 { font-size: 0.8125rem; color: #e8f0f4; margin-bottom: 2px; }
+    .card p { font-size: 0.625rem; color: #7a8898; line-height: 1.45; max-width: 200px; margin: 0 auto; }
+    .tier { display: inline-block; font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+    .tier--pretty { color: var(--pretty); }
+    .tier--normal { color: var(--normal); }
+    .tier--defective { color: var(--defective); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 12px; }
+    .links { margin-top: 24px; font-size: 0.6875rem; color: #6a7888; text-align: center; }
+    .links a { color: var(--ink2); }
+    footer { text-align: center; font-size: 0.625rem; color: #5a6878; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="badge">v2 · 대각선 휜 꼬리</span>
+    <h1>심해인어 · 측면 스케치</h1>
+    <p class="lead">상체(인간) + 허리 + 아래로 드리운 꼬리 · 손그림 SVG · <strong>스테이징</strong></p>
+    <div class="notice">
+      <strong>v1 문제</strong> — 가로 뱀 꼬리·뭉개진 머리·거대한 외눈·낙서 머리카락 → 물고기 괴물처럼 보였습니다.<br>
+      <strong>v2</strong> — 상체 인간 비율 + <strong>날씬한 꼬리가 ↘ 대각선으로 약하게 휨</strong> + 작은 가랫지느러미.
+    </div>
+    <ul class="fix-list">
+      <li>꼬리를 <strong>옆으로 뻗는 장어</strong>가 아니라 <strong>허리 아래로 드리우는</strong> 형태로 변경</li>
+      <li>상체·팔 실루엣을 분리해 인간 비율이 읽히도록 함</li>
+      <li>눈을 아몬드형 프로필 눈으로 축소, 속눈썹·입술 라인 추가</li>
+      <li>머리카락을 등 뒤로 흘러내리는 곡선으로 정리</li>
+      <li>defective도 인어 실루엣 유지 — 표정·상처만 다르게</li>
+    </ul>
+
+    <h2>진화 단계 <span>egg → teen</span></h2>
+    <div class="evo-strip" id="evo-strip"></div>
+
+    <h2>성체 · pretty</h2>
+    <div class="grid" id="pretty-grid"></div>
+    <h2>성체 · normal</h2>
+    <div class="grid" id="normal-grid"></div>
+    <h2>성체 · defective</h2>
+    <div class="grid" id="defective-grid"></div>
+
+    <p class="links">다음: <a href="mermaid-side-preview/">픽셀 시안</a></p>
+    <footer>스테이징 only</footer>
+  </div>
+
+  <script>
+    const DEFS = `
+      <defs>
+        <filter id="soft-sketch" x="-2%" y="-2%" width="104%" height="104%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="1" seed="3" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="0.35"/>
+        </filter>
+        <linearGradient id="bgwash" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#58b8c8" stop-opacity="0.1"/>
+          <stop offset="100%" stop-color="#142030" stop-opacity="0"/>
+        </linearGradient>
+      </defs>`;
+
+    function wrap(inner, w = 180, h = 200) {
+      return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${DEFS}${inner}</svg>`;
+    }
+
+    /**
+     * 클래식 인어 측면 — 오른쪽 프로필, 상체 수직, 꼬리는 아래로 S자.
+     * hx,hy = 이마 근처 기준점
+     */
+    function mermaidProfile(o = {}) {
+      const {
+        hx = 78, hy = 36,
+        skin = "#f5c4b0", skinShadow = "#e8a898",
+        tail = "#3db9a8", tailDark = "#2a8f82", fin = "#5ec8e8",
+        hair1 = "#e89888", hair2 = "#d07060",
+        hairStyle = "long",
+        tailScale = 1,
+        lash = true, smile = false,
+        eyeOpen = true, eyeTired = false,
+        fang = false, scar = false, parasites = false,
+        crown = false, stars = false, seaweed = false,
+        extras = "",
+        stroke = "#b8dce8",
+      } = o;
+
+      const neckY = hy + 30;
+      const bustY = hy + 38;
+      const waistX = hx - 6;
+      const waistY = hy + 52;
+      const tailLen = 48 * tailScale;
+      const tipX = waistX + 12 + 10 * tailScale;
+      const tipY = waistY + tailLen;
+
+      // 얼굴 프로필 (인간형)
+      const face = `M ${hx - 16} ${hy + 8}
+        C ${hx - 20} ${hy + 22}, ${hx - 12} ${hy + 30}, ${hx - 2} ${hy + 28}
+        C ${hx + 6} ${hy + 27}, ${hx + 8} ${hy + 18}, ${hx + 5} ${hy + 10}
+        C ${hx + 2} ${hy + 2}, ${hx - 8} ${hy}, ${hx - 16} ${hy + 8} Z`;
+
+      // 목·가슴·허리
+      const upperBody = `M ${hx - 10} ${hy + 28}
+        C ${hx - 12} ${hy + 34}, ${hx - 10} ${bustY}, ${hx - 8} ${bustY + 4}
+        C ${hx - 6} ${waistY - 4}, ${waistX} ${waistY}, ${waistX} ${waistY}`;
+
+      // 꼬리 — 대각선(↘)으로 약하게 휘는 가는 S자
+      const tailMain = `M ${waistX} ${waistY}
+        C ${waistX + 4} ${waistY + 16}, ${waistX + 8} ${waistY + 32}, ${tipX - 3} ${tipY - 10}
+        C ${tipX + 1} ${tipY - 3}, ${tipX + 2} ${tipY + 4}, ${tipX} ${tipY + 6}`;
+
+      const tailFill = `M ${waistX - 1} ${waistY + 2}
+        C ${waistX + 3} ${waistY + 18}, ${waistX + 7} ${waistY + 32}, ${tipX - 2} ${tipY - 8}
+        L ${tipX + 1} ${tipY + 4}
+        C ${waistX + 4} ${waistY + 26}, ${waistX + 1} ${waistY + 12}, ${waistX + 1} ${waistY + 4} Z`;
+
+      // 가랫지느러미 — 휨 방향에 맞춘 작은 갈래
+      const fluke = `M ${tipX} ${tipY + 6}
+        Q ${tipX + 12} ${tipY + 2}, ${tipX + 17} ${tipY + 8}
+        M ${tipX} ${tipY + 6}
+        Q ${tipX + 12} ${tipY + 10}, ${tipX + 17} ${tipY + 9}`;
+
+      // 팔 — 가슴 앞으로 살짝 구부린 실루엣
+      const arm = `M ${hx + 2} ${hy + 32}
+        Q ${hx + 14} ${hy + 38}, ${hx + 10} ${hy + 46}
+        Q ${hx + 6} ${hy + 50}, ${hx + 2} ${hy + 44}`;
+
+      // 머리카락 — 등 뒤로 길게
+      let hair = "";
+      if (hairStyle === "none") {
+        hair = "";
+      } else if (hairStyle === "long") {
+        hair = `<path d="M ${hx - 14} ${hy + 6}
+          C ${hx - 30} ${hy + 14}, ${hx - 34} ${hy + 40}, ${hx - 24} ${hy + 62}
+          C ${hx - 18} ${hy + 72}, ${hx - 12} ${hy + 64}, ${hx - 10} ${hy + 50}
+          C ${hx - 8} ${hy + 36}, ${hx - 12} ${hy + 20}, ${hx - 14} ${hy + 6}" fill="${hair2}" fill-opacity="0.25" stroke="${hair1}" stroke-width="1.4"/>
+        <path d="M ${hx - 10} ${hy + 4} C ${hx - 22} ${hy + 18}, ${hx - 20} ${hy + 44}, ${hx - 14} ${hy + 58}" fill="none" stroke="${hair2}" stroke-width="1.2"/>`;
+      } else if (hairStyle === "veil") {
+        hair = `<path d="M ${hx - 12} ${hy + 8}
+          C ${hx - 32} ${hy + 4}, ${hx - 36} ${hy + 36}, ${hx - 26} ${hy + 68}
+          C ${hx - 20} ${hy + 78}, ${hx - 14} ${hy + 70}, ${hx - 12} ${hy + 50}" fill="${hair1}" fill-opacity="0.15" stroke="${hair2}" stroke-width="1.3"/>`;
+      } else if (hairStyle === "short") {
+        hair = `<path d="M ${hx - 14} ${hy + 6} C ${hx - 20} ${hy + 2}, ${hx - 8} ${hy - 2}, ${hx - 4} ${hy + 4}" fill="none" stroke="${hair1}" stroke-width="1.5"/>`;
+      } else if (hairStyle === "messy") {
+        hair = `<path d="M ${hx - 14} ${hy + 6} C ${hx - 22} ${hy + 2}, ${hx - 6} ${hy - 1}, ${hx - 4} ${hy + 5}
+          M ${hx - 16} ${hy + 10} L ${hx - 24} ${hy + 8}" fill="none" stroke="${hair2}" stroke-width="1.2"/>`;
+      }
+
+      // 눈 — 프로필 아몬드 (작게)
+      let eyeSvg = "";
+      if (!eyeOpen) {
+        eyeSvg = `<path d="M ${hx + 1} ${hy + 14} Q ${hx + 7} ${hy + 12}, ${hx + 8} ${hy + 16}" fill="none" stroke="${stroke}" stroke-width="1.2"/>`;
+      } else if (eyeTired) {
+        eyeSvg = `<path d="M ${hx + 1} ${hy + 15} Q ${hx + 7} ${hy + 13}, ${hx + 9} ${hy + 16} Q ${hx + 5} ${hy + 18}, ${hx + 1} ${hy + 17} Z" fill="#fff" fill-opacity="0.9" stroke="${stroke}" stroke-width="1"/>
+          <circle cx="${hx + 5}" cy="${hy + 16}" r="1.3" fill="#2a3848"/>`;
+      } else {
+        eyeSvg = `<path d="M ${hx + 1} ${hy + 13} Q ${hx + 8} ${hy + 11}, ${hx + 10} ${hy + 15} Q ${hx + 6} ${hy + 19}, ${hx + 1} ${hy + 17} Z" fill="#fff" stroke="${stroke}" stroke-width="1"/>
+          <circle cx="${hx + 6}" cy="${hy + 15}" r="1.6" fill="#2a3848"/>
+          <circle cx="${hx + 7}" cy="${hy + 14}" r="0.5" fill="#fff"/>`;
+        if (lash) {
+          eyeSvg += `<path d="M ${hx + 9} ${hy + 13} L ${hx + 11} ${hy + 11} M ${hx + 8} ${hy + 12} L ${hx + 10} ${hy + 10}" stroke="${stroke}" stroke-width="0.7"/>`;
+        }
+      }
+
+      const nose = `<path d="M ${hx + 6} ${hy + 18} Q ${hx + 9} ${hy + 20}, ${hx + 7} ${hy + 22}" fill="none" stroke="${skinShadow}" stroke-width="0.9" opacity="0.8"/>`;
+      const mouth = smile
+        ? `<path d="M ${hx + 2} ${hy + 24} Q ${hx + 6} ${hy + 27}, ${hx + 4} ${hy + 25}" fill="none" stroke="#d88888" stroke-width="0.9"/>`
+        : fang
+          ? `<path d="M ${hx + 2} ${hy + 24} L ${hx + 5} ${hy + 27} M ${hx + 4} ${hy + 24} L ${hx + 6} ${hy + 26}" stroke="#fff" stroke-width="0.8"/>`
+          : `<path d="M ${hx + 2} ${hy + 25} Q ${hx + 5} ${hy + 26}, ${hx + 3} ${hy + 26}" fill="none" stroke="${skinShadow}" stroke-width="0.8"/>`;
+
+      const scales = `<path d="M ${waistX + 2} ${waistY + 14} Q ${waistX + 8} ${waistY + 20}, ${tipX - 6} ${tipY - 20}
+        M ${waistX + 6} ${waistY + 24} Q ${waistX + 12} ${waistY + 32}, ${tipX - 2} ${tipY - 8}" fill="none" stroke="${tailDark}" stroke-width="0.6" opacity="0.5"/>`;
+
+      let deco = "";
+      if (crown) deco += `<path d="M ${hx - 6} ${hy - 2} L ${hx - 2} ${hy - 8} L ${hx + 2} ${hy - 2}" fill="none" stroke="#ffd54f" stroke-width="1"/><circle cx="${hx - 2}" cy="${hy - 6}" r="1" fill="#fff59d"/>`;
+      if (stars) deco += `<circle cx="36" cy="32" r="1" fill="#80deea"/><circle cx="148" cy="40" r="0.8" fill="#b388ff"/>`;
+      if (seaweed) deco += `<path d="M ${hx - 22} ${hy + 20} Q ${hx - 28} ${hy + 28}, ${hx - 24} ${hy + 36}" fill="none" stroke="#66bb6a" stroke-width="1"/>`;
+      if (scar) deco += `<path d="M ${hx - 4} ${hy + 16} L ${hx} ${hy + 22}" stroke="#8d6e63" stroke-width="0.8"/>`;
+      if (parasites) deco += `<path d="M ${hx - 20} ${hy + 40} Q ${hx - 26} ${hy + 46}, ${hx - 22} ${hy + 52}" fill="none" stroke="#7e57c2" stroke-width="0.8"/>`;
+
+      return `
+        <rect width="180" height="200" fill="url(#bgwash)"/>
+        <g filter="url(#soft-sketch)" stroke-linecap="round" stroke-linejoin="round">
+          ${hair}
+          <path d="${tailFill}" fill="${tail}" fill-opacity="0.4" stroke="none"/>
+          <path d="${face}" fill="${skin}" fill-opacity="0.55" stroke="${stroke}" stroke-width="1.5"/>
+          <path d="${upperBody}" fill="${skin}" fill-opacity="0.4" stroke="${stroke}" stroke-width="1.4"/>
+          <path d="${arm}" fill="${skin}" fill-opacity="0.35" stroke="${stroke}" stroke-width="1.2"/>
+          ${eyeSvg}${nose}${mouth}
+          <path d="${tailMain}" fill="none" stroke="${tailDark}" stroke-width="1.5"/>
+          <path d="${fluke}" fill="none" stroke="${fin}" stroke-width="1.6"/>
+          ${deco}${extras}
+        </g>`;
+    }
+
+    const SKETCHES = {
+      egg: () => wrap(`
+        <rect width="180" height="200" fill="url(#bgwash)"/>
+        <g filter="url(#soft-sketch)" stroke-linecap="round">
+          <path d="M 48 118 Q 62 138 90 132 Q 118 126 128 110 Q 132 92 118 82 Q 90 72 68 78 Q 50 84 48 118 Z" fill="#bcaaa4" fill-opacity="0.35" stroke="#b8dce8" stroke-width="1.6"/>
+          <path d="M 52 116 Q 90 108 124 104" fill="none" stroke="#8d6e63" stroke-width="1.2"/>
+          <ellipse cx="92" cy="98" rx="12" ry="10" fill="#fff8f0" fill-opacity="0.6" stroke="#ffe0b2" stroke-width="1.4"/>
+        </g>`),
+
+      baby: () => wrap(mermaidProfile({
+        hx: 82, hy: 52, tailScale: 0.45, hairStyle: "none",
+        skin: "#f8cbb8", smile: true,
+        tail: "#7ecec4", tailDark: "#4db6ac", fin: "#80deea",
+      })),
+
+      child: () => wrap(mermaidProfile({
+        hx: 80, hy: 44, tailScale: 0.65, hairStyle: "short",
+        hair1: "#ffab91", hair2: "#ff8a65", smile: true,
+      })),
+
+      teen: () => wrap(mermaidProfile({
+        hx: 78, hy: 38, tailScale: 0.92, hairStyle: "long",
+        hair1: "#b39ddb", hair2: "#7e57c2",
+        tail: "#42a5f5", tailDark: "#1e88e5", fin: "#4fc3f7",
+      })),
+
+      golden: () => wrap(mermaidProfile({
+        skin: "#ffe0b2", hair1: "#ffd54f", hair2: "#ffb300",
+        tail: "#ffca28", tailDark: "#ffa000", fin: "#fff59d",
+        crown: true, smile: true, lash: true,
+      })),
+
+      fluffy: () => wrap(mermaidProfile({
+        skin: "#f3e5f5", hair1: "#ce93d8", hair2: "#ba68c8", hairStyle: "veil",
+        tail: "#b39ddb", tailDark: "#9575cd", fin: "#e1bee7", lash: true,
+      })),
+
+      sparkle: () => wrap(mermaidProfile({
+        skin: "#ede7f6", hair1: "#7c4dff", hair2: "#651fff",
+        tail: "#536dfe", tailDark: "#3d5afe", fin: "#00e5ff",
+        stars: true, lash: true,
+      })),
+
+      standard: () => wrap(mermaidProfile({
+        hair1: "#ff8a65", hair2: "#e64a19",
+        tail: "#ff7043", tailDark: "#e64a19", fin: "#4db6ac",
+      })),
+
+      farm: () => wrap(mermaidProfile({
+        hairStyle: "short", hair1: "#66bb6a", hair2: "#43a047",
+        tail: "#26a69a", tailDark: "#00897b", fin: "#81c784", seaweed: true,
+      })),
+
+      plain: () => wrap(mermaidProfile({
+        skin: "#d7ccc8", hairStyle: "short", hair1: "#90a4ae", hair2: "#78909c",
+        tail: "#90a4ae", tailDark: "#78909c", fin: "#b0bec5", tailScale: 0.8,
+      })),
+
+      scruffy: () => wrap(mermaidProfile({
+        skin: "#bcaaa4", hairStyle: "messy", hair1: "#6d4c41", hair2: "#5d4037",
+        tail: "#8d6e63", tailDark: "#6d4c41", fin: "#a1887f",
+        eyeOpen: false, scar: true,
+      })),
+
+      grumpy: () => wrap(mermaidProfile({
+        skin: "#d0c0b8", hairStyle: "messy", hair1: "#5d4037", hair2: "#4e342e",
+        tail: "#78909c", tailDark: "#546e7a", fin: "#e57373",
+        fang: true, lash: false,
+        extras: `<path d="M 86 48 L 90 46" stroke="#5d4037" stroke-width="1"/>`,
+      })),
+
+      sickly: () => wrap(mermaidProfile({
+        skin: "#e8f5e9", hairStyle: "messy", hair1: "#aed581", hair2: "#9ccc65",
+        tail: "#aed581", tailDark: "#8bc34a", fin: "#dce775",
+        eyeTired: true, parasites: true,
+      })),
+    };
+
+    const META = {
+      egg: { name: "진주 알", note: "조개 속 진주", tier: "" },
+      baby: { name: "꼬물 인어", note: "통통한 얼굴·짧은 꼬리", tier: "" },
+      child: { name: "어린 인어", note: "인간 상체 비율 확립", tier: "" },
+      teen: { name: "청소년 인어", note: "긴 머리·긴 꼬리", tier: "" },
+      golden: { name: "진주 인어", note: "왕관·금빛 꼬리", tier: "pretty" },
+      fluffy: { name: "달빛 실크 인어", note: "베일 머리", tier: "pretty" },
+      sparkle: { name: "별빛 인어", note: "별·보라 꼬리", tier: "pretty" },
+      standard: { name: "산호 인어", note: "산호 톤", tier: "normal" },
+      farm: { name: "해초 인어", note: "해초·녹색 꼬리", tier: "normal" },
+      plain: { name: "늪 인어", note: "차분한 회녹", tier: "normal" },
+      scruffy: { name: "저주받은 인어", note: "감은 눈·흉터", tier: "defective" },
+      grumpy: { name: "송곳니 인어", note: "송곳니·찡그린 인상", tier: "defective" },
+      sickly: { name: "기생 인어", note: "피곤한 눈·기생충", tier: "defective" },
+    };
+
+    function card(id) {
+      const m = META[id];
+      const tier = m.tier ? `<span class="tier tier--${m.tier}">${m.tier}</span>` : "";
+      return `<div class="card">${tier}${SKETCHES[id]()}<h3>${m.name}</h3><p>${m.note}</p></div>`;
+    }
+
+    const evo = ["egg", "baby", "child", "teen"];
+    document.getElementById("evo-strip").innerHTML = evo.map((id, i) =>
+      (i ? '<span class="evo-arrow">→</span>' : "") + card(id)).join("");
+    document.getElementById("pretty-grid").innerHTML = ["golden", "fluffy", "sparkle"].map(card).join("");
+    document.getElementById("normal-grid").innerHTML = ["standard", "farm", "plain"].map(card).join("");
+    document.getElementById("defective-grid").innerHTML = ["scruffy", "grumpy", "sickly"].map(card).join("");
+  </script>
+</body>
+</html>
