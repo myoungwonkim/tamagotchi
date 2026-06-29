@@ -62,6 +62,8 @@ rg -q 'appName: "abysspet"' granite.config.ts && ok 'granite appName abysspet' |
 test -f docs/privacy.html && ok 'privacy.html' || bad 'privacy.html'
 test -f docs/ABYSSPET-LAUNCH-RUNBOOK.md && ok 'ABYSSPET-LAUNCH-RUNBOOK.md' || bad 'ABYSSPET-LAUNCH-RUNBOOK.md'
 test -f docs/GRAC-SUBMISSION-PACK.md && ok 'GRAC-SUBMISSION-PACK.md' || bad 'GRAC-SUBMISSION-PACK.md'
+test -f docs/GRAC-DEMO-SUBMISSION.md && ok 'GRAC-DEMO-SUBMISSION.md' || bad 'GRAC-DEMO-SUBMISSION.md'
+test -f assets/grac-submission/abysspet-grac-demo.webm && ok 'GRAC demo video' || warn 'GRAC demo video missing (run record_grac_demo.py)'
 test -f package.json && ok 'package.json (ait)' || bad 'package.json'
 test -f docs/MONETIZATION.md && ok 'MONETIZATION.md' || bad 'MONETIZATION.md'
 
@@ -74,7 +76,7 @@ rg -q 'getVariantDescription' js/encyclopedia.js && ok 'encyclopedia description
 rg -q 'SLEEP_TOGGLE_GUARD_MS' js/actions.js && ok 'sleep toggle guard' || bad 'sleep toggle guard'
 rg -q 'lastActionAtByKey' js/actions.js && ok 'per-action cooldown' || bad 'per-action cooldown'
 rg -q 'pet-mood-fallback' js/ui.js && ok 'mood fallback selector' || bad 'mood fallback selector'
-rg -q 'scene === "gameover"' js/storeCapture.js && ok 'store capture gameover' || bad 'store capture gameover'
+rg -q 'isGracDemoMode' js/gracDemo.js js/main.js && ok 'grac demo mode' || bad 'grac demo mode'
 
 DEFAULT_PNG=$(python3 - <<'PY'
 import re

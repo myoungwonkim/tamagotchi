@@ -147,6 +147,19 @@ https://myoungwonkim.github.io/tamagotchi/docs/privacy.html
 
 ---
 
-## 8. 문의
+## 8. 시연 영상·빌드
+
+| 자료 | 경로 |
+|------|------|
+| 시연 영상 (WebM/MP4) | `assets/grac-submission/abysspet-grac-demo.webm` |
+| 제출 zip 패키지 | `assets/grac-submission/abysspet-grac-submission.zip` |
+| 샌드박스 `.ait` | `assets/grac-submission/abysspet-sandbox.ait` (로컬 빌드 후) |
+| 온라인 시연 URL | https://myoungwonkim.github.io/tamagotchi/ |
+
+생성·제출 방법: [GRAC-DEMO-SUBMISSION.md](./GRAC-DEMO-SUBMISSION.md)
+
+---
+
+## 9. 문의
 
 nolsoop.games@gmail.com

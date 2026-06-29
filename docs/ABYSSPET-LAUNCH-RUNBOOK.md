@@ -56,8 +56,9 @@ icon URL: https://...
 1. [게임물관리위원회](https://www.grac.or.kr) 등급분류 신청
 2. 게임 설명서: [GRAC-SUBMISSION-PACK.md](./GRAC-SUBMISSION-PACK.md) → PDF 변환 후 첨부
 3. 스크린샷 5장: `assets/ait-store/screenshot-portrait-0*.png` + landscape
-4. 수수료 납부
-5. **등급분류증명서 PDF** 보관
+4. 시연 영상 또는 빌드: `assets/grac-submission/abysspet-grac-submission.zip` ([가이드](./GRAC-DEMO-SUBMISSION.md))
+5. 수수료 납부
+6. **등급분류증명서 PDF** 보관
 
 체크리스트: [GRAC-RATING-CHECKLIST.md](./GRAC-RATING-CHECKLIST.md)
 

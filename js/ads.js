@@ -100,6 +100,8 @@ function mockShowAd(kind) {
 
 function preloadSlot(slotName, adGroupId) {
   if (!isAdsSupported()) return;
+  if (isMockAdsEnabled()) return;
+  if (!sdk?.loadFullScreenAd) return;
   const slot = slotState[slotName];
   if (slot.loaded || slot.loadUnsub) return;
 

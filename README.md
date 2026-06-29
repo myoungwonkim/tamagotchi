@@ -233,6 +233,7 @@ npm run build:ait              # dist/ + .ait 번들 (콘솔 업로드용)
 | [docs/APPS-IN-TOSS-CONSOLE-SETUP.md](docs/APPS-IN-TOSS-CONSOLE-SETUP.md) | 콘솔·정산·광고 그룹 |
 | [docs/GRAC-RATING-CHECKLIST.md](docs/GRAC-RATING-CHECKLIST.md) | 게임물 등급 심의 |
 | [docs/GRAC-SUBMISSION-PACK.md](docs/GRAC-SUBMISSION-PACK.md) | GRAC 제출용 게임 설명서 |
+| [docs/GRAC-DEMO-SUBMISSION.md](docs/GRAC-DEMO-SUBMISSION.md) | GRAC 시연 영상·.ait·QR 가이드 |
 | [docs/privacy.html](docs/privacy.html) | 개인정보 처리방침 (검수 URL) |
 | [docs/MONETIZATION.md](docs/MONETIZATION.md) | 광고 지점·보상 정책 |
 | [docs/APPS-IN-TOSS-LAUNCH.md](docs/APPS-IN-TOSS-LAUNCH.md) | 출시·QA 체크리스트 |

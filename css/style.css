@@ -1348,6 +1348,10 @@ body.capture-mode .dev-panel {
   display: none !important;
 }
 
+body.grac-demo-mode .dev-panel {
+  display: none !important;
+}
+
 body.capture-mode .boot-error {
   display: none !important;
 }

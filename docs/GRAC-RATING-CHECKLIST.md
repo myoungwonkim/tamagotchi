@@ -21,7 +21,7 @@
 - [ ] 사업자등록증 사본
 - [ ] 게임 설명서 (플레이 방법, 사망·부활 규칙, 광고 노출 시점) → [GRAC-SUBMISSION-PACK.md](./GRAC-SUBMISSION-PACK.md)
 - [ ] 스크린샷 5장 이상 (메인, 돌보기, 진화, 게임오버, 탐사 일지)
-- [ ] 시연 영상 또는 빌드 (샌드박스 `.ait` / 검수용 QR)
+- [ ] 시연 영상 또는 빌드 → [GRAC-DEMO-SUBMISSION.md](./GRAC-DEMO-SUBMISSION.md) · `assets/grac-submission/`
 - [ ] 등급분류 신청서 ([게임물관리위원회](https://www.grac.or.kr))
 
 ## 게임 내 콘텐츠 자가 점검

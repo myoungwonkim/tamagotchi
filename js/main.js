@@ -9,7 +9,7 @@ import {
   EVOLUTION_ADULT_MIN_AGE_MS,
 } from "./evolution.js";
 import { resolveAdultVariant } from "./adultVariants.js";
-import { addToEncyclopedia } from "./encyclopedia.js";
+import { addToEncyclopedia, clearEncyclopedia } from "./encyclopedia.js";
 import {
   getAdultActionMessage,
   shouldShowIdleDialogue,
@@ -57,6 +57,7 @@ import {
   setAdsPromptApi,
 } from "./ui.js";
 import { getStoreCaptureScene, isStoreCaptureMode, setupStoreCapture } from "./storeCapture.js";
+import { isGracDemoMode, runGracDemo } from "./gracDemo.js";
 
 const OFFLINE_MESSAGE_MS = 30 * 60 * 1000;
 const OFFLINE_NOTICE_MS = 5 * 60 * 1000;
@@ -179,6 +180,51 @@ function applyAwayTime(elapsed, { notify = false } = {}) {
   savePet(pet);
 }
 
+function performDemoAction(key) {
+  if (key === "feed") handleAction(feed, "feed");
+  else if (key === "play") handleAction(play, "play");
+  else if (key === "clean") handleAction(clean, "clean");
+  else if (key === "sleep" || key === "wake") handleAction(toggleSleep, "sleep");
+}
+
+async function initGracDemo() {
+  document.body.classList.add("grac-demo-mode");
+  bindEvents();
+  setupMuteButton();
+
+  setAdsPromptApi({
+    canOfferEmergencyCare,
+    canOfferNeglectReset,
+  });
+  await initAds();
+
+  await runGracDemo({
+    getPet: () => pet,
+    startNewPet,
+    handleEvolution,
+    performAction: performDemoAction,
+    renderAndSave() {
+      renderPet(pet);
+      savePet(pet);
+    },
+    showMessage,
+    showEncyclopedia,
+    hideEncyclopedia,
+    clearStorage() {
+      clearPet();
+      clearDeathSnapshot();
+      clearEncyclopedia();
+    },
+    triggerGameOver() {
+      if (!pet) return;
+      pet.health = 0;
+      runGameOverCheck();
+      renderPet(pet);
+      savePet(pet);
+    },
+  });
+}
+
 async function init() {
   const captureScene = getStoreCaptureScene();
   if (captureScene) {
@@ -187,6 +233,11 @@ async function init() {
     pet = setupStoreCapture(captureScene);
     await refreshAllGraphics(pet);
     window.__STORE_CAPTURE_READY__ = true;
+    return;
+  }
+
+  if (isGracDemoMode()) {
+    await initGracDemo();
     return;
   }
 

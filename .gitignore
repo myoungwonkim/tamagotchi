@@ -7,3 +7,5 @@ node_modules/
 dist/
 .env.ait
 *.ait
+!assets/grac-submission/
+assets/grac-submission/_video_raw/
