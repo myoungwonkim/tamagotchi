@@ -492,7 +492,7 @@ function bindEvents() {
   });
 
   document.getElementById("btn-encyclopedia")?.addEventListener("click", withAudio(() => {
-    showEncyclopedia();
+    showEncyclopedia(pet);
   }));
 
   document.getElementById("btn-close-encyclopedia")?.addEventListener("click", withAudio(() => {

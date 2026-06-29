@@ -49,20 +49,10 @@ function evolveToAdultPretty(ctx) {
   ctx.renderAndSave();
 }
 
-function seedDemoEncyclopedia(ctx) {
+function ensureEncyclopediaEntry(ctx) {
   const pet = ctx.getPet();
   if (!pet?.adultVariantId) return;
   addToEncyclopedia(pet);
-
-  const ghost = {
-    ...pet,
-    name: "별이",
-    adultVariantId: "sparkle",
-    speciesTheme: "deepsea",
-    bornAt: Date.now() - EVOLUTION_ADULT_MIN_AGE_MS - MS_PER_DAY * 8,
-    lastEvolutionStage: "adult",
-  };
-  addToEncyclopedia(ghost);
 }
 
 export async function runGracDemo(ctx) {
@@ -116,8 +106,8 @@ export async function runGracDemo(ctx) {
     evolveToAdultPretty(ctx);
     await pause(5500);
 
-    seedDemoEncyclopedia(ctx);
-    ctx.showEncyclopedia();
+    ensureEncyclopediaEntry(ctx);
+    ctx.showEncyclopedia(ctx.getPet());
     await pause(5500);
     ctx.hideEncyclopedia();
     await pause(1200);

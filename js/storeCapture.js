@@ -133,7 +133,7 @@ export function setupStoreCapture(scene) {
     setGameActive(true);
     renderPet(pet);
     document.getElementById("btn-new-pet-side")?.setAttribute("hidden", "");
-    showEncyclopedia();
+    showEncyclopedia(pet);
     return pet;
   }
 

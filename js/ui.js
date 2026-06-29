@@ -554,8 +554,11 @@ function renderEncyclopediaGrid(speciesTheme) {
     card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
 
     const entry = slot.entries[0];
+    const spriteTheme = entry
+      ? normalizeSpeciesTheme(entry.speciesTheme)
+      : theme;
     const graphic = slot.collected
-      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant, theme))
+      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant, spriteTheme))
       : createEncyclopediaGraphic(null, true);
 
     const name = document.createElement("span");
@@ -590,7 +593,7 @@ function renderEncyclopediaGrid(speciesTheme) {
 }
 
 function showEncyclopediaDetail(variant, entry) {
-  const theme = entry.speciesTheme;
+  const theme = normalizeSpeciesTheme(entry.speciesTheme ?? encyclopediaActiveTheme);
   elements.encyclopediaDetailGraphic.innerHTML = "";
   setPetGraphic(
     elements.encyclopediaDetailGraphic,
@@ -618,7 +621,14 @@ export function renderEncyclopedia() {
   selectEncyclopediaTheme(encyclopediaActiveTheme);
 }
 
-export function showEncyclopedia() {
+export function showEncyclopedia(speciesThemeOrPet) {
+  if (speciesThemeOrPet) {
+    const theme =
+      typeof speciesThemeOrPet === "object" && speciesThemeOrPet.speciesTheme != null
+        ? speciesThemeOrPet.speciesTheme
+        : speciesThemeOrPet;
+    encyclopediaActiveTheme = normalizeSpeciesTheme(theme);
+  }
   renderEncyclopedia();
   elements.encyclopediaOverlay.hidden = false;
   elements.encyclopediaPanel?.scrollTo(0, 0);
