@@ -144,11 +144,6 @@ export function setupStoreCapture(scene) {
     captureDeathSnapshot(pet);
     setGameActive(false);
     renderPet(pet);
-    const reviveBtn = document.getElementById("btn-revive-ad");
-    if (reviveBtn) {
-      reviveBtn.hidden = false;
-      reviveBtn.disabled = false;
-    }
     return pet;
   }
 

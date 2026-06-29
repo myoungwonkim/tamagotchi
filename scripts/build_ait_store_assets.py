@@ -457,7 +457,7 @@ def wait_server(timeout: float = 20.0) -> None:
     raise RuntimeError("Local server did not start in time")
 
 
-def capture_with_playwright() -> None:
+def capture_with_playwright(scenes: list[tuple[str, int, int, str]] | None = None) -> None:
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
@@ -491,7 +491,7 @@ def capture_with_playwright() -> None:
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        for scene, width, height, filename in CAPTURES:
+        for scene, width, height, filename in scenes or CAPTURES:
             run_capture(browser, scene, width, height, filename)
         browser.close()
 
@@ -502,12 +502,21 @@ def save_logo(img: Image.Image, name: str) -> None:
 
 
 def main() -> None:
+    only = None
+    if len(sys.argv) > 1 and sys.argv[1] == "--only" and len(sys.argv) > 2:
+        only = {s.strip() for s in sys.argv[2].split(",") if s.strip()}
+
     OUT.mkdir(parents=True, exist_ok=True)
 
-    save_logo(make_logo_light(), "app-logo-light.png")
-    save_logo(make_logo_dark(), "app-logo-dark.png")
-    print("logo app-logo-light.png 600x600")
-    print("logo app-logo-dark.png 600x600")
+    if only is None:
+        save_logo(make_logo_light(), "app-logo-light.png")
+        save_logo(make_logo_dark(), "app-logo-dark.png")
+        print("logo app-logo-light.png 600x600")
+        print("logo app-logo-dark.png 600x600")
+
+    captures = CAPTURES if only is None else [c for c in CAPTURES if c[0] in only]
+    if only is not None and not captures:
+        raise SystemExit(f"unknown capture scene(s): {sys.argv[2]!r} (valid: {[c[0] for c in CAPTURES]})")
 
     server = subprocess.Popen(
         [sys.executable, "-m", "http.server", str(PORT), "--bind", "127.0.0.1"],
@@ -517,13 +526,14 @@ def main() -> None:
     )
     try:
         wait_server()
-        capture_with_playwright()
+        capture_with_playwright(captures if only is not None else None)
     finally:
         server.terminate()
         server.wait(timeout=5)
 
-    build_marketing_thumbnails()
-    build_landscape_screenshot()
+    if only is None:
+        build_marketing_thumbnails()
+        build_landscape_screenshot()
     print("done")
 
 

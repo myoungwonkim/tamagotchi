@@ -388,7 +388,10 @@ function updateGameOver(pet) {
   }
 
   const snapshot = getDeathSnapshot();
-  const showRevive = snapshot && canOfferRevive(snapshot.deathId);
+  const captureScene = new URLSearchParams(window.location.search).get("capture");
+  const showRevive =
+    snapshot &&
+    (canOfferRevive(snapshot.deathId) || captureScene === "gameover");
   if (elements.btnReviveAd) {
     elements.btnReviveAd.hidden = !showRevive;
     elements.btnReviveAd.disabled = !showRevive;

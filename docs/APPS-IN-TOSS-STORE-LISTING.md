@@ -71,6 +71,7 @@
 
 ```bash
 python3 scripts/build_ait_store_assets.py
+# 단일 캡처만: python3 scripts/build_ait_store_assets.py --only gameover
 ```
 
 콘솔 업로드 후 `app-logo-light.png` URL을 `granite.config.ts` `brand.icon`에 입력하세요.
