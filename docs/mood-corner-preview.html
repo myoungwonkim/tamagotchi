@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <title>기분 표시 시안 — 화면 한구석 5종</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a2028;
+    --surface: #0f2f39;
+    --text: #cfe6ec;
+    --text-muted: #6a8b94;
+    --accent: #45c8dc;
+    --border-subtle: #20464f;
+    --pet-viewport-bg: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
+    --pet-border: #6fb6d0;
+    --msg-bg: #ffffff;
+    --msg-text: #153039;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding:
+      calc(22px + env(safe-area-inset-top))
+      calc(14px + env(safe-area-inset-right))
+      calc(48px + env(safe-area-inset-bottom))
+      calc(14px + env(safe-area-inset-left));
+    line-height: 1.5;
+  }
+
+  .page-head { max-width: 1180px; margin: 0 auto 6px; text-align: center; }
+  .page-head h1 { font-size: 1.125rem; font-weight: 700; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #8fb4c4; max-width: 680px; margin: 0 auto; }
+  .page-head strong { color: #bfe6f2; }
+
+  .controls {
+    position: sticky; top: 0; z-index: 20;
+    max-width: 1180px; margin: 16px auto 22px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: 8px 10px; padding: 12px 14px;
+    background: #10303a; border: 1px solid var(--border-subtle); border-radius: 12px;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+  .controls .lbl { font-size: 0.6875rem; color: #8fb4c4; margin: 0 2px 0 6px; }
+  .controls .sep { width: 1px; height: 22px; background: #2a5260; margin: 0 4px; }
+  .chip {
+    font: inherit; font-size: 0.72rem; font-weight: 600;
+    color: #cfe6ec; background: #17414e; border: 1px solid #2f5d6c;
+    border-radius: 999px; padding: 6px 11px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; transition: background .15s, border-color .15s, color .15s;
+  }
+  .chip[aria-pressed="true"] { background: #256e83; border-color: #45c8dc; color: #fff; }
+  .btn {
+    font: inherit; font-size: 0.72rem; font-weight: 600; color: #dff0f6;
+    background: #17414e; border: 1px solid #2f5d6c; border-radius: 8px;
+    padding: 7px 11px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+
+  .gallery {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px; max-width: 1180px; margin: 0 auto;
+  }
+  .card { background: #12313b; border: 1px solid #223f48; border-radius: 16px; padding: 12px 12px 14px; }
+  .card--pick { border-color: #45c8dc; box-shadow: 0 0 0 1px rgba(69,200,220,0.3); }
+  .card__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .card__head h2 { font-size: 0.9375rem; font-weight: 700; color: #eaf6fb; }
+  .tag { font-size: 0.5625rem; font-weight: 700; letter-spacing: .05em; padding: 2px 8px; border-radius: 999px; background: #256e83; color: #fff; white-space: nowrap; }
+  .card__desc { font-size: 0.6875rem; color: #86a6b4; margin: 4px 0 10px; min-height: 3.6em; }
+
+  /* ===== 미니 펫 화면 ===== */
+  .stage {
+    position: relative; height: 230px; border-radius: 12px; overflow: hidden;
+    border: 2px solid var(--pet-border);
+    background: var(--pet-viewport-bg);
+    box-shadow: inset 0 0 40px rgba(16,74,104,0.28);
+    isolation: isolate;
+  }
+  .water { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
+  .water span {
+    position: absolute; bottom: -20px; border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, rgba(255,255,255,.85), rgba(255,255,255,.2) 55%, transparent 72%);
+    animation: bubbleRise linear infinite;
+  }
+  @keyframes bubbleRise { 0%{transform:translateY(0);opacity:0} 15%{opacity:.85} 100%{transform:translateY(-230px);opacity:0} }
+  .water span:nth-child(1){left:16%;width:7px;height:7px;animation-duration:12s;animation-delay:-2s}
+  .water span:nth-child(2){left:44%;width:5px;height:5px;animation-duration:9s;animation-delay:-5s}
+  .water span:nth-child(3){left:72%;width:9px;height:9px;animation-duration:15s;animation-delay:-8s}
+
+  .pet {
+    position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%);
+    width: 84px; height: auto; z-index: 4;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    filter: drop-shadow(0 7px 10px rgba(6,40,62,.4));
+    animation: petFloat 4.5s ease-in-out infinite;
+  }
+  @keyframes petFloat { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-50%,calc(-50% - 8px))} }
+
+  /* soft-white 메시지 (게임 적용본, 맥락용) */
+  .msg {
+    position: absolute; z-index: 6; left: 50%; top: 12px; transform: translateX(-50%);
+    max-width: 76%; font-size: 0.68rem; font-weight: 600; text-align: center;
+    padding: 6px 12px; line-height: 1.3; white-space: nowrap;
+    background: var(--msg-bg); color: var(--msg-text);
+    border-radius: 13px; box-shadow: 0 4px 12px rgba(0,20,30,.28);
+  }
+  .msg::after { content:""; position:absolute; left:50%; bottom:-6px; transform:translateX(-50%); border:7px solid transparent; border-top-color:var(--msg-bg); border-bottom:0; }
+
+  /* ===== 코너 기분 표시 공통 ===== */
+  .mi {
+    position: absolute; z-index: 8;
+    display: flex; align-items: center;
+    transition: transform .3s ease, opacity .3s ease;
+  }
+  .mi img { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
+  .mi.is-changing { animation: miPop .45s ease; }
+  @keyframes miPop { 0%{transform:scale(.8);opacity:.4} 60%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+
+  /* V1 아이콘 배지 (테두리=기분색) */
+  .mi--v1 {
+    width: 40px; height: 40px; border-radius: 50%; justify-content: center;
+    background: var(--surface); border: 2px solid var(--mood-color);
+    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  }
+  .mi--v1 img { width: 28px; height: 28px; }
+
+  /* V2 아이콘 + 라벨 칩 */
+  .mi--v2 {
+    gap: 5px; background: var(--surface); border: 1px solid var(--border-subtle);
+    border-radius: 999px; padding: 3px 11px 3px 4px; box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  }
+  .mi--v2 img { width: 26px; height: 26px; }
+  .mi--v2 .t { font-size: 0.72rem; font-weight: 700; color: var(--mood-color); }
+
+  /* V3 미니 아이콘 (프레임 없음) */
+  .mi--v3 img { width: 36px; height: 36px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.45)); }
+
+  /* V4 컬러 도트 + 라벨 (HUD) */
+  .mi--v4 {
+    gap: 6px; background: rgba(10,32,40,.55); border: 1px solid rgba(255,255,255,.14);
+    border-radius: 8px; padding: 5px 9px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  }
+  .mi--v4 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--mood-color); box-shadow: 0 0 7px var(--mood-color); }
+  .mi--v4 .t { font-size: 0.7rem; font-weight: 600; color: #e8f6fb; }
+
+  /* V5 코너 글로우 + 아이콘 (앰비언트) */
+  .mi--v5 {
+    width: 44px; height: 44px; border-radius: 50%; justify-content: center;
+    background: radial-gradient(circle, rgba(255,255,255,.1), rgba(255,255,255,0) 70%);
+    box-shadow: 0 0 18px 7px var(--mood-glow);
+  }
+  .mi--v5 img { width: 32px; height: 32px; }
+  .mi--v5.mi--pulse { animation: miGlowPulse 1.6s ease-in-out infinite; }
+  @keyframes miGlowPulse {
+    0%,100% { box-shadow: 0 0 14px 5px var(--mood-glow); }
+    50% { box-shadow: 0 0 22px 10px var(--mood-glow); }
+  }
+
+  .back-link { display:block; text-align:center; margin-top:30px; font-size:0.8125rem; }
+  .back-link a { color:#7fb8cd; text-decoration:none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet, .water span, .mi { animation: none !important; }
+  }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>기분 표시 시안 — 화면 한구석 5종</h1>
+    <p>풍선 대신 <strong>펫 화면 모서리에 기분을 상시 표시</strong>하는 안입니다. 위쪽 <strong>기분 칩</strong>과 <strong>위치(네 모서리)</strong>를 바꿔가며 비교하세요. 말풍선(소프트 화이트)은 맥락용으로 함께 표시됩니다. <strong>아직 게임에는 반영하지 않았습니다.</strong></p>
+  </header>
+
+  <div class="controls">
+    <span class="lbl">기분:</span>
+    <button type="button" class="chip mood-chip" data-mood="happy" aria-pressed="true">😊</button>
+    <button type="button" class="chip mood-chip" data-mood="neutral" aria-pressed="false">😐</button>
+    <button type="button" class="chip mood-chip" data-mood="sad" aria-pressed="false">😢</button>
+    <button type="button" class="chip mood-chip" data-mood="sick" aria-pressed="false">🤒</button>
+    <button type="button" class="chip mood-chip" data-mood="sleep" aria-pressed="false">😴</button>
+    <span class="sep"></span>
+    <span class="lbl">위치:</span>
+    <button type="button" class="chip pos-chip" data-pos="tl" aria-pressed="true">↖ 좌상</button>
+    <button type="button" class="chip pos-chip" data-pos="tr" aria-pressed="false">↗ 우상</button>
+    <button type="button" class="chip pos-chip" data-pos="bl" aria-pressed="false">↙ 좌하</button>
+    <button type="button" class="chip pos-chip" data-pos="br" aria-pressed="false">↘ 우하</button>
+    <span class="sep"></span>
+    <button type="button" class="btn" id="replay">↻ 다시 재생</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <p class="back-link"><a href="index.html">← 시안 허브로</a></p>
+
+  <script>
+    const PET = "../assets/sprites/adult/standard.png";
+    const moodIcon = (m) => `../assets/sprites/mood/${m}.png`;
+
+    const MOOD_LABEL = { happy:"행복", neutral:"보통", sad:"슬픔", sick:"아픔", sleep:"수면" };
+    const MOOD_MSG = { happy:"기분 최고!", neutral:"그럭저럭.", sad:"흥, 관심 없어.", sick:"으… 아파.", sleep:"쿨… 쿨…" };
+    const MOOD_COLOR = { happy:"#45d98a", neutral:"#8ba0a8", sad:"#4a90e2", sick:"#e0663c", sleep:"#6a72e0" };
+    const MOOD_GLOW = { happy:"rgba(69,217,138,.5)", neutral:"rgba(139,160,168,.35)", sad:"rgba(74,144,226,.5)", sick:"rgba(224,102,60,.6)", sleep:"rgba(106,114,224,.5)" };
+
+    const VARIANTS = [
+      { id:"v4", name:"컬러 도트 + 라벨", tag:"추천", pick:true,
+        desc:"작은 기분색 점 + 글자 라벨의 미니 HUD. 얼굴 없이도 한눈에 읽히고 가장 깔끔·정보적." },
+      { id:"v1", name:"아이콘 배지", tag:"추천", pick:true,
+        desc:"기존 얼굴 아이콘을 작은 원형 배지로 모서리에 고정. 테두리가 기분색. 친숙하고 안정적." },
+      { id:"v2", name:"아이콘 + 라벨 칩", tag:"", pick:false,
+        desc:"얼굴 + 한글 라벨을 알약형으로. 초보도 바로 이해되는 명확한 표시." },
+      { id:"v3", name:"미니 아이콘", tag:"", pick:false,
+        desc:"프레임 없이 얼굴만 살짝. 가장 미니멀하고 화면을 가장 적게 차지." },
+      { id:"v5", name:"코너 글로우 + 아이콘", tag:"", pick:false,
+        desc:"얼굴 + 기분색 은은한 광채. 분위기 있는 앰비언트. 아픔은 살짝 맥동." },
+    ];
+
+    let mood = "happy";
+    let pos = "tl";
+    const gallery = document.getElementById("gallery");
+
+    function innerFor(v, m) {
+      if (v === "v1" || v === "v3" || v === "v5") return `<img data-role="icon" src="${moodIcon(m)}" alt="">`;
+      if (v === "v2") return `<img data-role="icon" src="${moodIcon(m)}" alt=""><span class="t" data-role="label">${MOOD_LABEL[m]}</span>`;
+      if (v === "v4") return `<span class="dot"></span><span class="t" data-role="label">${MOOD_LABEL[m]}</span>`;
+      return "";
+    }
+
+    VARIANTS.forEach((v) => {
+      const card = document.createElement("article");
+      card.className = "card" + (v.pick ? " card--pick" : "");
+      const tagHTML = v.tag ? `<span class="tag">${v.tag}</span>` : "";
+      card.innerHTML = `
+        <div class="card__head"><h2>${v.name}</h2>${tagHTML}</div>
+        <p class="card__desc">${v.desc}</p>
+        <div class="stage">
+          <div class="water"><span></span><span></span><span></span></div>
+          <div class="msg" data-role="msg">${MOOD_MSG[mood]}</div>
+          <img class="pet" src="${PET}" alt="">
+          <div class="mi mi--${v.id}" data-variant="${v.id}">${innerFor(v.id, mood)}</div>
+        </div>`;
+      gallery.append(card);
+    });
+
+    function applyPosition(p) {
+      pos = p;
+      document.querySelectorAll(".pos-chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.pos === p)));
+      const M = 10;
+      document.querySelectorAll(".mi").forEach((mi) => {
+        mi.style.top = mi.style.bottom = mi.style.left = mi.style.right = "auto";
+        if (p[0] === "t") mi.style.top = M + "px"; else mi.style.bottom = M + "px";
+        if (p[1] === "l") mi.style.left = M + "px"; else mi.style.right = M + "px";
+      });
+    }
+
+    function applyMood(m, animate) {
+      mood = m;
+      document.querySelectorAll(".mood-chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.mood === m)));
+      document.querySelectorAll(".mi").forEach((mi) => {
+        mi.style.setProperty("--mood-color", MOOD_COLOR[m]);
+        mi.style.setProperty("--mood-glow", MOOD_GLOW[m]);
+        const icon = mi.querySelector('[data-role="icon"]');
+        if (icon) icon.src = moodIcon(m);
+        const label = mi.querySelector('[data-role="label"]');
+        if (label) label.textContent = MOOD_LABEL[m];
+        mi.classList.toggle("mi--pulse", mi.dataset.variant === "v5" && m === "sick");
+        if (animate) {
+          mi.classList.remove("is-changing");
+          void mi.offsetWidth;
+          mi.classList.add("is-changing");
+        }
+      });
+      document.querySelectorAll('[data-role="msg"]').forEach((el) => { el.textContent = MOOD_MSG[m]; });
+    }
+
+    document.querySelectorAll(".mood-chip").forEach((c) => c.addEventListener("click", () => applyMood(c.dataset.mood, true)));
+    document.querySelectorAll(".pos-chip").forEach((c) => c.addEventListener("click", () => applyPosition(c.dataset.pos)));
+    document.getElementById("replay").addEventListener("click", () => applyMood(mood, true));
+
+    applyPosition("tl");
+    applyMood("happy", false);
+  </script>
+</body>
+</html>

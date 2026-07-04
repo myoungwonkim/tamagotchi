@@ -642,6 +642,33 @@ img.pet-sprite[hidden] {
   line-height: 1;
 }
 
+/* 인게임 기분 표시: 좌상단 미니 아이콘 (프레임 없음) */
+#pet-mood-bubble {
+  top: 10px;
+  left: 10px;
+  right: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  z-index: 6;
+}
+
+#pet-mood-bubble::before,
+#pet-mood-bubble::after {
+  display: none;
+}
+
+#pet-mood-bubble .pet-mood-img,
+#pet-mood-bubble .pet-mood-fallback {
+  width: clamp(1.85rem, 7.5vw, 2.2rem);
+  height: clamp(1.85rem, 7.5vw, 2.2rem);
+  font-size: clamp(1.85rem, 7.5vw, 2.2rem);
+  filter: drop-shadow(0 2px 4px rgba(6, 40, 62, 0.5));
+}
+
 .new-pet-fab {
   position: fixed;
   left: calc(16px + var(--safe-left));
