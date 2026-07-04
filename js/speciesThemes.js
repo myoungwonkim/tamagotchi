@@ -39,8 +39,8 @@ export const STAGE_LABELS = {
 };
 
 const VARIANT_LABELS = {
-  golden: { deepsea: "등불어", mermaid: "진주 인어", vent: "열수 해마" },
-  fluffy: { deepsea: "달빛 해파리", mermaid: "달빛 실크 인어", vent: "눈없는 새우" },
+  golden: { deepsea: "등불어", mermaid: "금비늘 어인", vent: "열수 해마" },
+  fluffy: { deepsea: "달빛 해파리", mermaid: "소라 어인", vent: "눈없는 새우" },
   sparkle: { deepsea: "발광 오징어", mermaid: "별빛 인어", vent: "예티 게" },
   standard: { deepsea: "산호어", mermaid: "산호 인어", vent: "담수어" },
   farm: { deepsea: "해조어", mermaid: "해초 인어", vent: "벤트 게" },
@@ -51,8 +51,8 @@ const VARIANT_LABELS = {
 };
 
 const VARIANT_EMOJI = {
-  golden: { deepsea: "🔆🐟", mermaid: "🧜‍♀️✨", vent: "🐴🌋" },
-  fluffy: { deepsea: "🪼", mermaid: "🧜‍♀️🌙", vent: "🦐" },
+  golden: { deepsea: "🔆🐟", mermaid: "🐟⚔️", vent: "🐴🌋" },
+  fluffy: { deepsea: "🪼", mermaid: "🐚🧜", vent: "🦐" },
   sparkle: { deepsea: "✨🦑", mermaid: "✨🧜", vent: "🦀" },
   standard: { deepsea: "🐟", mermaid: "🧜‍♀️", vent: "🐟" },
   farm: { deepsea: "🪸🐟", mermaid: "🧜‍♀️🌿", vent: "🦀" },
