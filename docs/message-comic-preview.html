@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <title>말풍선 시안 — 코믹 팝 6종</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a2028;
+    --surface: #0f2f39;
+    --text: #cfe6ec;
+    --text-muted: #6a8b94;
+    --accent: #45c8dc;
+    --border-subtle: #20464f;
+    --pet-viewport-bg: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
+    --pet-border: #6fb6d0;
+    --ink: #0a2833;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding:
+      calc(22px + env(safe-area-inset-top))
+      calc(14px + env(safe-area-inset-right))
+      calc(48px + env(safe-area-inset-bottom))
+      calc(14px + env(safe-area-inset-left));
+    line-height: 1.5;
+  }
+
+  .page-head { max-width: 1180px; margin: 0 auto 6px; text-align: center; }
+  .page-head h1 { font-size: 1.125rem; font-weight: 700; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #8fb4c4; max-width: 660px; margin: 0 auto; }
+  .page-head strong { color: #bfe6f2; }
+
+  .controls {
+    position: sticky; top: 0; z-index: 20;
+    max-width: 1180px; margin: 16px auto 22px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: 8px 12px; padding: 12px 14px;
+    background: #10303a; border: 1px solid var(--border-subtle); border-radius: 12px;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+  .btn {
+    font: inherit; font-size: 0.75rem; font-weight: 600;
+    color: #dff0f6; background: #17414e; border: 1px solid #2f5d6c;
+    border-radius: 8px; padding: 7px 12px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; transition: background .15s, border-color .15s;
+  }
+  .btn:active { background: #1e5162; }
+  .btn--primary { background: #256e83; border-color: #3f97ad; color: #fff; }
+  .controls .lbl { font-size: 0.6875rem; color: #8fb4c4; }
+  .controls .cur { font-size: 0.6875rem; color: #bfe6f2; font-weight: 600; }
+
+  .gallery {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px; max-width: 1180px; margin: 0 auto;
+  }
+  .card { background: #12313b; border: 1px solid #223f48; border-radius: 16px; padding: 12px 12px 14px; }
+  .card--baseline { border-color: #5a4636; opacity: 0.95; }
+  .card--pick { border-color: #45c8dc; box-shadow: 0 0 0 1px rgba(69,200,220,0.3); }
+  .card__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .card__head h2 { font-size: 0.9375rem; font-weight: 700; color: #eaf6fb; }
+  .tag { font-size: 0.5625rem; font-weight: 700; letter-spacing: .05em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .tag--baseline { background: #5a4636; color: #f0e0cc; }
+  .tag--pick { background: #256e83; color: #fff; }
+  .card__desc { font-size: 0.6875rem; color: #86a6b4; margin: 4px 0 10px; min-height: 3.6em; }
+
+  /* ===== 미니 펫 화면 ===== */
+  .stage {
+    position: relative; height: 250px; border-radius: 12px; overflow: hidden;
+    border: 2px solid var(--pet-border);
+    background: var(--pet-viewport-bg);
+    box-shadow: inset 0 0 40px rgba(16,74,104,0.28);
+    isolation: isolate;
+  }
+  .water { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
+  .water span {
+    position: absolute; bottom: -20px; border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, rgba(255,255,255,.85), rgba(255,255,255,.2) 55%, transparent 72%);
+    animation: bubbleRise linear infinite;
+  }
+  @keyframes bubbleRise { 0%{transform:translateY(0);opacity:0} 15%{opacity:.85} 100%{transform:translateY(-250px);opacity:0} }
+  .water span:nth-child(1){left:16%;width:7px;height:7px;animation-duration:12s;animation-delay:-2s}
+  .water span:nth-child(2){left:44%;width:5px;height:5px;animation-duration:9s;animation-delay:-5s}
+  .water span:nth-child(3){left:72%;width:9px;height:9px;animation-duration:15s;animation-delay:-8s}
+  .water span:nth-child(4){left:86%;width:5px;height:5px;animation-duration:11s;animation-delay:-3s}
+
+  .pet {
+    position: absolute; left: 50%; top: 58%; transform: translate(-50%,-50%);
+    width: 92px; height: auto; z-index: 4;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    filter: drop-shadow(0 7px 10px rgba(6,40,62,.4));
+    animation: petFloat 4.5s ease-in-out infinite;
+  }
+  @keyframes petFloat { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-50%,calc(-50% - 8px))} }
+
+  /* ===== 기분 풍선: 현재 게임과 동일 (원본 유지) ===== */
+  .mood {
+    position: absolute; z-index: 7; top: 16%; right: 20%;
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 2px solid var(--border-subtle);
+    box-shadow: 0 2px 0 rgba(0,0,0,.2); padding: 5px;
+    animation: moodFade .5s ease;
+  }
+  .mood img { width: 30px; height: 30px; image-rendering: pixelated; image-rendering: crisp-edges; }
+  .mood::before {
+    content: ""; position: absolute; top: 58%; left: -9px;
+    width: 0; height: 0; border-style: solid; border-width: 5px 9px 5px 0;
+    border-color: transparent var(--border-subtle) transparent transparent;
+  }
+  .mood::after {
+    content: ""; position: absolute; top: 58%; left: -6px;
+    width: 0; height: 0; border-style: solid; border-width: 4px 7px 4px 0;
+    border-color: transparent var(--surface) transparent transparent;
+  }
+  @keyframes moodFade { 0%{opacity:.4;transform:scale(.92)} 100%{opacity:1;transform:scale(1)} }
+
+  /* ============================================================
+     말풍선 — 코믹 팝 계열 (펫 위 · 아래 꼬리)
+     ============================================================ */
+  .msg {
+    position: absolute; z-index: 6; left: 50%; top: 14px; transform: translateX(-50%);
+    max-width: 84%; font-size: 0.74rem; font-weight: 700; text-align: center;
+    padding: 8px 14px; line-height: 1.3;
+  }
+
+  /* 0) 현재(기준): 상단 전체 폭 반투명 바 */
+  .msg--v0 {
+    left:0; right:0; top:0; transform:none; max-width:none;
+    border-radius: 12px 12px 0 0;
+    background: rgba(12,40,49,0.96); color:#cfe6ec; font-weight:600;
+    border-bottom: 1px solid var(--border-subtle);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    animation: v0Pop .4s ease;
+  }
+  @keyframes v0Pop { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* 공통 팝/흔들 키프레임 (translateX(-50%) 유지) */
+  @keyframes cPop {
+    0%{opacity:0;transform:translateX(-50%) scale(.4) rotate(-8deg)}
+    55%{opacity:1;transform:translateX(-50%) scale(1.12) rotate(4deg)}
+    75%{transform:translateX(-50%) scale(.97) rotate(-2deg)}
+    100%{transform:translateX(-50%) scale(1) rotate(0)}
+  }
+  @keyframes cWiggle { 0%,100%{transform:translateX(-50%) rotate(-1.6deg)} 50%{transform:translateX(-50%) rotate(1.6deg)} }
+  @keyframes cJiggle { 0%,100%{transform:translateX(-50%) rotate(-3deg)} 50%{transform:translateX(-50%) rotate(3deg)} }
+
+  /* 1) 클래식 크림 (추천) */
+  .msg--c1 { background:#fff4d6; color:#3a2a10; border:2.5px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); }
+  .msg--c1::after { content:""; position:absolute; left:50%; bottom:-13px; transform:translateX(-50%); border:9px solid transparent; border-top-color:var(--ink); border-bottom:0; }
+  .msg--c1::before { content:""; position:absolute; left:50%; bottom:-8px; transform:translateX(-50%); border:6px solid transparent; border-top-color:#fff4d6; border-bottom:0; z-index:1; }
+  .msg--c1.is-in { animation: cPop .55s cubic-bezier(.5,1.6,.5,1) both, cWiggle 2.4s ease-in-out .55s infinite; }
+
+  /* 2) 시안 팝 (테마색) */
+  .msg--c2 { background:#4fe0f0; color:#05242c; border:2.5px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); }
+  .msg--c2::after { content:""; position:absolute; left:50%; bottom:-13px; transform:translateX(-50%); border:9px solid transparent; border-top-color:var(--ink); border-bottom:0; }
+  .msg--c2::before { content:""; position:absolute; left:50%; bottom:-8px; transform:translateX(-50%); border:6px solid transparent; border-top-color:#4fe0f0; border-bottom:0; z-index:1; }
+  .msg--c2.is-in { animation: cPop .55s cubic-bezier(.5,1.6,.5,1) both, cJiggle 2s ease-in-out .55s infinite; }
+
+  /* 3) 잉크 리버스 (다크 네온) */
+  .msg--c3 { background:#0e2f3a; color:#eafcff; border:2.5px solid var(--accent); border-radius:14px; box-shadow:3px 3px 0 #1f6f80; }
+  .msg--c3::after { content:""; position:absolute; left:50%; bottom:-13px; transform:translateX(-50%); border:9px solid transparent; border-top-color:var(--accent); border-bottom:0; }
+  .msg--c3::before { content:""; position:absolute; left:50%; bottom:-9px; transform:translateX(-50%); border:6px solid transparent; border-top-color:#0e2f3a; border-bottom:0; z-index:1; }
+  .msg--c3.is-in { animation: cPop .55s cubic-bezier(.5,1.6,.5,1) both, cWiggle 2.6s ease-in-out .55s infinite; }
+
+  /* 4) 스탬프 임팩트 (쾅 찍히듯 · 살짝 기울임) */
+  .msg--c4 { background:#fff4d6; color:#3a2a10; border:3px solid var(--ink); border-radius:12px; box-shadow:0 4px 0 var(--ink); }
+  .msg--c4::after { content:""; position:absolute; left:50%; bottom:-13px; transform:translateX(-50%); border:9px solid transparent; border-top-color:var(--ink); border-bottom:0; }
+  .msg--c4::before { content:""; position:absolute; left:50%; bottom:-8px; transform:translateX(-50%); border:6px solid transparent; border-top-color:#fff4d6; border-bottom:0; z-index:1; }
+  .msg--c4.is-in { animation: cStamp .5s cubic-bezier(.2,.8,.3,1) both, c4Bob 3s ease-in-out .5s infinite; }
+  @keyframes cStamp {
+    0%{opacity:0;transform:translateX(-50%) scale(1.9) rotate(-5deg)}
+    55%{opacity:1;transform:translateX(-50%) scale(.9) rotate(-3deg)}
+    78%{transform:translateX(-50%) scale(1.05) rotate(-3deg)}
+    100%{transform:translateX(-50%) scale(1) rotate(-2.5deg)}
+  }
+  @keyframes c4Bob { 0%,100%{transform:translateX(-50%) rotate(-2.5deg)} 50%{transform:translateX(-50%) rotate(-2.5deg) translateY(-3px)} }
+
+  /* 5) 버스트 (폭발 말풍선 · 외침용) */
+  .msg--c5 {
+    background:#ffd23f; color:#3a2410; font-weight:800; border:0; border-radius:0;
+    padding:16px 22px;
+    clip-path: polygon(50% 0%,61.1% 15.8%,79.4% 9.6%,79.1% 28.8%,97.6% 34.6%,86% 50%,97.6% 65.4%,79.1% 71.2%,79.4% 90.4%,61.1% 84.2%,50% 100%,38.9% 84.2%,20.6% 90.4%,20.9% 71.2%,2.4% 65.4%,14% 50%,2.4% 34.6%,20.9% 28.8%,20.6% 9.6%,38.9% 15.8%);
+    filter:
+      drop-shadow(2.5px 0 0 var(--ink)) drop-shadow(-2.5px 0 0 var(--ink))
+      drop-shadow(0 2.5px 0 var(--ink)) drop-shadow(0 -2.5px 0 var(--ink))
+      drop-shadow(3px 4px 0 rgba(10,40,51,.3));
+  }
+  .msg--c5.is-in { animation: cBurst .55s cubic-bezier(.4,1.7,.5,1) both, cPulse 1.8s ease-in-out .55s infinite; }
+  @keyframes cBurst {
+    0%{opacity:0;transform:translateX(-50%) scale(0) rotate(-30deg)}
+    60%{opacity:1;transform:translateX(-50%) scale(1.15) rotate(8deg)}
+    100%{transform:translateX(-50%) scale(1) rotate(0)}
+  }
+  @keyframes cPulse { 0%,100%{transform:translateX(-50%) scale(1)} 50%{transform:translateX(-50%) scale(1.04)} }
+
+  /* 6) 핸드드로 스티커 (2겹 아웃라인) */
+  .msg--c6 {
+    background:#fbfbf5; color:#12313b; border:2px solid var(--ink); border-radius:16px;
+    box-shadow: 0 0 0 4px #fbfbf5, 0 0 0 6px var(--ink), 4px 6px 0 rgba(10,40,51,.25);
+  }
+  .msg--c6::after { content:""; position:absolute; left:50%; bottom:-16px; transform:translateX(-50%); border:8px solid transparent; border-top-color:var(--ink); border-bottom:0; }
+  .msg--c6::before { content:""; position:absolute; left:50%; bottom:-11px; transform:translateX(-50%); border:6px solid transparent; border-top-color:#fbfbf5; border-bottom:0; z-index:1; }
+  .msg--c6.is-in { animation: cPop .55s cubic-bezier(.5,1.6,.5,1) both, cWiggle 2.8s ease-in-out .55s infinite; }
+
+  .back-link { display:block; text-align:center; margin-top:30px; font-size:0.8125rem; }
+  .back-link a { color:#7fb8cd; text-decoration:none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pet, .water span, .msg, .mood { animation: none !important; }
+  }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>말풍선 시안 — 코믹 팝 6종</h1>
+    <p><strong>기분 풍선은 현재 게임 그대로</strong> 두고, 펫 창의 <strong>말풍선만</strong> 코믹 팝 계열로 다양화했습니다. 모두 펫 위에 뜨는 <strong>아래 꼬리 말풍선 + 등장 팝 + 상시 미세 액션</strong>. 아직 게임에는 반영하지 않았습니다.</p>
+  </header>
+
+  <div class="controls">
+    <button type="button" class="btn btn--primary" id="replay">↻ 다시 재생</button>
+    <button type="button" class="btn" id="cycle">💬 메시지 바꾸기</button>
+    <span class="lbl">현재:</span><span class="cur" id="cur"></span>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <p class="back-link"><a href="index.html">← 시안 허브로</a></p>
+
+  <script>
+    const PET = "../assets/sprites/adult/standard.png";
+    const MOOD = "../assets/sprites/mood/happy.png";
+
+    const MESSAGES = [
+      "흥, 관심 없어!",
+      "밥 줘… 당장!",
+      "또 너야?",
+      "심심해 죽겠어.",
+      "…고마워. (조금)",
+    ];
+    let msgIdx = 0;
+
+    const VARIANTS = [
+      { id:"v0", name:"현재", tag:"BASELINE", tagClass:"tag--baseline", cardClass:"card--baseline",
+        desc:"지금 게임 — 상단 전체 폭 반투명 바. 비교 기준." },
+      { id:"c1", name:"클래식 크림", tag:"추천", tagClass:"tag--pick", cardClass:"card--pick",
+        desc:"크림 배경 + 잉크 테두리 + 하드 섀도. 정통 만화 말풍선, 오버슛 팝 후 살랑 흔들." },
+      { id:"c2", name:"시안 팝", tag:"추천", tagClass:"tag--pick", cardClass:"card--pick",
+        desc:"게임 테마색(시안) 채움. 밝은 바다와 톤 일치, 팝 후 더 크게 지글." },
+      { id:"c3", name:"잉크 리버스", tag:"", tagClass:"", cardClass:"",
+        desc:"어두운 배경 + 네온 시안 테두리·글자. 다크 UI와 어울리고 대비 강함." },
+      { id:"c4", name:"스탬프 임팩트", tag:"", tagClass:"", cardClass:"",
+        desc:"큰 스케일에서 쾅 찍히듯 등장 + 살짝 기울어 고정. 강조 대사에 임팩트." },
+      { id:"c5", name:"버스트(폭발)", tag:"", tagClass:"", cardClass:"",
+        desc:"별 모양 폭발 말풍선. 외침·화남 대사에 최적, 팝 후 콩닥 펄스." },
+      { id:"c6", name:"핸드드로 스티커", tag:"", tagClass:"", cardClass:"",
+        desc:"2겹 아웃라인의 스티커 느낌. 도톰하고 귀여운 손그림 톤." },
+    ];
+
+    const gallery = document.getElementById("gallery");
+    const curEl = document.getElementById("cur");
+    curEl.textContent = MESSAGES[msgIdx];
+
+    VARIANTS.forEach((v) => {
+      const card = document.createElement("article");
+      card.className = "card" + (v.cardClass ? " " + v.cardClass : "");
+      const tagHTML = v.tag ? `<span class="tag ${v.tagClass}">${v.tag}</span>` : "";
+      card.innerHTML = `
+        <div class="card__head"><h2>${v.name}</h2>${tagHTML}</div>
+        <p class="card__desc">${v.desc}</p>
+        <div class="stage">
+          <div class="water"><span></span><span></span><span></span><span></span></div>
+          <div class="msg msg--${v.id} is-in">${MESSAGES[msgIdx]}</div>
+          <img class="pet" src="${PET}" alt="">
+          <div class="mood"><img src="${MOOD}" alt=""></div>
+        </div>`;
+      gallery.append(card);
+    });
+
+    function replay() {
+      document.querySelectorAll(".msg").forEach((el) => {
+        el.classList.remove("is-in");
+        void el.offsetWidth;
+        el.classList.add("is-in");
+      });
+    }
+    document.getElementById("replay").addEventListener("click", replay);
+
+    document.getElementById("cycle").addEventListener("click", () => {
+      msgIdx = (msgIdx + 1) % MESSAGES.length;
+      curEl.textContent = MESSAGES[msgIdx];
+      document.querySelectorAll(".msg").forEach((el) => { el.textContent = MESSAGES[msgIdx]; });
+      replay();
+    });
+  </script>
+</body>
+</html>

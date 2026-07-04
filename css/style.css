@@ -23,8 +23,8 @@
   --bar-happy: #5ab8ca;
   --bar-clean: #48aed2;
   --bar-health: #5cb47e;
-  --msg-bg: rgba(12, 40, 49, 0.96);
-  --msg-text: #cfe6ec;
+  --msg-bg: #ffffff;
+  --msg-text: #153039;
   --action-feed: #123842;
   --action-play: #0f333d;
   --action-clean: #0d2e38;
@@ -184,25 +184,34 @@ body {
 
 .message {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 5;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  max-width: 88%;
   text-align: center;
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
-  line-height: var(--leading-relaxed);
+  line-height: 1.3;
   color: var(--msg-text);
   background: var(--msg-bg);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  padding: 8px 12px;
-  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 8px 14px;
+  border-radius: 14px;
   border: none;
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: none;
+  box-shadow: 0 4px 12px rgba(0, 20, 30, 0.28);
   pointer-events: none;
-  animation: messagePop 0.4s ease;
+  animation: messageIn 0.35s ease both, messageFloat 3.6s ease-in-out 0.35s infinite;
+}
+
+.message::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: var(--msg-bg);
+  border-bottom: 0;
 }
 
 .message[hidden] {
@@ -1322,14 +1331,23 @@ img.pet-sprite[hidden] {
   100% { opacity: 0; transform: translate(-50%, -50%) scale(0.4) translate(calc(var(--care-spark-x, 0) * 1.6), calc(var(--care-spark-y, 0) * 1.6 - 10px)); }
 }
 
-@keyframes messagePop {
+@keyframes messageIn {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateX(-50%) translateY(-6px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes messageFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-3px);
   }
 }
 
