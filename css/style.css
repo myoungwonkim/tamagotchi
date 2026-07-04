@@ -7,37 +7,37 @@
 }
 
 :root {
-  --bg: #1a2838;
-  --surface: #243040;
-  --stats-surface: #1e2c3c;
-  --text: #d8e4ec;
-  --text-muted: #7a8a98;
-  --accent: #58b8c8;
-  --accent-dark: #3a98a8;
+  --bg: #0a2028;
+  --surface: #0f2f39;
+  --stats-surface: #0c2831;
+  --text: #cfe6ec;
+  --text-muted: #6a8b94;
+  --accent: #45c8dc;
+  --accent-dark: #2ba6bc;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
   --radius: 12px;
-  --border-subtle: #3a5060;
+  --border-subtle: #20464f;
   --pet-viewport-bg: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
-  --bar-track: #141c28;
-  --bar-hunger: #c88848;
-  --bar-happy: #68a8b8;
-  --bar-clean: #48a0c0;
-  --bar-health: #68a878;
-  --msg-bg: rgba(36, 48, 64, 0.96);
-  --msg-text: #c8dce8;
-  --action-feed: #304050;
-  --action-play: #2a3848;
-  --action-clean: #283848;
-  --action-sleep: #243040;
-  --action-feed-active: #3a5060;
-  --action-play-active: #344050;
-  --action-clean-active: #304050;
-  --action-sleep-active: #2a3848;
-  --encyclopedia-card-bg: #283848;
-  --encyclopedia-card-active: #304858;
-  --overlay-secondary: #283848;
-  --overlay-secondary-active: #344858;
-  --input-bg: #1e2c3c;
+  --bar-track: #081c23;
+  --bar-hunger: #d09248;
+  --bar-happy: #5ab8ca;
+  --bar-clean: #48aed2;
+  --bar-health: #5cb47e;
+  --msg-bg: rgba(12, 40, 49, 0.96);
+  --msg-text: #cfe6ec;
+  --action-feed: #123842;
+  --action-play: #0f333d;
+  --action-clean: #0d2e38;
+  --action-sleep: #0b2831;
+  --action-feed-active: #1a4854;
+  --action-play-active: #164450;
+  --action-clean-active: #143f4a;
+  --action-sleep-active: #123a45;
+  --encyclopedia-card-bg: #123845;
+  --encyclopedia-card-active: #1a4a58;
+  --overlay-secondary: #123845;
+  --overlay-secondary-active: #1a4a58;
+  --input-bg: #0b2630;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
@@ -107,9 +107,9 @@ body {
   right: 0;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(88, 184, 200, 0.4);
+  border: 1px solid rgba(69, 200, 220, 0.4);
   border-radius: 10px;
-  background: #304858;
+  background: #123842;
   box-shadow: var(--shadow);
   cursor: pointer;
   touch-action: manipulation;
@@ -130,9 +130,9 @@ body {
   left: 0;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(88, 184, 200, 0.4);
+  border: 1px solid rgba(69, 200, 220, 0.4);
   border-radius: 10px;
-  background: #304858;
+  background: #123842;
   box-shadow: var(--shadow);
   cursor: pointer;
   touch-action: manipulation;
@@ -223,8 +223,8 @@ body {
 }
 
 .pet-area--sleeping {
-  background: linear-gradient(165deg, #1a2838 0%, #101828 100%);
-  border-color: #3a5060;
+  background: linear-gradient(165deg, #0e2630 0%, #061418 100%);
+  border-color: #20464f;
   box-shadow: inset 0 0 24px rgba(0, 40, 80, 0.35);
 }
 
@@ -811,7 +811,7 @@ img.pet-sprite[hidden] {
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 16, 24, 0.72);
+  background: rgba(6, 20, 26, 0.74);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -985,9 +985,9 @@ img.pet-sprite[hidden] {
 }
 
 .encyclopedia-tab {
-  border: 1px solid rgba(88, 184, 200, 0.3);
+  border: 1px solid rgba(69, 200, 220, 0.3);
   border-radius: 8px;
-  background: #283848;
+  background: #123845;
   color: var(--text);
   padding: 10px 8px;
   font-family: inherit;
@@ -1000,7 +1000,7 @@ img.pet-sprite[hidden] {
 }
 
 .encyclopedia-tab[aria-selected="true"] {
-  background: #304858;
+  background: #1a4a58;
   border-color: var(--accent);
   color: var(--text);
 }
@@ -1202,14 +1202,14 @@ img.pet-sprite[hidden] {
 }
 
 .overlay-btn--reward {
-  background: #2a4858;
+  background: #123f4a;
   color: #a8e8f0;
-  border: 1px solid #58b8c8;
+  border: 1px solid #45c8dc;
   margin-bottom: 8px;
 }
 
 .overlay-btn--reward:active {
-  background: #1e3848;
+  background: #0e3340;
 }
 
 .reward-prompts {
@@ -1223,9 +1223,9 @@ img.pet-sprite[hidden] {
   width: 100%;
   min-height: 40px;
   padding: 8px 12px;
-  border: 1px solid #3a5868;
+  border: 1px solid #23505b;
   border-radius: 8px;
-  background: #243040;
+  background: #0e2c35;
   color: #a8e0e8;
   font-family: inherit;
   font-size: var(--text-sm);
@@ -1235,7 +1235,7 @@ img.pet-sprite[hidden] {
 }
 
 .reward-prompt-btn:active {
-  background: #1a2838;
+  background: #0a2028;
 }
 
 @keyframes bounce {
@@ -1365,7 +1365,7 @@ img.pet-sprite[hidden] {
   width: min(200px, calc(100vw - 16px));
   padding: 10px;
   border-radius: 12px;
-  background: rgba(20, 28, 36, 0.94);
+  background: rgba(9, 28, 35, 0.94);
   border: 1px solid var(--border-subtle);
   color: var(--text);
   box-shadow: var(--shadow);

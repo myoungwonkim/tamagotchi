@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1c26">
+  <title>전체 색상 시안 — 밝은 바다 펫 화면과 조화</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #0f1c26;
+    color: #e6f2f7;
+    padding:
+      calc(22px + env(safe-area-inset-top))
+      calc(14px + env(safe-area-inset-right))
+      calc(48px + env(safe-area-inset-bottom))
+      calc(14px + env(safe-area-inset-left));
+    line-height: 1.5;
+  }
+
+  .page-head { max-width: 1180px; margin: 0 auto 6px; text-align: center; }
+  .page-head h1 { font-size: 1.125rem; font-weight: 700; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #8fb4c4; max-width: 660px; margin: 0 auto; }
+  .page-head strong { color: #bfe6f2; }
+
+  .family-title {
+    max-width: 1180px;
+    margin: 30px auto 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6f97a8;
+    border-bottom: 1px solid #23404d;
+    padding-bottom: 8px;
+  }
+  .family-title span { color: #9fc2d1; font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 8px; }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: #16262f;
+    border: 1px solid #274049;
+    border-radius: 16px;
+    padding: 12px 12px 14px;
+  }
+  .card--pick { border-color: #4f9ab5; box-shadow: 0 0 0 1px rgba(79,154,181,0.35); }
+  .card--baseline { border-color: #6a5340; opacity: 0.92; }
+
+  .card__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+  .card__head h2 { font-size: 0.9375rem; font-weight: 700; color: #eaf6fb; }
+  .card__head .tag {
+    font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.05em;
+    padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+  }
+  .tag--pick { background: #327089; color: #fff; }
+  .tag--baseline { background: #5a4636; color: #f0e0cc; }
+  .card__desc { font-size: 0.6875rem; color: #86a6b4; margin-bottom: 10px; min-height: 3.6em; }
+
+  .chips { display: flex; gap: 5px; margin-top: 10px; }
+  .chips i {
+    flex: 1; height: 20px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.12);
+    display: block;
+  }
+
+  /* ===== 미니 앱 (실제 게임 구조·변수 미러) ===== */
+  .phone {
+    /* 고정: 이미 적용된 밝은 바다 펫 화면 */
+    --pet-viewport-bg: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
+    --pet-border: #6fb6d0;
+    --radius: 12px;
+    --shadow: 0 4px 16px rgba(0,0,0,0.22);
+
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.25);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.32);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px 12px;
+    gap: 14px;
+    font-size: 0.6875rem;
+  }
+
+  .m-header { position: relative; text-align: center; padding: 4px 40px 2px; }
+  .m-iconbtn {
+    position: absolute; top: 0;
+    width: 30px; height: 30px;
+    border: 1px solid var(--icon-btn-border, rgba(88,184,200,0.4));
+    border-radius: 8px;
+    background: var(--icon-btn, #304858);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8125rem;
+  }
+  .m-iconbtn--l { left: 0; }
+  .m-iconbtn--r { right: 0; }
+  .m-name { font-size: 0.9375rem; font-weight: 700; }
+  .m-age { font-size: 0.625rem; color: var(--text-muted); margin-top: 2px; }
+  .m-stage { font-size: 0.625rem; font-weight: 600; color: var(--accent-dark); margin-top: 1px; }
+
+  /* pet-area (게임과 동일) */
+  .m-petarea {
+    position: relative;
+    min-height: 190px;
+    background: var(--pet-viewport-bg);
+    border: 2px solid var(--pet-border);
+    border-radius: var(--radius);
+    box-shadow: inset 0 0 40px rgba(16, 74, 104, 0.28);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    isolation: isolate;
+  }
+  .m-msg {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+    text-align: center; font-size: 0.5625rem; font-weight: 600;
+    padding: 6px 10px;
+    color: var(--msg-text);
+    background: var(--msg-bg);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .m-pet {
+    position: relative; z-index: 6;
+    width: 84px; height: auto;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    filter: drop-shadow(0 6px 10px rgba(6,40,62,0.4));
+    animation: petFloat 4.5s ease-in-out infinite;
+  }
+  @keyframes petFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* 물 레이어 (게임과 동일) */
+  .pet-water { position: absolute; inset: 0; z-index: 1; overflow: hidden; border-radius: inherit; pointer-events: none; }
+  .pet-water__ripple {
+    position: absolute; inset: -12% 0;
+    background: repeating-linear-gradient(0deg, transparent 0 30px, rgba(255,255,255,0.04) 30px 32px, transparent 32px 60px);
+    animation: petWaterRipple 16s linear infinite;
+  }
+  @keyframes petWaterRipple { from{transform:translateY(0)} to{transform:translateY(-60px)} }
+  .pet-water__bubble {
+    position: absolute; bottom: -24px; border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.85), rgba(255,255,255,0.22) 55%, rgba(255,255,255,0) 72%);
+    box-shadow: inset 0 0 4px rgba(255,255,255,0.4);
+    animation: petBubbleRise linear infinite;
+  }
+  @keyframes petBubbleRise {
+    0%{transform:translateY(0) translateX(0);opacity:0}
+    12%{opacity:.9} 85%{opacity:.8}
+    100%{transform:translateY(-320px) translateX(var(--bubble-drift,10px));opacity:0}
+  }
+  .pet-water__bubble:nth-of-type(1){left:10%;width:6px;height:6px;--bubble-drift:12px;animation-duration:11s;animation-delay:-1s}
+  .pet-water__bubble:nth-of-type(2){left:22%;width:9px;height:9px;--bubble-drift:-10px;animation-duration:14s;animation-delay:-6s}
+  .pet-water__bubble:nth-of-type(3){left:34%;width:5px;height:5px;--bubble-drift:8px;animation-duration:9s;animation-delay:-3s}
+  .pet-water__bubble:nth-of-type(4){left:46%;width:12px;height:12px;--bubble-drift:-14px;animation-duration:16s;animation-delay:-9s}
+  .pet-water__bubble:nth-of-type(5){left:58%;width:7px;height:7px;--bubble-drift:6px;animation-duration:12s;animation-delay:-2s}
+  .pet-water__bubble:nth-of-type(6){left:70%;width:5px;height:5px;--bubble-drift:-8px;animation-duration:10s;animation-delay:-7s}
+  .pet-water__bubble:nth-of-type(7){left:82%;width:10px;height:10px;--bubble-drift:14px;animation-duration:15s;animation-delay:-4s}
+  .pet-water__bubble:nth-of-type(8){left:90%;width:6px;height:6px;--bubble-drift:-6px;animation-duration:13s;animation-delay:-11s}
+
+  /* stats */
+  .m-stats {
+    background: var(--stats-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 7px;
+    box-shadow: var(--shadow);
+  }
+  .m-stat { display: grid; grid-template-columns: 34px 1fr 22px; align-items: center; gap: 8px; }
+  .m-stat label { font-size: 0.5625rem; color: var(--text-muted); }
+  .m-stat .v { font-size: 0.5625rem; text-align: right; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .m-bar { height: 6px; background: var(--bar-track); border: 1px solid var(--border-subtle); border-radius: 4px; overflow: hidden; }
+  .m-fill { height: 100%; border-radius: 3px; }
+
+  /* actions */
+  .m-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .m-actbtn {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    min-height: 52px; padding: 8px 6px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    font-size: 0.5625rem; font-weight: 600; color: var(--text);
+  }
+  .m-actbtn img { width: 28px; height: 28px; image-rendering: pixelated; image-rendering: crisp-edges; }
+  .m-actbtn--feed { background: var(--action-feed); }
+  .m-actbtn--play { background: var(--action-play); }
+  .m-actbtn--clean { background: var(--action-clean); }
+  .m-actbtn--sleep { background: var(--action-sleep); }
+
+  .back-link { display: block; text-align: center; margin-top: 30px; font-size: 0.8125rem; }
+  .back-link a { color: #7fb8cd; text-decoration: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .m-pet, .pet-water__bubble, .pet-water__ripple { animation: none; }
+  }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>전체 색상 시안 — 밝은 바다 펫 화면과 조화</h1>
+    <p>펫 화면(가운데 물결·거품)은 <strong>이미 적용된 밝은 바다</strong>로 고정했고, 그 주변 <strong>앱 전체 색(배경·카드·스탯·버튼·헤더)</strong>만 바꿨습니다. 세 방향으로 제안합니다.</p>
+  </header>
+
+  <div id="root"></div>
+
+  <p class="back-link"><a href="index.html">← 시안 허브로</a></p>
+
+  <script>
+    const PET = "../assets/sprites/adult/standard.png";
+    const ICONS = {
+      feed: "../assets/sprites/ui/feed.png",
+      play: "../assets/sprites/ui/play.png",
+      clean: "../assets/sprites/ui/clean.png",
+      sleep: "../assets/sprites/ui/sleep.png",
+    };
+
+    // 물 레이어 (거품 8개)
+    const WATER = `
+      <div class="pet-water" aria-hidden="true">
+        <div class="pet-water__ripple"></div>
+        ${Array.from({length:8}).map(()=>'<span class="pet-water__bubble"></span>').join("")}
+      </div>`;
+
+    const MOCK = (t) => `
+      <div class="phone" style="${t.style}">
+        <div class="m-header">
+          <div class="m-iconbtn m-iconbtn--l">📖</div>
+          <div class="m-iconbtn m-iconbtn--r">🔊</div>
+          <div class="m-name">바다</div>
+          <div class="m-age">12일째</div>
+          <div class="m-stage">성체 · 표준어</div>
+        </div>
+        <div class="m-petarea">
+          ${WATER}
+          <div class="m-msg">오늘도 함께 헤엄쳐요.</div>
+          <img class="m-pet" src="${PET}" alt="">
+        </div>
+        <div class="m-stats">
+          <div class="m-stat"><label>배고픔</label><div class="m-bar"><div class="m-fill" style="width:62%;background:var(--bar-hunger)"></div></div><span class="v">62</span></div>
+          <div class="m-stat"><label>행복</label><div class="m-bar"><div class="m-fill" style="width:74%;background:var(--bar-happy)"></div></div><span class="v">74</span></div>
+          <div class="m-stat"><label>청결</label><div class="m-bar"><div class="m-fill" style="width:48%;background:var(--bar-clean)"></div></div><span class="v">48</span></div>
+          <div class="m-stat"><label>건강</label><div class="m-bar"><div class="m-fill" style="width:88%;background:var(--bar-health)"></div></div><span class="v">88</span></div>
+        </div>
+        <div class="m-actions">
+          <div class="m-actbtn m-actbtn--feed"><img src="${ICONS.feed}" alt=""><span>먹이</span></div>
+          <div class="m-actbtn m-actbtn--play"><img src="${ICONS.play}" alt=""><span>놀이</span></div>
+          <div class="m-actbtn m-actbtn--clean"><img src="${ICONS.clean}" alt=""><span>청소</span></div>
+          <div class="m-actbtn m-actbtn--sleep"><img src="${ICONS.sleep}" alt=""><span>재우기</span></div>
+        </div>
+      </div>`;
+
+    // 변수 → 인라인 스타일 문자열
+    function vars(v) {
+      return Object.entries(v).map(([k,val]) => `--${k}:${val}`).join(";");
+    }
+
+    // 공통 팔레트 헬퍼 값
+    const FAMILIES = [
+      {
+        title: "기준",
+        note: "현재 앱(어두운 네이비) — 밝은 펫 화면과 톤이 어긋남",
+        themes: [
+          {
+            id:"current", name:"현재", tag:"BASELINE", tagClass:"tag--baseline", cardClass:"card--baseline",
+            desc:"지금 게임의 어두운 네이비 크롬. 밝아진 펫 화면과 이질감이 생기는 지점.",
+            v:{ bg:"#1a2838", surface:"#243040", "stats-surface":"#1e2c3c", text:"#d8e4ec", "text-muted":"#7a8a98",
+                accent:"#58b8c8", "accent-dark":"#3a98a8", "border-subtle":"#3a5060", "bar-track":"#141c28",
+                "bar-hunger":"#c88848","bar-happy":"#68a8b8","bar-clean":"#48a0c0","bar-health":"#68a878",
+                "msg-bg":"rgba(36,48,64,0.96)","msg-text":"#c8dce8",
+                "action-feed":"#304050","action-play":"#2a3848","action-clean":"#283848","action-sleep":"#243040",
+                "icon-btn":"#304858","icon-btn-border":"rgba(88,184,200,0.4)" }
+          }
+        ]
+      },
+      {
+        title: "A. 밝게 통일",
+        note: "앱 전체를 밝게 — 펫 화면과 같은 '밝은 물' 세계로. 가장 상쾌하고 현대적.",
+        themes: [
+          {
+            id:"shallow", name:"얕은 물", tag:"추천", tagClass:"tag--pick", cardClass:"card--pick",
+            desc:"연한 아쿠아 배경 + 흰 카드 + 딥틸 텍스트. 펫 화면과 완전히 하나의 밝은 바다처럼 이어짐.",
+            v:{ bg:"#e6f3f8", surface:"#ffffff", "stats-surface":"#f1fafc", text:"#173540", "text-muted":"#5c7c88",
+                accent:"#2f9cb4", "accent-dark":"#1f7d92", "border-subtle":"#cfe4ea", "bar-track":"#dcecf1",
+                "bar-hunger":"#e59a45","bar-happy":"#4fb0c2","bar-clean":"#3aa4cc","bar-health":"#5cb878",
+                "msg-bg":"rgba(255,255,255,0.9)","msg-text":"#173540",
+                "action-feed":"#fff2e6","action-play":"#fde9f1","action-clean":"#e6f6fb","action-sleep":"#eef1f8",
+                "icon-btn":"#ffffff","icon-btn-border":"rgba(47,156,180,0.45)" }
+          },
+          {
+            id:"sandbar", name:"모래톱", tagClass:"", cardClass:"",
+            desc:"따뜻한 모래빛 크롬 + 틸 포인트. 시원한 물 vs 따뜻한 육지의 해변 대비.",
+            v:{ bg:"#f2ede1", surface:"#fffdf7", "stats-surface":"#f7f2e8", text:"#3a3226", "text-muted":"#8a7d67",
+                accent:"#2f9cb4", "accent-dark":"#1f7d92", "border-subtle":"#e4dac6", "bar-track":"#e9e0cf",
+                "bar-hunger":"#dd9440","bar-happy":"#4fb0c2","bar-clean":"#3aa4cc","bar-health":"#63b06f",
+                "msg-bg":"rgba(255,253,247,0.92)","msg-text":"#3a3226",
+                "action-feed":"#fbf0df","action-play":"#f7eae0","action-clean":"#eaf4f4","action-sleep":"#f1ede1",
+                "icon-btn":"#fffdf7","icon-btn-border":"rgba(47,156,180,0.4)" }
+          }
+        ]
+      },
+      {
+        title: "B. 중간 톤 브릿지",
+        note: "중간 청록으로 통일 — 물속에 들어와 있는 듯 크롬과 펫 화면이 자연스레 섞임.",
+        themes: [
+          {
+            id:"bay", name:"에메랄드 만", tagClass:"", cardClass:"",
+            desc:"중간 청록 배경 + 밝은 텍스트. 몰입감 있고 차분한 '수중' 통일감.",
+            v:{ bg:"#2b6274", surface:"#347284", "stats-surface":"#2a5c6d", text:"#eaf7fb", "text-muted":"#a6c8d2",
+                accent:"#8ce0ee", "accent-dark":"#bfeef6", "border-subtle":"#3f7d8f", "bar-track":"#1f4a58",
+                "bar-hunger":"#f0a85a","bar-happy":"#7fd3e2","bar-clean":"#63c2e0","bar-health":"#79cf9a",
+                "msg-bg":"rgba(42,92,109,0.94)","msg-text":"#eaf7fb",
+                "action-feed":"#3a7688","action-play":"#347082","action-clean":"#2f6b7d","action-sleep":"#2a6273",
+                "icon-btn":"#347284","icon-btn-border":"rgba(140,224,238,0.4)" }
+          },
+          {
+            id:"lagoon", name:"라군", tag:"추천", tagClass:"tag--pick", cardClass:"card--pick",
+            desc:"펫 화면 톤을 그대로 이어받은 밝은 청록 크롬. 경계가 거의 사라져 가장 매끈함.",
+            v:{ bg:"#3d95ab", surface:"#47a0b5", "stats-surface":"#3a8ea3", text:"#f4fcfe", "text-muted":"#d0ecf2",
+                accent:"#eafcff", "accent-dark":"#ffffff", "border-subtle":"#5aabbe", "bar-track":"#2d788c",
+                "bar-hunger":"#ffb060","bar-happy":"#9fe4f0","bar-clean":"#7fd4ea","bar-health":"#8bdaa6",
+                "msg-bg":"rgba(58,142,163,0.92)","msg-text":"#f4fcfe",
+                "action-feed":"#4ba2b6","action-play":"#469cb1","action-clean":"#4197ac","action-sleep":"#3c92a7",
+                "icon-btn":"#47a0b5","icon-btn-border":"rgba(234,252,255,0.45)" }
+          }
+        ]
+      },
+      {
+        title: "C. 어둡게 유지 · 청록으로 이동",
+        note: "대비는 살리되 색상을 청록 계열로 옮겨, 밝은 펫 화면이 '불 켜진 창'처럼 보이게.",
+        themes: [
+          {
+            id:"porthole", name:"심해 창", tag:"추천", tagClass:"tag--pick", cardClass:"card--pick",
+            desc:"현재의 어두운 무드는 유지하되 네이비 → 청록으로 이동. 변화 폭이 가장 작고 안전.",
+            v:{ bg:"#0f2e3a", surface:"#16404e", "stats-surface":"#123642", text:"#d8eef4", "text-muted":"#6f96a2",
+                accent:"#4fc0d4", "accent-dark":"#2f9cb0", "border-subtle":"#2b5666", "bar-track":"#0c2530",
+                "bar-hunger":"#d69a52","bar-happy":"#68bccc","bar-clean":"#4fb2d4","bar-health":"#68b888",
+                "msg-bg":"rgba(18,54,66,0.96)","msg-text":"#cfe8f0",
+                "action-feed":"#1a4a58","action-play":"#164450","action-clean":"#143e4a","action-sleep":"#123642",
+                "icon-btn":"#1a4a58","icon-btn-border":"rgba(79,192,212,0.4)" }
+          },
+          {
+            id:"midnight", name:"자정 청록", tagClass:"", cardClass:"",
+            desc:"더 짙고 서늘한 청록. 시안 액센트가 또렷해 밝은 화면과 콘트라스트가 강렬.",
+            v:{ bg:"#0a2028", surface:"#0f2f39", "stats-surface":"#0c2831", text:"#cfe6ec", "text-muted":"#6a8b94",
+                accent:"#45c8dc", "accent-dark":"#2ba6bc", "border-subtle":"#20464f", "bar-track":"#081c23",
+                "bar-hunger":"#d09248","bar-happy":"#5ab8ca","bar-clean":"#48aed2","bar-health":"#5cb47e",
+                "msg-bg":"rgba(12,40,49,0.96)","msg-text":"#cfe6ec",
+                "action-feed":"#123842","action-play":"#0f333d","action-clean":"#0d2e38","action-sleep":"#0b2831",
+                "icon-btn":"#123842","icon-btn-border":"rgba(69,200,220,0.4)" }
+          }
+        ]
+      }
+    ];
+
+    const root = document.getElementById("root");
+
+    for (const fam of FAMILIES) {
+      const h = document.createElement("p");
+      h.className = "family-title";
+      h.innerHTML = `${fam.title}<span>${fam.note}</span>`;
+      root.append(h);
+
+      const gal = document.createElement("div");
+      gal.className = "gallery";
+      for (const t of fam.themes) {
+        t.style = vars(t.v);
+        const card = document.createElement("article");
+        card.className = "card" + (t.cardClass ? " " + t.cardClass : "");
+        const tagHTML = t.tag ? `<span class="tag ${t.tagClass}">${t.tag}</span>` : "";
+        card.innerHTML = `
+          <div class="card__head"><h2>${t.name}</h2>${tagHTML}</div>
+          <p class="card__desc">${t.desc}</p>
+          ${MOCK(t)}
+          <div class="chips">
+            <i style="background:${t.v.bg}" title="bg ${t.v.bg}"></i>
+            <i style="background:${t.v.surface}" title="surface ${t.v.surface}"></i>
+            <i style="background:${t.v["stats-surface"]}" title="stats ${t.v["stats-surface"]}"></i>
+            <i style="background:${t.v.accent}" title="accent ${t.v.accent}"></i>
+          </div>`;
+        gal.append(card);
+      }
+      root.append(gal);
+    }
+  </script>
+</body>
+</html>
