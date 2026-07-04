@@ -17,7 +17,7 @@
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
   --radius: 12px;
   --border-subtle: #3a5060;
-  --pet-viewport-bg: radial-gradient(ellipse at 50% 30%, #2a5068 0%, #142030 70%);
+  --pet-viewport-bg: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
   --bar-track: #141c28;
   --bar-hunger: #c88848;
   --bar-happy: #68a8b8;
@@ -213,9 +213,9 @@ body {
   flex: 1;
   position: relative;
   background: var(--pet-viewport-bg);
-  border: 2px solid #4a6878;
+  border: 2px solid #6fb6d0;
   border-radius: var(--radius);
-  box-shadow: inset 0 0 32px rgba(0, 20, 40, 0.5);
+  box-shadow: inset 0 0 46px rgba(16, 74, 104, 0.28);
   min-height: clamp(260px, 42dvh, 400px);
   padding: 12px 8px;
   overflow: hidden;
@@ -226,6 +226,84 @@ body {
   background: linear-gradient(165deg, #1a2838 0%, #101828 100%);
   border-color: #3a5060;
   box-shadow: inset 0 0 24px rgba(0, 40, 80, 0.35);
+}
+
+/* ===== 부유 거품 물 레이어 (배경 위, 펫 아래) ===== */
+.pet-water {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+/* 잠들면 물결·거품을 잦아들게 */
+.pet-area--sleeping .pet-water {
+  opacity: 0;
+}
+
+.pet-water__ripple {
+  position: absolute;
+  inset: -12% 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 30px,
+    rgba(255, 255, 255, 0.04) 30px 32px,
+    transparent 32px 60px
+  );
+  animation: petWaterRipple 16s linear infinite;
+}
+
+@keyframes petWaterRipple {
+  from { transform: translateY(0); }
+  to { transform: translateY(-60px); }
+}
+
+.pet-water__bubble {
+  position: absolute;
+  bottom: -24px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 30%,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.22) 55%,
+    rgba(255, 255, 255, 0) 72%
+  );
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.4);
+  animation: petBubbleRise linear infinite;
+}
+
+@keyframes petBubbleRise {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  12% { opacity: 0.9; }
+  85% { opacity: 0.8; }
+  100% { transform: translateY(-420px) translateX(var(--bubble-drift, 10px)); opacity: 0; }
+}
+
+.pet-water__bubble:nth-of-type(1)  { left: 10%; width: 6px;  height: 6px;  --bubble-drift: 12px;  animation-duration: 11s; animation-delay: -1s; }
+.pet-water__bubble:nth-of-type(2)  { left: 22%; width: 9px;  height: 9px;  --bubble-drift: -10px; animation-duration: 14s; animation-delay: -6s; }
+.pet-water__bubble:nth-of-type(3)  { left: 34%; width: 5px;  height: 5px;  --bubble-drift: 8px;   animation-duration: 9s;  animation-delay: -3s; }
+.pet-water__bubble:nth-of-type(4)  { left: 46%; width: 12px; height: 12px; --bubble-drift: -14px; animation-duration: 16s; animation-delay: -9s; }
+.pet-water__bubble:nth-of-type(5)  { left: 58%; width: 7px;  height: 7px;  --bubble-drift: 6px;   animation-duration: 12s; animation-delay: -2s; }
+.pet-water__bubble:nth-of-type(6)  { left: 70%; width: 5px;  height: 5px;  --bubble-drift: -8px;  animation-duration: 10s; animation-delay: -7s; }
+.pet-water__bubble:nth-of-type(7)  { left: 82%; width: 10px; height: 10px; --bubble-drift: 14px;  animation-duration: 15s; animation-delay: -4s; }
+.pet-water__bubble:nth-of-type(8)  { left: 90%; width: 6px;  height: 6px;  --bubble-drift: -6px;  animation-duration: 13s; animation-delay: -11s; }
+.pet-water__bubble:nth-of-type(9)  { left: 16%; width: 8px;  height: 8px;  --bubble-drift: -12px; animation-duration: 17s; animation-delay: -13s; }
+.pet-water__bubble:nth-of-type(10) { left: 40%; width: 4px;  height: 4px;  --bubble-drift: 10px;  animation-duration: 8s;  animation-delay: -5s; }
+.pet-water__bubble:nth-of-type(11) { left: 64%; width: 9px;  height: 9px;  --bubble-drift: -9px;  animation-duration: 14s; animation-delay: -10s; }
+.pet-water__bubble:nth-of-type(12) { left: 78%; width: 5px;  height: 5px;  --bubble-drift: 7px;   animation-duration: 11s; animation-delay: -8s; }
+
+/* 캡처(스토어 썸네일·스크린샷)에서는 결정적인 이미지를 위해 숨김 */
+body.capture-mode .pet-water {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-water {
+    display: none;
+  }
 }
 
 .mess-layer {

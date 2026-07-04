@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#3f9cbe">
+  <title>배경 시안 — 밝은 바다 · 잔잔한 물결</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* 공통 밝은 바다 베이스 — 전체 톤은 일정하게 유지 */
+    --ocean-base: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
+    --spd: 1; /* 물결 속도 배율 (슬라이더로 조절) */
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #0f1c26;
+    color: #e6f2f7;
+    padding:
+      calc(22px + env(safe-area-inset-top))
+      calc(14px + env(safe-area-inset-right))
+      calc(48px + env(safe-area-inset-bottom))
+      calc(14px + env(safe-area-inset-left));
+    line-height: 1.5;
+  }
+
+  .page-head { max-width: 1120px; margin: 0 auto 8px; text-align: center; }
+  .page-head h1 { font-size: 1.125rem; font-weight: 700; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #8fb4c4; max-width: 620px; margin: 0 auto; }
+  .page-head strong { color: #bfe6f2; }
+
+  /* ===== 컨트롤 바 ===== */
+  .controls {
+    max-width: 1120px;
+    margin: 16px auto 22px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 18px;
+    padding: 12px 16px;
+    background: #162a36;
+    border: 1px solid #26414f;
+    border-radius: 12px;
+  }
+
+  .controls label { font-size: 0.75rem; color: #9fc2d1; display: flex; align-items: center; gap: 8px; }
+  .controls input[type="range"] { width: 130px; accent-color: #57b4d2; }
+  .controls .spd-val { font-variant-numeric: tabular-nums; color: #bfe6f2; width: 34px; text-align: right; }
+
+  .btn {
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #dff0f6;
+    background: #22404f;
+    border: 1px solid #35586a;
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn:active { background: #2c5266; }
+  .btn.is-on { background: #327089; border-color: #4f9ab5; color: #fff; }
+
+  /* ===== 갤러리 ===== */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: #16262f;
+    border: 1px solid #274049;
+    border-radius: 16px;
+    padding: 12px 12px 14px;
+  }
+  .card--current { border-color: #4a6878; }
+  .card--pick { border-color: #4f9ab5; box-shadow: 0 0 0 1px rgba(79,154,181,0.35); }
+
+  .card__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+  .card__head h2 { font-size: 0.9375rem; font-weight: 700; color: #eaf6fb; }
+  .card__head .tag {
+    font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.05em;
+    padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+  }
+  .tag--current { background: #3a5566; color: #d6ebf3; }
+  .tag--pick { background: #327089; color: #fff; }
+  .card__desc { font-size: 0.6875rem; color: #86a6b4; margin-bottom: 10px; min-height: 2.4em; }
+
+  /* ===== 뷰포트 (게임 pet-area 미러) ===== */
+  .viewport {
+    position: relative;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #6fb6d0;
+    box-shadow: inset 0 0 46px rgba(16, 74, 104, 0.28);
+    background: var(--ocean-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+  }
+  .viewport--dark {
+    border-color: #4a6878;
+    background: radial-gradient(ellipse at 50% 30%, #2a5068 0%, #142030 70%);
+    box-shadow: inset 0 0 32px rgba(0, 20, 40, 0.5);
+  }
+
+  .layer { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+
+  .pet {
+    position: relative;
+    z-index: 6;
+    width: 104px;
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(0 8px 12px rgba(6, 40, 62, 0.4));
+    animation: petFloat calc(4.5s * var(--spd)) ease-in-out infinite;
+  }
+  @keyframes petFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+
+  /* 바닥 은은한 그림자 */
+  .seabed {
+    position: absolute; left: 50%; bottom: 26px; z-index: 2;
+    width: 120px; height: 20px; transform: translateX(-50%);
+    background: radial-gradient(ellipse, rgba(8,44,64,0.28), transparent 70%);
+    filter: blur(3px);
+    animation: shadowPulse calc(4.5s * var(--spd)) ease-in-out infinite;
+  }
+  @keyframes shadowPulse { 0%,100% { transform: translateX(-50%) scale(1); opacity:0.85; } 50% { transform: translateX(-50%) scale(0.86); opacity:0.6; } }
+
+  /* ============================================================
+     1) 은은한 코스틱 — 부드러운 빛 얼룩이 천천히 떠다님
+     ============================================================ */
+  .bg-caustic .c1, .bg-caustic .c2 {
+    inset: -25%;
+    mix-blend-mode: screen;
+    filter: blur(7px);
+    background:
+      radial-gradient(circle at 28% 30%, rgba(255,255,255,0.24), transparent 46%),
+      radial-gradient(circle at 72% 58%, rgba(210,248,255,0.18), transparent 42%),
+      radial-gradient(circle at 52% 82%, rgba(255,255,255,0.16), transparent 46%);
+  }
+  .bg-caustic .c1 { animation: causticDrift calc(15s * var(--spd)) ease-in-out infinite alternate; }
+  .bg-caustic .c2 { opacity: 0.65; animation: causticDrift calc(22s * var(--spd)) ease-in-out infinite alternate-reverse; }
+  @keyframes causticDrift {
+    0%   { transform: translate(-4%, -3%) scale(1.05); }
+    50%  { transform: translate(3%, 2%)   scale(1.13); }
+    100% { transform: translate(-2%, 4%)  scale(1.06); }
+  }
+
+  /* ============================================================
+     2) 수평 잔물결 — 얇은 빛띠가 위로 천천히 흐름
+     ============================================================ */
+  .bg-ripple .r1 {
+    inset: -12% 0;
+    background: repeating-linear-gradient(0deg,
+      transparent 0 24px,
+      rgba(255,255,255,0.055) 24px 26px,
+      transparent 26px 50px);
+    animation: rippleUp calc(11s * var(--spd)) linear infinite;
+  }
+  .bg-ripple .r2 {
+    inset: -12% 0;
+    opacity: 0.6;
+    background: repeating-linear-gradient(0deg,
+      transparent 0 38px,
+      rgba(220,246,255,0.05) 38px 41px,
+      transparent 41px 76px);
+    animation: rippleUp calc(17s * var(--spd)) linear infinite;
+  }
+  @keyframes rippleUp { from { transform: translateY(0); } to { transform: translateY(-50px); } }
+
+  /* ============================================================
+     3) 빛기둥 — 위에서 내려오는 광선이 좌우로 살랑임
+     ============================================================ */
+  .bg-rays .ray {
+    inset: -30% -14% 20%;
+    transform-origin: 50% 0;
+    mix-blend-mode: screen;
+    filter: blur(3px);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 88%);
+            mask-image: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 88%);
+    background: repeating-linear-gradient(100deg,
+      transparent 0 30px,
+      rgba(255,255,255,0.10) 30px 46px,
+      transparent 46px 82px);
+    animation: raySway calc(13s * var(--spd)) ease-in-out infinite alternate;
+  }
+  @keyframes raySway {
+    from { transform: skewX(-7deg) translateX(-2.5%); }
+    to   { transform: skewX(7deg)  translateX(2.5%); }
+  }
+
+  /* ============================================================
+     4) 물결 레이어 — 반투명 파형이 서로 다른 속도로 흘러감
+     ============================================================ */
+  .bg-waves .wave {
+    left: -50%; right: -50%; width: 200%;
+    height: 120px;
+    background-repeat: repeat-x;
+    background-size: 50% 100%;
+  }
+  .bg-waves .wave--1 {
+    bottom: 30%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='60' viewBox='0 0 200 60'><path d='M0 30 C 30 12 70 12 100 30 S 170 48 200 30 V60 H0 Z' fill='%23ffffff' fill-opacity='0.06'/></svg>");
+    animation: waveShift calc(18s * var(--spd)) linear infinite;
+  }
+  .bg-waves .wave--2 {
+    bottom: 12%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='60' viewBox='0 0 200 60'><path d='M0 32 C 40 50 60 50 100 32 S 160 14 200 32 V60 H0 Z' fill='%23dcf4ff' fill-opacity='0.07'/></svg>");
+    animation: waveShift calc(12s * var(--spd)) linear infinite reverse;
+  }
+  .bg-waves .wave--3 {
+    bottom: -2%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='60' viewBox='0 0 200 60'><path d='M0 30 C 30 12 70 12 100 30 S 170 48 200 30 V60 H0 Z' fill='%23083048' fill-opacity='0.10'/></svg>");
+    animation: waveShift calc(22s * var(--spd)) linear infinite;
+  }
+  @keyframes waveShift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ============================================================
+     5) 수면 굴절 — feTurbulence 코스틱 그물망이 아른거림
+     ============================================================ */
+  .bg-turb .turb { mix-blend-mode: screen; opacity: 0.32; }
+  .bg-turb .turb svg { width: 100%; height: 100%; display: block; }
+
+  /* ============================================================
+     6) 부유 거품 — 균일한 톤 위로 거품이 느리게 떠오름
+     ============================================================ */
+  .bg-bubbles .faint {
+    background: repeating-linear-gradient(0deg,
+      transparent 0 30px,
+      rgba(255,255,255,0.04) 30px 32px,
+      transparent 32px 62px);
+    animation: rippleUp calc(16s * var(--spd)) linear infinite;
+  }
+  .bubble {
+    position: absolute;
+    bottom: -24px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.85), rgba(255,255,255,0.22) 55%, rgba(255,255,255,0) 72%);
+    box-shadow: inset 0 0 4px rgba(255,255,255,0.4);
+    animation: bubbleRise linear infinite;
+    z-index: 3;
+  }
+  @keyframes bubbleRise {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    12%  { opacity: 0.9; }
+    85%  { opacity: 0.8; }
+    100% { transform: translateY(-320px) translateX(var(--drift, 10px)); opacity: 0; }
+  }
+
+  /* 애니메이션 정지 */
+  body.paused .viewport *,
+  body.paused .viewport { animation-play-state: paused !important; }
+  body.paused .bg-turb animate { }
+
+  .back-link { display: block; text-align: center; margin-top: 28px; font-size: 0.8125rem; }
+  .back-link a { color: #7fb8cd; text-decoration: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .viewport *, .pet { animation-duration: 0.001s !important; animation-iteration-count: 1 !important; }
+  }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>배경 시안 — 밝은 바다 · 잔잔한 물결</h1>
+    <p>모든 시안은 <strong>동일한 밝은 바다 베이스 톤</strong>을 유지하고, 물결 표현 방식만 다릅니다. 아래 슬라이더로 물결 속도를 조절해 보세요. <strong>게임 본편에는 아직 반영하지 않았습니다.</strong></p>
+  </header>
+
+  <div class="controls">
+    <label>물결 속도
+      <input type="range" id="speed" min="0.4" max="2.5" step="0.1" value="1">
+      <span class="spd-val" id="speed-val">1.0×</span>
+    </label>
+    <button type="button" class="btn" id="pause-btn">일시정지</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <p class="back-link"><a href="index.html">← 시안 허브로</a></p>
+
+  <script>
+    const PETS = [
+      "../assets/sprites/adult/standard.png",
+      "../assets/sprites/adult/sparkle.png",
+      "../assets/sprites/adult/golden.png",
+      "../assets/sprites/adult/grumpy.png",
+      "../assets/sprites/adult/farm.png",
+      "../assets/sprites/adult/scruffy.png",
+      "../assets/sprites/mermaid/adult/standard.png",
+    ];
+
+    // feTurbulence 코스틱 레이어 (SMIL 애니메이션)
+    const TURB_SVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 300 300">
+        <filter id="caustic-net" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="7" stitchTiles="stitch" result="n">
+            <animate attributeName="baseFrequency" dur="26s" values="0.012 0.02; 0.02 0.028; 0.012 0.02" repeatCount="indefinite"/>
+          </feTurbulence>
+          <feColorMatrix in="n" type="matrix"
+            values="0 0 0 0 1
+                    0 0 0 0 1
+                    0 0 0 0 1
+                    0 0 0 1.6 -0.62"/>
+        </filter>
+        <rect width="300" height="300" filter="url(#caustic-net)" fill="#ffffff"/>
+      </svg>`;
+
+    // 거품 파티클 생성
+    function makeBubbles(host) {
+      const n = 12;
+      for (let i = 0; i < n; i++) {
+        const b = document.createElement("span");
+        b.className = "bubble";
+        const size = 4 + Math.random() * 12;
+        b.style.width = size + "px";
+        b.style.height = size + "px";
+        b.style.left = (5 + Math.random() * 90) + "%";
+        b.style.setProperty("--drift", (Math.random() * 40 - 20) + "px");
+        const base = 8 + Math.random() * 9; // 초
+        b.style.animationDuration = "calc(" + base.toFixed(1) + "s * var(--spd))";
+        b.style.animationDelay = "-" + (Math.random() * base).toFixed(1) + "s";
+        host.append(b);
+      }
+    }
+
+    const VARIANTS = [
+      {
+        id: "current",
+        name: "현재 (심해)",
+        tag: "CURRENT", tagClass: "tag--current", cardClass: "card--current",
+        dark: true,
+        desc: "지금 게임의 어두운 심해 톤 — 비교용 기준.",
+        layers: "",
+      },
+      {
+        id: "caustic",
+        name: "은은한 코스틱",
+        tag: "추천", tagClass: "tag--pick", cardClass: "card--pick",
+        desc: "부드러운 빛 얼룩이 천천히 떠다님. 톤은 그대로, 가장 잔잔하고 자연스러움.",
+        layers: `<div class="layer c1"></div><div class="layer c2"></div>`,
+      },
+      {
+        id: "ripple",
+        name: "수평 잔물결",
+        desc: "얇은 빛 띠가 위로 느리게 흐름 — 수면 반사가 은은하게 어른거리는 느낌.",
+        layers: `<div class="layer r1"></div><div class="layer r2"></div>`,
+      },
+      {
+        id: "rays",
+        name: "빛기둥",
+        desc: "위에서 내려오는 광선이 좌우로 살랑임 — 햇살이 물속으로 스며드는 느낌.",
+        layers: `<div class="layer ray"></div>`,
+      },
+      {
+        id: "waves",
+        name: "물결 레이어",
+        desc: "반투명 파형 3겹이 서로 다른 속도로 흐름 — 잔물결의 깊이감.",
+        layers: `<div class="layer wave wave--1"></div><div class="layer wave wave--2"></div><div class="layer wave wave--3"></div>`,
+      },
+      {
+        id: "turb",
+        name: "수면 굴절",
+        tag: "추천", tagClass: "tag--pick", cardClass: "card--pick",
+        desc: "실제 물빛 코스틱 그물망이 아른거림 — 가장 '진짜 물속' 같은 표현.",
+        layers: `<div class="layer turb">${TURB_SVG}</div>`,
+      },
+      {
+        id: "bubbles",
+        name: "부유 거품",
+        desc: "균일한 밝은 톤 위로 거품이 느리게 떠오름 + 아주 옅은 잔물결.",
+        layers: `<div class="layer faint"></div>`,
+        bubbles: true,
+      },
+    ];
+
+    const gallery = document.getElementById("gallery");
+
+    VARIANTS.forEach((v, i) => {
+      const card = document.createElement("article");
+      card.className = "card" + (v.cardClass ? " " + v.cardClass : "");
+      const tagHTML = v.tag ? `<span class="tag ${v.tagClass}">${v.tag}</span>` : "";
+      const pet = PETS[i % PETS.length];
+      card.innerHTML = `
+        <div class="card__head">
+          <h2>${v.name}</h2>
+          ${tagHTML}
+        </div>
+        <p class="card__desc">${v.desc}</p>
+        <div class="viewport bg-${v.id}${v.dark ? " viewport--dark" : ""}">
+          ${v.layers}
+          <div class="seabed"></div>
+          <img class="pet" src="${pet}" alt="">
+        </div>
+      `;
+      gallery.append(card);
+      if (v.bubbles) makeBubbles(card.querySelector(".viewport"));
+    });
+
+    // 속도 슬라이더
+    const speed = document.getElementById("speed");
+    const speedVal = document.getElementById("speed-val");
+    speed.addEventListener("input", () => {
+      // 값이 클수록 빠르게 → duration 배율은 역수
+      const factor = (1 / parseFloat(speed.value)).toFixed(3);
+      document.documentElement.style.setProperty("--spd", factor);
+      speedVal.textContent = parseFloat(speed.value).toFixed(1) + "×";
+    });
+
+    // 일시정지
+    const pauseBtn = document.getElementById("pause-btn");
+    pauseBtn.addEventListener("click", () => {
+      const paused = document.body.classList.toggle("paused");
+      pauseBtn.classList.toggle("is-on", paused);
+      pauseBtn.textContent = paused ? "재생" : "일시정지";
+      // SMIL(turbulence) 제어
+      document.querySelectorAll(".bg-turb svg").forEach(svg => {
+        paused ? svg.pauseAnimations && svg.pauseAnimations() : svg.unpauseAnimations && svg.unpauseAnimations();
+      });
+    });
+  </script>
+</body>
+</html>
