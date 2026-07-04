@@ -58,47 +58,51 @@ def mirror_rows(rows):
     return out
 
 
-# Top-heavy rounded Casper head (small footprint, y6..16).
+# Rounded Casper head/body, enlarged so its opaque footprint sits in the same
+# size class as the "child" fish stage (widest x8..23, y6..17).
 HEAD = {
-    6: [(13, 18)],
+    6: [(12, 19)],
     7: [(11, 20)],
     8: [(10, 21)],
     9: [(9, 22)],
     10: [(9, 22)],
-    11: [(9, 22)],
-    12: [(10, 21)],
-    13: [(10, 21)],
-    14: [(11, 20)],
-    15: [(11, 20)],
-    16: [(12, 19)],
+    11: [(8, 23)],
+    12: [(8, 23)],
+    13: [(8, 23)],
+    14: [(9, 22)],
+    15: [(9, 22)],
+    16: [(10, 21)],
+    17: [(11, 20)],
 }
 
-# Single wisp curling to the LEFT (mirror of the right-curling wisp).
-TAIL_RIGHT = {
-    17: [(12, 18)],
-    18: [(13, 18)],
-    19: [(14, 19)],
-    20: [(15, 19)],
-    21: [(16, 19)],
-    22: [(17, 19)],
+# Single wisp curling to the LEFT, tapering to a point (y18..24).
+TAIL = {
+    18: [(11, 18)],
+    19: [(11, 17)],
+    20: [(10, 16)],
+    21: [(10, 15)],
+    22: [(11, 14)],
+    23: [(11, 13)],
+    24: [(12, 13)],
 }
-TAIL = mirror_rows(TAIL_RIGHT)
 
-# Little rounded nub arms.
+# Little rounded nub arms (2x3), sitting just outside the widest body rows.
 ARMS = [
-    (8, 12), (9, 12), (8, 13), (9, 13), (8, 14), (9, 14),
-    (22, 12), (23, 12), (22, 13), (23, 13), (22, 14), (23, 14),
+    (6, 12), (7, 12), (6, 13), (7, 13), (6, 14), (7, 14),
+    (24, 12), (25, 12), (24, 13), (25, 13), (24, 14), (25, 14),
 ]
 
-# Big friendly rounded eyes, worried brows, tear on the right. No mouth.
+# Big friendly rounded eyes (3x4), worried brows, tear on the right. No mouth.
 EYES = [
-    (12, 9), (13, 9), (12, 10), (13, 10), (12, 11), (13, 11),
-    (18, 9), (19, 9), (18, 10), (19, 10), (18, 11), (19, 11),
+    (11, 9), (12, 9), (13, 9), (11, 10), (12, 10), (13, 10),
+    (11, 11), (12, 11), (13, 11), (11, 12), (12, 12), (13, 12),
+    (18, 9), (19, 9), (20, 9), (18, 10), (19, 10), (20, 10),
+    (18, 11), (19, 11), (20, 11), (18, 12), (19, 12), (20, 12),
 ]
-GLINT_TOP = [(12, 9), (18, 9)]
-BROWS = [(13, 6), (12, 7), (18, 6), (19, 7)]
-TEAR_R_HI = [(19, 12)]
-TEAR_R = [(19, 13), (19, 14)]
+GLINT_TOP = [(11, 9), (20, 9)]
+BROWS = [(11, 8), (12, 7), (13, 7), (18, 7), (19, 7), (20, 8)]
+TEAR_R_HI = [(20, 13)]
+TEAR_R = [(20, 14), (20, 15)]
 
 
 def render(body_color):
