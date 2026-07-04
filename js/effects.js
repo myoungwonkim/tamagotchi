@@ -1,6 +1,7 @@
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant } from "./adultVariants.js";
 import { getUiSpriteMeta } from "./sprites.js";
+import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -56,6 +57,7 @@ export function applyIdleClasses(el, pet) {
     "pet-evolution--variant-pretty",
     "pet-evolution--variant-normal",
     "pet-evolution--variant-defective",
+    "pet-evolution--neungeo-walk",
   );
 
   if (!pet.isAlive) {
@@ -76,6 +78,12 @@ export function applyIdleClasses(el, pet) {
     el.setAttribute("data-variant", variant.tier);
     if (displayEl) displayEl.setAttribute("data-variant", variant.tier);
     el.classList.add(`pet-evolution--variant-${variant.tier}`);
+
+    // 능어(인어 scruffy) 전용: 좌우 왕복 + 오른쪽 이동 시 반전
+    const theme = normalizeSpeciesTheme(pet.speciesTheme);
+    if (theme === "mermaid" && pet.adultVariantId === "scruffy" && !pet.isSleeping) {
+      el.classList.add("pet-evolution--neungeo-walk");
+    }
   } else {
     el.removeAttribute("data-variant");
     if (displayEl) displayEl.removeAttribute("data-variant");
