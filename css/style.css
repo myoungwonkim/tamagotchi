@@ -351,27 +351,26 @@ body.capture-mode .pet-evolution--neungeo-walk .pet-evolution-img {
 
 .shark-fx__shark {
   position: absolute;
-  top: 46%;
-  left: 0;
-  width: 48%;
-  max-width: 220px;
+  top: 50%;
+  left: 50%;
+  width: 150%;
   height: auto;
-  transform: translate(-150%, -50%);
+  transform: translate(-10%, -50%) scale(1.1);
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
   opacity: 0;
 }
 
 .pet-area--shark-run .shark-fx__shark {
-  animation: sharkSwim 1.15s cubic-bezier(0.45, 0.05, 0.6, 1) forwards;
+  animation: sharkSwim 1.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes sharkSwim {
-  0% { opacity: 0; transform: translate(-150%, -50%) scale(0.85); }
-  18% { opacity: 1; }
-  70% { transform: translate(30%, -52%) scale(1.05); opacity: 1; }
-  100% { transform: translate(130%, -50%) scale(1.18); opacity: 1; }
+  0% { opacity: 0; transform: translate(120%, -50%) scale(0.7); }
+  20% { opacity: 1; }
+  75% { transform: translate(-4%, -50%) scale(1.05); opacity: 1; }
+  100% { transform: translate(-10%, -50%) scale(1.14); opacity: 1; }
 }
 
 .shark-fx__flash {
@@ -1207,7 +1206,8 @@ img.pet-sprite[hidden] {
   align-items: center;
   justify-content: center;
   width: 100%;
-  --sprite-evolution-size: clamp(11rem, 58vw, 16rem);
+  /* 펫 화면(성체) 크기를 넘지 않도록 동일 값으로 제한 */
+  --sprite-evolution-size: clamp(8.5rem, 44vw, 11.25rem);
   min-height: var(--sprite-evolution-size);
   padding: 4px 0 8px;
 }
