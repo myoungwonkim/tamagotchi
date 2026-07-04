@@ -36,6 +36,7 @@ export function createNewPet(name = "치치") {
     speciesTheme: pickRandomSpeciesTheme(),
     adultVariantId: null,
     adultCareSnapshot: null,
+    deathCause: null,
   };
 }
 
@@ -145,6 +146,7 @@ export function checkGameOver(pet) {
   if (pet.health <= 0 || neglectedTooLong) {
     pet.isAlive = false;
     pet.isSleeping = false;
+    pet.deathCause = pet.health <= 0 ? "health" : "neglect";
     return true;
   }
 

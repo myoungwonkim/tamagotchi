@@ -16,6 +16,7 @@ export function mountDevPanel(handlers) {
   const tests = [
     { label: "건강 게임 오버", action: handlers.simulateHealthGameOver },
     { label: "방치 게임 오버 (11분)", action: handlers.simulateNeglectGameOver },
+    { label: "상어 습격", action: handlers.simulateSharkAttack },
     { label: "5분 오프라인", action: () => handlers.simulateOffline(5) },
     { label: "30분 오프라인", action: () => handlers.simulateOffline(30) },
     { label: "나이 +1일", action: handlers.simulateAgePlusOne },

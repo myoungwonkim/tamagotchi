@@ -28,6 +28,7 @@ import { syncMessLayer, scheduleMessLayer, clearMessLayer } from "./mess.js";
 import { AD_TUNING } from "./adConfig.js";
 import { canOfferRevive } from "./ads.js";
 import { getDeathSnapshot } from "./deathSnapshot.js";
+import { pickGhostLine } from "./ghostDialogue.js";
 
 const elements = {
   petName: document.getElementById("pet-name"),
@@ -92,6 +93,34 @@ let messageTimeout = null;
 let gameOverSoundNotified = false;
 let lastEvolutionKey = null;
 let lastMoodKey = null;
+let deferGameOverOverlay = false;
+let ghostPleaTimer = null;
+
+const GHOST_PLEA_INTERVAL_MS = 3600;
+
+/** 상어 습격 연출 중에는 게임오버 카드를 잠시 미뤘다가 연출 후 띄운다. */
+export function setDeferGameOverOverlay(value) {
+  deferGameOverOverlay = Boolean(value);
+}
+
+function startGhostPlea(pet) {
+  if (ghostPleaTimer) return;
+  elements.gameOverText.textContent = pet.ghostLine || pickGhostLine();
+  ghostPleaTimer = window.setInterval(() => {
+    elements.gameOverText.textContent = pickGhostLine();
+    elements.gameOverText.classList.remove("overlay-text--plea-pop");
+    void elements.gameOverText.offsetWidth;
+    elements.gameOverText.classList.add("overlay-text--plea-pop");
+  }, GHOST_PLEA_INTERVAL_MS);
+}
+
+function stopGhostPlea() {
+  if (ghostPleaTimer) {
+    window.clearInterval(ghostPleaTimer);
+    ghostPleaTimer = null;
+  }
+  elements.gameOverText?.classList.remove("overlay-text--plea-pop");
+}
 
 function getStageLabel(pet) {
   const theme = getPetSpeciesTheme(pet);
@@ -359,24 +388,42 @@ function updateGameOver(pet) {
     elements.gameOverOverlay.hidden = true;
     elements.actions.hidden = false;
     gameOverSoundNotified = false;
+    stopGhostPlea();
     return;
   }
 
-  const age = getAgeDays(pet);
-  elements.gameOverTitle.textContent = `${withSubjectParticle(pet.name)} 떠났어요...`;
-
-  if (age > 0) {
-    elements.gameOverText.textContent = `${age}일 동안 함께했어요. 새 친구를 만나볼까요?`;
-  } else if (getGameOverReason(pet) === "health") {
-    elements.gameOverText.textContent = "건강이 너무 나빠졌어요. 다음엔 더 잘 돌봐줄 수 있을까요?";
-  } else {
-    elements.gameOverText.textContent = "너무 오래 방치했어요. 다음엔 더 잘 돌봐줄 수 있을까요?";
+  // 상어 습격 연출이 재생되는 동안에는 카드를 잠시 감춰 둔다.
+  if (deferGameOverOverlay) {
+    elements.gameOverOverlay.hidden = true;
+    elements.actions.hidden = true;
+    if (elements.newPetFab) elements.newPetFab.hidden = true;
+    return;
   }
 
-  setOverlayGraphic(
-    elements.gameOverGraphic,
-    getUiSpriteMeta("heart-broken", "💔", "게임 오버"),
-  );
+  const isShark = pet.deathCause === "shark";
+  const age = getAgeDays(pet);
+
+  if (isShark) {
+    elements.gameOverTitle.textContent = `${withSubjectParticle(pet.name)} 유령이 되었어요...`;
+    startGhostPlea(pet);
+    setOverlayGraphic(elements.gameOverGraphic, getEvolutionSpriteMeta(pet));
+  } else {
+    stopGhostPlea();
+    elements.gameOverTitle.textContent = `${withSubjectParticle(pet.name)} 떠났어요...`;
+
+    if (age > 0) {
+      elements.gameOverText.textContent = `${age}일 동안 함께했어요. 새 친구를 만나볼까요?`;
+    } else if (getGameOverReason(pet) === "health") {
+      elements.gameOverText.textContent = "건강이 너무 나빠졌어요. 다음엔 더 잘 돌봐줄 수 있을까요?";
+    } else {
+      elements.gameOverText.textContent = "너무 오래 방치했어요. 다음엔 더 잘 돌봐줄 수 있을까요?";
+    }
+
+    setOverlayGraphic(
+      elements.gameOverGraphic,
+      getUiSpriteMeta("heart-broken", "💔", "게임 오버"),
+    );
+  }
 
   elements.gameOverOverlay.hidden = false;
   elements.actions.hidden = true;
@@ -452,6 +499,7 @@ export function isMessageVisible() {
 }
 
 export function showNameModal() {
+  stopGhostPlea();
   elements.nameOverlay.hidden = false;
   elements.gameOverOverlay.hidden = true;
   elements.graduateOverlay.hidden = true;

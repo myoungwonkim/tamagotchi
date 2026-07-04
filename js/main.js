@@ -37,9 +37,12 @@ import {
   applyDeathSnapshotToPet,
   clearDeathSnapshot,
 } from "./deathSnapshot.js";
+import { maybeSharkAttack, applySharkDeath, runSharkAttackAnimation } from "./sharkAttack.js";
+import { pickGhostLine } from "./ghostDialogue.js";
 import {
   renderPet,
   showMessage,
+  setDeferGameOverOverlay,
   showNameModal,
   hideNameModal,
   showGraduateModal,
@@ -315,11 +318,38 @@ function gameTick() {
 
   const wasAlive = pet.isAlive;
   tickPet(pet, elapsed);
+
+  if (pet.isAlive && maybeSharkAttack(pet, elapsed, now)) {
+    triggerSharkAttack();
+    return;
+  }
+
   noteDeathIfNeeded(wasAlive);
   handleEvolution();
   maybeShowIdleDialogue();
   renderPet(pet);
   savePet(pet);
+}
+
+function triggerSharkAttack() {
+  if (!pet) return;
+
+  applySharkDeath(pet);
+  pet.ghostLine = pickGhostLine();
+  captureDeathSnapshot(pet);
+  savePet(pet);
+  playSfx("shark");
+
+  setDeferGameOverOverlay(true);
+  const petArea = document.getElementById("pet-area");
+  runSharkAttackAnimation(petArea, {
+    onChomp: () => renderPet(pet),
+    onComplete: () => {
+      setDeferGameOverOverlay(false);
+      renderPet(pet);
+      savePet(pet);
+    },
+  });
 }
 
 const ACTION_MESSAGES = {
@@ -535,6 +565,11 @@ function mountDevToolsIfEnabled() {
         pet.happiness = 5;
         pet.cleanliness = 5;
         applyAwayTime(11 * 60 * 1000, { notify: false });
+      },
+
+      simulateSharkAttack() {
+        if (!pet?.isAlive) return;
+        triggerSharkAttack();
       },
 
       simulateOffline(minutes) {

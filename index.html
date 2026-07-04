@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="심해 가상펫 육성 및 수집 게임. 불가사의한 알을 돌보며 나만의 펫을 키우고 비밀 탐사일지에 기록하세요.">
-  <meta name="app-version" content="ecc7e3e">
+  <meta name="app-version" content="5f0a9d2">
   <title>어비스펫: 심해 가상 펫</title>
-  <link rel="stylesheet" href="css/style.css?v=ecc7e3e">
+  <link rel="stylesheet" href="css/style.css?v=5f0a9d2">
 </head>
 <body>
   <div class="app">
@@ -50,6 +50,11 @@
         </div>
         <div class="pet-mood-bubble" id="pet-mood-bubble" aria-hidden="true">
           <div class="pet-mood-emoji" id="pet-mood-emoji"></div>
+        </div>
+        <div class="shark-fx" id="shark-fx" aria-hidden="true">
+          <div class="shark-fx__darken"></div>
+          <img class="shark-fx__shark" src="assets/sprites/ui/shark.png" alt="">
+          <div class="shark-fx__flash"></div>
         </div>
       </div>
 
@@ -195,9 +200,9 @@
       const scope = new URL("js/", document.baseURI).href;
       const files = [
         "pet.js", "actions.js", "storage.js", "evolution.js", "speciesThemes.js", "adultVariants.js",
-        "encyclopedia.js", "dialogue.js", "audio.js", "sprites.js", "effects.js",
+        "encyclopedia.js", "dialogue.js", "ghostDialogue.js", "audio.js", "sprites.js", "effects.js",
         "korean.js", "ui.js", "mess.js", "dev.js", "adConfig.js", "tossEnv.js",
-        "deathSnapshot.js", "ads.js", "main.js",
+        "deathSnapshot.js", "sharkAttack.js", "ads.js", "main.js",
       ];
       const scoped = {};
       for (const file of files) {

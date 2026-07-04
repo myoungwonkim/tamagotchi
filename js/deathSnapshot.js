@@ -72,6 +72,9 @@ export function applyDeathSnapshotToPet(pet, snapshot) {
   pet.isSleeping = false;
   pet.neglectStartedAt = null;
   pet.health = Math.max(pet.health, 25);
+  pet.deathCause = null;
+  pet.ghostLine = null;
+  pet.lastReviveAt = Date.now();
   pet.lastUpdated = Date.now();
   return true;
 }

@@ -11,6 +11,7 @@ const SFX_PRESETS = {
   evolve: { frequencies: [523, 659, 784, 1047], duration: 0.1, gap: 0.07, type: "square", gain: 0.06 },
   gameover: { frequencies: [392, 330, 262], duration: 0.2, gap: 0.08, type: "sine", gain: 0.08 },
   message: { frequencies: [587], duration: 0.08, type: "sine", gain: 0.05 },
+  shark: { frequencies: [160, 110, 70], duration: 0.16, gap: 0.03, type: "sawtooth", gain: 0.1 },
 };
 
 let audioContext = null;

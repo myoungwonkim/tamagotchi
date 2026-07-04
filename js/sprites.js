@@ -94,6 +94,14 @@ export function getEvolutionSpriteMeta(pet) {
   const theme = getPetSpeciesTheme(pet);
 
   if (!pet.isAlive) {
+    if (pet.deathCause === "shark") {
+      return {
+        key: `${theme}-ghost`,
+        src: getSpriteUrl("evolution", "ghost", theme),
+        alt: "유령",
+        fallbackEmoji: "👻",
+      };
+    }
     return {
       key: `${theme}-dead`,
       src: getSpriteUrl("evolution", "dead", theme),
@@ -201,7 +209,10 @@ export function preloadSpritesForPet(pet) {
 }
 
 export function getFallbackEvolutionEmoji(pet) {
-  if (!pet.isAlive) return getDeadEmojiForTheme(getPetSpeciesTheme(pet));
+  if (!pet.isAlive) {
+    if (pet.deathCause === "shark") return "👻";
+    return getDeadEmojiForTheme(getPetSpeciesTheme(pet));
+  }
   const stage = getEvolutionStage(pet);
   if (stage.id === "adult") return getEvolutionDisplayEmoji(pet);
   return getEvolutionStageEmojiForTheme(stage.id, getPetSpeciesTheme(pet));

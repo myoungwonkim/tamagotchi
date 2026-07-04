@@ -315,6 +315,93 @@ body.capture-mode .pet-water {
   }
 }
 
+/* ===== 상어 습격 연출 ===== */
+.shark-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.pet-area--shark .shark-fx {
+  opacity: 1;
+}
+
+.shark-fx__darken {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 18, 26, 0.12), rgba(2, 10, 16, 0.55));
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+.pet-area--shark .shark-fx__darken {
+  opacity: 1;
+}
+
+.shark-fx__shark {
+  position: absolute;
+  top: 46%;
+  left: 0;
+  width: 48%;
+  max-width: 220px;
+  height: auto;
+  transform: translate(-150%, -50%);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+  opacity: 0;
+}
+
+.pet-area--shark-run .shark-fx__shark {
+  animation: sharkSwim 1.15s cubic-bezier(0.45, 0.05, 0.6, 1) forwards;
+}
+
+@keyframes sharkSwim {
+  0% { opacity: 0; transform: translate(-150%, -50%) scale(0.85); }
+  18% { opacity: 1; }
+  70% { transform: translate(30%, -52%) scale(1.05); opacity: 1; }
+  100% { transform: translate(130%, -50%) scale(1.18); opacity: 1; }
+}
+
+.shark-fx__flash {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+}
+
+.pet-area--shark-chomp .shark-fx__flash {
+  animation: sharkFlash 0.45s ease;
+}
+
+@keyframes sharkFlash {
+  0% { opacity: 0; }
+  25% { opacity: 0.92; }
+  100% { opacity: 0; }
+}
+
+.pet-area--shark-chomp {
+  animation: sharkShake 0.4s ease;
+}
+
+@keyframes sharkShake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-6px, 3px); }
+  40% { transform: translate(6px, -3px); }
+  60% { transform: translate(-5px, -2px); }
+  80% { transform: translate(5px, 2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shark-fx {
+    display: none;
+  }
+}
+
 .mess-layer {
   position: absolute;
   inset: 0;
@@ -857,6 +944,15 @@ img.pet-sprite[hidden] {
 
 .overlay[hidden] {
   display: none;
+}
+
+.overlay-text--plea-pop {
+  animation: pleaPop 0.32s ease;
+}
+
+@keyframes pleaPop {
+  from { opacity: 0.35; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 #encyclopedia-overlay {
