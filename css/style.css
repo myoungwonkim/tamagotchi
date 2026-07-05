@@ -604,9 +604,10 @@ img.pet-sprite[hidden] {
   transform-origin: 50% 50%;
 }
 
-/* 겹얼굴 어인(인어 sickly) — 3프레임 머리카락(JS). 컨테이너 흔들림 끔 */
-.pet-evolution--geupface-hair,
-.pet-evolution--geupface-hair.pet-evolution--variant-defective {
+/* 인어 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
+.pet-evolution--mermaid-frames,
+.pet-evolution--mermaid-frames.pet-evolution--variant-defective,
+.pet-evolution--mermaid-frames.pet-evolution--variant-pretty {
   animation: none !important;
 }
 

@@ -5,51 +5,67 @@ import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-const GEUPFACE_HAIR_FRAMES = [
-  "assets/sprites/mermaid/adult/sickly-frame-1.png",
-  "assets/sprites/mermaid/adult/sickly.png",
-  "assets/sprites/mermaid/adult/sickly-frame-3.png",
-];
-const GEUPFACE_FRAME_MS = 700;
-const geupfaceHairTimers = new WeakMap();
+const MERMAID_SPRITE_FRAMES = {
+  sickly: [
+    "assets/sprites/mermaid/adult/sickly-frame-1.png",
+    "assets/sprites/mermaid/adult/sickly.png",
+    "assets/sprites/mermaid/adult/sickly-frame-3.png",
+  ],
+  sparkle: [
+    "assets/sprites/mermaid/adult/sparkle-frame-1.png",
+    "assets/sprites/mermaid/adult/sparkle.png",
+    "assets/sprites/mermaid/adult/sparkle-frame-3.png",
+  ],
+};
+const MERMAID_FRAME_MS = 700;
+const mermaidFrameTimers = new WeakMap();
 
-function geupfaceFrameSrc(path) {
+function mermaidFrameSrc(path) {
   if (typeof document === "undefined") return path;
   const v = document.querySelector('meta[name="app-version"]')?.content || "";
   return v ? `${path}?v=${encodeURIComponent(v)}` : path;
 }
 
-function stopGeupfaceHairFrames(el) {
-  const id = geupfaceHairTimers.get(el);
+function stopMermaidSpriteFrames(el) {
+  const id = mermaidFrameTimers.get(el);
   if (id == null) return;
   clearInterval(id);
-  geupfaceHairTimers.delete(el);
+  mermaidFrameTimers.delete(el);
+  const variantId = el?.dataset.frameVariant;
+  const frames = variantId && MERMAID_SPRITE_FRAMES[variantId];
   const img = el?.querySelector("img.pet-evolution-img:not([hidden])");
-  if (img) img.src = geupfaceFrameSrc(GEUPFACE_HAIR_FRAMES[1]);
+  if (img && frames) img.src = mermaidFrameSrc(frames[1]);
+  if (el) delete el.dataset.frameVariant;
 }
 
-function shouldAnimateGeupfaceHair(pet) {
+function shouldAnimateMermaidFrames(pet) {
   if (!pet?.isAlive || pet.isSleeping) return false;
   if (prefersReducedMotion()) return false;
   if (typeof document !== "undefined" && document.body.classList.contains("capture-mode")) return false;
   const theme = normalizeSpeciesTheme(pet.speciesTheme);
-  return theme === "mermaid" && getEvolutionStage(pet).id === "adult" && pet.adultVariantId === "sickly";
+  return (
+    theme === "mermaid" &&
+    getEvolutionStage(pet).id === "adult" &&
+    Boolean(MERMAID_SPRITE_FRAMES[pet.adultVariantId])
+  );
 }
 
-function syncGeupfaceHairFrames(el, pet) {
-  stopGeupfaceHairFrames(el);
-  if (!el || !shouldAnimateGeupfaceHair(pet)) return;
+function syncMermaidSpriteFrames(el, pet) {
+  stopMermaidSpriteFrames(el);
+  if (!el || !shouldAnimateMermaidFrames(pet)) return;
 
+  const frames = MERMAID_SPRITE_FRAMES[pet.adultVariantId];
   const img = el.querySelector("img.pet-evolution-img:not([hidden])");
   if (!img) return;
 
+  el.dataset.frameVariant = pet.adultVariantId;
   let frame = 0;
   const tick = () => {
-    img.src = geupfaceFrameSrc(GEUPFACE_HAIR_FRAMES[frame % GEUPFACE_HAIR_FRAMES.length]);
+    img.src = mermaidFrameSrc(frames[frame % frames.length]);
     frame += 1;
   };
   tick();
-  geupfaceHairTimers.set(el, setInterval(tick, GEUPFACE_FRAME_MS));
+  mermaidFrameTimers.set(el, setInterval(tick, MERMAID_FRAME_MS));
 }
 
 export function prefersReducedMotion() {
@@ -92,7 +108,7 @@ export function playMoodTransition(bubbleEl) {
 export function applyIdleClasses(el, pet) {
   if (!el || !pet) return;
 
-  stopGeupfaceHairFrames(el);
+  stopMermaidSpriteFrames(el);
 
   const displayEl = el.closest(".pet-display");
   const stageId = !pet.isAlive ? "dead" : getEvolutionStage(pet).id;
@@ -107,7 +123,7 @@ export function applyIdleClasses(el, pet) {
     "pet-evolution--variant-normal",
     "pet-evolution--variant-defective",
     "pet-evolution--neungeo-walk",
-    "pet-evolution--geupface-hair",
+    "pet-evolution--mermaid-frames",
   );
 
   if (!pet.isAlive) {
@@ -139,16 +155,20 @@ export function applyIdleClasses(el, pet) {
       el.classList.add("pet-evolution--neungeo-walk");
     }
 
-    // 겹얼굴 어인(인어 sickly) 전용: 3프레임 머리카락 순환
-    if (theme === "mermaid" && !pet.isSleeping && pet.adultVariantId === "sickly") {
-      el.classList.add("pet-evolution--geupface-hair");
+    // 3프레임 idle: 겹얼굴(sickly)·청령(sparkle) 등
+    if (
+      theme === "mermaid" &&
+      !pet.isSleeping &&
+      MERMAID_SPRITE_FRAMES[pet.adultVariantId]
+    ) {
+      el.classList.add("pet-evolution--mermaid-frames");
     }
   } else {
     el.removeAttribute("data-variant");
     if (displayEl) displayEl.removeAttribute("data-variant");
   }
 
-  syncGeupfaceHairFrames(el, pet);
+  syncMermaidSpriteFrames(el, pet);
 }
 
 const CARE_EDGE_GAP_CM = 0.45;
