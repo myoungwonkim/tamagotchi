@@ -79,9 +79,13 @@ export function applyIdleClasses(el, pet) {
     if (displayEl) displayEl.setAttribute("data-variant", variant.tier);
     el.classList.add(`pet-evolution--variant-${variant.tier}`);
 
-    // 능어(인어 scruffy) 전용: 좌우 왕복 + 오른쪽 이동 시 반전
+    // 능어·핀백 어인(인어 scruffy/grumpy) 전용: 좌우 왕복 + 오른쪽 이동 시 반전
     const theme = normalizeSpeciesTheme(pet.speciesTheme);
-    if (theme === "mermaid" && pet.adultVariantId === "scruffy" && !pet.isSleeping) {
+    if (
+      theme === "mermaid" &&
+      !pet.isSleeping &&
+      (pet.adultVariantId === "scruffy" || pet.adultVariantId === "grumpy")
+    ) {
       el.classList.add("pet-evolution--neungeo-walk");
     }
   } else {

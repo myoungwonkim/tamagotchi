@@ -46,7 +46,7 @@ const VARIANT_LABELS = {
   farm: { deepsea: "해조어", mermaid: "해초 인어", vent: "벤트 게" },
   plain: { deepsea: "진흙어", mermaid: "늪 인어", vent: "황 새우" },
   scruffy: { deepsea: "썩은 아귀", mermaid: "능어", vent: "녹슨 새우" },
-  grumpy: { deepsea: "송곳니어", mermaid: "투성 어인", vent: "분홍 장어" },
+  grumpy: { deepsea: "송곳니어", mermaid: "핀백 어인", vent: "분홍 장어" },
   sickly: { deepsea: "기생어", mermaid: "반점 어인", vent: "기생 새우" },
 };
 
@@ -58,7 +58,7 @@ const VARIANT_EMOJI = {
   farm: { deepsea: "🪸🐟", mermaid: "🧜‍♀️🌿", vent: "🦀" },
   plain: { deepsea: "🐟", mermaid: "🧜", vent: "🦐" },
   scruffy: { deepsea: "🪱🐟", mermaid: "🐟👖", vent: "🦐" },
-  grumpy: { deepsea: "💢🐡", mermaid: "🐟👞", vent: "🐍" },
+  grumpy: { deepsea: "💢🐡", mermaid: "🐟🔺", vent: "🐍" },
   sickly: { deepsea: "🤢🐟", mermaid: "🐟🩹", vent: "🦠🦐" },
 };
 
