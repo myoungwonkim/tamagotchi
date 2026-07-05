@@ -1,29 +1,21 @@
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant } from "./adultVariants.js";
-import { getUiSpriteMeta } from "./sprites.js";
+import { getSpriteUrl, getUiSpriteMeta } from "./sprites.js";
 import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-const MERMAID_SPRITE_FRAMES = {
-  sickly: [
-    "assets/sprites/mermaid/adult/sickly-frame-1.png",
-    "assets/sprites/mermaid/adult/sickly.png",
-    "assets/sprites/mermaid/adult/sickly-frame-3.png",
-  ],
-  sparkle: [
-    "assets/sprites/mermaid/adult/sparkle-frame-1.png",
-    "assets/sprites/mermaid/adult/sparkle.png",
-    "assets/sprites/mermaid/adult/sparkle-frame-3.png",
-  ],
+const MERMAID_SPRITE_FRAME_IDS = {
+  sparkle: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
 };
 const MERMAID_FRAME_MS = 700;
 const mermaidFrameTimers = new WeakMap();
 
-function mermaidFrameSrc(path) {
-  if (typeof document === "undefined") return path;
-  const v = document.querySelector('meta[name="app-version"]')?.content || "";
-  return v ? `${path}?v=${encodeURIComponent(v)}` : path;
+function getMermaidFrameSrcs(variantId, speciesTheme) {
+  const ids = MERMAID_SPRITE_FRAME_IDS[variantId];
+  if (!ids) return null;
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  return ids.map((id) => getSpriteUrl("adult", id, theme));
 }
 
 function stopMermaidSpriteFrames(el) {
@@ -32,10 +24,13 @@ function stopMermaidSpriteFrames(el) {
   clearInterval(id);
   mermaidFrameTimers.delete(el);
   const variantId = el?.dataset.frameVariant;
-  const frames = variantId && MERMAID_SPRITE_FRAMES[variantId];
+  const frames = variantId && getMermaidFrameSrcs(variantId, el?.dataset.frameTheme);
   const img = el?.querySelector("img.pet-evolution-img:not([hidden])");
-  if (img && frames) img.src = mermaidFrameSrc(frames[1]);
-  if (el) delete el.dataset.frameVariant;
+  if (img && frames) img.src = frames[1];
+  if (el) {
+    delete el.dataset.frameVariant;
+    delete el.dataset.frameTheme;
+  }
 }
 
 function shouldAnimateMermaidFrames(pet) {
@@ -46,7 +41,7 @@ function shouldAnimateMermaidFrames(pet) {
   return (
     theme === "mermaid" &&
     getEvolutionStage(pet).id === "adult" &&
-    Boolean(MERMAID_SPRITE_FRAMES[pet.adultVariantId])
+    Boolean(MERMAID_SPRITE_FRAME_IDS[pet.adultVariantId])
   );
 }
 
@@ -54,14 +49,23 @@ function syncMermaidSpriteFrames(el, pet) {
   stopMermaidSpriteFrames(el);
   if (!el || !shouldAnimateMermaidFrames(pet)) return;
 
-  const frames = MERMAID_SPRITE_FRAMES[pet.adultVariantId];
-  const img = el.querySelector("img.pet-evolution-img:not([hidden])");
-  if (!img) return;
+  const frames = getMermaidFrameSrcs(pet.adultVariantId, pet.speciesTheme);
+  const img = el.querySelector("img.pet-evolution-img");
+  if (!img || !frames) return;
+
+  img.onerror = null;
+  img.onload = null;
+  img.hidden = false;
+  img.style.display = "";
+  delete img.dataset.retryBust;
+  const fallback = el.querySelector(".pet-evolution-fallback, .pet-sprite-fallback");
+  if (fallback) fallback.hidden = true;
 
   el.dataset.frameVariant = pet.adultVariantId;
+  el.dataset.frameTheme = normalizeSpeciesTheme(pet.speciesTheme);
   let frame = 0;
   const tick = () => {
-    img.src = mermaidFrameSrc(frames[frame % frames.length]);
+    img.src = frames[frame % frames.length];
     frame += 1;
   };
   tick();
@@ -155,11 +159,11 @@ export function applyIdleClasses(el, pet) {
       el.classList.add("pet-evolution--neungeo-walk");
     }
 
-    // 3프레임 idle: 겹얼굴(sickly)·청령(sparkle) 등
+    // 3프레임 idle: 청령(sparkle) 등
     if (
       theme === "mermaid" &&
       !pet.isSleeping &&
-      MERMAID_SPRITE_FRAMES[pet.adultVariantId]
+      MERMAID_SPRITE_FRAME_IDS[pet.adultVariantId]
     ) {
       el.classList.add("pet-evolution--mermaid-frames");
     }

@@ -1,7 +1,12 @@
 import { getAgeDays, getGameOverReason, getAverageCare } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
-import { getStageLabelForTheme, normalizeSpeciesTheme, SPECIES_THEMES } from "./speciesThemes.js";
+import {
+  getStageLabelForTheme,
+  getVariantLabelForTheme,
+  normalizeSpeciesTheme,
+  SPECIES_THEMES,
+} from "./speciesThemes.js";
 import {
   getEncyclopediaSlots,
   getCollectedCount,
@@ -149,12 +154,20 @@ function applyEmojiFallback(container, emoji, className = "pet-sprite-fallback")
 
 function spriteSrcMatches(currentSrc, nextSrc) {
   if (!currentSrc || !nextSrc) return false;
-  const strip = (url) => url.split("?")[0];
-  return strip(currentSrc) === strip(nextSrc);
+  try {
+    const base = typeof location !== "undefined" ? location.href : "http://localhost/";
+    const a = new URL(currentSrc, base);
+    const b = new URL(nextSrc, base);
+    return a.pathname === b.pathname && a.search === b.search;
+  } catch {
+    return currentSrc === nextSrc;
+  }
 }
 
 function bindSpriteImgHandlers(img, fallback, getMeta) {
   const onError = () => {
+    if (img.closest("[data-frame-variant]")) return;
+
     const meta = getMeta();
     if (!img.dataset.retryBust && meta?.src) {
       img.dataset.retryBust = "1";
@@ -530,10 +543,12 @@ function createEncyclopediaGraphic(meta, locked = false) {
   const wrap = document.createElement("div");
   wrap.className = "encyclopedia-card__graphic";
 
-  if (locked) {
-    setPetGraphic(wrap, getUiSpriteMeta("locked", "❓", "미수집"), {
-      imgClass: "encyclopedia-card__img",
-    });
+  if (locked || !meta) {
+    setPetGraphic(
+      wrap,
+      meta ?? getUiSpriteMeta("locked", "❓", "미수집"),
+      { imgClass: "encyclopedia-card__img" },
+    );
     return wrap;
   }
 
@@ -605,9 +620,11 @@ function renderEncyclopediaGrid(speciesTheme) {
     const spriteTheme = entry
       ? normalizeSpeciesTheme(entry.speciesTheme)
       : theme;
-    const graphic = slot.collected
-      ? createEncyclopediaGraphic(getVariantSpriteMeta(slot.variant, spriteTheme))
-      : createEncyclopediaGraphic(null, true);
+    const speciesLabel = getVariantLabelForTheme(slot.variant.id, theme);
+    const graphic = createEncyclopediaGraphic(
+      getVariantSpriteMeta(slot.variant, spriteTheme),
+      !slot.collected,
+    );
 
     const name = document.createElement("span");
     name.className = "encyclopedia-card__name";
@@ -617,7 +634,7 @@ function renderEncyclopediaGrid(speciesTheme) {
 
     const species = document.createElement("span");
     species.className = "encyclopedia-card__species";
-    species.textContent = slot.collected ? (entry?.label ?? slot.variant.label) : "???";
+    species.textContent = speciesLabel;
 
     card.append(graphic, name, species);
 
@@ -651,7 +668,10 @@ function showEncyclopediaDetail(variant, entry) {
 
   const petName = entry.petName?.trim() || "이름 없음";
   elements.encyclopediaDetailName.textContent = petName;
-  elements.encyclopediaDetailSpecies.textContent = entry.label ?? variant.label;
+  elements.encyclopediaDetailSpecies.textContent = getVariantLabelForTheme(
+    variant.id,
+    theme,
+  );
   elements.encyclopediaDetailDesc.textContent = getVariantDescription(
     variant.id,
     petName,

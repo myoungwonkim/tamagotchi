@@ -1,11 +1,34 @@
 import { ADULT_VARIANTS, getAdultVariant } from "./adultVariants.js";
 import { getEvolutionStage } from "./evolution.js";
-import { getVariantLabelForTheme, normalizeSpeciesTheme } from "./speciesThemes.js";
+import {
+  DEFAULT_SPECIES_THEME,
+  getVariantLabelForTheme,
+  normalizeSpeciesTheme,
+} from "./speciesThemes.js";
 
 const STORAGE_KEY = "tamagotchi-encyclopedia";
 
 function createEntryId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+function normalizeEncyclopediaEntry(entry) {
+  if (!entry || typeof entry.id !== "string") return null;
+  if (typeof entry.variantId !== "string") return null;
+  if (!ADULT_VARIANTS.some((variant) => variant.id === entry.variantId)) return null;
+
+  let speciesTheme = DEFAULT_SPECIES_THEME;
+  if (typeof entry.speciesTheme === "string") {
+    speciesTheme = normalizeSpeciesTheme(entry.speciesTheme);
+  } else if (typeof entry.label === "string" && /인어|어인/.test(entry.label)) {
+    speciesTheme = "mermaid";
+  }
+
+  return {
+    ...entry,
+    speciesTheme,
+    label: getVariantLabelForTheme(entry.variantId, speciesTheme),
+  };
 }
 
 export function loadEncyclopedia() {
@@ -15,7 +38,11 @@ export function loadEncyclopedia() {
 
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.entries)) return { entries: [] };
-    return { entries: parsed.entries.filter((e) => e && typeof e.id === "string") };
+    return {
+      entries: parsed.entries
+        .map(normalizeEncyclopediaEntry)
+        .filter(Boolean),
+    };
   } catch {
     return { entries: [] };
   }
@@ -67,9 +94,18 @@ export function addToEncyclopedia(pet) {
   const data = loadEncyclopedia();
 
   const duplicate = data.entries.find(
-    (e) => e.petBornAt === pet.bornAt && e.variantId === pet.adultVariantId
+    (e) =>
+      e.petBornAt === pet.bornAt &&
+      e.variantId === pet.adultVariantId &&
+      normalizeSpeciesTheme(e.speciesTheme) === speciesTheme,
   );
-  if (duplicate) return duplicate;
+  if (duplicate) {
+    duplicate.label = getVariantLabelForTheme(variant.id, speciesTheme);
+    duplicate.speciesTheme = speciesTheme;
+    duplicate.emoji = variant.emoji;
+    saveEncyclopedia(data);
+    return duplicate;
+  }
 
   const entry = {
     id: createEntryId(),
@@ -163,7 +199,7 @@ const MERMAID_ENCYCLOPEDIA_DESCRIPTIONS = {
   grumpy:
     "{name}의 등지느러미는 헤엄칠 때마다 물살을 가르며 분홍빛으로 번집니다. 물고기 머리라 입을 다물기 어렵지만, 표정만 보면 항상 뭔가 불만인 것 같아요. 바지는 절대 벗지 않는데, 이유를 물으면 '바닥이 차갑다'고만 합니다.",
   sickly:
-    "{name}은 큰 물고기 머리 위에 작은 사람 얼굴이 하나 더 있어요. 아래쪽 입은 늘 벌어져 있지만, 위쪽 얼굴은 눈을 감고 '별일 없음'이라고만 합니다. 긴 머리카락은 물살 따라 흩날리는데, {name}은 '몸이 흔들리는 것'이라고 고집해요. 가느다란 팔 두 개는 지나가는 이바귀에게 '조용히' 손짓하는 안내판 역할을 합니다.",
+    "{name}은 은빛 반점이 있는 물고기 상체와 창백한 사람 다리를 가졌어요. 거울 앞에 서면 어색해서 피하지만, 거울 없는 날엔 오히려 제일 활발합니다. 한쪽 눈이 비어 보이는 건 무서운 게 아니라 '오늘은 여기까지 쉴게요'라는 신호래요. 발끝까지 신발을 신는 성실함은 인정받고 있습니다.",
 };
 
 /** variantId → {name} 치환 가능한 도감 설명 (열수구) */
