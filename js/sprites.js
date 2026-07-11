@@ -127,7 +127,7 @@ export function getEvolutionSpriteMeta(pet) {
       : { spriteId: "standard", emoji: "🐟", label: getStageLabelForTheme("adult", theme) };
     return {
       key: `${theme}-adult-${variant.spriteId ?? variant.id}`,
-      src: getSpriteUrl("adult", variant.spriteId ?? variant.id ?? "standard", theme),
+      src: getSpriteUrlPng("adult", variant.spriteId ?? variant.id ?? "standard", theme),
       alt: variant.label,
       fallbackEmoji: variant.emoji,
     };
@@ -160,7 +160,7 @@ export function getVariantSpriteMeta(variant, speciesTheme = DEFAULT_SPECIES_THE
   const themed = getAdultVariant(variant.id, theme);
   return {
     key: `${theme}-${variant.id}`,
-    src: getSpriteUrl("adult", variant.spriteId, theme),
+    src: getSpriteUrlPng("adult", variant.spriteId, theme),
     alt: themed.label,
     fallbackEmoji: themed.emoji,
   };
