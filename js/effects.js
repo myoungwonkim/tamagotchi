@@ -5,53 +5,67 @@ import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-const MERMAID_SPRITE_FRAME_IDS = {
-  sparkle: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
+/** variantId → theme → { ids, frameMs, floatBob?, floatBobSec? } */
+const ADULT_SPRITE_FRAME_CONFIG = {
+  sparkle: {
+    mermaid: { ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"], frameMs: 700 },
+    deepsea: {
+      ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
+      frameMs: 711,
+      floatBob: true,
+      floatBobSec: 2.13,
+    },
+  },
 };
-const MERMAID_FRAME_MS = 700;
-const mermaidFrameTimers = new WeakMap();
 
-function getMermaidFrameSrcs(variantId, speciesTheme) {
-  const ids = MERMAID_SPRITE_FRAME_IDS[variantId];
-  if (!ids) return null;
+const spriteFrameTimers = new WeakMap();
+
+function getSpriteFrameConfig(variantId, speciesTheme) {
   const theme = normalizeSpeciesTheme(speciesTheme);
-  return ids.map((id) => getSpriteUrl("adult", id, theme));
+  return ADULT_SPRITE_FRAME_CONFIG[variantId]?.[theme] ?? null;
 }
 
-function stopMermaidSpriteFrames(el) {
-  const id = mermaidFrameTimers.get(el);
+function getSpriteFrameSrcs(variantId, speciesTheme) {
+  const config = getSpriteFrameConfig(variantId, speciesTheme);
+  if (!config) return null;
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  return config.ids.map((id) => getSpriteUrl("adult", id, theme));
+}
+
+function stopSpriteFrames(el) {
+  const id = spriteFrameTimers.get(el);
   if (id == null) return;
   clearInterval(id);
-  mermaidFrameTimers.delete(el);
+  spriteFrameTimers.delete(el);
   const variantId = el?.dataset.frameVariant;
-  const frames = variantId && getMermaidFrameSrcs(variantId, el?.dataset.frameTheme);
+  const frames = variantId && getSpriteFrameSrcs(variantId, el?.dataset.frameTheme);
   const img = el?.querySelector("img.pet-evolution-img:not([hidden])");
-  if (img && frames) img.src = frames[1];
+  if (img && frames) {
+    img.src = frames[1];
+    img.style.removeProperty("--float-dur");
+  }
   if (el) {
     delete el.dataset.frameVariant;
     delete el.dataset.frameTheme;
   }
 }
 
-function shouldAnimateMermaidFrames(pet) {
+function shouldAnimateSpriteFrames(pet) {
   if (!pet?.isAlive || pet.isSleeping) return false;
   if (prefersReducedMotion()) return false;
   if (typeof document !== "undefined" && document.body.classList.contains("capture-mode")) return false;
-  const theme = normalizeSpeciesTheme(pet.speciesTheme);
-  return (
-    theme === "mermaid" &&
-    getEvolutionStage(pet).id === "adult" &&
-    Boolean(MERMAID_SPRITE_FRAME_IDS[pet.adultVariantId])
-  );
+  if (getEvolutionStage(pet).id !== "adult") return false;
+  return Boolean(getSpriteFrameConfig(pet.adultVariantId, pet.speciesTheme));
 }
 
-function syncMermaidSpriteFrames(el, pet) {
-  stopMermaidSpriteFrames(el);
-  if (!el || !shouldAnimateMermaidFrames(pet)) return;
+function syncSpriteFrames(el, pet) {
+  stopSpriteFrames(el);
+  if (!el || !shouldAnimateSpriteFrames(pet)) return;
 
-  const frames = getMermaidFrameSrcs(pet.adultVariantId, pet.speciesTheme);
+  const config = getSpriteFrameConfig(pet.adultVariantId, pet.speciesTheme);
+  const frames = getSpriteFrameSrcs(pet.adultVariantId, pet.speciesTheme);
   const img = el.querySelector("img.pet-evolution-img");
-  if (!img || !frames) return;
+  if (!img || !frames || !config) return;
 
   img.onerror = null;
   img.onload = null;
@@ -61,6 +75,10 @@ function syncMermaidSpriteFrames(el, pet) {
   const fallback = el.querySelector(".pet-evolution-fallback, .pet-sprite-fallback");
   if (fallback) fallback.hidden = true;
 
+  if (config.floatBob && config.floatBobSec) {
+    img.style.setProperty("--float-dur", `${config.floatBobSec}s`);
+  }
+
   el.dataset.frameVariant = pet.adultVariantId;
   el.dataset.frameTheme = normalizeSpeciesTheme(pet.speciesTheme);
   let frame = 0;
@@ -69,7 +87,7 @@ function syncMermaidSpriteFrames(el, pet) {
     frame += 1;
   };
   tick();
-  mermaidFrameTimers.set(el, setInterval(tick, MERMAID_FRAME_MS));
+  spriteFrameTimers.set(el, setInterval(tick, config.frameMs));
 }
 
 export function prefersReducedMotion() {
@@ -112,7 +130,7 @@ export function playMoodTransition(bubbleEl) {
 export function applyIdleClasses(el, pet) {
   if (!el || !pet) return;
 
-  stopMermaidSpriteFrames(el);
+  stopSpriteFrames(el);
 
   const displayEl = el.closest(".pet-display");
   const stageId = !pet.isAlive ? "dead" : getEvolutionStage(pet).id;
@@ -127,7 +145,9 @@ export function applyIdleClasses(el, pet) {
     "pet-evolution--variant-normal",
     "pet-evolution--variant-defective",
     "pet-evolution--neungeo-walk",
+    "pet-evolution--sprite-frames",
     "pet-evolution--mermaid-frames",
+    "pet-evolution--deepsea-float",
   );
 
   if (!pet.isAlive) {
@@ -159,20 +179,20 @@ export function applyIdleClasses(el, pet) {
       el.classList.add("pet-evolution--neungeo-walk");
     }
 
-    // 3프레임 idle: 청령(sparkle) 등
-    if (
-      theme === "mermaid" &&
-      !pet.isSleeping &&
-      MERMAID_SPRITE_FRAME_IDS[pet.adultVariantId]
-    ) {
-      el.classList.add("pet-evolution--mermaid-frames");
+    // 3프레임 idle: 청령(인어 sparkle), 주머니귀오징어(심해 sparkle) 등
+    const frameConfig = getSpriteFrameConfig(pet.adultVariantId, theme);
+    if (!pet.isSleeping && frameConfig) {
+      el.classList.add("pet-evolution--sprite-frames", "pet-evolution--mermaid-frames");
+      if (frameConfig.floatBob) {
+        el.classList.add("pet-evolution--deepsea-float");
+      }
     }
   } else {
     el.removeAttribute("data-variant");
     if (displayEl) displayEl.removeAttribute("data-variant");
   }
 
-  syncMermaidSpriteFrames(el, pet);
+  syncSpriteFrames(el, pet);
 }
 
 const CARE_EDGE_GAP_CM = 0.45;

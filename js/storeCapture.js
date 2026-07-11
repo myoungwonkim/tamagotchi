@@ -14,7 +14,7 @@ const PET_KEY = "tamagotchi-pet";
 const CAPTURE_ENCYCLOPEDIA_NAMES = {
   golden: "루미",
   fluffy: "달이",
-  sparkle: "별이",
+  sparkle: "주머니",
   standard: "산호",
   farm: "해초",
   plain: "진흙",

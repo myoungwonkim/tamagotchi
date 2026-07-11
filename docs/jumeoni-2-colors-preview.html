@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>주머니귀오징어 · 시안 2 색상 변형</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+
+    .ref {
+      display: flex; gap: 14px; align-items: center; margin-bottom: 24px;
+      background: #101c26; border: 1px solid #23414d; border-radius: 12px; padding: 14px;
+    }
+    .ref img {
+      width: 88px; height: 88px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      background: #1c2c38; border-radius: 8px; padding: 4px;
+    }
+    .ref .txt { font-size: 0.75rem; color: #9fb2be; flex: 1; }
+    .ref .txt strong { color: #d8e4ec; }
+
+    h2 { font-size: 0.8125rem; color: #58b8c8; margin: 4px 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card {
+      background: #10222c; border: 1px solid #23414d; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 200px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 150px; height: 150px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; }
+    .swatch { display: flex; gap: 4px; justify-content: center; margin-top: 8px; }
+    .swatch span {
+      width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15);
+    }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 56px; height: 56px; image-rendering: pixelated;
+      background: #1c2c38; border-radius: 6px; padding: 3px;
+    }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+    .thumbs .flip img { transform: scaleX(-1); }
+    code { color: #9fe6c8; }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a7888; }
+    .back { margin-bottom: 14px; font-size: 0.6875rem; }
+    .back a { color: #58b8c8; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="back"><a href="jumeoni-preview.html">← 주머니귀오징어 시안 목록</a></p>
+    <h1>시안 2 · 청록 발광형 — 색상 변형 3종</h1>
+    <p class="lead">동일 실루엣·포즈 · 팔레트만 변경 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      원본 <strong>시안 2(청록 발광형)</strong>의 형태를 유지하고, 발광 팔레트만 바꾼 3가지 색상 버전입니다.
+    </div>
+
+    <div class="ref">
+      <img src="../assets/custom/jumeoni-2.png" alt="원본 시안 2">
+      <div class="txt">
+        <strong>원본 · 시안 2 청록 발광형</strong><br>
+        <code>jumeoni-2.png</code> · 청록·시안 바디 + 흰 발광 점
+      </div>
+    </div>
+
+    <h2>색상 변형 (게임 배경 위)</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/jumeoni-2-violet.png" alt="보라"></div>
+        <h3>2-A · 보라 발광형</h3>
+        <p>진보라·마젠타 바디 + 핑크 발광 점</p>
+        <div class="swatch">
+          <span style="background:#3a1860"></span>
+          <span style="background:#7a2898"></span>
+          <span style="background:#c848b8"></span>
+          <span style="background:#f0a8e8"></span>
+        </div>
+        <div class="thumbs">
+          <div><img src="../assets/custom/jumeoni-2-violet.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/jumeoni-2-violet.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/jumeoni-2-coral.png" alt="산호"></div>
+        <h3>2-B · 산호 발광형</h3>
+        <p>코랄·로즈 바디 + 복숭아 발광 점</p>
+        <div class="swatch">
+          <span style="background:#8a2848"></span>
+          <span style="background:#c84868"></span>
+          <span style="background:#e87888"></span>
+          <span style="background:#f8c0c8"></span>
+        </div>
+        <div class="thumbs">
+          <div><img src="../assets/custom/jumeoni-2-coral.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/jumeoni-2-coral.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/jumeoni-2-amber.png" alt="호박"></div>
+        <h3>2-C · 호박 발광형</h3>
+        <p>앰버·골드 바디 + 황금 발광 점</p>
+        <div class="swatch">
+          <span style="background:#784810"></span>
+          <span style="background:#b87818"></span>
+          <span style="background:#e8a828"></span>
+          <span style="background:#f8d878"></span>
+        </div>
+        <div class="thumbs">
+          <div><img src="../assets/custom/jumeoni-2-amber.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/jumeoni-2-amber.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot">
+      스프라이트: <code>assets/custom/jumeoni-2-{violet,coral,amber}.png</code> (256×256) · 원본 시안 2와 동일 bbox<br>
+      <a href="jumeoni-preview.html">전체 시안 목록</a>
+    </p>
+  </div>
+</body>
+</html>

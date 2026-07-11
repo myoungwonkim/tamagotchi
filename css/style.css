@@ -309,9 +309,10 @@ body.capture-mode .pet-water {
   display: none;
 }
 
-/* 캡처 시 능어 왕복을 멈춰 중앙·원본 방향으로 고정 */
+/* 캡처 시 능어 왕복·주머니귀 float를 멈춰 중앙·원본 방향으로 고정 */
 body.capture-mode .pet-evolution--neungeo-walk,
-body.capture-mode .pet-evolution--neungeo-walk .pet-evolution-img {
+body.capture-mode .pet-evolution--neungeo-walk .pet-evolution-img,
+body.capture-mode .pet-evolution--deepsea-float .pet-evolution-img {
   animation: none !important;
   transform: none !important;
 }
@@ -604,11 +605,20 @@ img.pet-sprite[hidden] {
   transform-origin: 50% 50%;
 }
 
-/* 인어 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
+/* 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
+.pet-evolution--sprite-frames,
 .pet-evolution--mermaid-frames,
+.pet-evolution--sprite-frames.pet-evolution--variant-defective,
+.pet-evolution--sprite-frames.pet-evolution--variant-pretty,
 .pet-evolution--mermaid-frames.pet-evolution--variant-defective,
 .pet-evolution--mermaid-frames.pet-evolution--variant-pretty {
   animation: none !important;
+}
+
+/* 주머니귀오징어(심해 sparkle) — 느릿 둥둥 float bob (액션 C × 1.5배) */
+.pet-evolution--deepsea-float .pet-evolution-img {
+  animation: deepseaJumeoniFloat var(--float-dur, 2.13s) ease-in-out infinite;
+  transform-origin: 50% 50%;
 }
 
 .pet-mood-bubble--changing {
@@ -1433,6 +1443,11 @@ img.pet-sprite[hidden] {
   50%, 100%  { transform: scaleX(1); }
 }
 
+@keyframes deepseaJumeoniFloat {
+  0%, 100% { transform: translateY(-4px); }
+  50% { transform: translateY(4px); }
+}
+
 @keyframes moodFade {
   0% { opacity: 0.4; transform: scale(0.92); }
   100% { opacity: 1; transform: scale(1); }
@@ -1526,6 +1541,7 @@ img.pet-sprite[hidden] {
   .pet-evolution--variant-defective,
   .pet-evolution--neungeo-walk,
   .pet-evolution--neungeo-walk .pet-evolution-img,
+  .pet-evolution--deepsea-float .pet-evolution-img,
   .pet-evolution--evolving,
   .pet-mood-bubble--changing,
   .care-fx__particle,

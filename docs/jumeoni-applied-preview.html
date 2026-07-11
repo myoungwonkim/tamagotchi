@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주머니귀오징어 · 심해어 적용 확인</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    background: #0a141d; color: #d8ecf8; padding: 28px 16px 64px; line-height: 1.55;
+  }
+  h1 { font-size: 1.125rem; text-align: center; color: #80deea; margin-bottom: 6px; }
+  .sub { text-align: center; font-size: 0.8125rem; color: #8fb0c6; margin-bottom: 24px; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .notice {
+    padding: 12px 14px; font-size: 0.75rem; color: #98a8b8; margin-bottom: 20px;
+    background: #101f2b; border: 1px solid rgba(120,170,200,.16); border-radius: 10px;
+  }
+  .notice strong { color: #58c6d6; }
+  .tier-rec {
+    padding: 14px; margin-bottom: 20px; border-radius: 12px;
+    background: linear-gradient(135deg, #142838 0%, #1a3040 100%);
+    border: 1px solid rgba(88,198,214,.25);
+  }
+  .tier-rec h2 { font-size: 0.875rem; color: #80deea; margin-bottom: 8px; }
+  .tier-rec p { font-size: 0.75rem; color: #9fb2be; margin-bottom: 6px; }
+  .tier-rec .pick { color: #9fe6c8; font-weight: 600; }
+  .anim-block {
+    background: #101f2b; border: 1px solid rgba(120,170,200,.16);
+    border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px;
+  }
+  .anim-block h2 { font-size: 0.9375rem; margin-bottom: 4px; }
+  .anim-block p { font-size: 0.6875rem; color: #8fb0c6; margin-bottom: 14px; }
+  .stage {
+    position: relative; height: 200px; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+    box-shadow: inset 0 0 40px rgba(16,74,104,.35);
+  }
+  .bobber {
+    position: absolute; inset: 0; margin: auto; width: 120px; height: 120px;
+    animation: bob 2.13s ease-in-out infinite;
+  }
+  .bobber img {
+    position: absolute; inset: 0; margin: auto; width: 110px; height: 110px;
+    object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
+    opacity: 0; animation: cycle 2.13s steps(1) infinite;
+  }
+  .bobber img:nth-child(1) { animation-delay: 0s; }
+  .bobber img:nth-child(2) { animation-delay: -0.71s; }
+  .bobber img:nth-child(3) { animation-delay: -1.42s; }
+  @keyframes cycle { 0%, 33.32% { opacity: 1; } 33.33%, 100% { opacity: 0; } }
+  @keyframes bob { 0%, 100% { transform: translateY(-4px); } 50% { transform: translateY(4px); } }
+  .dex {
+    background: #101f2b; border: 1px solid rgba(120,170,200,.16);
+    border-radius: 14px; padding: 16px;
+  }
+  .dex h2 { font-size: 0.875rem; color: #80deea; margin-bottom: 10px; }
+  .dex .meta { font-size: 0.6875rem; color: #8fb0c6; margin-bottom: 10px; }
+  .dex .meta span { display: inline-block; margin-right: 10px; }
+  .dex .badge { background: #2a4860; color: #9fe6c8; padding: 2px 8px; border-radius: 6px; font-size: 0.625rem; }
+  .dex p { font-size: 0.8125rem; color: #c8d4dc; }
+  code { color: #9fe6c8; font-size: 0.6875rem; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>주머니귀오징어 · 심해어 적용</h1>
+    <p class="sub">액션 C × 1.5배 · pretty(sparkle) 슬롯 · 게임 반영됨</p>
+
+    <div class="notice">
+      <strong>적용 내용:</strong> <code>assets/sprites/adult/sparkle*.png</code> 교체 ·
+      3프레임 711ms(1.5×) · float bob 2.13s ·
+      심해 테마 pretty 티어 <strong>sparkle</strong> = <strong>주머니귀오징어</strong>
+    </div>
+
+    <div class="tier-rec">
+      <h2>티어 추천</h2>
+      <p><span class="pick">✓ 예쁨 (pretty) — 추천</span> · 귀여운 둥근 실루엣·발광·인형 같은 매력 → sparkle 슬롯에 적용</p>
+      <p>△ 일반 (normal) · 너무 평범한 슬롯(산호어·해조어)과 결이 다름</p>
+      <p>✗ 괴이 (defective) · 기괴·부패 콘셉트와 맞지 않음</p>
+    </div>
+
+    <div class="anim-block">
+      <h2>게임 idle (액션 C × 1.5배)</h2>
+      <p>프레임 711ms · bob 2.13s · 촉수·지느러미 프레임별 변화</p>
+      <div class="stage">
+        <div class="bobber">
+          <img src="../assets/sprites/adult/sparkle-frame-1.png" alt="">
+          <img src="../assets/sprites/adult/sparkle.png" alt="">
+          <img src="../assets/sprites/adult/sparkle-frame-3.png" alt="">
+        </div>
+      </div>
+    </div>
+
+    <div class="dex">
+      <h2>도감 설명 (심해어 · pretty · sparkle)</h2>
+      <div class="meta">
+        <span class="badge">pretty</span>
+        <span>이름 예시: <strong>주머니</strong></span>
+        <span>종족: 심해어</span>
+      </div>
+      <p id="dex-text"></p>
+    </div>
+  </div>
+  <script type="module">
+    import { getVariantDescription } from "../js/encyclopedia.js";
+    document.getElementById("dex-text").textContent =
+      getVariantDescription("sparkle", "주머니", "deepsea");
+  </script>
+</body>
+</html>
