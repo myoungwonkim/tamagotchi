@@ -1,0 +1,43 @@
+---
+description: 흰/크림 몸통 스프라이트 — 배경 제거 시 투명화 방지 (minsung 사례)
+globs: scripts/prepare_staging_adult.py,assets/custom/**/*.png,docs/*-preview.html
+alwaysApply: false
+---
+
+# 흰/크림 몸통 — 투명화 방지
+
+**재발 사례 (2026-07):** `flood_transparent()`가 neutral 밝은 픽셀을 배경으로 flood → 갯민숭달팽이(minsung) 크림 몸통이 통째로 투명 처리됨 (`minsung-1ca-1` near-white **248px**).
+
+## 원인
+
+- `is_neutral` + `not is_colored` 조건만으로 flood하면 **RGB 240–255 몸통 = 배경**으로 취급됨
+- 가장자리 흰 배경과 윤곽선 틈으로 연결되면 몸통 전체가 alpha 0
+
+## 필수 규칙
+
+1. **배경 flood는 `scripts/prepare_staging_adult.py`만 사용** — naive neutral flood 금지
+2. **outline-protected flood:** `is_background_pixel`(min≥240)만 전파, `is_outline_barrier`(r+g+b≤200)에서 차단
+3. **`defringe` / `is_halo_pixel`:** `r>238` 단독 halo 판정 금지 — 크림 몸통 가장자리 보호
+4. **prep 직후 검증 필수:** neutral near-white( min≥228, sat≤25 ) 손실 >30% → **exit 1**; 최종 256px near-white <400 → **exit 1**
+5. **시각 QA:** 어두운 체커보드(`docs/*-preview.html`)에서 몸통이 비치면 재실행
+
+## prep 후 체크리스트
+
+```bash
+python3 scripts/prepare_staging_adult.py "$SRC" assets/custom/out.png
+# stderr에 WHITE_BODY_LOSS 없어야 함
+python3 -c "
+from PIL import Image
+im=Image.open('assets/custom/out.png').convert('RGBA')
+px=im.load(); b=im.getbbox()
+w=sum(1 for y in range(b[1],b[3]) for x in range(b[0],b[2])
+      if px[x,y][3]>=240 and min(px[x,y][:3])>=200)
+print('near_white', w); assert w>=500, 'white body too thin'
+"
+```
+
+## 금지
+
+- `is_neutral and not is_colored`만으로 edge flood
+- validation 경고 무시하고 프리뷰/게임 반영
+- 흰 몸 캐릭터에 chroma key·체커보드 key

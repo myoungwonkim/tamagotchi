@@ -14,7 +14,8 @@ alwaysApply: true
    - 왼쪽 응시 측면(side profile)
    - 캐릭터만, 배경은 투명 또는 흰색/밝은 단색
 3. **최소 후처리만** (`scripts/prepare_staging_adult.py`)
-   - 가장자리에서 밝은/중립 배경 flood 제거
+   - 가장자리에서 **outline 보호 배경 flood** 제거 (`is_background_pixel`만 전파, `is_outline_barrier`로 흰/크림 몸통 보호)
+   - 후처리 직후 `validate_character_fill`로 near-white 손실 검증 (>30% 손실 시 경고)
    - 선택적 콘텐츠 크롭
    - scruffy bbox `(27, 13, 229, 243)` 기준 256×256 정렬
    - **내부 구멍 채우기·스트릭 유발 fill 금지**
@@ -28,6 +29,7 @@ alwaysApply: true
 
 ## 금지 (절대 사용하지 말 것)
 
+- **흰/크림/밝은 몸통 캐릭터를 naive neutral flood로 배경 제거** — outline-protected flood 필수; prep 후 validation 실행; 흰 몸이 투명해 보이면 **수정된 스크립트로 재실행 후 승인 전 배포 금지**
 - HQ GenerateImage → LANCZOS 다운스케일 → `pixelize` / 팔레트 양자화 / `*-pixel.png` 파이프라인
 - `prepare_melusine.py`, `prepare_koi_ningyo_*.py` 스타일 HQ+픽셀 2단계
 - 절차적 32×32 → 8× NEAREST를 성체 기본 워크플로로 쓰기 (`generate_cecaelia_pixel.py` 등)
@@ -37,4 +39,5 @@ alwaysApply: true
 ## 참고
 
 - 규격: `docs/PNG-SPRITE-GUIDE.md` · 시안 예시: `docs/lingyu-design-preview.html`
+- **흰/크림 몸통 투명화 방지:** `.cursor/rules/sprite-white-body-guard.mdc` (minsung 사례 — prep 실패 시 배포 금지)
 - 게임 스프라이트(`assets/sprites/mermaid/adult/*`)는 승인 전 수정하지 않음

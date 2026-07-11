@@ -15,7 +15,7 @@ const CAPTURE_ENCYCLOPEDIA_NAMES = {
   golden: "루미",
   fluffy: "달이",
   sparkle: "주머니",
-  standard: "산호",
+  standard: "민숭",
   farm: "해초",
   plain: "진흙",
   scruffy: "아귀",

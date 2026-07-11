@@ -166,9 +166,16 @@ function spriteSrcMatches(currentSrc, nextSrc) {
 
 function bindSpriteImgHandlers(img, fallback, getMeta) {
   const onError = () => {
-    if (img.closest("[data-frame-variant]")) return;
-
     const meta = getMeta();
+    const inFrameAnim = Boolean(img.closest("[data-frame-variant]"));
+
+    if (inFrameAnim && meta?.src && !img.dataset.pngRetry && /\.svg(\?|$)/i.test(meta.src)) {
+      img.dataset.pngRetry = "1";
+      img.src = meta.src.replace(/\.svg(\?)/i, ".png$1");
+      return;
+    }
+    if (inFrameAnim) return;
+
     if (!img.dataset.retryBust && meta?.src) {
       img.dataset.retryBust = "1";
       const bust = `${meta.src}${meta.src.includes("?") ? "&" : "?"}_r=${Date.now()}`;

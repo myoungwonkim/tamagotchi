@@ -1,6 +1,6 @@
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant } from "./adultVariants.js";
-import { getSpriteUrl, getUiSpriteMeta } from "./sprites.js";
+import { getSpriteUrlPng, getUiSpriteMeta } from "./sprites.js";
 import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -16,6 +16,12 @@ const ADULT_SPRITE_FRAME_CONFIG = {
       floatBobSec: 2.13,
     },
   },
+  standard: {
+    deepsea: {
+      ids: ["standard-frame-1", "standard", "standard-frame-3"],
+      frameMs: 1067,
+    },
+  },
 };
 
 const spriteFrameTimers = new WeakMap();
@@ -29,7 +35,7 @@ function getSpriteFrameSrcs(variantId, speciesTheme) {
   const config = getSpriteFrameConfig(variantId, speciesTheme);
   if (!config) return null;
   const theme = normalizeSpeciesTheme(speciesTheme);
-  return config.ids.map((id) => getSpriteUrl("adult", id, theme));
+  return config.ids.map((id) => getSpriteUrlPng("adult", id, theme));
 }
 
 function stopSpriteFrames(el) {
@@ -179,7 +185,7 @@ export function applyIdleClasses(el, pet) {
       el.classList.add("pet-evolution--neungeo-walk");
     }
 
-    // 3프레임 idle: 청령(인어 sparkle), 주머니귀오징어(심해 sparkle) 등
+    // 3프레임 idle: 청령(인어 sparkle), 주머니귀오징어(심해 sparkle), 갯민숭달팽이(심해 standard) 등
     const frameConfig = getSpriteFrameConfig(pet.adultVariantId, theme);
     if (!pet.isSleeping && frameConfig) {
       el.classList.add("pet-evolution--sprite-frames", "pet-evolution--mermaid-frames");

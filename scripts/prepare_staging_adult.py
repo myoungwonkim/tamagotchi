@@ -8,6 +8,7 @@ No pixelize, palette quantization, or interior hole filling.
 from __future__ import annotations
 
 import argparse
+import sys
 from collections import deque
 from pathlib import Path
 
@@ -18,31 +19,139 @@ CANVAS = 256
 FILL = 0.92
 REF_BBOX = (27, 13, 229, 243)
 INK = (32, 24, 20)
+WHITE_BODY_MIN = 5000  # min neutral near-white px in source to treat as white-body character
+WHITE_BODY_MAX_LOSS = 0.30
+NEAR_WHITE_MIN = 228
+NEAR_WHITE_MAX_SAT = 25
 
 
-def is_neutral(r: int, g: int, b: int) -> bool:
-    return abs(r - g) <= 12 and abs(g - b) <= 12
+def is_background_pixel(r: int, g: int, b: int) -> bool:
+    """Bright neutral canvas — safe to flood from edges."""
+    mn = min(r, g, b)
+    if mn < 240:
+        return False
+    sat = max(r, g, b) - mn
+    return sat <= 20
 
 
-def is_colored(r: int, g: int, b: int) -> bool:
-    if r < 72:
-        return True
-    if abs(r - g) > 15 or abs(g - b) > 15:
-        return True
-    return False
+def is_outline_barrier(r: int, g: int, b: int) -> bool:
+    """Dark outline ink — blocks background flood into character interior."""
+    return r + g + b <= 200
 
 
 def is_halo_pixel(r: int, g: int, b: int) -> bool:
+    """Light matte fringe near transparency — not cream/white character fill."""
     if max(r, g, b) < 170:
         return False
-    sat = max(r, g, b) - min(r, g, b)
-    if sat < 48 and max(r, g, b) > 175:
+    mn = min(r, g, b)
+    sat = max(r, g, b) - mn
+    if mn >= 248 and sat <= 12:
         return True
-    return r > 238 and g > 238 and b > 238
+    return sat < 48 and max(r, g, b) > 175 and mn >= 240
+
+
+def character_content_bbox(im: Image.Image) -> tuple[int, int, int, int] | None:
+    """Approximate character region on a bright canvas (outline + non-bg pixels)."""
+    rgb = im.convert("RGB")
+    px = rgb.load()
+    w, h = rgb.size
+    min_x, min_y, max_x, max_y = w, h, 0, 0
+    found = False
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px[x, y]
+            if is_outline_barrier(r, g, b) or not is_background_pixel(r, g, b):
+                found = True
+                min_x = min(min_x, x)
+                min_y = min(min_y, y)
+                max_x = max(max_x, x + 1)
+                max_y = max(max_y, y + 1)
+    if not found:
+        return None
+    return (min_x, min_y, max_x, max_y)
+
+
+def is_near_white_body_pixel(r: int, g: int, b: int) -> bool:
+    mn = min(r, g, b)
+    sat = max(r, g, b) - mn
+    return mn >= NEAR_WHITE_MIN and sat <= NEAR_WHITE_MAX_SAT
+
+
+def count_near_white_opaque(im: Image.Image, bbox: tuple[int, int, int, int]) -> int:
+    px = im.convert("RGBA").load()
+    x0, y0, x1, y1 = bbox
+    n = 0
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            r, g, b, a = px[x, y]
+            if a >= 240 and is_near_white_body_pixel(r, g, b):
+                n += 1
+    return n
+
+
+def count_character_near_white_rgb(im: Image.Image) -> int:
+    """Neutral near-white pixels belonging to the character — excludes bright canvas."""
+    rgb = im.convert("RGB")
+    px = rgb.load()
+    w, h = rgb.size
+    n = 0
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px[x, y]
+            if is_background_pixel(r, g, b):
+                continue
+            if is_near_white_body_pixel(r, g, b):
+                n += 1
+    return n
+
+
+def count_opaque_near_white(im: Image.Image) -> int:
+    bbox = im.getbbox()
+    if bbox is None:
+        return 0
+    return count_near_white_opaque(im, bbox)
+
+
+def validate_after_flood(im_before: Image.Image, flooded: Image.Image, *, strict: bool) -> None:
+    """Same-resolution check right after background flood."""
+    before = count_character_near_white_rgb(im_before)
+    if before == 0:
+        return
+    after = count_opaque_near_white(flooded)
+    loss = (before - after) / before
+    if loss <= WHITE_BODY_MAX_LOSS:
+        return
+    msg = (
+        f"WHITE_BODY_LOSS [flood]: near-white fill loss {loss:.1%} "
+        f"({before} -> {after}). White/cream body was likely flood-stripped. "
+        f"Use outline-protected flood in prepare_staging_adult.py; do not ship."
+    )
+    if strict and before >= WHITE_BODY_MIN:
+        raise SystemExit(msg)
+    print(f"WARNING: {msg}", file=sys.stderr)
+
+
+FINAL_NEAR_WHITE_MIN = 400  # minimum opaque near-white px on 256×256 for white-body characters
+
+
+def validate_final_output(im_before: Image.Image, result: Image.Image, *, strict: bool) -> None:
+    """256×256 output must retain enough near-white fill for white-body characters."""
+    if count_character_near_white_rgb(im_before) < WHITE_BODY_MIN:
+        return
+    after = count_opaque_near_white(result)
+    if after >= FINAL_NEAR_WHITE_MIN:
+        return
+    msg = (
+        f"WHITE_BODY_TOO_THIN [final]: near-white opaque {after} < {FINAL_NEAR_WHITE_MIN}. "
+        f"White/cream body likely transparent in game — re-run prep; do not ship."
+    )
+    if strict:
+        raise SystemExit(msg)
+    print(f"WARNING: {msg}", file=sys.stderr)
 
 
 def flood_transparent(im: Image.Image) -> Image.Image:
-    """Remove neutral/light background reachable from image edges."""
+    """Remove bright canvas background reachable from edges; outline blocks interior."""
     rgb = im.convert("RGB")
     w, h = rgb.size
     px = rgb.load()
@@ -52,7 +161,7 @@ def flood_transparent(im: Image.Image) -> Image.Image:
     def seed(x: int, y: int) -> None:
         if 0 <= x < w and 0 <= y < h and not mask[y][x]:
             r, g, b = px[x, y]
-            if is_neutral(r, g, b) and not is_colored(r, g, b):
+            if is_background_pixel(r, g, b):
                 mask[y][x] = True
                 q.append((x, y))
 
@@ -68,7 +177,9 @@ def flood_transparent(im: Image.Image) -> Image.Image:
         for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
             if 0 <= nx < w and 0 <= ny < h and not mask[ny][nx]:
                 r, g, b = px[nx, ny]
-                if is_neutral(r, g, b) and not is_colored(r, g, b):
+                if is_outline_barrier(r, g, b):
+                    continue
+                if is_background_pixel(r, g, b):
                     mask[ny][nx] = True
                     q.append((nx, ny))
 
@@ -206,17 +317,26 @@ def fit_to_ref_bbox(im: Image.Image) -> Image.Image:
     return canvas
 
 
-def prepare(im: Image.Image) -> Image.Image:
-    cut = keep_largest_component(flood_transparent(im))
+def prepare(im: Image.Image, *, strict_validation: bool = True) -> Image.Image:
+    flooded = flood_transparent(im)
+    validate_after_flood(im, flooded, strict=strict_validation)
+    cut = keep_largest_component(flooded)
     cut = solidify_alpha(cut)
     cut = defringe(cut)
-    return fit_to_ref_bbox(cut)
+    result = fit_to_ref_bbox(cut)
+    validate_final_output(im, result, strict=strict_validation)
+    return result
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Lingyu-style minimal adult sprite staging prep")
     parser.add_argument("input", type=Path, help="Generated PNG (256px pixel art)")
     parser.add_argument("output", type=Path, nargs="?", help="Output path (default: overwrite input)")
+    parser.add_argument(
+        "--allow-white-loss",
+        action="store_true",
+        help="Do not exit on >30%% near-white loss (non-white-body sprites only)",
+    )
     args = parser.parse_args()
 
     src = args.input if args.input.is_absolute() else ROOT / args.input
@@ -229,7 +349,7 @@ def main() -> None:
     else:
         dst = out if out.is_absolute() else ROOT / out
 
-    result = prepare(Image.open(src).convert("RGBA"))
+    result = prepare(Image.open(src).convert("RGBA"), strict_validation=not args.allow_white_loss)
     dst.parent.mkdir(parents=True, exist_ok=True)
     result.save(dst, "PNG")
     print(f"Saved {dst} bbox={result.getbbox()}")

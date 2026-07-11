@@ -28,6 +28,8 @@
 
 새 성체 시안은 **능어(lingyu)** 워크플로만 사용합니다. GenerateImage로 256×256 픽셀아트를 직접 생성한 뒤 `scripts/prepare_staging_adult.py`로 최소 후처리(scruffy bbox `(27,13,229,243)` 정렬)합니다. HQ→픽셀 2단계·절차적 32×32 그리드·`*-pixel.png` 파이프라인은 금지입니다.
 
+**흰/크림 몸통:** prep은 outline 보호 flood만 사용. near-white 손실 >30%이면 스크립트가 exit 1 — 프리뷰·게임 반영 전에 재실행. 상세: `.cursor/rules/sprite-white-body-guard.mdc`
+
 - 규칙: `.cursor/rules/adult-sprite-lingyu.mdc`
 - 시안 예시: `docs/lingyu-design-preview.html`
 - 스테이징: `assets/custom/{name}-{1,2,3}.png` → 승인 후 `assets/sprites/mermaid/adult/`에 복사

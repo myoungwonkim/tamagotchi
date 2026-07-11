@@ -73,8 +73,13 @@ export function getPetSpeciesTheme(pet) {
   return normalizeSpeciesTheme(pet?.speciesTheme);
 }
 
-export function getSpriteUrl(category, id, speciesTheme = DEFAULT_SPECIES_THEME) {
-  const ext = getSpriteFormat();
+export function getSpriteUrl(
+  category,
+  id,
+  speciesTheme = DEFAULT_SPECIES_THEME,
+  format,
+) {
+  const ext = format ?? getSpriteFormat();
   const theme = normalizeSpeciesTheme(speciesTheme);
   let base;
   if (category === "ui") {
@@ -88,6 +93,11 @@ export function getSpriteUrl(category, id, speciesTheme = DEFAULT_SPECIES_THEME)
   }
   const v = getAppVersion();
   return v ? `${base}?v=${v}` : base;
+}
+
+/** Multi-frame·신규 성체 스프라이트는 PNG만 존재 — spriteFormat(svg)와 무관 */
+export function getSpriteUrlPng(category, id, speciesTheme = DEFAULT_SPECIES_THEME) {
+  return getSpriteUrl(category, id, speciesTheme, "png");
 }
 
 export function getEvolutionSpriteMeta(pet) {
@@ -205,6 +215,24 @@ export function preloadSpritesForPet(pet) {
 
   for (const id of ["poop", "fly", "feed", "play", "clean", "sleep", "wake", "encyclopedia", "sound-on", "sound-off"]) {
     preloadSpriteMeta({ src: getSpriteUrl("ui", id) });
+  }
+
+  if (stage.id === "adult" && pet.adultVariantId) {
+    const frameIdsByVariant = {
+      sparkle: {
+        deepsea: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
+        mermaid: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
+      },
+      standard: {
+        deepsea: ["standard-frame-1", "standard", "standard-frame-3"],
+      },
+    };
+    const frameIds = frameIdsByVariant[pet.adultVariantId]?.[theme];
+    if (frameIds) {
+      for (const id of frameIds) {
+        preloadSpriteMeta({ src: getSpriteUrlPng("adult", id, theme) });
+      }
+    }
   }
 }
 
