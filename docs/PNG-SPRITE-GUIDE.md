@@ -58,7 +58,7 @@
 | [x] | `standard.png` | normal | 갯민숭달팽이 |
 | [x] | `farm.png` | normal | 해조어 |
 | [x] | `plain.png` | normal | 진흙어 |
-| [x] | `scruffy.png` | defective | 썩은 아귀 |
+| [x] | `scruffy.png` | defective | 심해아귀 |
 | [x] | `grumpy.png` | defective | 송곳니어 |
 | [x] | `sickly.png` | defective | 기생어 |
 

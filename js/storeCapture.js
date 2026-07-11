@@ -18,7 +18,7 @@ const CAPTURE_ENCYCLOPEDIA_NAMES = {
   standard: "민숭",
   farm: "해초",
   plain: "진흙",
-  scruffy: "아귀",
+  scruffy: "심해아귀",
   grumpy: "뾰족",
   sickly: "균이",
 };
