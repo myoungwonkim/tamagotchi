@@ -127,12 +127,31 @@ function shouldEncyclopediaNeungeoWalk(variantId, speciesTheme) {
   return theme === "mermaid" && (variantId === "scruffy" || variantId === "grumpy");
 }
 
+export function hasEncyclopediaAdultDisplay(variantId, speciesTheme) {
+  return (
+    hasAdultSpriteFrameAnimation(variantId, speciesTheme) ||
+    shouldEncyclopediaNeungeoWalk(variantId, speciesTheme)
+  );
+}
+
+function applyEncyclopediaNeungeoWalkPresentation(container, variantId) {
+  container.classList.add("encyclopedia-detail__graphic--neungeo-walk");
+  if (variantId === "scruffy") {
+    container.classList.add(
+      "encyclopedia-detail__graphic--neungeo-scruffy",
+      "encyclopedia-card__graphic--neungeo-scruffy",
+    );
+  }
+}
+
 function applyEncyclopediaFramePresentation(container, variantId, speciesTheme) {
   const theme = normalizeSpeciesTheme(speciesTheme);
   container.classList.remove(
     "encyclopedia-detail__graphic--float",
     "encyclopedia-detail__graphic--jinju-yeoin",
     "encyclopedia-card__graphic--jinju-yeoin",
+    "encyclopedia-detail__graphic--cheongryeong-yeoin",
+    "encyclopedia-card__graphic--cheongryeong-yeoin",
   );
 
   const config = getSpriteFrameConfig(variantId, theme);
@@ -147,6 +166,12 @@ function applyEncyclopediaFramePresentation(container, variantId, speciesTheme) 
     container.classList.add(
       "encyclopedia-detail__graphic--jinju-yeoin",
       "encyclopedia-card__graphic--jinju-yeoin",
+    );
+  }
+  if (theme === "mermaid" && variantId === "sparkle") {
+    container.classList.add(
+      "encyclopedia-detail__graphic--cheongryeong-yeoin",
+      "encyclopedia-card__graphic--cheongryeong-yeoin",
     );
   }
 }
@@ -164,16 +189,13 @@ export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme)
   }
 
   if (shouldEncyclopediaNeungeoWalk(variantId, theme)) {
-    container.classList.add("encyclopedia-detail__graphic--neungeo-walk");
-    if (variantId === "scruffy") {
-      container.classList.add("encyclopedia-detail__graphic--neungeo-scruffy");
-    }
+    applyEncyclopediaNeungeoWalkPresentation(container, variantId);
   }
 }
 
-/** DOM 페인트 후 도감 프레임 idle 시작 (상세·그리드 공통) */
+/** DOM 페인트 후 도감 액션 시작 (3프레임 idle·능어/핀백 걷기, 상세·그리드 공통) */
 export function scheduleEncyclopediaAdultDisplay(container, variantId, speciesTheme) {
-  if (!container || !hasAdultSpriteFrameAnimation(variantId, speciesTheme)) return;
+  if (!container || !hasEncyclopediaAdultDisplay(variantId, speciesTheme)) return;
   requestAnimationFrame(() => {
     syncEncyclopediaAdultDisplay(container, variantId, speciesTheme);
   });
@@ -189,8 +211,11 @@ export function stopEncyclopediaAdultFrames(container) {
   container?.classList.remove(
     "encyclopedia-detail__graphic--neungeo-walk",
     "encyclopedia-detail__graphic--neungeo-scruffy",
+    "encyclopedia-card__graphic--neungeo-scruffy",
     "encyclopedia-detail__graphic--jinju-yeoin",
     "encyclopedia-card__graphic--jinju-yeoin",
+    "encyclopedia-detail__graphic--cheongryeong-yeoin",
+    "encyclopedia-card__graphic--cheongryeong-yeoin",
   );
 }
 
@@ -251,6 +276,7 @@ export function applyIdleClasses(el, pet) {
     "pet-evolution--neungeo-walk",
     "pet-evolution--neungeo-scruffy",
     "pet-evolution--jinju-yeoin",
+    "pet-evolution--cheongryeong-yeoin",
     "pet-evolution--sprite-frames",
     "pet-evolution--mermaid-frames",
     "pet-evolution--deepsea-float",
@@ -290,6 +316,10 @@ export function applyIdleClasses(el, pet) {
 
     if (theme === "mermaid" && !pet.isSleeping && pet.adultVariantId === "golden") {
       el.classList.add("pet-evolution--jinju-yeoin");
+    }
+
+    if (theme === "mermaid" && !pet.isSleeping && pet.adultVariantId === "sparkle") {
+      el.classList.add("pet-evolution--cheongryeong-yeoin");
     }
 
     // 3프레임 idle: 진주 여인·청령·주머니귀오징어·갯민숭달팽이·심해아귀·인면어(plain)·녹면어(sickly) 등
