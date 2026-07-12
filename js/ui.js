@@ -5,6 +5,7 @@ import {
   getStageLabelForTheme,
   getVariantLabelForTheme,
   normalizeSpeciesTheme,
+  PLAYABLE_SPECIES_THEMES,
 } from "./speciesThemes.js";
 import {
   getEncyclopediaSlots,
@@ -596,7 +597,7 @@ function hideEncyclopediaDetail() {
 }
 
 /** 도감 탭 — vent(업데이트 예정)는 비활성 */
-const ENCYCLOPEDIA_SPECIES_THEMES = ["deepsea", "mermaid"];
+const ENCYCLOPEDIA_SPECIES_THEMES = PLAYABLE_SPECIES_THEMES;
 
 function normalizeEncyclopediaTabTheme(theme) {
   const normalized = normalizeSpeciesTheme(theme);

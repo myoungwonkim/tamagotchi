@@ -1,16 +1,15 @@
 export const SPECIES_THEMES = ["deepsea", "mermaid", "vent"];
 export const DEFAULT_SPECIES_THEME = "deepsea";
+/** 도감·게임플레이에 노출되는 테마 (vent 탭 비활성) */
+export const PLAYABLE_SPECIES_THEMES = ["deepsea", "mermaid"];
 
 export function pickRandomSpeciesTheme() {
-  const r = Math.random();
-  if (r < 1 / 3) return "mermaid";
-  if (r < 2 / 3) return "vent";
-  return "deepsea";
+  return PLAYABLE_SPECIES_THEMES[Math.floor(Math.random() * PLAYABLE_SPECIES_THEMES.length)];
 }
 
 export function normalizeSpeciesTheme(value) {
   if (value === "mermaid") return "mermaid";
-  if (value === "vent") return "vent";
+  if (value === "vent") return DEFAULT_SPECIES_THEME;
   return DEFAULT_SPECIES_THEME;
 }
 
