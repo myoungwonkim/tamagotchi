@@ -630,9 +630,9 @@ img.pet-sprite[hidden] {
   height: var(--adult-large-size);
 }
 
-/* 청령 어인(인어 sparkle) — 스프라이트 여백 보정 후 진주 여인과 비슷한 체감 크기 */
+/* 청령 어인(인어 sparkle) — 스프라이트 여백 보정, 도감·펫별 단계 스케일 */
 .pet-evolution--cheongryeong-yeoin {
-  --adult-large-size: calc(var(--sprite-evolution-size) * 1.8);
+  --adult-large-size: calc(var(--sprite-evolution-size) * 1.45);
   min-width: var(--adult-large-size);
   min-height: var(--adult-large-size);
 }
@@ -648,8 +648,8 @@ img.pet-sprite[hidden] {
 }
 
 .pet-display:has(.pet-evolution--cheongryeong-yeoin) {
-  width: min(100%, calc(var(--sprite-evolution-size) * 1.8));
-  min-height: calc(var(--sprite-evolution-size) * 1.8);
+  width: min(100%, calc(var(--sprite-evolution-size) * 1.45));
+  min-height: calc(var(--sprite-evolution-size) * 1.45);
 }
 
 /* 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
@@ -1346,8 +1346,8 @@ img.pet-sprite[hidden] {
 }
 
 .encyclopedia-card__graphic--cheongryeong-yeoin .encyclopedia-card__img {
-  width: calc(var(--encyclopedia-grid-sprite-size) * 1.8);
-  height: calc(var(--encyclopedia-grid-sprite-size) * 1.8);
+  width: calc(var(--encyclopedia-grid-sprite-size) * 1.3);
+  height: calc(var(--encyclopedia-grid-sprite-size) * 1.3);
 }
 
 .encyclopedia-detail__graphic--jinju-yeoin .encyclopedia-detail__img {
@@ -1356,12 +1356,12 @@ img.pet-sprite[hidden] {
 }
 
 .encyclopedia-detail__graphic--cheongryeong-yeoin .encyclopedia-detail__img {
-  width: calc(var(--sprite-evolution-size) * 1.8);
-  height: calc(var(--sprite-evolution-size) * 1.8);
+  width: calc(var(--sprite-evolution-size) * 1.4);
+  height: calc(var(--sprite-evolution-size) * 1.4);
 }
 
 .encyclopedia-detail__graphic.encyclopedia-detail__graphic--cheongryeong-yeoin {
-  min-height: calc(var(--sprite-evolution-size) * 1.8);
+  min-height: calc(var(--sprite-evolution-size) * 1.4);
 }
 
 .encyclopedia-detail__name {
