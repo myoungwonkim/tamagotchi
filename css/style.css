@@ -60,6 +60,7 @@
   --sprite-mood-size: clamp(2.25rem, 10vw, 2.75rem);
   --sprite-overlay-size: clamp(5rem, 28vw, 7rem);
   --encyclopedia-grid-sprite-size: clamp(3rem, 15vw, 4rem);
+  --encyclopedia-card-height: calc(var(--encyclopedia-grid-sprite-size) + 2.65rem);
 }
 
 html {
@@ -1080,23 +1081,26 @@ img.pet-sprite[hidden] {
 .encyclopedia-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: var(--encyclopedia-card-height);
   gap: 6px;
   margin-bottom: 10px;
-  overflow: visible;
 }
 
 .encyclopedia-card {
   background: var(--encyclopedia-card-bg);
   border-radius: 10px;
   padding: 6px 4px 5px;
-  min-height: 0;
+  height: var(--encyclopedia-card-height);
+  min-height: var(--encyclopedia-card-height);
+  max-height: var(--encyclopedia-card-height);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2px;
   border: 1px solid var(--border-subtle);
-  overflow: visible;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .encyclopedia-card--locked {
@@ -1127,15 +1131,22 @@ img.pet-sprite[hidden] {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: var(--encyclopedia-grid-sprite-size);
   min-height: var(--encyclopedia-grid-sprite-size);
-  overflow: visible;
+  max-height: var(--encyclopedia-grid-sprite-size);
+  overflow: hidden;
   position: relative;
+  flex-shrink: 0;
 }
 
 .encyclopedia-card__img {
   width: var(--encyclopedia-grid-sprite-size);
   height: var(--encyclopedia-grid-sprite-size);
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .encyclopedia-card__name {
@@ -1333,21 +1344,6 @@ img.pet-sprite[hidden] {
 .encyclopedia-detail__graphic--neungeo-walk.encyclopedia-detail__graphic--neungeo-scruffy .encyclopedia-detail__img {
   width: calc(var(--sprite-evolution-size) * 0.8);
   height: calc(var(--sprite-evolution-size) * 0.8);
-}
-
-.encyclopedia-card__graphic--neungeo-scruffy .encyclopedia-card__img {
-  width: calc(var(--encyclopedia-grid-sprite-size) * 0.8);
-  height: calc(var(--encyclopedia-grid-sprite-size) * 0.8);
-}
-
-.encyclopedia-card__graphic--jinju-yeoin .encyclopedia-card__img {
-  width: calc(var(--encyclopedia-grid-sprite-size) * 1.2);
-  height: calc(var(--encyclopedia-grid-sprite-size) * 1.2);
-}
-
-.encyclopedia-card__graphic--cheongryeong-yeoin .encyclopedia-card__img {
-  width: calc(var(--encyclopedia-grid-sprite-size) * 1.3);
-  height: calc(var(--encyclopedia-grid-sprite-size) * 1.3);
 }
 
 .encyclopedia-detail__graphic--jinju-yeoin .encyclopedia-detail__img {
