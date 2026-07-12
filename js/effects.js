@@ -60,11 +60,25 @@ function shouldAnimateSpriteFrames(pet) {
 }
 
 function syncSpriteFrames(el, pet) {
-  stopSpriteFrames(el);
-  if (!el || !shouldAnimateSpriteFrames(pet)) return;
+  if (!el || !shouldAnimateSpriteFrames(pet)) {
+    stopSpriteFrames(el);
+    return;
+  }
 
-  const config = getSpriteFrameConfig(pet.adultVariantId, pet.speciesTheme);
-  const frames = getSpriteFrameSrcs(pet.adultVariantId, pet.speciesTheme);
+  const variantId = pet.adultVariantId;
+  const theme = normalizeSpeciesTheme(pet.speciesTheme);
+  if (
+    el.dataset.frameVariant === variantId &&
+    el.dataset.frameTheme === theme &&
+    spriteFrameTimers.has(el)
+  ) {
+    return;
+  }
+
+  stopSpriteFrames(el);
+
+  const config = getSpriteFrameConfig(variantId, theme);
+  const frames = getSpriteFrameSrcs(variantId, theme);
   const img = el.querySelector("img.pet-evolution-img");
   if (!img || !frames || !config) return;
 
@@ -80,8 +94,8 @@ function syncSpriteFrames(el, pet) {
     img.style.setProperty("--float-dur", `${config.floatBobSec}s`);
   }
 
-  el.dataset.frameVariant = pet.adultVariantId;
-  el.dataset.frameTheme = normalizeSpeciesTheme(pet.speciesTheme);
+  el.dataset.frameVariant = variantId;
+  el.dataset.frameTheme = theme;
   let frame = 0;
   const tick = () => {
     img.src = frames[frame % frames.length];
@@ -203,6 +217,14 @@ function rememberEncyclopediaAdultDisplayTarget(container, variantId, speciesThe
   container.dataset.adultSpriteTheme = theme;
 }
 
+/** DOM 페인트 후 펫 화면 3프레임 idle 재동기화 (이미지 로드·진화 직후) */
+export function schedulePetSpriteFrames(el, pet) {
+  if (!el || !pet) return;
+  requestAnimationFrame(() => {
+    syncSpriteFrames(el, pet);
+  });
+}
+
 /** DOM 페인트 후 도감 액션 시작 (3프레임 idle·능어/핀백 걷기, 상세·그리드 공통) */
 export function scheduleEncyclopediaAdultDisplay(container, variantId, speciesTheme) {
   if (!container || !hasEncyclopediaAdultDisplay(variantId, speciesTheme)) return;
@@ -294,8 +316,6 @@ export function playMoodTransition(bubbleEl) {
 
 export function applyIdleClasses(el, pet) {
   if (!el || !pet) return;
-
-  stopSpriteFrames(el);
 
   const displayEl = el.closest(".pet-display");
   const stageId = !pet.isAlive ? "dead" : getEvolutionStage(pet).id;

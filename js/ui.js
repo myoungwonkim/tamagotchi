@@ -29,6 +29,7 @@ import {
   applyIdleClasses,
   resyncAllEncyclopediaAdultDisplays,
   scheduleEncyclopediaAdultDisplay,
+  schedulePetSpriteFrames,
   stopEncyclopediaAdultFrames,
 } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
@@ -259,8 +260,9 @@ export function setPetGraphic(
 
   const currentSrc = img.getAttribute("src");
   const needsUpdate = isNewKey || !spriteSrcMatches(currentSrc, meta.src);
+  const inFrameAnim = Boolean(container.dataset.frameVariant);
 
-  if (needsUpdate) {
+  if (needsUpdate && !(inFrameAnim && !isNewKey)) {
     delete img.dataset.retryBust;
     img.hidden = false;
     img.style.display = "";
@@ -294,6 +296,7 @@ export function renderPet(pet) {
 
   const evolutionKey = setPetGraphic(elements.petEvolution, evolutionMeta, {
     imgClass: "pet-evolution-img",
+    afterGraphicReady: () => schedulePetSpriteFrames(elements.petEvolution, pet),
   });
 
   if (evolutionKey && evolutionKey !== lastEvolutionKey) {
