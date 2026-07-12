@@ -28,6 +28,18 @@ const ADULT_SPRITE_FRAME_CONFIG = {
       frameMs: 1067,
     },
   },
+  plain: {
+    deepsea: {
+      ids: ["plain-frame-1", "plain", "plain-frame-3"],
+      frameMs: 1067,
+    },
+  },
+  sickly: {
+    deepsea: {
+      ids: ["sickly-frame-1", "sickly", "sickly-frame-3"],
+      frameMs: 800,
+    },
+  },
 };
 
 const spriteFrameTimers = new WeakMap();
@@ -191,7 +203,7 @@ export function applyIdleClasses(el, pet) {
       el.classList.add("pet-evolution--neungeo-walk");
     }
 
-    // 3프레임 idle: 청령(인어 sparkle), 주머니귀오징어(심해 sparkle), 갯민숭달팽이(심해 standard), 심해아귀(심해 scruffy) 등
+    // 3프레임 idle: 청령·주머니귀오징어·갯민숭달팽이·심해아귀·인면어(plain)·녹면어(sickly) 등
     const frameConfig = getSpriteFrameConfig(pet.adultVariantId, theme);
     if (!pet.isSleeping && frameConfig) {
       el.classList.add("pet-evolution--sprite-frames", "pet-evolution--mermaid-frames");

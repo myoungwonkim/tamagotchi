@@ -27,10 +27,10 @@ export const ADULT_VARIANTS = [
   { id: "sparkle", tier: "pretty", emoji: "✨🦑", spriteId: "sparkle", label: "주머니귀오징어" },
   { id: "standard", tier: "normal", emoji: "🐌", spriteId: "standard", label: "갯민숭달팽이" },
   { id: "farm", tier: "normal", emoji: "🪸🐟", spriteId: "farm", label: "해조어" },
-  { id: "plain", tier: "normal", emoji: "🐟", spriteId: "plain", label: "진흙어" },
+  { id: "plain", tier: "normal", emoji: "😶🐟", spriteId: "plain", label: "인면어" },
   { id: "scruffy", tier: "defective", emoji: "🐟💡", spriteId: "scruffy", label: "심해아귀" },
   { id: "grumpy", tier: "defective", emoji: "💢🐡", spriteId: "grumpy", label: "송곳니어" },
-  { id: "sickly", tier: "defective", emoji: "🤢🐟", spriteId: "sickly", label: "기생어" },
+  { id: "sickly", tier: "defective", emoji: "💚🐟", spriteId: "sickly", label: "녹면어" },
 ];
 
 const variantById = Object.fromEntries(ADULT_VARIANTS.map((v) => [v.id, v]));
