@@ -19,7 +19,7 @@ const CAPTURE_ENCYCLOPEDIA_NAMES = {
   farm: "해초",
   plain: "인면어",
   scruffy: "심해아귀",
-  grumpy: "뾰족",
+  grumpy: "백골말미",
   sickly: "녹면어",
 };
 

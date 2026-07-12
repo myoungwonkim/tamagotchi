@@ -29,7 +29,7 @@ export const ADULT_VARIANTS = [
   { id: "farm", tier: "normal", emoji: "🪸🐟", spriteId: "farm", label: "해조어" },
   { id: "plain", tier: "normal", emoji: "😶🐟", spriteId: "plain", label: "인면어" },
   { id: "scruffy", tier: "defective", emoji: "🐟💡", spriteId: "scruffy", label: "심해아귀" },
-  { id: "grumpy", tier: "defective", emoji: "💢🐡", spriteId: "grumpy", label: "송곳니어" },
+  { id: "grumpy", tier: "defective", emoji: "🪸💚", spriteId: "grumpy", label: "백골 말미" },
   { id: "sickly", tier: "defective", emoji: "💚🐟", spriteId: "sickly", label: "녹면어" },
 ];
 

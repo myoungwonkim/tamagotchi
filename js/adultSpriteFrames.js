@@ -43,6 +43,10 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
       ids: ["scruffy-frame-1", "scruffy", "scruffy-frame-3"],
       frameMs: 1067,
     },
+    mermaid: {
+      ids: ["scruffy-frame-1", "scruffy", "scruffy-frame-3"],
+      frameMs: 1067,
+    },
   },
   farm: {
     mermaid: {
@@ -60,6 +64,12 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
     deepsea: {
       ids: ["sickly-frame-1", "sickly", "sickly-frame-3"],
       frameMs: 800,
+    },
+  },
+  grumpy: {
+    deepsea: {
+      ids: ["grumpy-frame-1", "grumpy", "grumpy-frame-3"],
+      frameMs: 667,
     },
   },
 };
