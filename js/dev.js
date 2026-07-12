@@ -22,6 +22,7 @@ export function mountDevPanel(handlers) {
     { label: "나이 +1일", action: handlers.simulateAgePlusOne },
     { label: "진화 테스트", action: handlers.simulateEvolution },
     { label: "성체 진화 (pretty)", action: handlers.simulateAdultPretty },
+    { label: "성체 진화 (normal)", action: handlers.simulateAdultNormal },
     { label: "성체 진화 (defective)", action: handlers.simulateAdultDefective },
     { label: "도감 초기화", action: handlers.clearEncyclopedia },
     { label: "idle 대사 강제", action: handlers.forceIdleDialogue },

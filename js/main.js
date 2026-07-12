@@ -613,6 +613,21 @@ function mountDevToolsIfEnabled() {
         savePet(pet);
       },
 
+      simulateAdultNormal() {
+        if (!pet) return;
+        pet.hunger = 55;
+        pet.happiness = 55;
+        pet.cleanliness = 52;
+        pet.health = 48;
+        pet.bornAt = Date.now() - EVOLUTION_ADULT_MIN_AGE_MS;
+        pet.lastEvolutionStage = "teen";
+        pet.adultVariantId = null;
+        pet.adultCareSnapshot = null;
+        handleEvolution();
+        renderPet(pet);
+        savePet(pet);
+      },
+
       simulateAdultDefective() {
         if (!pet) return;
         pet.hunger = 25;

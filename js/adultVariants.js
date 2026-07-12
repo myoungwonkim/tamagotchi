@@ -23,8 +23,8 @@ export const ADULT_TIERS = {
 
 export const ADULT_VARIANTS = [
   { id: "golden", tier: "pretty", emoji: "🔆🐟", spriteId: "golden", label: "등불어" },
-  { id: "fluffy", tier: "pretty", emoji: "🪼", spriteId: "fluffy", label: "달빛 해파리" },
-  { id: "sparkle", tier: "pretty", emoji: "✨🦑", spriteId: "sparkle", label: "주머니귀오징어" },
+  { id: "fluffy", tier: "pretty", emoji: "🪼", spriteId: "fluffy", label: "독성 해파리" },
+  { id: "sparkle", tier: "pretty", emoji: "🐙", spriteId: "sparkle", label: "심해 문어" },
   { id: "standard", tier: "normal", emoji: "🐌", spriteId: "standard", label: "갯민숭달팽이" },
   { id: "farm", tier: "normal", emoji: "🪸🐟", spriteId: "farm", label: "해조어" },
   { id: "plain", tier: "normal", emoji: "😶🐟", spriteId: "plain", label: "인면어" },

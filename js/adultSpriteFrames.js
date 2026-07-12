@@ -16,12 +16,18 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
   },
   fluffy: {
     mermaid: { ids: ["fluffy-frame-1", "fluffy", "fluffy-frame-3"], frameMs: 933 },
+    deepsea: {
+      ids: ["fluffy-frame-1", "fluffy", "fluffy-frame-3"],
+      frameMs: 933,
+      floatBob: true,
+      floatBobSec: 2.8,
+    },
   },
   sparkle: {
     mermaid: { ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"], frameMs: 700 },
     deepsea: {
       ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
-      frameMs: 711,
+      frameMs: 1000,
       floatBob: true,
       floatBobSec: 2.13,
     },

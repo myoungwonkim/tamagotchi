@@ -53,8 +53,8 @@
 | [x] | 파일 | tier | 라벨 |
 |-----|------|------|------|
 | [x] | `golden.png` | pretty | 등불어 |
-| [x] | `fluffy.png` | pretty | 달빛 해파리 |
-| [x] | `sparkle.png` | pretty | 주머니귀오징어 |
+| [x] | `fluffy.png` | pretty | 독성 해파리 |
+| [x] | `sparkle.png` | pretty | 심해 문어 |
 | [x] | `standard.png` | normal | 갯민숭달팽이 |
 | [x] | `farm.png` | normal | 해조어 |
 | [x] | `plain.png` | normal | 인면어 |
