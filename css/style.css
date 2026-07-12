@@ -653,6 +653,23 @@ img.pet-sprite[hidden] {
   min-height: calc(var(--sprite-evolution-size) * 1.45);
 }
 
+/* 세규치(인어 farm) — 얼굴 가득 차게 1.38× 크기, 3프레임 눈 깜빡 idle */
+.pet-evolution--segyu {
+  --adult-large-size: calc(var(--sprite-evolution-size) * 1.38);
+  min-width: var(--adult-large-size);
+  min-height: var(--adult-large-size);
+}
+
+.pet-evolution--segyu .pet-evolution-img {
+  width: var(--adult-large-size);
+  height: var(--adult-large-size);
+}
+
+.pet-display:has(.pet-evolution--segyu) {
+  width: min(100%, calc(var(--sprite-evolution-size) * 1.38));
+  min-height: calc(var(--sprite-evolution-size) * 1.38);
+}
+
 /* 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
 .pet-evolution--sprite-frames,
 .pet-evolution--mermaid-frames,
@@ -1358,6 +1375,20 @@ img.pet-sprite[hidden] {
 
 .encyclopedia-detail__graphic.encyclopedia-detail__graphic--cheongryeong-yeoin {
   min-height: calc(var(--sprite-evolution-size) * 1.4);
+}
+
+.encyclopedia-detail__graphic--segyu .encyclopedia-detail__img {
+  width: calc(var(--sprite-evolution-size) * 1.3);
+  height: calc(var(--sprite-evolution-size) * 1.3);
+}
+
+.encyclopedia-detail__graphic.encyclopedia-detail__graphic--segyu {
+  min-height: calc(var(--sprite-evolution-size) * 1.3);
+}
+
+.encyclopedia-card__graphic--segyu .encyclopedia-card__img {
+  width: calc(var(--encyclopedia-grid-sprite-size, 4rem) * 1.15);
+  height: calc(var(--encyclopedia-grid-sprite-size, 4rem) * 1.15);
 }
 
 .encyclopedia-detail__name {

@@ -169,6 +169,8 @@ function applyEncyclopediaFramePresentation(container, variantId, speciesTheme) 
     "encyclopedia-card__graphic--jinju-yeoin",
     "encyclopedia-detail__graphic--cheongryeong-yeoin",
     "encyclopedia-card__graphic--cheongryeong-yeoin",
+    "encyclopedia-detail__graphic--segyu",
+    "encyclopedia-card__graphic--segyu",
   );
 
   const config = getSpriteFrameConfig(variantId, theme);
@@ -189,6 +191,12 @@ function applyEncyclopediaFramePresentation(container, variantId, speciesTheme) 
     container.classList.add(
       "encyclopedia-detail__graphic--cheongryeong-yeoin",
       "encyclopedia-card__graphic--cheongryeong-yeoin",
+    );
+  }
+  if (theme === "mermaid" && variantId === "farm") {
+    container.classList.add(
+      "encyclopedia-detail__graphic--segyu",
+      "encyclopedia-card__graphic--segyu",
     );
   }
 }
@@ -333,6 +341,7 @@ export function applyIdleClasses(el, pet) {
     "pet-evolution--neungeo-scruffy",
     "pet-evolution--jinju-yeoin",
     "pet-evolution--cheongryeong-yeoin",
+    "pet-evolution--segyu",
     "pet-evolution--sprite-frames",
     "pet-evolution--mermaid-frames",
     "pet-evolution--deepsea-float",
@@ -376,6 +385,10 @@ export function applyIdleClasses(el, pet) {
 
     if (theme === "mermaid" && !pet.isSleeping && pet.adultVariantId === "sparkle") {
       el.classList.add("pet-evolution--cheongryeong-yeoin");
+    }
+
+    if (theme === "mermaid" && !pet.isSleeping && pet.adultVariantId === "farm") {
+      el.classList.add("pet-evolution--segyu");
     }
 
     // 3프레임 idle: 진주 여인·청령·주머니귀오징어·갯민숭달팽이·심해아귀·인면어(plain)·녹면어(sickly) 등

@@ -15,7 +15,7 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
     mermaid: { ids: ["golden-frame-1", "golden", "golden-frame-3"], frameMs: 533 },
   },
   fluffy: {
-    mermaid: { ids: ["fluffy-frame-1", "fluffy", "fluffy-frame-3"], frameMs: 933 },
+    mermaid: { ids: ["fluffy-frame-1", "fluffy", "fluffy-frame-3"], frameMs: 1866 },
     deepsea: {
       ids: ["fluffy-frame-1", "fluffy", "fluffy-frame-3"],
       frameMs: 933,
@@ -42,6 +42,12 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
     deepsea: {
       ids: ["scruffy-frame-1", "scruffy", "scruffy-frame-3"],
       frameMs: 1067,
+    },
+  },
+  farm: {
+    mermaid: {
+      ids: ["farm-frame-1", "farm", "farm-frame-3"],
+      frameMs: 800,
     },
   },
   plain: {
