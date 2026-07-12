@@ -605,6 +605,19 @@ img.pet-sprite[hidden] {
   transform-origin: 50% 50%;
 }
 
+/* 능어(인어 scruffy)만 — 85% 크기, 걷기 1.5× 빠름 (6s → 4s) */
+.pet-evolution--neungeo-walk.pet-evolution--neungeo-scruffy {
+  --walk-dur: 4s;
+  --neungeo-size: calc(var(--sprite-evolution-size) * 0.85);
+  min-width: var(--neungeo-size);
+  min-height: var(--neungeo-size);
+}
+
+.pet-evolution--neungeo-walk.pet-evolution--neungeo-scruffy .pet-evolution-img {
+  width: var(--neungeo-size);
+  height: var(--neungeo-size);
+}
+
 /* 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
 .pet-evolution--sprite-frames,
 .pet-evolution--mermaid-frames,
@@ -1184,6 +1197,11 @@ img.pet-sprite[hidden] {
   box-shadow: inset 0 0 0 1px rgba(255, 120, 40, 0.28);
 }
 
+.encyclopedia-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .encyclopedia-page {
   margin-bottom: 4px;
 }
@@ -1255,6 +1273,15 @@ img.pet-sprite[hidden] {
 .encyclopedia-detail__graphic--neungeo-walk .encyclopedia-detail__img {
   animation: neungeoFlip var(--walk-dur) linear infinite;
   transform-origin: 50% 50%;
+}
+
+.encyclopedia-detail__graphic--neungeo-walk.encyclopedia-detail__graphic--neungeo-scruffy {
+  --walk-dur: 4s;
+}
+
+.encyclopedia-detail__graphic--neungeo-walk.encyclopedia-detail__graphic--neungeo-scruffy .encyclopedia-detail__img {
+  width: calc(var(--sprite-evolution-size) * 0.85);
+  height: calc(var(--sprite-evolution-size) * 0.85);
 }
 
 .encyclopedia-detail__name {

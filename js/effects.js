@@ -171,6 +171,9 @@ export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme)
 
   if (shouldEncyclopediaNeungeoWalk(variantId, theme)) {
     container.classList.add("encyclopedia-detail__graphic--neungeo-walk");
+    if (variantId === "scruffy") {
+      container.classList.add("encyclopedia-detail__graphic--neungeo-scruffy");
+    }
   }
 }
 
@@ -181,7 +184,10 @@ export function syncEncyclopediaAdultFrames(container, variantId, speciesTheme) 
 
 export function stopEncyclopediaAdultFrames(container) {
   stopSpriteFrames(container);
-  container?.classList.remove("encyclopedia-detail__graphic--neungeo-walk");
+  container?.classList.remove(
+    "encyclopedia-detail__graphic--neungeo-walk",
+    "encyclopedia-detail__graphic--neungeo-scruffy",
+  );
 }
 
 export function prefersReducedMotion() {
@@ -239,6 +245,7 @@ export function applyIdleClasses(el, pet) {
     "pet-evolution--variant-normal",
     "pet-evolution--variant-defective",
     "pet-evolution--neungeo-walk",
+    "pet-evolution--neungeo-scruffy",
     "pet-evolution--sprite-frames",
     "pet-evolution--mermaid-frames",
     "pet-evolution--deepsea-float",
@@ -271,6 +278,9 @@ export function applyIdleClasses(el, pet) {
       (pet.adultVariantId === "scruffy" || pet.adultVariantId === "grumpy")
     ) {
       el.classList.add("pet-evolution--neungeo-walk");
+      if (pet.adultVariantId === "scruffy") {
+        el.classList.add("pet-evolution--neungeo-scruffy");
+      }
     }
 
     // 3프레임 idle: 청령·주머니귀오징어·갯민숭달팽이·심해아귀·인면어(plain)·녹면어(sickly) 등

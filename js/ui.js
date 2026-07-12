@@ -65,6 +65,7 @@ const elements = {
   encyclopediaSubtitle: document.getElementById("encyclopedia-subtitle"),
   encyclopediaTabDeepsea: document.getElementById("encyclopedia-tab-deepsea"),
   encyclopediaTabMermaid: document.getElementById("encyclopedia-tab-mermaid"),
+  encyclopediaTabVent: document.getElementById("encyclopedia-tab-vent"),
   encyclopediaDetail: document.getElementById("encyclopedia-detail"),
   encyclopediaDetailGraphic: document.getElementById("encyclopedia-detail-graphic"),
   encyclopediaDetailName: document.getElementById("encyclopedia-detail-name"),
@@ -570,7 +571,7 @@ function hideEncyclopediaDetail() {
   elements.encyclopediaDetail.hidden = true;
 }
 
-/** 도감 탭 — 열수구 제외 */
+/** 도감 탭 — vent(업데이트 예정)는 비활성 */
 const ENCYCLOPEDIA_SPECIES_THEMES = ["deepsea", "mermaid"];
 
 function normalizeEncyclopediaTabTheme(theme) {
@@ -581,11 +582,13 @@ function normalizeEncyclopediaTabTheme(theme) {
 const ENCYCLOPEDIA_THEME_LABEL = {
   deepsea: "심해어",
   mermaid: "심해인어",
+  vent: "업데이트 예정",
 };
 
 const ENCYCLOPEDIA_TAB_ELEMENTS = {
   deepsea: () => elements.encyclopediaTabDeepsea,
   mermaid: () => elements.encyclopediaTabMermaid,
+  vent: () => elements.encyclopediaTabVent,
 };
 
 let encyclopediaActiveTheme = "deepsea";
@@ -607,6 +610,7 @@ function selectEncyclopediaTheme(theme) {
       encyclopediaActiveTheme === speciesTheme ? "true" : "false",
     );
   }
+  elements.encyclopediaTabVent?.setAttribute("aria-selected", "false");
   updateEncyclopediaSubtitle(encyclopediaActiveTheme);
   renderEncyclopediaGrid(encyclopediaActiveTheme);
 }
@@ -614,6 +618,7 @@ function selectEncyclopediaTheme(theme) {
 function bindEncyclopediaTabs() {
   if (encyclopediaTabsBound) return;
   encyclopediaTabsBound = true;
+  elements.encyclopediaTabVent?.setAttribute("disabled", "");
   for (const speciesTheme of ENCYCLOPEDIA_SPECIES_THEMES) {
     ENCYCLOPEDIA_TAB_ELEMENTS[speciesTheme]?.()?.addEventListener("click", () => {
       selectEncyclopediaTheme(speciesTheme);
