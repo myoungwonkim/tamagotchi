@@ -135,7 +135,10 @@ export function hasEncyclopediaAdultDisplay(variantId, speciesTheme) {
 }
 
 function applyEncyclopediaNeungeoWalkPresentation(container, variantId) {
-  container.classList.add("encyclopedia-detail__graphic--neungeo-walk");
+  container.classList.add(
+    "encyclopedia-detail__graphic--neungeo-walk",
+    "encyclopedia-card__graphic--neungeo-walk",
+  );
   if (variantId === "scruffy") {
     container.classList.add(
       "encyclopedia-detail__graphic--neungeo-scruffy",
@@ -196,9 +199,9 @@ export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme)
 /** DOM 페인트 후 도감 액션 시작 (3프레임 idle·능어/핀백 걷기, 상세·그리드 공통) */
 export function scheduleEncyclopediaAdultDisplay(container, variantId, speciesTheme) {
   if (!container || !hasEncyclopediaAdultDisplay(variantId, speciesTheme)) return;
-  requestAnimationFrame(() => {
-    syncEncyclopediaAdultDisplay(container, variantId, speciesTheme);
-  });
+  const run = () => syncEncyclopediaAdultDisplay(container, variantId, speciesTheme);
+  run();
+  requestAnimationFrame(run);
 }
 
 /** @deprecated use syncEncyclopediaAdultDisplay */
@@ -210,6 +213,7 @@ export function stopEncyclopediaAdultFrames(container) {
   stopSpriteFrames(container);
   container?.classList.remove(
     "encyclopedia-detail__graphic--neungeo-walk",
+    "encyclopedia-card__graphic--neungeo-walk",
     "encyclopedia-detail__graphic--neungeo-scruffy",
     "encyclopedia-card__graphic--neungeo-scruffy",
     "encyclopedia-detail__graphic--jinju-yeoin",

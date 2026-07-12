@@ -642,15 +642,13 @@ function renderEncyclopediaGrid(speciesTheme) {
     card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
 
     const entry = slot.entries[0];
-    const spriteTheme = entry
-      ? normalizeSpeciesTheme(entry.speciesTheme)
-      : theme;
-    const speciesLabel = getVariantLabelForTheme(slot.variant.id, theme);
+    const displayTheme = theme;
+    const speciesLabel = getVariantLabelForTheme(slot.variant.id, displayTheme);
     const graphic = createEncyclopediaGraphic(
-      getVariantSpriteMeta(slot.variant, spriteTheme),
+      getVariantSpriteMeta(slot.variant, displayTheme),
       !slot.collected,
       slot.collected ? slot.variant.id : null,
-      slot.collected ? spriteTheme : null,
+      slot.collected ? displayTheme : null,
     );
 
     const name = document.createElement("span");
@@ -685,12 +683,12 @@ function renderEncyclopediaGrid(speciesTheme) {
 }
 
 function showEncyclopediaDetail(variant, entry) {
-  const theme = normalizeSpeciesTheme(entry.speciesTheme ?? encyclopediaActiveTheme);
+  const displayTheme = normalizeSpeciesTheme(encyclopediaActiveTheme);
   stopEncyclopediaAdultFrames(elements.encyclopediaDetailGraphic);
   elements.encyclopediaDetailGraphic.innerHTML = "";
   setPetGraphic(
     elements.encyclopediaDetailGraphic,
-    getVariantSpriteMeta(variant, theme),
+    getVariantSpriteMeta(variant, displayTheme),
     { imgClass: "encyclopedia-detail__img encyclopedia-card__img" },
   );
 
@@ -698,18 +696,18 @@ function showEncyclopediaDetail(variant, entry) {
   elements.encyclopediaDetailName.textContent = petName;
   elements.encyclopediaDetailSpecies.textContent = getVariantLabelForTheme(
     variant.id,
-    theme,
+    displayTheme,
   );
   elements.encyclopediaDetailDesc.textContent = getVariantDescription(
     variant.id,
     petName,
-    theme,
+    displayTheme,
   );
 
   elements.encyclopediaList.hidden = true;
   elements.encyclopediaDetail.hidden = false;
   elements.encyclopediaPanel?.classList.add("encyclopedia-panel--detail");
-  scheduleEncyclopediaAdultDisplay(elements.encyclopediaDetailGraphic, variant.id, theme);
+  scheduleEncyclopediaAdultDisplay(elements.encyclopediaDetailGraphic, variant.id, displayTheme);
 }
 
 export function renderEncyclopedia() {

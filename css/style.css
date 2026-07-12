@@ -618,18 +618,38 @@ img.pet-sprite[hidden] {
   height: var(--neungeo-size);
 }
 
-/* 진주 여인·청령 어인(인어 golden/sparkle) — 1.2× 크기, 3프레임 idle */
-.pet-evolution--jinju-yeoin,
-.pet-evolution--cheongryeong-yeoin {
+/* 진주 여인(인어 golden) — 1.2× 크기, 3프레임 idle */
+.pet-evolution--jinju-yeoin {
   --adult-large-size: calc(var(--sprite-evolution-size) * 1.2);
   min-width: var(--adult-large-size);
   min-height: var(--adult-large-size);
 }
 
-.pet-evolution--jinju-yeoin .pet-evolution-img,
+.pet-evolution--jinju-yeoin .pet-evolution-img {
+  width: var(--adult-large-size);
+  height: var(--adult-large-size);
+}
+
+/* 청령 어인(인어 sparkle) — 스프라이트 여백 보정 후 진주 여인과 비슷한 체감 크기 */
+.pet-evolution--cheongryeong-yeoin {
+  --adult-large-size: calc(var(--sprite-evolution-size) * 1.8);
+  min-width: var(--adult-large-size);
+  min-height: var(--adult-large-size);
+}
+
 .pet-evolution--cheongryeong-yeoin .pet-evolution-img {
   width: var(--adult-large-size);
   height: var(--adult-large-size);
+}
+
+.pet-display:has(.pet-evolution--jinju-yeoin) {
+  width: min(100%, calc(var(--sprite-evolution-size) * 1.2));
+  min-height: calc(var(--sprite-evolution-size) * 1.2);
+}
+
+.pet-display:has(.pet-evolution--cheongryeong-yeoin) {
+  width: min(100%, calc(var(--sprite-evolution-size) * 1.8));
+  min-height: calc(var(--sprite-evolution-size) * 1.8);
 }
 
 /* 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
@@ -1062,6 +1082,7 @@ img.pet-sprite[hidden] {
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
   margin-bottom: 10px;
+  overflow: visible;
 }
 
 .encyclopedia-card {
@@ -1075,6 +1096,7 @@ img.pet-sprite[hidden] {
   justify-content: center;
   gap: 2px;
   border: 1px solid var(--border-subtle);
+  overflow: visible;
 }
 
 .encyclopedia-card--locked {
@@ -1106,6 +1128,8 @@ img.pet-sprite[hidden] {
   align-items: center;
   justify-content: center;
   min-height: var(--encyclopedia-grid-sprite-size);
+  overflow: visible;
+  position: relative;
 }
 
 .encyclopedia-card__img {
@@ -1282,20 +1306,27 @@ img.pet-sprite[hidden] {
   transform-origin: 50% 50%;
 }
 
-.encyclopedia-detail__graphic--neungeo-walk {
+.encyclopedia-detail__graphic--neungeo-walk,
+.encyclopedia-card__graphic--neungeo-walk {
   --walk-amp: clamp(32px, 14vw, 56px);
   --walk-dur: 6s;
   position: relative;
   animation: neungeoWalk var(--walk-dur) ease-in-out infinite;
 }
 
+.encyclopedia-card__graphic--neungeo-walk {
+  --walk-amp: clamp(10px, 5vw, 18px);
+}
+
 .encyclopedia-detail__graphic--neungeo-walk .encyclopedia-detail__img,
-.encyclopedia-detail__graphic--neungeo-walk .encyclopedia-card__img {
+.encyclopedia-detail__graphic--neungeo-walk .encyclopedia-card__img,
+.encyclopedia-card__graphic--neungeo-walk .encyclopedia-card__img {
   animation: neungeoFlip var(--walk-dur) linear infinite;
   transform-origin: 50% 50%;
 }
 
-.encyclopedia-detail__graphic--neungeo-walk.encyclopedia-detail__graphic--neungeo-scruffy {
+.encyclopedia-detail__graphic--neungeo-walk.encyclopedia-detail__graphic--neungeo-scruffy,
+.encyclopedia-card__graphic--neungeo-walk.encyclopedia-card__graphic--neungeo-scruffy {
   --walk-dur: 4s;
 }
 
@@ -1309,16 +1340,28 @@ img.pet-sprite[hidden] {
   height: calc(var(--encyclopedia-grid-sprite-size) * 0.8);
 }
 
-.encyclopedia-card__graphic--jinju-yeoin .encyclopedia-card__img,
-.encyclopedia-card__graphic--cheongryeong-yeoin .encyclopedia-card__img {
+.encyclopedia-card__graphic--jinju-yeoin .encyclopedia-card__img {
   width: calc(var(--encyclopedia-grid-sprite-size) * 1.2);
   height: calc(var(--encyclopedia-grid-sprite-size) * 1.2);
 }
 
-.encyclopedia-detail__graphic--jinju-yeoin .encyclopedia-detail__img,
-.encyclopedia-detail__graphic--cheongryeong-yeoin .encyclopedia-detail__img {
+.encyclopedia-card__graphic--cheongryeong-yeoin .encyclopedia-card__img {
+  width: calc(var(--encyclopedia-grid-sprite-size) * 1.8);
+  height: calc(var(--encyclopedia-grid-sprite-size) * 1.8);
+}
+
+.encyclopedia-detail__graphic--jinju-yeoin .encyclopedia-detail__img {
   width: calc(var(--sprite-evolution-size) * 1.2);
   height: calc(var(--sprite-evolution-size) * 1.2);
+}
+
+.encyclopedia-detail__graphic--cheongryeong-yeoin .encyclopedia-detail__img {
+  width: calc(var(--sprite-evolution-size) * 1.8);
+  height: calc(var(--sprite-evolution-size) * 1.8);
+}
+
+.encyclopedia-detail__graphic.encyclopedia-detail__graphic--cheongryeong-yeoin {
+  min-height: calc(var(--sprite-evolution-size) * 1.8);
 }
 
 .encyclopedia-detail__name {
@@ -1625,8 +1668,10 @@ img.pet-sprite[hidden] {
   .pet-evolution--deepsea-float .pet-evolution-img,
   .encyclopedia-detail__graphic--float .encyclopedia-detail__img,
   .encyclopedia-detail__graphic--neungeo-walk,
+  .encyclopedia-card__graphic--neungeo-walk,
   .encyclopedia-detail__graphic--neungeo-walk .encyclopedia-detail__img,
   .encyclopedia-detail__graphic--neungeo-walk .encyclopedia-card__img,
+  .encyclopedia-card__graphic--neungeo-walk .encyclopedia-card__img,
   .pet-evolution--evolving,
   .pet-mood-bubble--changing,
   .care-fx__particle,
