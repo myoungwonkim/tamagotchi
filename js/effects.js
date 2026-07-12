@@ -1,55 +1,18 @@
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant } from "./adultVariants.js";
+import {
+  getAdultSpriteFrameConfig,
+  hasAdultSpriteFrameAnimation,
+} from "./adultSpriteFrames.js";
 import { getSpriteUrlPng, getUiSpriteMeta, preloadSpriteMeta } from "./sprites.js";
 import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-/** variantId → theme → { ids, frameMs, floatBob?, floatBobSec? } */
-const ADULT_SPRITE_FRAME_CONFIG = {
-  golden: {
-    mermaid: { ids: ["golden-frame-1", "golden", "golden-frame-3"], frameMs: 533 },
-  },
-  sparkle: {
-    mermaid: { ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"], frameMs: 700 },
-    deepsea: {
-      ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
-      frameMs: 711,
-      floatBob: true,
-      floatBobSec: 2.13,
-    },
-  },
-  standard: {
-    deepsea: {
-      ids: ["standard-frame-1", "standard", "standard-frame-3"],
-      frameMs: 1067,
-    },
-  },
-  scruffy: {
-    deepsea: {
-      ids: ["scruffy-frame-1", "scruffy", "scruffy-frame-3"],
-      frameMs: 1067,
-    },
-  },
-  plain: {
-    deepsea: {
-      ids: ["plain-frame-1", "plain", "plain-frame-3"],
-      frameMs: 1067,
-    },
-  },
-  sickly: {
-    deepsea: {
-      ids: ["sickly-frame-1", "sickly", "sickly-frame-3"],
-      frameMs: 800,
-    },
-  },
-};
-
 const spriteFrameTimers = new WeakMap();
 
 function getSpriteFrameConfig(variantId, speciesTheme) {
-  const theme = normalizeSpeciesTheme(speciesTheme);
-  return ADULT_SPRITE_FRAME_CONFIG[variantId]?.[theme] ?? null;
+  return getAdultSpriteFrameConfig(variantId, speciesTheme);
 }
 
 function getSpriteFrameSrcs(variantId, speciesTheme) {
@@ -60,14 +23,20 @@ function getSpriteFrameSrcs(variantId, speciesTheme) {
 }
 
 function getFrameAnimImg(el) {
-  return el?.querySelector("img.pet-evolution-img, img.encyclopedia-detail__img") ?? null;
+  return (
+    el?.querySelector(
+      "img.pet-evolution-img, img.pet-sprite, img.encyclopedia-detail__img, img.encyclopedia-card__img",
+    ) ?? null
+  );
 }
 
 function stopSpriteFrames(el) {
   const id = spriteFrameTimers.get(el);
-  if (id == null) return;
-  clearInterval(id);
-  spriteFrameTimers.delete(el);
+  if (id != null) {
+    clearInterval(id);
+    spriteFrameTimers.delete(el);
+  }
+
   const variantId = el?.dataset.frameVariant;
   const frames = variantId && getSpriteFrameSrcs(variantId, el?.dataset.frameTheme);
   const img = getFrameAnimImg(el);
@@ -87,7 +56,7 @@ function shouldAnimateSpriteFrames(pet) {
   if (prefersReducedMotion()) return false;
   if (typeof document !== "undefined" && document.body.classList.contains("capture-mode")) return false;
   if (getEvolutionStage(pet).id !== "adult") return false;
-  return Boolean(getSpriteFrameConfig(pet.adultVariantId, pet.speciesTheme));
+  return Boolean(getAdultSpriteFrameConfig(pet.adultVariantId, pet.speciesTheme));
 }
 
 function syncSpriteFrames(el, pet) {
@@ -126,7 +95,7 @@ function syncSpriteFrames(el, pet) {
 function startEncyclopediaFrameLoop(container, variantId, speciesTheme) {
   const config = getSpriteFrameConfig(variantId, speciesTheme);
   const frames = getSpriteFrameSrcs(variantId, speciesTheme);
-  const img = container.querySelector("img.encyclopedia-detail__img");
+  const img = getFrameAnimImg(container);
   if (!config || !frames || !img) return false;
 
   for (const src of frames) {
@@ -140,11 +109,6 @@ function startEncyclopediaFrameLoop(container, variantId, speciesTheme) {
   delete img.dataset.retryBust;
   const fallback = container.querySelector(".encyclopedia-card__emoji");
   if (fallback) fallback.hidden = true;
-
-  if (config.floatBob && config.floatBobSec) {
-    container.classList.add("encyclopedia-detail__graphic--float");
-    img.style.setProperty("--float-dur", `${config.floatBobSec}s`);
-  }
 
   container.dataset.frameVariant = variantId;
   container.dataset.frameTheme = normalizeSpeciesTheme(speciesTheme);
@@ -163,6 +127,30 @@ function shouldEncyclopediaNeungeoWalk(variantId, speciesTheme) {
   return theme === "mermaid" && (variantId === "scruffy" || variantId === "grumpy");
 }
 
+function applyEncyclopediaFramePresentation(container, variantId, speciesTheme) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  container.classList.remove(
+    "encyclopedia-detail__graphic--float",
+    "encyclopedia-detail__graphic--jinju-yeoin",
+    "encyclopedia-card__graphic--jinju-yeoin",
+  );
+
+  const config = getSpriteFrameConfig(variantId, theme);
+  if (!config) return;
+
+  if (config.floatBob && config.floatBobSec) {
+    container.classList.add("encyclopedia-detail__graphic--float");
+    const img = getFrameAnimImg(container);
+    img?.style.setProperty("--float-dur", `${config.floatBobSec}s`);
+  }
+  if (theme === "mermaid" && variantId === "golden") {
+    container.classList.add(
+      "encyclopedia-detail__graphic--jinju-yeoin",
+      "encyclopedia-card__graphic--jinju-yeoin",
+    );
+  }
+}
+
 /** 도감 성체 상세 — 3프레임 idle 또는 인어 걷기 */
 export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme) {
   stopEncyclopediaAdultFrames(container);
@@ -171,9 +159,7 @@ export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme)
 
   const theme = normalizeSpeciesTheme(speciesTheme);
   if (startEncyclopediaFrameLoop(container, variantId, theme)) {
-    if (theme === "mermaid" && variantId === "golden") {
-      container.classList.add("encyclopedia-detail__graphic--jinju-yeoin");
-    }
+    applyEncyclopediaFramePresentation(container, variantId, theme);
     return;
   }
 
@@ -183,6 +169,14 @@ export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme)
       container.classList.add("encyclopedia-detail__graphic--neungeo-scruffy");
     }
   }
+}
+
+/** DOM 페인트 후 도감 프레임 idle 시작 (상세·그리드 공통) */
+export function scheduleEncyclopediaAdultDisplay(container, variantId, speciesTheme) {
+  if (!container || !hasAdultSpriteFrameAnimation(variantId, speciesTheme)) return;
+  requestAnimationFrame(() => {
+    syncEncyclopediaAdultDisplay(container, variantId, speciesTheme);
+  });
 }
 
 /** @deprecated use syncEncyclopediaAdultDisplay */
@@ -196,6 +190,7 @@ export function stopEncyclopediaAdultFrames(container) {
     "encyclopedia-detail__graphic--neungeo-walk",
     "encyclopedia-detail__graphic--neungeo-scruffy",
     "encyclopedia-detail__graphic--jinju-yeoin",
+    "encyclopedia-card__graphic--jinju-yeoin",
   );
 }
 

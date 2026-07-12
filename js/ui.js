@@ -26,7 +26,7 @@ import {
   playEvolutionTransition,
   playMoodTransition,
   applyIdleClasses,
-  syncEncyclopediaAdultDisplay,
+  scheduleEncyclopediaAdultDisplay,
   stopEncyclopediaAdultFrames,
 } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
@@ -547,7 +547,7 @@ export function hideGraduateModal() {
   elements.graduateOverlay.hidden = true;
 }
 
-function createEncyclopediaGraphic(meta, locked = false) {
+function createEncyclopediaGraphic(meta, locked = false, variantId = null, spriteTheme = null) {
   const wrap = document.createElement("div");
   wrap.className = "encyclopedia-card__graphic";
 
@@ -561,6 +561,9 @@ function createEncyclopediaGraphic(meta, locked = false) {
   }
 
   setPetGraphic(wrap, meta, { imgClass: "encyclopedia-card__img" });
+  if (variantId && spriteTheme) {
+    scheduleEncyclopediaAdultDisplay(wrap, variantId, spriteTheme);
+  }
   return wrap;
 }
 
@@ -629,6 +632,9 @@ function bindEncyclopediaTabs() {
 function renderEncyclopediaGrid(speciesTheme) {
   const theme = normalizeSpeciesTheme(speciesTheme);
   const slots = getEncyclopediaSlots(theme);
+  elements.encyclopediaGrid
+    .querySelectorAll(".encyclopedia-card__graphic")
+    .forEach((graphic) => stopEncyclopediaAdultFrames(graphic));
   elements.encyclopediaGrid.innerHTML = "";
 
   for (const slot of slots) {
@@ -643,6 +649,8 @@ function renderEncyclopediaGrid(speciesTheme) {
     const graphic = createEncyclopediaGraphic(
       getVariantSpriteMeta(slot.variant, spriteTheme),
       !slot.collected,
+      slot.collected ? slot.variant.id : null,
+      slot.collected ? spriteTheme : null,
     );
 
     const name = document.createElement("span");
@@ -685,7 +693,6 @@ function showEncyclopediaDetail(variant, entry) {
     getVariantSpriteMeta(variant, theme),
     { imgClass: "encyclopedia-detail__img encyclopedia-card__img" },
   );
-  syncEncyclopediaAdultDisplay(elements.encyclopediaDetailGraphic, variant.id, theme);
 
   const petName = entry.petName?.trim() || "이름 없음";
   elements.encyclopediaDetailName.textContent = petName;
@@ -702,6 +709,7 @@ function showEncyclopediaDetail(variant, entry) {
   elements.encyclopediaList.hidden = true;
   elements.encyclopediaDetail.hidden = false;
   elements.encyclopediaPanel?.classList.add("encyclopedia-panel--detail");
+  scheduleEncyclopediaAdultDisplay(elements.encyclopediaDetailGraphic, variant.id, theme);
 }
 
 export function renderEncyclopedia() {

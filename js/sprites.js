@@ -8,6 +8,7 @@ import {
   getStageLabelForTheme,
   normalizeSpeciesTheme,
 } from "./speciesThemes.js";
+import { getAdultSpriteFrameIds } from "./adultSpriteFrames.js";
 
 export const SPRITE_BASE = "assets/sprites";
 const SETTINGS_KEY = "tamagotchi-settings";
@@ -218,28 +219,7 @@ export function preloadSpritesForPet(pet) {
   }
 
   if (stage.id === "adult" && pet.adultVariantId) {
-    const frameIdsByVariant = {
-      golden: {
-        mermaid: ["golden-frame-1", "golden", "golden-frame-3"],
-      },
-      sparkle: {
-        deepsea: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
-        mermaid: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
-      },
-      standard: {
-        deepsea: ["standard-frame-1", "standard", "standard-frame-3"],
-      },
-      scruffy: {
-        deepsea: ["scruffy-frame-1", "scruffy", "scruffy-frame-3"],
-      },
-      plain: {
-        deepsea: ["plain-frame-1", "plain", "plain-frame-3"],
-      },
-      sickly: {
-        deepsea: ["sickly-frame-1", "sickly", "sickly-frame-3"],
-      },
-    };
-    const frameIds = frameIdsByVariant[pet.adultVariantId]?.[theme];
+    const frameIds = getAdultSpriteFrameIds(pet.adultVariantId, theme);
     if (frameIds) {
       for (const id of frameIds) {
         preloadSpriteMeta({ src: getSpriteUrlPng("adult", id, theme) });
