@@ -618,6 +618,18 @@ img.pet-sprite[hidden] {
   height: var(--neungeo-size);
 }
 
+/* 진주 여인(인어 golden) — 1.2× 크기, 3프레임 idle */
+.pet-evolution--jinju-yeoin {
+  --jinju-size: calc(var(--sprite-evolution-size) * 1.2);
+  min-width: var(--jinju-size);
+  min-height: var(--jinju-size);
+}
+
+.pet-evolution--jinju-yeoin .pet-evolution-img {
+  width: var(--jinju-size);
+  height: var(--jinju-size);
+}
+
 /* 3프레임 idle(JS). 컨테이너 bob/흔들림 끔 */
 .pet-evolution--sprite-frames,
 .pet-evolution--mermaid-frames,
@@ -1282,6 +1294,11 @@ img.pet-sprite[hidden] {
 .encyclopedia-detail__graphic--neungeo-walk.encyclopedia-detail__graphic--neungeo-scruffy .encyclopedia-detail__img {
   width: calc(var(--sprite-evolution-size) * 0.85);
   height: calc(var(--sprite-evolution-size) * 0.85);
+}
+
+.encyclopedia-detail__graphic--jinju-yeoin .encyclopedia-detail__img {
+  width: calc(var(--sprite-evolution-size) * 1.2);
+  height: calc(var(--sprite-evolution-size) * 1.2);
 }
 
 .encyclopedia-detail__name {

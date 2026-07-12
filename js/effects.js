@@ -7,6 +7,9 @@ const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 
 /** variantId → theme → { ids, frameMs, floatBob?, floatBobSec? } */
 const ADULT_SPRITE_FRAME_CONFIG = {
+  golden: {
+    mermaid: { ids: ["golden-frame-1", "golden", "golden-frame-3"], frameMs: 533 },
+  },
   sparkle: {
     mermaid: { ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"], frameMs: 700 },
     deepsea: {
@@ -167,7 +170,12 @@ export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme)
   if (typeof document !== "undefined" && document.body.classList.contains("capture-mode")) return;
 
   const theme = normalizeSpeciesTheme(speciesTheme);
-  if (startEncyclopediaFrameLoop(container, variantId, theme)) return;
+  if (startEncyclopediaFrameLoop(container, variantId, theme)) {
+    if (theme === "mermaid" && variantId === "golden") {
+      container.classList.add("encyclopedia-detail__graphic--jinju-yeoin");
+    }
+    return;
+  }
 
   if (shouldEncyclopediaNeungeoWalk(variantId, theme)) {
     container.classList.add("encyclopedia-detail__graphic--neungeo-walk");
@@ -187,6 +195,7 @@ export function stopEncyclopediaAdultFrames(container) {
   container?.classList.remove(
     "encyclopedia-detail__graphic--neungeo-walk",
     "encyclopedia-detail__graphic--neungeo-scruffy",
+    "encyclopedia-detail__graphic--jinju-yeoin",
   );
 }
 
@@ -246,6 +255,7 @@ export function applyIdleClasses(el, pet) {
     "pet-evolution--variant-defective",
     "pet-evolution--neungeo-walk",
     "pet-evolution--neungeo-scruffy",
+    "pet-evolution--jinju-yeoin",
     "pet-evolution--sprite-frames",
     "pet-evolution--mermaid-frames",
     "pet-evolution--deepsea-float",
@@ -283,7 +293,11 @@ export function applyIdleClasses(el, pet) {
       }
     }
 
-    // 3프레임 idle: 청령·주머니귀오징어·갯민숭달팽이·심해아귀·인면어(plain)·녹면어(sickly) 등
+    if (theme === "mermaid" && !pet.isSleeping && pet.adultVariantId === "golden") {
+      el.classList.add("pet-evolution--jinju-yeoin");
+    }
+
+    // 3프레임 idle: 진주 여인·청령·주머니귀오징어·갯민숭달팽이·심해아귀·인면어(plain)·녹면어(sickly) 등
     const frameConfig = getSpriteFrameConfig(pet.adultVariantId, theme);
     if (!pet.isSleeping && frameConfig) {
       el.classList.add("pet-evolution--sprite-frames", "pet-evolution--mermaid-frames");

@@ -219,6 +219,9 @@ export function preloadSpritesForPet(pet) {
 
   if (stage.id === "adult" && pet.adultVariantId) {
     const frameIdsByVariant = {
+      golden: {
+        mermaid: ["golden-frame-1", "golden", "golden-frame-3"],
+      },
       sparkle: {
         deepsea: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
         mermaid: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"],
