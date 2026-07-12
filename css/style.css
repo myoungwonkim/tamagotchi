@@ -1240,6 +1240,23 @@ img.pet-sprite[hidden] {
   object-fit: contain;
 }
 
+.encyclopedia-detail__graphic--float .encyclopedia-detail__img {
+  animation: deepseaJumeoniFloat var(--float-dur, 2.13s) ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+
+.encyclopedia-detail__graphic--neungeo-walk {
+  --walk-amp: clamp(32px, 14vw, 56px);
+  --walk-dur: 6s;
+  position: relative;
+  animation: neungeoWalk var(--walk-dur) ease-in-out infinite;
+}
+
+.encyclopedia-detail__graphic--neungeo-walk .encyclopedia-detail__img {
+  animation: neungeoFlip var(--walk-dur) linear infinite;
+  transform-origin: 50% 50%;
+}
+
 .encyclopedia-detail__name {
   margin: 0;
   font-size: var(--text-lg);
@@ -1542,6 +1559,9 @@ img.pet-sprite[hidden] {
   .pet-evolution--neungeo-walk,
   .pet-evolution--neungeo-walk .pet-evolution-img,
   .pet-evolution--deepsea-float .pet-evolution-img,
+  .encyclopedia-detail__graphic--float .encyclopedia-detail__img,
+  .encyclopedia-detail__graphic--neungeo-walk,
+  .encyclopedia-detail__graphic--neungeo-walk .encyclopedia-detail__img,
   .pet-evolution--evolving,
   .pet-mood-bubble--changing,
   .care-fx__particle,

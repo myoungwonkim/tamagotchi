@@ -1,6 +1,6 @@
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant } from "./adultVariants.js";
-import { getSpriteUrlPng, getUiSpriteMeta } from "./sprites.js";
+import { getSpriteUrlPng, getUiSpriteMeta, preloadSpriteMeta } from "./sprites.js";
 import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -56,6 +56,10 @@ function getSpriteFrameSrcs(variantId, speciesTheme) {
   return config.ids.map((id) => getSpriteUrlPng("adult", id, theme));
 }
 
+function getFrameAnimImg(el) {
+  return el?.querySelector("img.pet-evolution-img, img.encyclopedia-detail__img") ?? null;
+}
+
 function stopSpriteFrames(el) {
   const id = spriteFrameTimers.get(el);
   if (id == null) return;
@@ -63,12 +67,13 @@ function stopSpriteFrames(el) {
   spriteFrameTimers.delete(el);
   const variantId = el?.dataset.frameVariant;
   const frames = variantId && getSpriteFrameSrcs(variantId, el?.dataset.frameTheme);
-  const img = el?.querySelector("img.pet-evolution-img:not([hidden])");
+  const img = getFrameAnimImg(el);
   if (img && frames) {
-    img.src = frames[1];
+    img.src = frames[1] ?? frames[0];
     img.style.removeProperty("--float-dur");
   }
   if (el) {
+    el.classList.remove("encyclopedia-detail__graphic--float");
     delete el.dataset.frameVariant;
     delete el.dataset.frameTheme;
   }
@@ -112,6 +117,71 @@ function syncSpriteFrames(el, pet) {
   };
   tick();
   spriteFrameTimers.set(el, setInterval(tick, config.frameMs));
+}
+
+/** 도감 성체 상세 — 3프레임 idle (테마별 frame config) */
+function startEncyclopediaFrameLoop(container, variantId, speciesTheme) {
+  const config = getSpriteFrameConfig(variantId, speciesTheme);
+  const frames = getSpriteFrameSrcs(variantId, speciesTheme);
+  const img = container.querySelector("img.encyclopedia-detail__img");
+  if (!config || !frames || !img) return false;
+
+  for (const src of frames) {
+    preloadSpriteMeta({ src });
+  }
+
+  img.onerror = null;
+  img.onload = null;
+  img.hidden = false;
+  img.style.display = "";
+  delete img.dataset.retryBust;
+  const fallback = container.querySelector(".encyclopedia-card__emoji");
+  if (fallback) fallback.hidden = true;
+
+  if (config.floatBob && config.floatBobSec) {
+    container.classList.add("encyclopedia-detail__graphic--float");
+    img.style.setProperty("--float-dur", `${config.floatBobSec}s`);
+  }
+
+  container.dataset.frameVariant = variantId;
+  container.dataset.frameTheme = normalizeSpeciesTheme(speciesTheme);
+  let frame = 0;
+  const tick = () => {
+    img.src = frames[frame % frames.length];
+    frame += 1;
+  };
+  tick();
+  spriteFrameTimers.set(container, setInterval(tick, config.frameMs));
+  return true;
+}
+
+function shouldEncyclopediaNeungeoWalk(variantId, speciesTheme) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  return theme === "mermaid" && (variantId === "scruffy" || variantId === "grumpy");
+}
+
+/** 도감 성체 상세 — 3프레임 idle 또는 인어 걷기 */
+export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme) {
+  stopEncyclopediaAdultFrames(container);
+  if (!container || prefersReducedMotion()) return;
+  if (typeof document !== "undefined" && document.body.classList.contains("capture-mode")) return;
+
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  if (startEncyclopediaFrameLoop(container, variantId, theme)) return;
+
+  if (shouldEncyclopediaNeungeoWalk(variantId, theme)) {
+    container.classList.add("encyclopedia-detail__graphic--neungeo-walk");
+  }
+}
+
+/** @deprecated use syncEncyclopediaAdultDisplay */
+export function syncEncyclopediaAdultFrames(container, variantId, speciesTheme) {
+  syncEncyclopediaAdultDisplay(container, variantId, speciesTheme);
+}
+
+export function stopEncyclopediaAdultFrames(container) {
+  stopSpriteFrames(container);
+  container?.classList.remove("encyclopedia-detail__graphic--neungeo-walk");
 }
 
 export function prefersReducedMotion() {
