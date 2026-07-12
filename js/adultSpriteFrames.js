@@ -2,8 +2,13 @@ import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 /**
  * Adult idle frame animation registry.
- * 새 성체를 도감/펫에 3프레임 idle로 넣을 때 variantId + theme 항목을 추가하면
- * preload·도감 상세·도감 그리드·펫 idle이 같은 ids를 사용합니다.
+ *
+ * 새 성체 3프레임 idle / 도감 액션 추가 체크리스트:
+ * 1. `{variantId}/{theme}` 항목 추가 (ids + frameMs)
+ * 2. `assets/sprites/{theme}/adult/{id}.png` 프레임 PNG 3장 배치
+ * 3. `python3 scripts/verify_adult_sprite_frames.py` 로 파일·레지스트리 검증
+ *
+ * 등록하면 preload·펫 idle·도감 그리드·도감 상세가 같은 ids를 사용합니다.
  */
 export const ADULT_SPRITE_FRAME_CONFIG = {
   golden: {

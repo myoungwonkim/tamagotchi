@@ -132,6 +132,261 @@ def validate_after_flood(im_before: Image.Image, flooded: Image.Image, *, strict
 
 
 FINAL_NEAR_WHITE_MIN = 400  # minimum opaque near-white px on 256×256 for white-body characters
+INTERIOR_HOLE_MAX = 0  # enclosed transparent pixels inside silhouette — shell highlights must not punch through
+
+
+def count_enclosed_transparent_pixels(im: Image.Image) -> int:
+    """Transparent pixels touching opaque neighbors — visible holes in the sprite."""
+    w, h = im.size
+    px = im.load()
+    n = 0
+    for y in range(h):
+        for x in range(w):
+            if px[x, y][3] != 0:
+                continue
+            for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if 0 <= nx < w and 0 <= ny < h and px[nx, ny][3] > 128:
+                    n += 1
+                    break
+    return n
+
+
+def validate_no_interior_holes(im: Image.Image, *, strict: bool) -> None:
+    holes = count_enclosed_transparent_pixels(im)
+    if holes <= INTERIOR_HOLE_MAX:
+        return
+    msg = (
+        f"INTERIOR_HOLES: {holes} enclosed transparent pixel(s) inside silhouette. "
+        f"Bright shell/body highlights were likely defringed or white-flooded — re-run prep; do not ship."
+    )
+    if strict:
+        raise SystemExit(msg)
+    print(f"WARNING: {msg}", file=sys.stderr)
+
+
+def exterior_transparent_mask(im: Image.Image) -> list[list[bool]]:
+    w, h = im.size
+    px = im.load()
+    ext = [[False] * w for _ in range(h)]
+    q: deque[tuple[int, int]] = deque()
+
+    for x in range(w):
+        for y in (0, h - 1):
+            if px[x, y][3] == 0:
+                ext[y][x] = True
+                q.append((x, y))
+    for y in range(h):
+        for x in (0, w - 1):
+            if px[x, y][3] == 0 and not ext[y][x]:
+                ext[y][x] = True
+                q.append((x, y))
+
+    while q:
+        x, y = q.popleft()
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < w and 0 <= ny < h and not ext[ny][nx] and px[nx, ny][3] == 0:
+                ext[ny][nx] = True
+                q.append((nx, ny))
+    return ext
+
+
+def restore_enclosed_highlights(src: Image.Image, out: Image.Image, min_non_bg_neighbors: int = 6) -> Image.Image:
+    """Put back near-white shell/body highlights removed by background flood."""
+    if src.size != out.size:
+        raise ValueError("restore_enclosed_highlights requires matching dimensions")
+    src_px = src.convert("RGBA").load()
+    out = out.copy()
+    opx = out.load()
+    w, h = out.size
+    dirs = (
+        (1, 0), (-1, 0), (0, 1), (0, -1),
+        (1, 1), (1, -1), (-1, 1), (-1, -1),
+    )
+    for y in range(h):
+        for x in range(w):
+            if opx[x, y][3] != 0:
+                continue
+            sr, sg, sb, sa = src_px[x, y]
+            if sa <= 128 or not is_background_pixel(sr, sg, sb):
+                continue
+            non_bg = 0
+            for dx, dy in dirs:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < w and 0 <= ny < h and opx[nx, ny][3] > 128:
+                    nr, ng, nb = opx[nx, ny][:3]
+                    if not is_background_pixel(nr, ng, nb):
+                        non_bg += 1
+            if non_bg >= min_non_bg_neighbors:
+                opx[x, y] = (sr, sg, sb, 255)
+    return out
+
+
+def close_interior_holes(im: Image.Image, max_passes: int = 16) -> Image.Image:
+    """Fill transparent pockets fully enclosed by the sprite silhouette."""
+    out = im.copy()
+    px = out.load()
+    w, h = out.size
+    dirs = (
+        (1, 0), (-1, 0), (0, 1), (0, -1),
+        (1, 1), (1, -1), (-1, 1), (-1, -1),
+    )
+
+    for _ in range(max_passes):
+        ext = exterior_transparent_mask(out)
+        pending: list[tuple[int, int, tuple[int, int, int, int]]] = []
+        for y in range(h):
+            for x in range(w):
+                if px[x, y][3] != 0 or ext[y][x]:
+                    continue
+                neighbors = [
+                    px[x + dx, y + dy]
+                    for dx, dy in dirs
+                    if 0 <= x + dx < w and 0 <= y + dy < h and px[x + dx, y + dy][3] > 128
+                ]
+                if not neighbors:
+                    continue
+                bright = sum(1 for c in neighbors if min(c[:3]) >= 230)
+                if bright >= max(1, len(neighbors) // 2):
+                    color = (252, 252, 252, 255)
+                else:
+                    r = sum(c[0] for c in neighbors) // len(neighbors)
+                    g = sum(c[1] for c in neighbors) // len(neighbors)
+                    b = sum(c[2] for c in neighbors) // len(neighbors)
+                    color = (r, g, b, 255)
+                pending.append((x, y, color))
+        if not pending:
+            break
+        for x, y, color in pending:
+            px[x, y] = color
+
+    out = close_interior_transparent_components(out)
+    return out
+
+
+def is_shell_tone_pixel(r: int, g: int, b: int, a: int = 255) -> bool:
+    """Warm brown conch shell — matches visible flood-punch artifacts in game."""
+    if a < 200:
+        return False
+    mn = min(r, g, b)
+    if mn <= 30:
+        return False
+    return r > b
+
+
+def count_shell_highlight_holes(im: Image.Image) -> int:
+    """Transparent pixels touching opaque shell-toned neighbors (visible shell piercing)."""
+    w, h = im.size
+    px = im.load()
+    n = 0
+    for y in range(h):
+        for x in range(w):
+            if px[x, y][3] != 0:
+                continue
+            for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if 0 <= nx < w and 0 <= ny < h:
+                    nr, ng, nb, na = px[nx, ny]
+                    if is_shell_tone_pixel(nr, ng, nb, na):
+                        n += 1
+                        break
+    return n
+
+
+def patch_shell_highlight_holes(im: Image.Image) -> Image.Image:
+    """Fill flood-punched shell highlights with near-white (matches source highlight intent)."""
+    out = im.copy()
+    px = out.load()
+    w, h = out.size
+    dirs = ((1, 0), (-1, 0), (0, 1), (0, -1))
+    pending: list[tuple[int, int]] = []
+
+    for y in range(h):
+        for x in range(w):
+            if px[x, y][3] != 0:
+                continue
+            if not any(
+                0 <= x + dx < w
+                and 0 <= y + dy < h
+                and is_shell_tone_pixel(*px[x + dx, y + dy])
+                for dx, dy in dirs
+            ):
+                continue
+            pending.append((x, y))
+
+    for x, y in pending:
+        px[x, y] = (252, 252, 252, 255)
+    return out
+
+
+def validate_no_shell_holes(im: Image.Image, *, strict: bool) -> None:
+    holes = count_shell_highlight_holes(im)
+    if holes == 0:
+        return
+    msg = (
+        f"SHELL_HOLES: {holes} transparent pixel(s) inside conch shell tones. "
+        f"Bright highlights were likely white-flooded — re-run prep; do not ship."
+    )
+    if strict:
+        raise SystemExit(msg)
+    print(f"WARNING: {msg}", file=sys.stderr)
+
+
+def close_interior_transparent_components(im: Image.Image) -> Image.Image:
+    """Fill interior transparent components using colors from their opaque boundary."""
+    out = im.copy()
+    px = out.load()
+    w, h = out.size
+    ext = exterior_transparent_mask(out)
+    seen = [[False] * w for _ in range(h)]
+
+    for sy in range(h):
+        for sx in range(w):
+            if seen[sy][sx] or px[sx, sy][3] != 0 or ext[sy][sx]:
+                continue
+            stack = [(sx, sy)]
+            comp: list[tuple[int, int]] = []
+            seen[sy][sx] = True
+            boundary: list[tuple[int, int, int, int]] = []
+            while stack:
+                x, y = stack.pop()
+                comp.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if not (0 <= nx < w and 0 <= ny < h):
+                        continue
+                    if px[nx, ny][3] > 128:
+                        boundary.append(px[nx, ny])
+                    elif not seen[ny][nx] and not ext[ny][nx] and px[nx, ny][3] == 0:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            if not boundary:
+                continue
+            bright = sum(1 for c in boundary if min(c[:3]) >= 230)
+            if bright >= len(boundary) // 2:
+                color = (252, 252, 252, 255)
+            else:
+                r = sum(c[0] for c in boundary) // len(boundary)
+                g = sum(c[1] for c in boundary) // len(boundary)
+                b = sum(c[2] for c in boundary) // len(boundary)
+                color = (r, g, b, 255)
+            for x, y in comp:
+                px[x, y] = color
+    return out
+
+
+def count_opaque_non_halo_neighbors(
+    px,
+    w: int,
+    h: int,
+    x: int,
+    y: int,
+) -> int:
+    n = 0
+    for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+        if 0 <= nx < w and 0 <= ny < h:
+            nr, ng, nb, na = px[nx, ny]
+            if na > 0 and not is_halo_pixel(nr, ng, nb):
+                n += 1
+    return n
 
 
 def validate_final_output(im_before: Image.Image, result: Image.Image, *, strict: bool) -> None:
@@ -253,6 +508,9 @@ def defringe(
             r, g, b, a = px[x, y]
             if a == 0 or void_dist[y][x] > max_dist or not is_halo_pixel(r, g, b):
                 continue
+            # Interior shell/body highlights — not matte fringe.
+            if count_opaque_non_halo_neighbors(px, w, h, x, y) >= 2:
+                continue
 
             replacement = None
             for radius in range(1, 6):
@@ -317,13 +575,26 @@ def fit_to_ref_bbox(im: Image.Image) -> Image.Image:
     return canvas
 
 
-def prepare(im: Image.Image, *, strict_validation: bool = True) -> Image.Image:
+def prepare(
+    im: Image.Image,
+    *,
+    strict_validation: bool = True,
+    defringe_output: bool = True,
+    repair_shell_holes: bool = False,
+) -> Image.Image:
     flooded = flood_transparent(im)
     validate_after_flood(im, flooded, strict=strict_validation)
+    if repair_shell_holes:
+        flooded = restore_enclosed_highlights(im, flooded, min_non_bg_neighbors=6)
     cut = keep_largest_component(flooded)
     cut = solidify_alpha(cut)
-    cut = defringe(cut)
+    if defringe_output:
+        cut = defringe(cut)
     result = fit_to_ref_bbox(cut)
+    result = close_interior_holes(result)
+    if repair_shell_holes:
+        result = patch_shell_highlight_holes(result)
+        validate_no_shell_holes(result, strict=strict_validation)
     validate_final_output(im, result, strict=strict_validation)
     return result
 

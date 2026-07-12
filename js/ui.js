@@ -26,6 +26,7 @@ import {
   playEvolutionTransition,
   playMoodTransition,
   applyIdleClasses,
+  resyncAllEncyclopediaAdultDisplays,
   scheduleEncyclopediaAdultDisplay,
   stopEncyclopediaAdultFrames,
 } from "./effects.js";
@@ -203,7 +204,22 @@ function bindSpriteImgHandlers(img, fallback, getMeta) {
   return { onLoad, onError };
 }
 
-export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img", sizeClass = "" } = {}) {
+function runAfterGraphicReady(img, callback) {
+  if (!img || typeof callback !== "function") return;
+  const run = () => requestAnimationFrame(callback);
+  if (img.complete) {
+    run();
+    return;
+  }
+  img.addEventListener("load", run, { once: true });
+  img.addEventListener("error", run, { once: true });
+}
+
+export function setPetGraphic(
+  container,
+  meta,
+  { imgClass = "pet-evolution-img", sizeClass = "", afterGraphicReady = null } = {},
+) {
   if (!container || !meta) return null;
 
   if (!isSpritesEnabled()) {
@@ -258,6 +274,8 @@ export function setPetGraphic(container, meta, { imgClass = "pet-evolution-img",
     if (img.naturalWidth > 0) onLoad();
     else onError();
   }
+
+  runAfterGraphicReady(img, afterGraphicReady);
 
   return meta.key;
 }
@@ -560,10 +578,13 @@ function createEncyclopediaGraphic(meta, locked = false, variantId = null, sprit
     return wrap;
   }
 
-  setPetGraphic(wrap, meta, { imgClass: "encyclopedia-card__img" });
-  if (variantId && spriteTheme) {
-    scheduleEncyclopediaAdultDisplay(wrap, variantId, spriteTheme);
-  }
+  setPetGraphic(wrap, meta, {
+    imgClass: "encyclopedia-card__img",
+    afterGraphicReady:
+      variantId && spriteTheme
+        ? () => scheduleEncyclopediaAdultDisplay(wrap, variantId, spriteTheme)
+        : null,
+  });
   return wrap;
 }
 
@@ -689,7 +710,15 @@ function showEncyclopediaDetail(variant, entry) {
   setPetGraphic(
     elements.encyclopediaDetailGraphic,
     getVariantSpriteMeta(variant, displayTheme),
-    { imgClass: "encyclopedia-detail__img encyclopedia-card__img" },
+    {
+      imgClass: "encyclopedia-detail__img encyclopedia-card__img",
+      afterGraphicReady: () =>
+        scheduleEncyclopediaAdultDisplay(
+          elements.encyclopediaDetailGraphic,
+          variant.id,
+          displayTheme,
+        ),
+    },
   );
 
   const petName = entry.petName?.trim() || "이름 없음";
@@ -707,7 +736,6 @@ function showEncyclopediaDetail(variant, entry) {
   elements.encyclopediaList.hidden = true;
   elements.encyclopediaDetail.hidden = false;
   elements.encyclopediaPanel?.classList.add("encyclopedia-panel--detail");
-  scheduleEncyclopediaAdultDisplay(elements.encyclopediaDetailGraphic, variant.id, displayTheme);
 }
 
 export function renderEncyclopedia() {
@@ -728,6 +756,7 @@ export function showEncyclopedia(speciesThemeOrPet) {
   elements.encyclopediaOverlay.hidden = false;
   elements.encyclopediaPanel?.scrollTo(0, 0);
   elements.encyclopediaOverlay.scrollTo?.(0, 0);
+  resyncAllEncyclopediaAdultDisplays(elements.encyclopediaOverlay);
 }
 
 export function hideEncyclopedia() {
@@ -738,6 +767,7 @@ export function hideEncyclopedia() {
 
 export function backToEncyclopediaList() {
   hideEncyclopediaDetail();
+  resyncAllEncyclopediaAdultDisplays(elements.encyclopediaGrid);
 }
 
 export function setGameActive(active) {

@@ -196,12 +196,44 @@ export function syncEncyclopediaAdultDisplay(container, variantId, speciesTheme)
   }
 }
 
+function rememberEncyclopediaAdultDisplayTarget(container, variantId, speciesTheme) {
+  if (!container) return;
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  container.dataset.adultVariantId = variantId;
+  container.dataset.adultSpriteTheme = theme;
+}
+
 /** DOM 페인트 후 도감 액션 시작 (3프레임 idle·능어/핀백 걷기, 상세·그리드 공통) */
 export function scheduleEncyclopediaAdultDisplay(container, variantId, speciesTheme) {
   if (!container || !hasEncyclopediaAdultDisplay(variantId, speciesTheme)) return;
-  const run = () => syncEncyclopediaAdultDisplay(container, variantId, speciesTheme);
-  run();
-  requestAnimationFrame(run);
+  rememberEncyclopediaAdultDisplayTarget(container, variantId, speciesTheme);
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  requestAnimationFrame(() => {
+    syncEncyclopediaAdultDisplay(container, variantId, theme);
+  });
+}
+
+/** 도감 오버레이 표시·목록 복귀 등 — 그리드·상세 성체 액션 재시작 */
+export function resyncAllEncyclopediaAdultDisplays(root = document) {
+  const scope = root?.querySelector?.("#encyclopedia-overlay") ?? root;
+  if (!scope) return;
+
+  for (const graphic of scope.querySelectorAll(".encyclopedia-card__graphic[data-adult-variant-id]")) {
+    scheduleEncyclopediaAdultDisplay(
+      graphic,
+      graphic.dataset.adultVariantId,
+      graphic.dataset.adultSpriteTheme,
+    );
+  }
+
+  const detailGraphic = scope.querySelector("#encyclopedia-detail-graphic[data-adult-variant-id]");
+  if (detailGraphic && !detailGraphic.closest("[hidden]")) {
+    scheduleEncyclopediaAdultDisplay(
+      detailGraphic,
+      detailGraphic.dataset.adultVariantId,
+      detailGraphic.dataset.adultSpriteTheme,
+    );
+  }
 }
 
 /** @deprecated use syncEncyclopediaAdultDisplay */
