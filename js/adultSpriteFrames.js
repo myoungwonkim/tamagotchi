@@ -9,6 +9,9 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
   golden: {
     mermaid: { ids: ["golden-frame-1", "golden", "golden-frame-3"], frameMs: 533 },
   },
+  fluffy: {
+    mermaid: { ids: ["fluffy-frame-1", "fluffy", "fluffy-frame-3"], frameMs: 933 },
+  },
   sparkle: {
     mermaid: { ids: ["sparkle-frame-1", "sparkle", "sparkle-frame-3"], frameMs: 700 },
     deepsea: {
