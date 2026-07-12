@@ -226,6 +226,15 @@ export function preloadSpritesForPet(pet) {
       standard: {
         deepsea: ["standard-frame-1", "standard", "standard-frame-3"],
       },
+      scruffy: {
+        deepsea: ["scruffy-frame-1", "scruffy", "scruffy-frame-3"],
+      },
+      plain: {
+        deepsea: ["plain-frame-1", "plain", "plain-frame-3"],
+      },
+      sickly: {
+        deepsea: ["sickly-frame-1", "sickly", "sickly-frame-3"],
+      },
     };
     const frameIds = frameIdsByVariant[pet.adultVariantId]?.[theme];
     if (frameIds) {

@@ -5,7 +5,6 @@ import {
   getStageLabelForTheme,
   getVariantLabelForTheme,
   normalizeSpeciesTheme,
-  SPECIES_THEMES,
 } from "./speciesThemes.js";
 import {
   getEncyclopediaSlots,
@@ -27,6 +26,8 @@ import {
   playEvolutionTransition,
   playMoodTransition,
   applyIdleClasses,
+  syncEncyclopediaAdultDisplay,
+  stopEncyclopediaAdultFrames,
 } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
 import { syncMessLayer, scheduleMessLayer, clearMessLayer } from "./mess.js";
@@ -64,7 +65,6 @@ const elements = {
   encyclopediaSubtitle: document.getElementById("encyclopedia-subtitle"),
   encyclopediaTabDeepsea: document.getElementById("encyclopedia-tab-deepsea"),
   encyclopediaTabMermaid: document.getElementById("encyclopedia-tab-mermaid"),
-  encyclopediaTabVent: document.getElementById("encyclopedia-tab-vent"),
   encyclopediaDetail: document.getElementById("encyclopedia-detail"),
   encyclopediaDetailGraphic: document.getElementById("encyclopedia-detail-graphic"),
   encyclopediaDetailName: document.getElementById("encyclopedia-detail-name"),
@@ -564,21 +564,28 @@ function createEncyclopediaGraphic(meta, locked = false) {
 }
 
 function hideEncyclopediaDetail() {
+  stopEncyclopediaAdultFrames(elements.encyclopediaDetailGraphic);
   elements.encyclopediaPanel?.classList.remove("encyclopedia-panel--detail");
   elements.encyclopediaList.hidden = false;
   elements.encyclopediaDetail.hidden = true;
 }
 
+/** 도감 탭 — 열수구 제외 */
+const ENCYCLOPEDIA_SPECIES_THEMES = ["deepsea", "mermaid"];
+
+function normalizeEncyclopediaTabTheme(theme) {
+  const normalized = normalizeSpeciesTheme(theme);
+  return normalized === "mermaid" ? "mermaid" : "deepsea";
+}
+
 const ENCYCLOPEDIA_THEME_LABEL = {
   deepsea: "심해어",
   mermaid: "심해인어",
-  vent: "열수구",
 };
 
 const ENCYCLOPEDIA_TAB_ELEMENTS = {
   deepsea: () => elements.encyclopediaTabDeepsea,
   mermaid: () => elements.encyclopediaTabMermaid,
-  vent: () => elements.encyclopediaTabVent,
 };
 
 let encyclopediaActiveTheme = "deepsea";
@@ -592,8 +599,8 @@ function updateEncyclopediaSubtitle(theme) {
 }
 
 function selectEncyclopediaTheme(theme) {
-  encyclopediaActiveTheme = normalizeSpeciesTheme(theme);
-  for (const speciesTheme of SPECIES_THEMES) {
+  encyclopediaActiveTheme = normalizeEncyclopediaTabTheme(theme);
+  for (const speciesTheme of ENCYCLOPEDIA_SPECIES_THEMES) {
     const tab = ENCYCLOPEDIA_TAB_ELEMENTS[speciesTheme]?.();
     tab?.setAttribute(
       "aria-selected",
@@ -607,7 +614,7 @@ function selectEncyclopediaTheme(theme) {
 function bindEncyclopediaTabs() {
   if (encyclopediaTabsBound) return;
   encyclopediaTabsBound = true;
-  for (const speciesTheme of SPECIES_THEMES) {
+  for (const speciesTheme of ENCYCLOPEDIA_SPECIES_THEMES) {
     ENCYCLOPEDIA_TAB_ELEMENTS[speciesTheme]?.()?.addEventListener("click", () => {
       selectEncyclopediaTheme(speciesTheme);
     });
@@ -666,12 +673,14 @@ function renderEncyclopediaGrid(speciesTheme) {
 
 function showEncyclopediaDetail(variant, entry) {
   const theme = normalizeSpeciesTheme(entry.speciesTheme ?? encyclopediaActiveTheme);
+  stopEncyclopediaAdultFrames(elements.encyclopediaDetailGraphic);
   elements.encyclopediaDetailGraphic.innerHTML = "";
   setPetGraphic(
     elements.encyclopediaDetailGraphic,
     getVariantSpriteMeta(variant, theme),
     { imgClass: "encyclopedia-detail__img encyclopedia-card__img" },
   );
+  syncEncyclopediaAdultDisplay(elements.encyclopediaDetailGraphic, variant.id, theme);
 
   const petName = entry.petName?.trim() || "이름 없음";
   elements.encyclopediaDetailName.textContent = petName;
@@ -702,7 +711,7 @@ export function showEncyclopedia(speciesThemeOrPet) {
       typeof speciesThemeOrPet === "object" && speciesThemeOrPet.speciesTheme != null
         ? speciesThemeOrPet.speciesTheme
         : speciesThemeOrPet;
-    encyclopediaActiveTheme = normalizeSpeciesTheme(theme);
+    encyclopediaActiveTheme = normalizeEncyclopediaTabTheme(theme);
   }
   renderEncyclopedia();
   elements.encyclopediaOverlay.hidden = false;
