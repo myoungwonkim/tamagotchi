@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>도장 봉인 · 심플 시안 3종</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #101820; color: #d8e4ec; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #eef4f8; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 22px;
+    }
+    .notice strong { color: #58b8c8; }
+
+    h2 { font-size: 0.8125rem; color: #58b8c8; margin: 0 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .card {
+      background: #243040; border: 1px solid #3a5060; border-radius: 12px; padding: 12px;
+    }
+    .card--ref { border-color: #6a5848; }
+    .stage {
+      height: 170px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #2a2420 0%, #1a1612 60%, #100e0c 100%);
+      box-shadow: inset 0 0 34px rgba(80, 60, 40, 0.25);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage--dex {
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+    }
+    .stage img {
+      width: 110px; height: 110px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card .hook { font-size: 0.6875rem; color: #c8a878; margin-bottom: 6px; font-weight: 600; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; }
+    .thumbs { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      image-rendering: pixelated; background: #283848; border-radius: 6px; padding: 3px;
+    }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+
+    .compare-row {
+      display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-bottom: 24px;
+    }
+    .ref-card {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 10px;
+      padding: 10px; text-align: center; width: 120px;
+    }
+    .ref-card img {
+      width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated; margin-bottom: 6px;
+    }
+    .ref-card strong { font-size: 0.625rem; color: #c8d4dc; display: block; }
+    .ref-card span { font-size: 0.5625rem; color: #7a8898; }
+
+    .phone {
+      max-width: 320px; margin: 0 auto 24px;
+      background: #1a2838; border: 2px solid #3a5060; border-radius: 18px; overflow: hidden;
+    }
+    .phone-inner { padding: 12px; background: rgba(0,0,0,0.35); }
+    .dex-card {
+      background: #243040; border: 1px solid #3a5060; border-radius: 12px;
+      padding: 14px 12px; text-align: center;
+    }
+    .dex-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 4px; }
+    .dex-sub { font-size: 0.75rem; color: #7a8898; margin-bottom: 12px; }
+    .ency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .enc-card {
+      background: #283848; border-radius: 10px; padding: 6px 4px 5px;
+      display: flex; flex-direction: column; align-items: center; opacity: 0.45;
+    }
+    .enc-card img {
+      width: clamp(3rem, 15vw, 4rem); height: clamp(3rem, 15vw, 4rem);
+      object-fit: contain; image-rendering: pixelated;
+    }
+    .enc-name { font-size: 0.625rem; font-weight: 600; margin-top: 3px; }
+    .enc-species { font-size: 0.5625rem; color: #7a8898; }
+
+    .mock-label { font-size: 0.625rem; color: #58b8c8; text-align: center; margin-bottom: 8px; }
+    .foot { font-size: 0.625rem; color: #6a7888; }
+    code { color: #9fe6c8; }
+    .back { font-size: 0.6875rem; margin-bottom: 14px; }
+    .back a { color: #58b8c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="back"><a href="locked-slot-preview.html">← 고풍 자물쇠 시안 3종</a></p>
+    <h1>도장 봉인 · 심플 시안 3종</h1>
+    <p class="lead">시안 2(탐사 도장 봉인)를 도감 카드 크기에 맞게 <strong>단순화</strong>한 후보 · 스테이징</p>
+    <div class="notice">
+      원본 시안 2는 양피지·로프 교차·질감이 많아 작은 그리드에서 복잡합니다.
+      아래 3종은 <strong>왁스 봉인 + 닻</strong> 핵심만 남기고 요소를 줄였습니다.
+    </div>
+
+    <h2>기준 vs 심플</h2>
+    <div class="compare-row">
+      <div class="ref-card" style="border-color:#8a7060;">
+        <img src="../assets/custom/locked-draft-2.png" alt="원본 시안 2">
+        <strong>원본 시안 2</strong>
+        <span>양피지+로프+왁스</span>
+      </div>
+      <div class="ref-card">
+        <img src="../assets/sprites/ui/mystery.png" alt="mystery">
+        <strong>mystery</strong>
+        <span>업데이트 예정</span>
+      </div>
+      <div class="ref-card">
+        <img src="../assets/sprites/ui/locked.png" alt="현재 locked">
+        <strong>현재 locked</strong>
+        <span>게임 반영 중</span>
+      </div>
+    </div>
+
+    <h2>심플 시안 3종</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/locked-seal-simple-1.png" alt="심플 1"></div>
+        <h3>심플 1 · 왁스 봉인만</h3>
+        <p class="hook">「봉인된 기록」 최소형</p>
+        <p>진홍 왁스 원형 + 닻 문양만. 로프·양피지 제거. 32px에서도 실루엣이 가장 또렷합니다.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/locked-seal-simple-1.png" width="48" height="48" alt=""><span>48px</span></div>
+          <div><img src="../assets/custom/locked-seal-simple-1.png" width="32" height="32" alt=""><span>32px</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/locked-seal-simple-2.png" alt="심플 2"></div>
+        <h3>심플 2 · 얇은 로프 링</h3>
+        <p class="hook">「항해 도장」 절충형</p>
+        <p>시안 2의 로프를 <strong>얇은 한 줄 링</strong>만 남김. 양피지·매듭 제거. 원본 분위기를 유지하면서 단순화.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/locked-seal-simple-2.png" width="48" height="48" alt=""><span>48px</span></div>
+          <div><img src="../assets/custom/locked-seal-simple-2.png" width="32" height="32" alt=""><span>32px</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/locked-seal-simple-3.png" alt="심플 3"></div>
+        <h3>심플 3 · 플랫 도장</h3>
+        <p class="hook">「찍힌 인장」 평면형</p>
+        <p>완전한 원 + 평면 닻 실루엣. 하이라이트 최소. 가장 <strong>아이콘다운</strong> 형태로 mystery·수집 슬롯과 구분이 쉽습니다.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/locked-seal-simple-3.png" width="48" height="48" alt=""><span>48px</span></div>
+          <div><img src="../assets/custom/locked-seal-simple-3.png" width="32" height="32" alt=""><span>32px</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>도감 그리드 비교 (미수집 슬롯)</h2>
+    <div class="grid" id="variant-grids"></div>
+
+    <p class="foot" style="margin-top:16px;">
+      파일: <code>assets/custom/locked-seal-simple-{1,2,3}.png</code><br>
+      추천: <strong>심플 1</strong> — 가장 작은 크기에서 읽히고 mystery와 혼동이 적습니다.
+      원본 시안 2 느낌 유지는 <strong>심플 2</strong>, UI 아이콘 톤은 <strong>심플 3</strong>.<br>
+      <a href="locked-slot-preview.html">고풍 자물쇠 시안 3종</a>으로 돌아가기
+    </p>
+  </div>
+  <script>
+    const DRAFTS = [
+      { src: "../assets/custom/locked-draft-2.png", label: "원본 시안 2" },
+      { src: "../assets/custom/locked-seal-simple-1.png", label: "심플 1 · 왁스만" },
+      { src: "../assets/custom/locked-seal-simple-2.png", label: "심플 2 · 로프 링" },
+      { src: "../assets/custom/locked-seal-simple-3.png", label: "심플 3 · 플랫" },
+    ];
+    const COLLECTED = "../assets/sprites/adult/fluffy.png";
+    const LABELS = ["독성 해파리", "등불어", "해조어", "심해 문어", "갯민숭달팽이", "인면어", "심해아귀", "백골 말미", "녹면어"];
+
+    document.getElementById("variant-grids").innerHTML = DRAFTS.map(d => `
+      <div class="card">
+        <p class="hook" style="margin-bottom:8px;">${d.label}</p>
+        <div class="ency-grid">${LABELS.map((sp, i) => {
+          const collected = i === 0 || i === 3;
+          return `<div class="enc-card" style="${collected ? 'opacity:1' : ''}">
+            <img src="${collected ? COLLECTED : d.src}" alt="">
+            <span class="enc-name">${collected ? (i===0?'달이':'주머니') : '???'}</span>
+            <span class="enc-species">${sp}</span>
+          </div>`;
+        }).join("")}</div>
+      </div>
+    `).join("");
+  </script>
+</body>
+</html>

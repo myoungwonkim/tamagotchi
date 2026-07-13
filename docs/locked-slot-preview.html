@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>미수집 자물쇠 · 고풍 디자인 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #101820; color: #d8e4ec; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #eef4f8; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 22px;
+    }
+    .notice strong { color: #58b8c8; }
+
+    h2 { font-size: 0.8125rem; color: #58b8c8; margin: 0 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .card {
+      background: #243040; border: 1px solid #3a5060; border-radius: 12px; padding: 12px;
+    }
+    .stage {
+      height: 180px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage--warm {
+      background: linear-gradient(180deg, #2a2420 0%, #1a1612 60%, #100e0c 100%);
+      box-shadow: inset 0 0 34px rgba(80, 60, 40, 0.25);
+    }
+    .stage img {
+      width: 120px; height: 120px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card .hook { font-size: 0.6875rem; color: #c8a878; margin-bottom: 6px; font-weight: 600; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 48px; height: 48px; image-rendering: pixelated;
+      background: #283848; border-radius: 6px; padding: 4px;
+    }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+
+    .compare-row {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 28px;
+    }
+    .ref-card {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 10px;
+      padding: 10px; text-align: center; width: 130px;
+    }
+    .ref-card img {
+      width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated;
+      margin-bottom: 6px;
+    }
+    .ref-card span { font-size: 0.5625rem; color: #7a8898; display: block; line-height: 1.35; }
+    .ref-card strong { font-size: 0.625rem; color: #c8d4dc; display: block; margin-bottom: 2px; }
+
+    .phone {
+      max-width: 320px; margin: 0 auto 28px;
+      background: #1a2838; border: 2px solid #3a5060; border-radius: 18px;
+      overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    }
+    .phone-inner { padding: 12px; background: rgba(0,0,0,0.35); }
+    .dex-card {
+      background: #243040; border: 1px solid #3a5060; border-radius: 12px;
+      padding: 14px 12px 12px; text-align: center;
+    }
+    .dex-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 4px; }
+    .dex-sub { font-size: 0.75rem; color: #7a8898; margin-bottom: 12px; }
+    .ency-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    }
+    .enc-card {
+      background: #283848; border-radius: 10px; padding: 6px 4px 5px;
+      display: flex; flex-direction: column; align-items: center; opacity: 0.45;
+    }
+    .enc-card--ok { opacity: 1; }
+    .enc-card--disabled { opacity: 0.55; }
+    .enc-card img {
+      width: clamp(3rem, 15vw, 4rem); height: clamp(3rem, 15vw, 4rem);
+      object-fit: contain; image-rendering: pixelated;
+    }
+    .enc-name { font-size: 0.625rem; font-weight: 600; margin-top: 3px; }
+    .enc-species { font-size: 0.5625rem; color: #7a8898; }
+
+    .mock-label { font-size: 0.625rem; color: #58b8c8; text-align: center; margin-bottom: 8px; }
+    .foot { font-size: 0.625rem; color: #6a7888; margin-top: 8px; }
+    code { color: #9fe6c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>미수집 자물쇠 · 고풍 디자인 시안</h1>
+    <p class="lead">도감 <strong>미수집</strong> 슬롯용 <code>locked.png</code> 교체 후보 3종 · 스테이징 (게임 미반영)</p>
+    <div class="notice">
+      현재 자물쇠는 청록 발광·기계적 느낌입니다. 이번 시안은 <strong>19세기 탐사·항해 고문서</strong> 톤으로
+      <code>mystery.png</code>(업데이트 예정)와 구분되도록 따뜻한 금속·낙서·보물함 질감을 넣었습니다.
+    </div>
+
+    <h2>역할 구분</h2>
+    <div class="compare-row">
+      <div class="ref-card">
+        <img src="../assets/sprites/ui/locked.png" alt="현재 locked">
+        <strong>현재 locked</strong>
+        <span>미수집<br>기계적 자물쇠</span>
+      </div>
+      <div class="ref-card" style="border-color:#c8a878;">
+        <img src="../assets/custom/locked-draft-1.png" alt="신규 후보">
+        <strong>신규 locked (후보)</strong>
+        <span>미수집<br>고풍 디자인</span>
+      </div>
+      <div class="ref-card">
+        <img src="../assets/sprites/ui/mystery.png" alt="mystery">
+        <strong>mystery</strong>
+        <span>업데이트 예정<br>심해의 눈</span>
+      </div>
+    </div>
+
+    <h2>시안 3종</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage stage--warm"><img src="../assets/custom/locked-draft-1.png" alt="시안 1"></div>
+        <h3>시안 1 · 황동 해양 자물쇠</h3>
+        <p class="hook">「아직 열리지 않은 탐사 금고」</p>
+        <p>빅토리아 시대 황동 자물쇠. 닻·물결 문양 새김, 녹청 패티나. 가장 직관적인 ‘잠김’ 아이콘이면서 고풍스러움. mystery의 기괴한 눈과 대비가 선명합니다.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/locked-draft-1.png" alt=""><span>도감 카드</span></div>
+          <div><img src="../assets/custom/locked-draft-1.png" alt="" style="width:32px;height:32px"><span>32px</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage stage--warm"><img src="../assets/custom/locked-draft-2.png" alt="시안 2"></div>
+        <h3>시안 2 · 탐사 도장 봉인</h3>
+        <p class="hook">「아직 기록되지 않은 일지」</p>
+        <p>낙서 왁스 봉인 + 닻 도장 + 찢어진 양피지 모서리. ‘탐사 일지’ 세계관과 가장 잘 맞고, 자물쇠보다 **학술·고서** 느낌이 강합니다. 수집 전 = 봉인된 기록.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/locked-draft-2.png" alt=""><span>도감 카드</span></div>
+          <div><img src="../assets/custom/locked-draft-2.png" alt="" style="width:32px;height:32px"><span>32px</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage stage--warm"><img src="../assets/custom/locked-draft-3.png" alt="시안 3"></div>
+        <h3>시안 3 · 침몰 보물함 쇠자물쇠</h3>
+        <p class="hook">「아직 건져 올리지 못한 보물」</p>
+        <p>녹슨 쇠자물쇠 + 산호·패각 부착 + 진주 액센트. 심해·보물함 연상이 강하고, 게임 톤(어비스펫)과 잘 어울립니다. 가장 **모험·탐험** 감성.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/locked-draft-3.png" alt=""><span>도감 카드</span></div>
+          <div><img src="../assets/custom/locked-draft-3.png" alt="" style="width:32px;height:32px"><span>32px</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>도감 그리드 목업 (시안 1 적용 예)</h2>
+    <p class="mock-label">수집됨 · 미수집(locked) · 업데이트 예정(mystery) 혼합</p>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="dex-card">
+          <div class="dex-title">탐사 일지</div>
+          <div class="dex-sub">심해어 · 수집 2 / 9</div>
+          <div class="ency-grid" id="mock-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:8px;">시안별 그리드 비교</h2>
+    <div class="grid" id="variant-grids"></div>
+
+    <p class="foot">
+      파일: <code>assets/custom/locked-draft-{1,2,3}.png</code> (256×256 RGBA)<br>
+      추천: <strong>시안 1</strong> — ‘잠김’이 가장 즉시 읽히고 mystery와 실루엣 대비가 좋습니다.
+      도감 톤 일치는 <strong>시안 2</strong>, 심해 모험감은 <strong>시안 3</strong>.<br>
+      다음 단계: 선택 시안 픽셀 정돈 → <code>assets/sprites/ui/locked.png</code> 교체.
+    </p>
+  </div>
+  <script>
+    const DRAFTS = [
+      { id: 1, src: "../assets/custom/locked-draft-1.png", label: "시안 1 · 황동 자물쇠" },
+      { id: 2, src: "../assets/custom/locked-draft-2.png", label: "시안 2 · 도장 봉인" },
+      { id: 3, src: "../assets/custom/locked-draft-3.png", label: "시안 3 · 보물함 쇠자물쇠" },
+    ];
+    const LOCKED_CUR = "../assets/sprites/ui/locked.png";
+    const MYSTERY = "../assets/sprites/ui/mystery.png";
+    const FLUFFY = "../assets/sprites/adult/fluffy.png";
+
+    const SLOTS = [
+      { type: "collected", img: FLUFFY, name: "달이", species: "독성 해파리", cls: "enc-card enc-card--ok" },
+      { type: "locked", draft: 1, name: "???", species: "등불어", cls: "enc-card" },
+      { type: "disabled", img: MYSTERY, name: "???", species: "업데이트 예정", cls: "enc-card enc-card--disabled" },
+      { type: "locked", draft: 1, name: "???", species: "해조어", cls: "enc-card" },
+      { type: "collected", img: "../assets/sprites/adult/sparkle.png", name: "주머니", species: "심해 문어", cls: "enc-card enc-card--ok" },
+      { type: "locked", draft: 1, name: "???", species: "갯민숭달팽이", cls: "enc-card" },
+      { type: "disabled", img: MYSTERY, name: "???", species: "업데이트 예정", cls: "enc-card enc-card--disabled" },
+      { type: "locked", draft: 1, name: "???", species: "인면어", cls: "enc-card" },
+      { type: "locked", draft: 1, name: "???", species: "심해아귀", cls: "enc-card" },
+    ];
+
+    function cardHtml(slot, lockedSrc) {
+      const img = slot.type === "locked" ? lockedSrc : slot.img;
+      return `<div class="${slot.cls}">
+        <img src="${img}" alt="">
+        <span class="enc-name">${slot.name}</span>
+        <span class="enc-species">${slot.species}</span>
+      </div>`;
+    }
+
+    document.getElementById("mock-grid").innerHTML = SLOTS.map(s =>
+      cardHtml(s, DRAFTS[0].src)
+    ).join("");
+
+    document.getElementById("variant-grids").innerHTML = DRAFTS.map(d => `
+      <div class="card">
+        <p class="hook" style="margin-bottom:8px;">${d.label}</p>
+        <div class="ency-grid">${SLOTS.map(s => cardHtml(s, d.src)).join("")}</div>
+      </div>
+    `).join("");
+  </script>
+</body>
+</html>
