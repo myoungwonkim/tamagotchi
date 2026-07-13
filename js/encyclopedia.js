@@ -1,4 +1,4 @@
-import { ADULT_VARIANTS, getAdultVariant } from "./adultVariants.js";
+import { ADULT_VARIANTS, getAdultVariant, getPlayableVariants, isEvolutionVariantEnabled } from "./adultVariants.js";
 import { getEvolutionStage } from "./evolution.js";
 import {
   DEFAULT_SPECIES_THEME,
@@ -63,9 +63,13 @@ export function getCollectedCount(speciesTheme) {
     return data.entries.length;
   }
   const theme = normalizeSpeciesTheme(speciesTheme);
+  const enabledIds = new Set(getPlayableVariants(theme).map((v) => v.id));
   const collected = new Set();
   for (const entry of data.entries) {
-    if (normalizeSpeciesTheme(entry.speciesTheme) === theme) {
+    if (
+      normalizeSpeciesTheme(entry.speciesTheme) === theme &&
+      enabledIds.has(entry.variantId)
+    ) {
       collected.add(entry.variantId);
     }
   }
@@ -78,9 +82,14 @@ export function getCollectedVariantIds(speciesTheme) {
     return new Set(data.entries.map((e) => e.variantId));
   }
   const theme = normalizeSpeciesTheme(speciesTheme);
+  const enabledIds = new Set(getPlayableVariants(theme).map((v) => v.id));
   return new Set(
     data.entries
-      .filter((e) => normalizeSpeciesTheme(e.speciesTheme) === theme)
+      .filter(
+        (e) =>
+          normalizeSpeciesTheme(e.speciesTheme) === theme &&
+          enabledIds.has(e.variantId),
+      )
       .map((e) => e.variantId),
   );
 }
@@ -88,6 +97,7 @@ export function getCollectedVariantIds(speciesTheme) {
 export function addToEncyclopedia(pet) {
   if (!pet?.adultVariantId) return null;
   if (getEvolutionStage(pet).id !== "adult") return null;
+  if (!isEvolutionVariantEnabled(pet.adultVariantId, pet.speciesTheme)) return null;
 
   const variant = getAdultVariant(pet.adultVariantId, pet.speciesTheme);
   const speciesTheme = normalizeSpeciesTheme(pet.speciesTheme);
@@ -139,14 +149,18 @@ export function getEncyclopediaSlots(speciesTheme) {
   const theme = normalizeSpeciesTheme(speciesTheme);
   const data = loadEncyclopedia();
   return ADULT_VARIANTS.map((variant) => {
-    const entries = data.entries.filter(
-      (e) =>
-        e.variantId === variant.id &&
-        normalizeSpeciesTheme(e.speciesTheme) === theme,
-    );
+    const disabled = !isEvolutionVariantEnabled(variant.id, theme);
+    const entries = disabled
+      ? []
+      : data.entries.filter(
+          (e) =>
+            e.variantId === variant.id &&
+            normalizeSpeciesTheme(e.speciesTheme) === theme,
+        );
     return {
       variant,
       speciesTheme: theme,
+      disabled,
       collected: entries.length > 0,
       entries,
     };

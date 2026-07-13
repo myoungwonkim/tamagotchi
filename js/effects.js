@@ -194,10 +194,10 @@ function applyEncyclopediaFramePresentation(container, variantId, speciesTheme) 
     );
   }
   if (theme === "mermaid" && variantId === "farm") {
-    container.classList.add(
-      "encyclopedia-detail__graphic--segyu",
-      "encyclopedia-card__graphic--segyu",
-    );
+    container.classList.add("encyclopedia-detail__graphic--segyu");
+    if (container.classList.contains("encyclopedia-card__graphic")) {
+      container.classList.add("encyclopedia-card__graphic--segyu");
+    }
   }
 }
 
@@ -282,6 +282,8 @@ export function stopEncyclopediaAdultFrames(container) {
     "encyclopedia-card__graphic--jinju-yeoin",
     "encyclopedia-detail__graphic--cheongryeong-yeoin",
     "encyclopedia-card__graphic--cheongryeong-yeoin",
+    "encyclopedia-detail__graphic--segyu",
+    "encyclopedia-card__graphic--segyu",
   );
 }
 

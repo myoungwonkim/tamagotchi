@@ -1,6 +1,6 @@
 import { MS_PER_DAY } from "./pet.js";
 import { EVOLUTION_ADULT_MIN_AGE_MS } from "./evolution.js";
-import { ADULT_VARIANTS } from "./adultVariants.js";
+import { getPlayableVariants } from "./adultVariants.js";
 import { clearEncyclopedia } from "./encyclopedia.js";
 import { clearPet } from "./storage.js";
 import { clearDeathSnapshot, captureDeathSnapshot } from "./deathSnapshot.js";
@@ -26,7 +26,7 @@ const CAPTURE_ENCYCLOPEDIA_NAMES = {
 function seedEncyclopedia() {
   clearEncyclopedia();
   const now = Date.now();
-  const entries = ADULT_VARIANTS.map((variant, index) => ({
+  const entries = getPlayableVariants("deepsea").map((variant, index) => ({
     id: `capture-${variant.id}`,
     petName: CAPTURE_ENCYCLOPEDIA_NAMES[variant.id] ?? `친구${index + 1}`,
     petBornAt: now - (index + 1) * MS_PER_DAY,
@@ -76,7 +76,7 @@ function adultPet(name) {
     neglectStartedAt: null,
     lastEvolutionStage: "teen",
     speciesTheme: "deepsea",
-    adultVariantId: "golden",
+    adultVariantId: "fluffy",
     adultCareSnapshot: {
       hunger: 70,
       happiness: 88,

@@ -569,9 +569,19 @@ export function hideGraduateModal() {
   elements.graduateOverlay.hidden = true;
 }
 
-function createEncyclopediaGraphic(meta, locked = false, variantId = null, spriteTheme = null) {
+function createEncyclopediaGraphic(
+  meta,
+  { locked = false, disabled = false, variantId = null, spriteTheme = null } = {},
+) {
   const wrap = document.createElement("div");
   wrap.className = "encyclopedia-card__graphic";
+
+  if (disabled) {
+    setPetGraphic(wrap, getUiSpriteMeta("mystery", "❓", "업데이트 예정"), {
+      imgClass: "encyclopedia-card__img",
+    });
+    return wrap;
+  }
 
   if (locked || !meta) {
     setPetGraphic(
@@ -664,23 +674,35 @@ function renderEncyclopediaGrid(speciesTheme) {
 
   for (const slot of slots) {
     const card = document.createElement("div");
-    card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
+    if (slot.disabled) {
+      card.className = "encyclopedia-card encyclopedia-card--disabled";
+    } else {
+      card.className = `encyclopedia-card${slot.collected ? " encyclopedia-card--collected" : " encyclopedia-card--locked"}`;
+    }
 
     const entry = slot.entries[0];
     const displayTheme = theme;
-    const speciesLabel = getVariantLabelForTheme(slot.variant.id, displayTheme);
-    const graphic = createEncyclopediaGraphic(
-      getVariantSpriteMeta(slot.variant, displayTheme),
-      !slot.collected,
-      slot.collected ? slot.variant.id : null,
-      slot.collected ? displayTheme : null,
-    );
+    const speciesLabel = slot.disabled
+      ? "업데이트 예정"
+      : getVariantLabelForTheme(slot.variant.id, displayTheme);
+    const graphic = slot.disabled
+      ? createEncyclopediaGraphic(null, { disabled: true })
+      : createEncyclopediaGraphic(
+          getVariantSpriteMeta(slot.variant, displayTheme),
+          {
+            locked: !slot.collected,
+            variantId: slot.collected ? slot.variant.id : null,
+            spriteTheme: slot.collected ? displayTheme : null,
+          },
+        );
 
     const name = document.createElement("span");
     name.className = "encyclopedia-card__name";
-    name.textContent = slot.collected && entry
-      ? entry.petName?.trim() || "이름 없음"
-      : "???";
+    name.textContent = slot.disabled
+      ? "???"
+      : slot.collected && entry
+        ? entry.petName?.trim() || "이름 없음"
+        : "???";
 
     const species = document.createElement("span");
     species.className = "encyclopedia-card__species";
@@ -715,7 +737,7 @@ function showEncyclopediaDetail(variant, entry) {
     elements.encyclopediaDetailGraphic,
     getVariantSpriteMeta(variant, displayTheme),
     {
-      imgClass: "encyclopedia-detail__img encyclopedia-card__img",
+      imgClass: "encyclopedia-detail__img",
       afterGraphicReady: () =>
         scheduleEncyclopediaAdultDisplay(
           elements.encyclopediaDetailGraphic,

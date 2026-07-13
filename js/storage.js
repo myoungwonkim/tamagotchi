@@ -43,7 +43,7 @@ export function normalizePet(raw) {
     pet.lastEvolutionStage = getEvolutionStage(pet).id;
   }
 
-  if (getEvolutionStage(pet).id === "adult" && !pet.adultVariantId) {
+  if (getEvolutionStage(pet).id === "adult") {
     resolveAdultVariant(pet);
   }
 

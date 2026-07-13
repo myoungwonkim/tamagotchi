@@ -1,6 +1,11 @@
 import { getAverageCare } from "./pet.js";
 
-import { getVariantEmojiForTheme, getVariantLabelForTheme, normalizeSpeciesTheme } from "./speciesThemes.js";
+import {
+  DEFAULT_SPECIES_THEME,
+  getVariantEmojiForTheme,
+  getVariantLabelForTheme,
+  normalizeSpeciesTheme,
+} from "./speciesThemes.js";
 
 export const ADULT_TIERS = {
   pretty: {
@@ -35,6 +40,32 @@ export const ADULT_VARIANTS = [
 
 const variantById = Object.fromEntries(ADULT_VARIANTS.map((v) => [v.id, v]));
 
+/** 테마별 진화·도감 비활성 슬롯 (등불어·해조어·산호 인어·늪 인어·반점 어인) */
+const DISABLED_EVOLUTION_VARIANT_IDS = {
+  deepsea: new Set(["golden", "farm"]),
+  mermaid: new Set(["golden", "standard", "plain", "sickly"]),
+  vent: new Set(["golden", "farm", "standard", "plain", "sickly"]),
+};
+
+export function isEvolutionVariantEnabled(variantId, speciesTheme) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  return !DISABLED_EVOLUTION_VARIANT_IDS[theme]?.has(variantId);
+}
+
+export function getPlayableVariants(speciesTheme) {
+  const theme = normalizeSpeciesTheme(speciesTheme);
+  return ADULT_VARIANTS.filter((v) => isEvolutionVariantEnabled(v.id, theme));
+}
+
+export function getPlayableVariantCount(speciesTheme) {
+  return getPlayableVariants(speciesTheme).length;
+}
+
+function getDefaultPlayableVariant(speciesTheme) {
+  const playable = getPlayableVariants(speciesTheme);
+  return playable[0] ?? ADULT_VARIANTS[0];
+}
+
 export function getCareSnapshot(pet) {
   const avg = (pet.hunger + pet.happiness + pet.cleanliness + pet.health) / 4;
   return {
@@ -60,15 +91,32 @@ export function determineTier(pet) {
   return "defective";
 }
 
-function pickVariantForTier(tier) {
-  const pool = ADULT_VARIANTS.filter((v) => v.tier === tier);
+function pickVariantForTier(tier, speciesTheme) {
+  const pool = getPlayableVariants(speciesTheme).filter((v) => v.tier === tier);
+  if (pool.length === 0) return null;
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+function pickVariantForPet(pet) {
+  const theme = normalizeSpeciesTheme(pet.speciesTheme);
+  const tier = determineTier(pet);
+  const tiers = ["pretty", "normal", "defective"];
+  const startIdx = Math.max(0, tiers.indexOf(tier));
+  for (let i = startIdx; i < tiers.length; i++) {
+    const variant = pickVariantForTier(tiers[i], theme);
+    if (variant) return variant;
+  }
+  const playable = getPlayableVariants(theme);
+  return playable[Math.floor(Math.random() * playable.length)];
+}
+
 export function getAdultVariant(variantId, speciesTheme) {
-  const base = variantById[variantId] ?? ADULT_VARIANTS.find((v) => v.id === "standard");
+  const theme = speciesTheme == null ? DEFAULT_SPECIES_THEME : normalizeSpeciesTheme(speciesTheme);
+  const base =
+    variantById[variantId] && isEvolutionVariantEnabled(variantId, theme)
+      ? variantById[variantId]
+      : getDefaultPlayableVariant(theme);
   if (speciesTheme == null) return base;
-  const theme = normalizeSpeciesTheme(speciesTheme);
   return {
     ...base,
     label: getVariantLabelForTheme(base.id, theme),
@@ -77,12 +125,20 @@ export function getAdultVariant(variantId, speciesTheme) {
 }
 
 export function resolveAdultVariant(pet) {
-  if (pet.adultVariantId) {
+  const theme = normalizeSpeciesTheme(pet.speciesTheme);
+  if (
+    pet.adultVariantId &&
+    isEvolutionVariantEnabled(pet.adultVariantId, theme)
+  ) {
     return getAdultVariant(pet.adultVariantId, pet.speciesTheme);
   }
 
-  const tier = determineTier(pet);
-  const variant = pickVariantForTier(tier);
+  if (pet.adultVariantId) {
+    pet.adultVariantId = null;
+    pet.adultCareSnapshot = null;
+  }
+
+  const variant = pickVariantForPet(pet);
   pet.adultVariantId = variant.id;
   pet.adultCareSnapshot = getCareSnapshot(pet);
   return getAdultVariant(variant.id, pet.speciesTheme);
@@ -101,6 +157,7 @@ export function getAdultTier(pet) {
   return getAdultVariant(pet.adultVariantId).tier;
 }
 
-export function getAllVariantIds() {
-  return ADULT_VARIANTS.map((v) => v.id);
+export function getAllVariantIds(speciesTheme) {
+  if (speciesTheme == null) return ADULT_VARIANTS.map((v) => v.id);
+  return getPlayableVariants(speciesTheme).map((v) => v.id);
 }

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2838">
+  <title>비활성 슬롯 · 물음표 플레이스홀더 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #101820; color: #d8e4ec; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #eef4f8; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 22px;
+    }
+    .notice strong { color: #58b8c8; }
+
+    h2 { font-size: 0.8125rem; color: #58b8c8; margin: 0 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .card {
+      background: #243040; border: 1px solid #3a5060; border-radius: 12px; padding: 12px;
+    }
+    .stage {
+      height: 180px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 120px; height: 120px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card .hook { font-size: 0.6875rem; color: #80deea; margin-bottom: 6px; font-weight: 600; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; }
+
+    .compare-row {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 28px;
+    }
+    .ref-card {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 10px;
+      padding: 10px; text-align: center; width: 140px;
+    }
+    .ref-card img {
+      width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated;
+      margin-bottom: 6px;
+    }
+    .ref-card span { font-size: 0.5625rem; color: #7a8898; display: block; }
+    .ref-card strong { font-size: 0.625rem; color: #c8d4dc; }
+
+    .phone {
+      max-width: 320px; margin: 0 auto 28px;
+      background: #1a2838; border: 2px solid #3a5060; border-radius: 18px;
+      overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    }
+    .phone-inner { padding: 12px; background: rgba(0,0,0,0.35); }
+    .dex-card {
+      background: #243040; border: 1px solid #3a5060; border-radius: 12px;
+      padding: 14px 12px 12px; text-align: center;
+    }
+    .dex-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 4px; }
+    .dex-sub { font-size: 0.75rem; color: #7a8898; margin-bottom: 12px; }
+    .ency-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px;
+    }
+    .enc-card {
+      background: #283848; border-radius: 10px; padding: 6px 4px 5px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .enc-card--disabled { opacity: 0.55; }
+    .enc-card--collected { opacity: 1; }
+    .enc-card img {
+      width: clamp(3rem, 15vw, 4rem); height: clamp(3rem, 15vw, 4rem);
+      object-fit: contain; image-rendering: pixelated;
+    }
+    .enc-name { font-size: 0.625rem; font-weight: 600; margin-top: 3px; }
+    .enc-species { font-size: 0.5625rem; color: #7a8898; }
+    .mock-label { font-size: 0.625rem; color: #58b8c8; text-align: center; margin-bottom: 8px; }
+
+    .tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; }
+    .tab {
+      font-size: 0.625rem; padding: 4px 10px; border-radius: 6px;
+      background: #304050; color: #88a0b0; border: none; cursor: pointer;
+    }
+    .tab[aria-selected="true"] { background: #58b8c8; color: #0a1418; font-weight: 700; }
+
+    .foot { font-size: 0.625rem; color: #6a7888; margin-top: 8px; }
+    code { color: #9fe6c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>비활성 슬롯 · 물음표 플레이스홀더 시안</h1>
+    <p class="lead">등불어·해조어·산호 인어·늪 인어·반점 어인 등 <strong>업데이트 예정 슬롯</strong>용 아이콘 후보 3종 · 스테이징</p>
+    <div class="notice">
+      기존 <code>locked.png</code>(미수집)와 구분되는 <strong>「아직 공개되지 않은 종」</strong> 전용 아이콘이 목표입니다.
+      유저가 “뭔가 숨겨져 있나?” 하고 궁금해할 만한 비주얼 훅을 넣었습니다.
+      256×256 픽셀아트 후보 · NEAREST 다운스케일 + 배경 제거 후처리.
+    </div>
+
+    <h2>기존 vs 신규 역할</h2>
+    <div class="compare-row">
+      <div class="ref-card">
+        <img src="../assets/sprites/ui/locked.png" alt="현재 locked">
+        <strong>현재 locked</strong>
+        <span>미수집 슬롯<br>자물쇠·보물함</span>
+      </div>
+      <div class="ref-card" style="border-color:#58b8c8;">
+        <img src="../assets/custom/mystery-slot-draft-1.png" alt="신규 mystery">
+        <strong>신규 mystery (후보)</strong>
+        <span>비활성·업데이트 예정<br>??? 종 슬롯</span>
+      </div>
+    </div>
+
+    <h2>시안 3종</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mystery-slot-draft-1.png" alt="시안 1"></div>
+        <h3>시안 1 · 신비의 알</h3>
+        <p class="hook">「안에서 뭔가 자라고 있어요」</p>
+        <p>어두운 진주 알·고치 안에 청록 발광 <strong>?</strong>가 맥동합니다. 해초 촉수가 감싸고 플랑크톤이 떠다녀요. 알 키우기·진화 기대감과 자연스럽게 연결됩니다.</p>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mystery-slot-draft-2.png" alt="시안 2"></div>
+        <h3>시안 2 · 잃어버린 탐사 일지</h3>
+        <p class="hook">「아직 기록되지 않은 종이 있어요」</p>
+        <p>찢어진 고대 항해 지도 조각 + 황금 <strong>?</strong> 도장. 희미한 생물 스케치가 지워져 있어 도감·탐사 일지 세계관과 잘 맞습니다. “언젠가 공개될 전설” 느낌.</p>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mystery-slot-draft-3.png" alt="시안 3"></div>
+        <h3>시안 3 · 심해의 눈</h3>
+        <p class="hook">「누군가 지켜보고 있어요」</p>
+        <p>조개 껍질 사이로 큰 눈이 반쯤 열리고, 홍채가 <strong>?</strong> 모양으로 빛납니다. 가장 강한 호기심 유발·기괴함. “이게 뭐지?” 반응이 클 수 있어요.</p>
+      </div>
+    </div>
+
+    <h2>도감 그리드 목업 (시안 1 적용 예)</h2>
+    <p class="mock-label">수집됨 + 비활성(???) + 미수집(locked) 혼합</p>
+    <div class="phone">
+      <div class="phone-inner">
+        <div class="dex-card">
+          <div class="dex-title">탐사 일지</div>
+          <div class="dex-sub">심해인어 · 수집 2 / 5</div>
+          <div class="tabs">
+            <button class="tab">심해어</button>
+            <button class="tab" aria-selected="true">심해인어</button>
+            <button class="tab" disabled>업데이트 예정</button>
+          </div>
+          <div class="ency-grid" id="mock-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:8px;">시안별 그리드 비교</h2>
+    <div class="grid" id="variant-grids"></div>
+
+    <p class="foot">
+      파일: <code>assets/custom/mystery-slot-draft-{1,2,3}.png</code> (256×256 RGBA)<br>
+      추천: <strong>시안 1</strong> — 알·진화 루프와 가장 잘 맞고, 도감 카드 작은 크기에서도 ? 실루엣이 읽힙니다.
+      시안 2는 스토리·도감 톤, 시안 3은 임팩트·기괴함이 강합니다.<br>
+      다음 단계: 선택 시안 픽셀 정돈 → <code>assets/sprites/ui/mystery.png</code> 반영 + 비활성 슬롯 도감 노출.
+    </p>
+  </div>
+  <script>
+    const DRAFTS = [
+      { id: 1, src: "../assets/custom/mystery-slot-draft-1.png", label: "시안 1 · 신비의 알" },
+      { id: 2, src: "../assets/custom/mystery-slot-draft-2.png", label: "시안 2 · 탐사 일지" },
+      { id: 3, src: "../assets/custom/mystery-slot-draft-3.png", label: "시안 3 · 심해의 눈" },
+    ];
+    const LOCKED = "../assets/sprites/ui/locked.png";
+    const FLUFFY = "../assets/sprites/mermaid/adult/fluffy.png";
+    const SCRUFFY = "../assets/sprites/mermaid/adult/scruffy.png";
+
+    const SLOTS = [
+      { type: "collected", img: FLUFFY, name: "소라", species: "소라 나팔 인어" },
+      { type: "disabled", draft: 1, name: "???", species: "업데이트 예정" },
+      { type: "disabled", draft: 1, name: "???", species: "업데이트 예정" },
+      { type: "collected", img: SCRUFFY, name: "능이", species: "능어" },
+      { type: "locked", img: LOCKED, name: "???", species: "???" },
+      { type: "disabled", draft: 1, name: "???", species: "업데이트 예정" },
+    ];
+
+    function cardHtml(slot, draftSrc) {
+      const cls = slot.type === "collected" ? "enc-card enc-card--collected"
+        : slot.type === "disabled" ? "enc-card enc-card--disabled" : "enc-card enc-card--disabled";
+      const img = slot.type === "disabled" ? draftSrc : slot.img;
+      return `<div class="${cls}">
+        <img src="${img}" alt="">
+        <span class="enc-name">${slot.name}</span>
+        <span class="enc-species">${slot.species}</span>
+      </div>`;
+    }
+
+    document.getElementById("mock-grid").innerHTML = SLOTS.map(s =>
+      cardHtml(s, DRAFTS[0].src)
+    ).join("");
+
+    document.getElementById("variant-grids").innerHTML = DRAFTS.map(d => `
+      <div class="card">
+        <p class="hook" style="margin-bottom:8px;">${d.label}</p>
+        <div class="ency-grid">${SLOTS.map(s => cardHtml(s, d.src)).join("")}</div>
+      </div>
+    `).join("");
+  </script>
+</body>
+</html>
