@@ -1,0 +1,15 @@
+# Reduce agent context noise (see token-saving workflow in chat).
+# To work on a ignored path, @-mention the file explicitly.
+
+# Staging sprites — 350+ PNG drafts; only assets/sprites/ belongs in game commits
+assets/custom/**
+
+# Archived duplicates of docs/assets
+_archive/**
+
+# Design preview HTML (81+ files); open via @ path when editing
+docs/*-preview.html
+
+# Local / OS noise
+.cursor/debug-*.log
+.DS_Store

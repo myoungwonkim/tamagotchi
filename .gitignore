@@ -9,3 +9,9 @@ dist/
 *.ait
 !assets/grac-submission/
 assets/grac-submission/_video_raw/
+
+# --- token / noise reduction (staging & archives) ---
+# Copy approved sprites into assets/sprites/ only; do not commit new custom drafts.
+assets/custom/
+_archive/
+.cursor/debug-*.log
