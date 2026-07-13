@@ -59,6 +59,10 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
       ids: ["plain-frame-1", "plain", "plain-frame-3"],
       frameMs: 1067,
     },
+    mermaid: {
+      ids: ["plain-frame-1", "plain", "plain-frame-3"],
+      frameMs: 1067,
+    },
   },
   sickly: {
     deepsea: {

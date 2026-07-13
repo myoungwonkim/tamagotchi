@@ -40,10 +40,14 @@ export const ADULT_VARIANTS = [
 
 const variantById = Object.fromEntries(ADULT_VARIANTS.map((v) => [v.id, v]));
 
-/** 테마별 진화·도감 비활성 슬롯 (등불어·해조어·산호 인어·늪 인어·반점 어인) */
+/**
+ * 테마별 진화·도감 비활성 슬롯.
+ * - 등불어(golden)·해조어(farm)·산호 인어(standard)·반점 어인(sickly) 비활성
+ * - 인면어(plain)는 심해인어 탭으로 이동: 심해어 비활성 / 심해인어 활성
+ */
 const DISABLED_EVOLUTION_VARIANT_IDS = {
-  deepsea: new Set(["golden", "farm"]),
-  mermaid: new Set(["golden", "standard", "plain", "sickly"]),
+  deepsea: new Set(["golden", "farm", "plain"]),
+  mermaid: new Set(["golden", "standard", "sickly"]),
   vent: new Set(["golden", "farm", "standard", "plain", "sickly"]),
 };
 
