@@ -586,7 +586,7 @@ function createEncyclopediaGraphic(
   if (locked || !meta) {
     setPetGraphic(
       wrap,
-      meta ?? getUiSpriteMeta("locked", "❓", "미수집"),
+      getUiSpriteMeta("locked", "❓", "미수집"),
       { imgClass: "encyclopedia-card__img" },
     );
     return wrap;

@@ -58,7 +58,7 @@ import {
   setGameActive,
   syncSleepControls,
   setAdsPromptApi,
-} from "./ui.js";
+} from "./ui.js?v=locked-seal-fix-2";
 import { getStoreCaptureScene, isStoreCaptureMode, setupStoreCapture } from "./storeCapture.js";
 import { isGracDemoMode, runGracDemo } from "./gracDemo.js";
 
