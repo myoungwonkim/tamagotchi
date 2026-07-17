@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <title>먹이 아이콘 · 새우 테마 시안</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #0a2028; color: #cfe6ec; padding: 20px 14px 48px; line-height: 1.5; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.0625rem; margin-bottom: 6px; }
+  .lead { font-size: 0.75rem; color: #8fb4c4; margin-bottom: 16px; }
+  .notice { background: #10303a; border: 1px solid #20464f; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.6875rem; color: #8fb4c4; margin-bottom: 20px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: #12313b; border: 1px solid #223f48; border-radius: 14px; padding: 14px; text-align: center; }
+  .card--pick { border-color: #45c8dc; box-shadow: 0 0 0 1px rgba(69,200,220,.25); }
+  .card h2 { font-size: 0.9rem; color: #eaf6fb; margin-bottom: 4px; }
+  .card .name { font-size: 0.5625rem; color: #45c8dc; margin-bottom: 4px; }
+  .card .desc { font-size: 0.65rem; color: #86a6b4; margin-bottom: 12px; min-height: 2.8em; }
+  .stage { height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 50% 40%, #16303c 0%, #0a1c24 70%);
+    box-shadow: inset 0 0 30px rgba(0,0,0,.4); margin-bottom: 10px; }
+  .stage img { width: 150px; height: 150px; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
+  .actionbar { display: flex; gap: 8px; justify-content: center; margin: 8px 0; }
+  .actionbar .btn { background: #17414e; border: 1px solid #2f5d6c; border-radius: 10px;
+    padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .actionbar .btn img { width: 40px; height: 40px; image-rendering: pixelated; object-fit: contain; }
+  .actionbar .btn span { font-size: 0.5rem; color: #8fb4c4; }
+  .row { display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 6px; }
+  .row .cell { text-align: center; }
+  .row img { image-rendering: pixelated; background: #1a3040; border-radius: 6px; padding: 4px; object-fit: contain; }
+  .row .big img { width: 48px; height: 48px; }
+  .row .sm img { width: 28px; height: 28px; }
+  .row span { display: block; font-size: 0.4375rem; color: #6a8898; margin-top: 3px; }
+  .compare { margin-top: 10px; padding-top: 10px; border-top: 1px solid #1e3444;
+    display: flex; gap: 8px; justify-content: center; align-items: center; }
+  .compare img { width: 36px; height: 36px; image-rendering: pixelated; background: #1a3040; border-radius: 4px; padding: 2px; object-fit: contain; }
+  .compare .vs { font-size: 0.5rem; color: #4a6070; }
+  .foot { margin-top: 20px; font-size: 0.625rem; color: #6a8898; }
+  code { color: #9fe6c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>먹이 아이콘 · 새우 테마 시안</h1>
+    <p class="lead">먹이(feed) 아이콘 · 새우 테마 3종 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">256×256 · 하단 액션바 배치 목업 + 48/28px 축소 가독성 + 현재 아이콘 비교. 승인 후 <code>assets/sprites/ui/feed.png</code> 반영.</div>
+    <div class="gallery">
+      <article class="card card--pick">
+        <h2>시안 1 · 통새우</h2>
+        <div class="name">핑크 통새우 · C자 곡선 · 광택 껍질</div>
+        <p class="desc">가장 직관적인 '먹이 = 새우'. 현행 톤과 잘 어울림</p>
+        <div class="stage"><img src="../assets/custom/ui-feed-shrimp-1.png" alt="시안 1 · 통새우"></div>
+        <div class="actionbar">
+          <div class="btn"><img src="../assets/custom/ui-feed-shrimp-1.png" alt=""><span>먹이</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/play.png" alt=""><span>놀이</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/clean.png" alt=""><span>청소</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/sleep.png" alt=""><span>재우기</span></div>
+        </div>
+        <div class="row">
+          <div class="cell big"><img src="../assets/custom/ui-feed-shrimp-1.png" alt=""><span>48px</span></div>
+          <div class="cell sm"><img src="../assets/custom/ui-feed-shrimp-1.png" alt=""><span>28px</span></div>
+        </div>
+        <div class="compare">
+          <img src="../assets/sprites/ui/feed.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/ui-feed-shrimp-1.png" alt="시안">
+        </div>
+      </article>
+      <article class="card">
+        <h2>시안 2 · 마른새우 알갱이</h2>
+        <div class="name">주황 건새우 펠릿 뭉치</div>
+        <p class="desc">사료 느낌 · 여러 마리 클러스터로 급이 이미지 강조</p>
+        <div class="stage"><img src="../assets/custom/ui-feed-shrimp-2.png" alt="시안 2 · 마른새우 알갱이"></div>
+        <div class="actionbar">
+          <div class="btn"><img src="../assets/custom/ui-feed-shrimp-2.png" alt=""><span>먹이</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/play.png" alt=""><span>놀이</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/clean.png" alt=""><span>청소</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/sleep.png" alt=""><span>재우기</span></div>
+        </div>
+        <div class="row">
+          <div class="cell big"><img src="../assets/custom/ui-feed-shrimp-2.png" alt=""><span>48px</span></div>
+          <div class="cell sm"><img src="../assets/custom/ui-feed-shrimp-2.png" alt=""><span>28px</span></div>
+        </div>
+        <div class="compare">
+          <img src="../assets/sprites/ui/feed.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/ui-feed-shrimp-2.png" alt="시안">
+        </div>
+      </article>
+      <article class="card">
+        <h2>시안 3 · 심해 발광새우</h2>
+        <div class="name">반투명 청백 새우 · 청록 발광점</div>
+        <p class="desc">심해 테마 일체감 · 바이오루미네선스</p>
+        <div class="stage"><img src="../assets/custom/ui-feed-shrimp-3.png" alt="시안 3 · 심해 발광새우"></div>
+        <div class="actionbar">
+          <div class="btn"><img src="../assets/custom/ui-feed-shrimp-3.png" alt=""><span>먹이</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/play.png" alt=""><span>놀이</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/clean.png" alt=""><span>청소</span></div>
+          <div class="btn"><img src="../assets/sprites/ui/sleep.png" alt=""><span>재우기</span></div>
+        </div>
+        <div class="row">
+          <div class="cell big"><img src="../assets/custom/ui-feed-shrimp-3.png" alt=""><span>48px</span></div>
+          <div class="cell sm"><img src="../assets/custom/ui-feed-shrimp-3.png" alt=""><span>28px</span></div>
+        </div>
+        <div class="compare">
+          <img src="../assets/sprites/ui/feed.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/ui-feed-shrimp-3.png" alt="시안">
+        </div>
+      </article>
+    </div>
+    <p class="foot">스테이징: <code>assets/custom/ui-feed-shrimp-{1,2,3}.png</code> · 후처리: <code>scripts/prepare_staging_ui.py</code></p>
+  </div>
+</body>
+</html>

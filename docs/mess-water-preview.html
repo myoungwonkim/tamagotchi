@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>탁한 물줄기 오버레이 프리뷰 (A/B/C)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0d1626; color: #e8f0ff; padding: 24px 16px 60px; min-height: 100dvh;
+    }
+    h1 { font-size: 18px; margin-bottom: 4px; }
+    .sub { font-size: 12px; color: #8fa6cc; margin-bottom: 18px; }
+    .tag { display: inline-block; margin-left: 8px; padding: 2px 8px; font-size: 10px;
+      background: #7a8b3a; color: #fff; border-radius: 4px; vertical-align: middle; }
+    .controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 20px;
+      background: #16233d; border: 1px solid #2c4272; border-radius: 10px; padding: 12px 14px; }
+    .controls label { font-size: 12px; display: flex; align-items: center; gap: 6px; }
+    .stage-wrap { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+    /* 실제 펫 화면 비율을 흉내낸 목업 */
+    .screen {
+      position: relative; width: 300px; height: 300px; border-radius: 16px; overflow: hidden;
+      border: 2px solid #2c4272;
+      background: radial-gradient(circle at 50% 35%, #1b3a5a 0%, #0e2035 55%, #071320 100%);
+    }
+    .screen .pet {
+      position: absolute; left: 50%; top: 54%; transform: translate(-50%,-50%);
+      width: 150px; height: 150px; image-rendering: pixelated; z-index: 1;
+    }
+    .screen .water {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      image-rendering: pixelated; opacity: 0; z-index: 2; pointer-events: none;
+    }
+    .screen .water.on { opacity: var(--water-opacity, 0.5); }
+    .caption { font-size: 11px; color: #8fa6cc; margin-top: 8px; text-align: center; }
+    .strip { display: flex; gap: 12px; }
+    .frame { text-align: center; }
+    .frame img { width: 120px; height: 120px; border-radius: 8px; border: 1px solid #2c4272;
+      image-rendering: pixelated; display: block; }
+    .frame span { display: block; font-size: 10px; color: #8fa6cc; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>탁한 물줄기 오버레이 <span class="tag">STAGING ONLY</span></h1>
+  <p class="sub">청결 스탯이 낮을 때 펫 화면에 탁한 물줄기가 흐르는 연출 — 3프레임(A/B/C) 개별 생성. fly/poop 대체안. 게임 미반영(오버레이 기준).</p>
+
+  <div class="controls">
+    <label>속도
+      <select id="speed">
+        <option value="250">빠름 (250ms)</option>
+        <option value="400" selected>보통 (400ms)</option>
+        <option value="650">느림 (650ms)</option>
+      </select>
+    </label>
+    <label>탁함(불투명도)
+      <input type="range" id="opacity" min="0.2" max="0.9" step="0.05" value="0.5">
+      <span id="opacity-val">0.50</span>
+    </label>
+    <label>블렌드
+      <select id="blend">
+        <option value="normal">normal</option>
+        <option value="multiply" selected>multiply</option>
+        <option value="overlay">overlay</option>
+        <option value="soft-light">soft-light</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="stage-wrap">
+    <div>
+      <div class="screen" id="screen">
+        <img class="pet" src="../assets/sprites/mermaid/adult/scruffy.png" alt="pet"
+             onerror="this.style.display='none'">
+        <img class="water" data-f="a" src="../assets/custom/mess-water-a.png" alt="">
+        <img class="water" data-f="b" src="../assets/custom/mess-water-b.png" alt="">
+        <img class="water" data-f="c" src="../assets/custom/mess-water-c.png" alt="">
+      </div>
+      <div class="caption">청결 낮음 — 물줄기 흐름 재생</div>
+    </div>
+
+    <div>
+      <div class="strip">
+        <div class="frame"><img src="../assets/custom/mess-water-a.png"><span>A</span></div>
+        <div class="frame"><img src="../assets/custom/mess-water-b.png"><span>B</span></div>
+        <div class="frame"><img src="../assets/custom/mess-water-c.png"><span>C</span></div>
+      </div>
+      <div class="caption">개별 프레임</div>
+    </div>
+  </div>
+
+  <script>
+    const FR = ["a","b","c"];
+    const screen = document.getElementById("screen");
+    const waters = [...screen.querySelectorAll(".water")];
+    const speedEl = document.getElementById("speed");
+    const opEl = document.getElementById("opacity");
+    const opVal = document.getElementById("opacity-val");
+    const blendEl = document.getElementById("blend");
+    let idx = 0, timer = null;
+
+    function applyStyle() {
+      screen.style.setProperty("--water-opacity", opEl.value);
+      opVal.textContent = Number(opEl.value).toFixed(2);
+      for (const w of waters) w.style.mixBlendMode = blendEl.value;
+    }
+    function render() {
+      waters.forEach((w) => w.classList.toggle("on", w.dataset.f === FR[idx]));
+    }
+    function tick() { render(); idx = (idx + 1) % FR.length; }
+    function restart() {
+      clearInterval(timer); idx = 0; render();
+      timer = setInterval(tick, parseInt(speedEl.value, 10));
+    }
+    speedEl.addEventListener("change", restart);
+    opEl.addEventListener("input", applyStyle);
+    blendEl.addEventListener("change", applyStyle);
+    applyStyle(); restart();
+  </script>
+</body>
+</html>

@@ -33,7 +33,7 @@ import {
   stopEncyclopediaAdultFrames,
 } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
-import { syncMessLayer, scheduleMessLayer, clearMessLayer } from "./mess.js";
+import { syncMessLayer, scheduleMessLayer, clearMessLayer, syncMessWater } from "./mess.js";
 import { AD_TUNING } from "./adConfig.js";
 import { canOfferRevive } from "./ads.js";
 import { getDeathSnapshot } from "./deathSnapshot.js";
@@ -325,6 +325,7 @@ export function renderPet(pet) {
 
   if (pet.isAlive) {
     scheduleMessLayer(elements.messLayer, pet.cleanliness, elements.petEvolution);
+    syncMessWater(elements.messLayer, pet.cleanliness, elements.petEvolution);
   } else {
     clearMessLayer(elements.messLayer);
   }

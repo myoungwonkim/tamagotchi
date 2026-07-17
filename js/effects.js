@@ -4,7 +4,7 @@ import {
   getAdultSpriteFrameConfig,
   hasAdultSpriteFrameAnimation,
 } from "./adultSpriteFrames.js";
-import { getSpriteUrlPng, getUiSpriteMeta, preloadSpriteMeta } from "./sprites.js";
+import { getSpriteUrl, getSpriteUrlPng, getUiSpriteMeta, preloadSpriteMeta } from "./sprites.js";
 import { normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -432,6 +432,22 @@ const CARE_ORBIT_ANGLE = {
   wake: 270,
 };
 
+/** 액션 케어 이펙트 3프레임(A/B/C) — assets/sprites/ui/action-frames/{action}-{a,b,c}.png */
+const CARE_FRAME_KEYS = ["feed", "play", "clean", "sleep", "wake"];
+const CARE_FRAME_SUFFIXES = ["a", "b", "c"];
+/** 프레임 간격(프리뷰 "느림"과 동일 ~350ms); 3프레임 1회 재생 후 마지막 유지 */
+const CARE_FRAME_STEP_MS = 350;
+/** 3프레임(A/B/C)이 모두 보이도록 최소 파티클 수명 = 프레임수 × 간격 + 버퍼 */
+const CARE_FRAME_MIN_LIFETIME_MS =
+  CARE_FRAME_SUFFIXES.length * CARE_FRAME_STEP_MS + 150;
+
+function getCareFrameSrcs(actionKey) {
+  if (!CARE_FRAME_KEYS.includes(actionKey)) return null;
+  return CARE_FRAME_SUFFIXES.map((suffix) =>
+    getSpriteUrl("ui", `action-frames/${actionKey}-${suffix}`),
+  );
+}
+
 let activeCareFx = 0;
 const MAX_CARE_FX = 3;
 
@@ -487,6 +503,7 @@ function orbitPoint(angleDeg, anchorEl, layerEl, particleHalf) {
 }
 
 function createCareParticle(actionKey, spriteId, angleDeg, anchorEl, layerEl) {
+  const frames = getCareFrameSrcs(actionKey);
   const meta = getUiSpriteMeta(spriteId, CARE_FALLBACK[spriteId] ?? "✨", actionKey);
   const particle = document.createElement("span");
   particle.className = `care-fx__particle care-fx__particle--${actionKey}`;
@@ -495,7 +512,7 @@ function createCareParticle(actionKey, spriteId, angleDeg, anchorEl, layerEl) {
   img.className = "care-fx__img";
   img.alt = "";
   img.decoding = "async";
-  img.src = meta.src;
+  img.src = frames ? frames[0] : meta.src;
 
   const fallback = document.createElement("span");
   fallback.className = "care-fx__fallback";
@@ -521,6 +538,21 @@ function createCareParticle(actionKey, spriteId, angleDeg, anchorEl, layerEl) {
     img.onerror();
   } else {
     positionParticle(particle, angleDeg, anchorEl, layerEl);
+  }
+
+  // 3프레임(A/B/C) 순차 재생 후 마지막 프레임 유지; reduced motion 시 A 고정
+  if (frames && frames.length > 1 && !prefersReducedMotion()) {
+    for (const src of frames) preloadSpriteMeta({ src });
+    let next = 1;
+    particle._frameTimer = setInterval(() => {
+      if (next >= frames.length) {
+        clearInterval(particle._frameTimer);
+        particle._frameTimer = null;
+        return;
+      }
+      img.src = frames[next];
+      next += 1;
+    }, CARE_FRAME_STEP_MS);
   }
 
   return particle;
@@ -551,13 +583,27 @@ export function playCareEffect(actionKey, containerEl) {
   if (!anchor) return;
 
   const reduced = prefersReducedMotion();
+  const animatesFrames = !reduced && Boolean(getCareFrameSrcs(actionKey));
   activeCareFx += 1;
   const particle = createCareParticle(actionKey, actionKey, angle, anchor, layer);
 
+  let cleaned = false;
   const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    if (particle._frameTimer) {
+      clearInterval(particle._frameTimer);
+      particle._frameTimer = null;
+    }
     particle.remove();
     activeCareFx = Math.max(0, activeCareFx - 1);
   };
   particle.addEventListener("animationend", cleanup, { once: true });
-  setTimeout(cleanup, reduced ? 120 : 900);
+  // 프레임 애니메이션 시 A/B/C가 모두 보이도록 최소 수명 보장
+  const lifetime = reduced
+    ? 120
+    : animatesFrames
+      ? CARE_FRAME_MIN_LIFETIME_MS
+      : 900;
+  setTimeout(cleanup, lifetime);
 }

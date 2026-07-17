@@ -1,5 +1,8 @@
 import { isSpritesEnabled, SPRITE_BASE, preloadSpriteMeta } from "./sprites.js";
 
+/** poop·fly 더러움 오브젝트 중지 — 청결 저하 연출은 "탁한 물줄기" 오버레이로 대체 */
+export const MESS_ENABLED = false;
+
 /** 청결 이 값 미만일 때 더러움 오브젝트가 단계별로 나타남 */
 export const MESS_THRESHOLD = 70;
 /** threshold 아래로 이 간격마다 오브젝트 1개 추가 */
@@ -45,7 +48,102 @@ function getMessSpriteUrl(id) {
   return v ? `${base}?v=${v}&${bust}` : `${base}?${bust}`;
 }
 
+/* ===== 탁한 물줄기 오버레이 (청결 저하 연출; fly/poop 대체) ===== */
+/** 청결 < MESS_THRESHOLD일 때 펫 화면에 흐르는 3프레임 오버레이 */
+const WATER_ENABLED = true;
+const WATER_FRAMES = ["a", "b", "c"];
+const WATER_FRAME_MS = 400; // 보통
+const WATER_OPACITY = 0.3; // 탁함
+const WATER_FADE_MS = 650;
+
+let waterTimer = 0;
+let waterFrameIdx = 0;
+let waterImgRef = null;
+
+function getWaterSpriteUrl(frame) {
+  const base = `${SPRITE_BASE}/ui/mess-water/${frame}.png`;
+  const v = getAppVersion();
+  return v ? `${base}?v=${v}` : base;
+}
+
+function waterReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function stopWater() {
+  if (waterTimer) {
+    clearInterval(waterTimer);
+    waterTimer = 0;
+  }
+  waterImgRef = null;
+}
+
+function startWater(img) {
+  const frames = WATER_FRAMES.map(getWaterSpriteUrl);
+  if (waterReducedMotion()) {
+    stopWater();
+    img.src = frames[0];
+    return;
+  }
+  if (waterTimer && waterImgRef === img) return;
+  stopWater();
+  waterImgRef = img;
+  waterFrameIdx = 0;
+  const tick = () => {
+    if (!img.isConnected) {
+      stopWater();
+      return;
+    }
+    img.src = frames[waterFrameIdx % frames.length];
+    waterFrameIdx += 1;
+  };
+  tick();
+  waterTimer = setInterval(tick, WATER_FRAME_MS);
+}
+
+function hideWater(img) {
+  stopWater();
+  if (!img || img.dataset.hiding === "1") return;
+  img.dataset.hiding = "1";
+  img.style.opacity = "0";
+  setTimeout(() => {
+    if (img.dataset.hiding === "1") img.remove();
+  }, WATER_FADE_MS);
+}
+
+/** 청결 수치에 맞춰 탁한 물줄기 오버레이 표시/숨김 */
+export function syncMessWater(layerEl, cleanliness, anchorRootEl) {
+  if (!layerEl) return;
+  const stageId = getMessStageId(anchorRootEl);
+  const show = WATER_ENABLED && stageId !== "egg" && cleanliness < MESS_THRESHOLD;
+  let img = layerEl.querySelector("img.mess-water");
+
+  if (!show) {
+    hideWater(img);
+    return;
+  }
+
+  if (!img) {
+    img = document.createElement("img");
+    img.className = "mess-water";
+    img.alt = "";
+    img.setAttribute("aria-hidden", "true");
+    img.draggable = false;
+    img.style.opacity = "0";
+    layerEl.append(img);
+  }
+  delete img.dataset.hiding;
+  startWater(img);
+  requestAnimationFrame(() => {
+    img.style.opacity = String(WATER_OPACITY);
+  });
+}
+
 export function getMessCount(cleanliness, stageId) {
+  if (!MESS_ENABLED) return 0;
   if (stageId === "egg") return 0;
   if (cleanliness >= MESS_THRESHOLD) return 0;
   return Math.min(MAX_MESS, Math.ceil((MESS_THRESHOLD - cleanliness) / MESS_STEP));
@@ -360,12 +458,19 @@ export function scheduleMessLayer(layerEl, cleanliness, anchorRootEl) {
 
 export function clearMessLayer(layerEl) {
   if (!layerEl) return;
+  stopWater();
   layerEl.replaceChildren();
   layoutRetries = 0;
   resizeObserver?.disconnect();
 }
 
 export function preloadMessSprites() {
+  if (WATER_ENABLED && isSpritesEnabled()) {
+    for (const frame of WATER_FRAMES) {
+      preloadSpriteMeta({ src: getWaterSpriteUrl(frame) });
+    }
+  }
+  if (!MESS_ENABLED) return;
   if (!isSpritesEnabled()) return;
   for (const type of MESS_TYPES) {
     preloadSpriteMeta({ src: getMessSpriteUrl(type.id) });

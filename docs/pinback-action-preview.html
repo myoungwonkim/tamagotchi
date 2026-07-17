@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>핀백 어인 액션 시안 (A/B/C)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #10131c; color: #e8ecf5; padding: 24px 16px 60px; min-height: 100dvh; }
+    h1 { font-size: 18px; margin-bottom: 4px; }
+    .sub { font-size: 12px; color: #97a1b8; margin-bottom: 18px; }
+    .tag { display:inline-block; margin-left:8px; padding:2px 8px; font-size:10px;
+      background:#a03c6e; color:#fff; border-radius:4px; vertical-align:middle; }
+    .controls { display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-bottom:20px;
+      background:#1a1f2e; border:1px solid #2c3448; border-radius:10px; padding:12px 14px; }
+    .controls label { font-size:12px; display:flex; align-items:center; gap:6px; }
+    .ref { display:flex; align-items:center; gap:14px; margin-bottom:22px;
+      background:#1a1f2e; border:1px solid #2c3448; border-radius:10px; padding:12px 14px; }
+    .ref img { width:96px; height:96px; image-rendering:pixelated; }
+    .ref .cap { font-size:12px; color:#97a1b8; }
+    .rows { display:flex; flex-direction:column; gap:16px; }
+    .card { background:#1a1f2e; border:1px solid #2c3448; border-radius:12px;
+      padding:16px; display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+    .card h2 { width:130px; font-size:14px; }
+    .card h2 small { display:block; color:#97a1b8; font-size:11px; font-weight:400; margin-top:2px; }
+    .play { width:150px; height:150px; border-radius:10px; position:relative;
+      border:1px solid #2c3448; background:#0b0e16; }
+    .play img { position:absolute; inset:0; width:100%; height:100%;
+      image-rendering:pixelated; opacity:0; }
+    .play img.on { opacity:1; }
+    .strip { display:flex; gap:10px; }
+    .frame { text-align:center; }
+    .frame img { width:96px; height:96px; border-radius:8px; border:1px solid #2c3448;
+      image-rendering:pixelated; display:block; }
+    .frame span { display:block; font-size:10px; color:#97a1b8; margin-top:4px; }
+    body.chk .play, body.chk .frame img, body.chk .ref img {
+      background-image:
+        linear-gradient(45deg,#3a3f4c 25%,transparent 25%,transparent 75%,#3a3f4c 75%),
+        linear-gradient(45deg,#3a3f4c 25%,#22252e 25%,#22252e 75%,#3a3f4c 75%);
+      background-size:16px 16px; background-position:0 0,8px 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>핀백 어인 — 액션 시안 <span class="tag">STAGING ONLY</span></h1>
+  <p class="sub">grumpy(인어) · 액션 3종 A/B/C, 각 3프레임 개별 생성 · scruffy bbox 정렬 · 게임 미반영</p>
+
+  <div class="controls">
+    <label>속도
+      <select id="speed">
+        <option value="150">빠름 (150ms)</option>
+        <option value="220" selected>보통 (220ms)</option>
+        <option value="350">느림 (350ms)</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="chk"> 체커보드 배경(투명 QA)</label>
+    <label><input type="checkbox" id="pingpong"> 왕복 재생</label>
+  </div>
+
+  <div class="ref">
+    <img src="../assets/sprites/mermaid/adult/grumpy.png" alt="현재 핀백 어인">
+    <div class="cap">현재 게임 스프라이트 (참고)</div>
+  </div>
+
+  <div class="rows" id="rows"></div>
+
+  <script>
+    const ACTIONS = [
+      { key:"acta", ko:"A · 포효", en:"roar / threat" },
+      { key:"actb", ko:"B · 걷기", en:"stride walk" },
+      { key:"actc", ko:"C · 꼬리치기", en:"tail fin swipe" },
+    ];
+    const FR = [1,2,3];
+    const rows = document.getElementById("rows");
+    const players = [];
+    for (const a of ACTIONS) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const imgs = FR.map(n=>`<img src="../assets/custom/pinback-${a.key}-${n}.png" alt="">`).join("");
+      const strip = FR.map(n=>`<div class="frame"><img src="../assets/custom/pinback-${a.key}-${n}.png"><span>${n}</span></div>`).join("");
+      card.innerHTML = `<h2>${a.ko}<small>${a.en}</small></h2>
+        <div class="play">${imgs}</div><div class="strip">${strip}</div>`;
+      rows.appendChild(card);
+      players.push(card.querySelector(".play"));
+    }
+    let idx=0, dir=1, timer=null;
+    const speedEl=document.getElementById("speed");
+    const pingEl=document.getElementById("pingpong");
+    document.getElementById("chk").addEventListener("change",e=>document.body.classList.toggle("chk",e.target.checked));
+    function render(){ for(const p of players){ p.querySelectorAll("img").forEach((im,i)=>im.classList.toggle("on",i===idx)); } }
+    function tick(){ render(); if(pingEl.checked){ idx+=dir; if(idx===FR.length-1||idx===0) dir*=-1; } else { idx=(idx+1)%FR.length; } }
+    function restart(){ clearInterval(timer); idx=0; dir=1; render(); timer=setInterval(tick,parseInt(speedEl.value,10)); }
+    speedEl.addEventListener("change",restart);
+    pingEl.addEventListener("change",restart);
+    restart();
+  </script>
+</body>
+</html>

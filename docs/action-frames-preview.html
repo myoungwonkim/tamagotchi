@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>액션 프레임 프리뷰 (A/B/C)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #12203a;
+      color: #e8f0ff;
+      padding: 24px 16px 60px;
+      min-height: 100dvh;
+    }
+    h1 { font-size: 18px; margin-bottom: 4px; }
+    .sub { font-size: 12px; color: #8fa6cc; margin-bottom: 20px; }
+    .tag {
+      display: inline-block; margin-left: 8px; padding: 2px 8px;
+      font-size: 10px; background: #ff5470; color: #fff; border-radius: 4px;
+      vertical-align: middle;
+    }
+    .controls { margin-bottom: 20px; }
+    .controls label { font-size: 12px; margin-right: 12px; }
+    .actions { display: flex; flex-direction: column; gap: 16px; }
+    .card {
+      background: #1b2c4d; border: 1px solid #2c4272; border-radius: 12px;
+      padding: 16px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .card h2 { font-size: 15px; width: 90px; }
+    .card h2 small { display: block; color: #8fa6cc; font-size: 11px; font-weight: 400; }
+    .play {
+      width: 96px; height: 96px; background: #0c1526;
+      border: 1px solid #2c4272; border-radius: 10px; position: relative;
+    }
+    .play img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      image-rendering: pixelated; opacity: 0;
+    }
+    .play img.on { opacity: 1; }
+    .strip { display: flex; gap: 10px; }
+    .frame { text-align: center; }
+    .frame img {
+      width: 72px; height: 72px; background: #0c1526;
+      border: 1px solid #2c4272; border-radius: 8px; image-rendering: pixelated;
+    }
+    .frame span { display: block; font-size: 10px; color: #8fa6cc; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>액션 애니메이션 프레임 <span class="tag">STAGING ONLY</span></h1>
+  <p class="sub">먹이 · 놀이 · 청소 · 재우기 · 깨우기 — 각 3프레임(A/B/C), 프레임별 개별 생성. 게임 미반영.</p>
+
+  <div class="controls">
+    <label>속도
+      <select id="speed">
+        <option value="120">빠름 (120ms)</option>
+        <option value="200" selected>보통 (200ms)</option>
+        <option value="350">느림 (350ms)</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="pingpong"> 왕복 재생</label>
+  </div>
+
+  <div class="actions" id="actions"></div>
+
+  <script>
+    const ACTIONS = [
+      { key: "feed",  ko: "먹이",   en: "shrimp eaten" },
+      { key: "play",  ko: "놀이",   en: "ball bounce" },
+      { key: "clean", ko: "청소",   en: "broom sweep" },
+      { key: "sleep", ko: "재우기", en: "moon + Zzz" },
+      { key: "wake",  ko: "깨우기", en: "sun rays" },
+    ];
+    const FR = ["a", "b", "c"];
+    const root = document.getElementById("actions");
+    const players = [];
+
+    for (const a of ACTIONS) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const imgs = FR.map(f =>
+        `<img src="../assets/custom/ui-anim-${a.key}-${f}.png" alt="${a.ko} ${f}">`
+      ).join("");
+      const strip = FR.map(f =>
+        `<div class="frame"><img src="../assets/custom/ui-anim-${a.key}-${f}.png"><span>${f.toUpperCase()}</span></div>`
+      ).join("");
+      card.innerHTML = `
+        <h2>${a.ko}<small>${a.en}</small></h2>
+        <div class="play" data-key="${a.key}">${imgs}</div>
+        <div class="strip">${strip}</div>`;
+      root.appendChild(card);
+      players.push(card.querySelector(".play"));
+    }
+
+    let idx = 0, dir = 1, timer = null;
+    const speedEl = document.getElementById("speed");
+    const pingEl = document.getElementById("pingpong");
+
+    function render() {
+      for (const p of players) {
+        const frames = p.querySelectorAll("img");
+        frames.forEach((im, i) => im.classList.toggle("on", i === idx));
+      }
+    }
+    function tick() {
+      render();
+      if (pingEl.checked) {
+        idx += dir;
+        if (idx === FR.length - 1 || idx === 0) dir *= -1;
+      } else {
+        idx = (idx + 1) % FR.length;
+      }
+    }
+    function restart() {
+      clearInterval(timer);
+      idx = 0; dir = 1; render();
+      timer = setInterval(tick, parseInt(speedEl.value, 10));
+    }
+    speedEl.addEventListener("change", restart);
+    pingEl.addEventListener("change", restart);
+    restart();
+  </script>
+</body>
+</html>

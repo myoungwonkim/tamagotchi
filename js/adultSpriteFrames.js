@@ -75,6 +75,10 @@ export const ADULT_SPRITE_FRAME_CONFIG = {
       ids: ["grumpy-frame-1", "grumpy", "grumpy-frame-3"],
       frameMs: 667,
     },
+    mermaid: {
+      ids: ["grumpy-frame-1", "grumpy", "grumpy-frame-3"],
+      frameMs: 260,
+    },
   },
 };
 
