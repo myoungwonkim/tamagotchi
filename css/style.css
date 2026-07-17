@@ -1559,14 +1559,34 @@ img.pet-sprite[hidden] {
 }
 
 .overlay-btn--reward {
-  background: #123f4a;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0e3340;
   color: #a8e8f0;
-  border: 1px solid #45c8dc;
+  border: 1px solid var(--accent);
+  border-left: 4px solid var(--accent);
   margin-bottom: 8px;
 }
 
+.overlay-btn--reward::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(126, 230, 244, 0.28), transparent);
+  transform: skewX(-18deg);
+  animation: shimmer 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
 .overlay-btn--reward:active {
-  background: #0e3340;
+  background: #0b2a35;
 }
 
 .reward-prompts {
@@ -1577,10 +1597,13 @@ img.pet-sprite[hidden] {
 }
 
 .reward-prompt-btn {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   min-height: 40px;
   padding: 8px 12px;
   border: 1px solid #23505b;
+  border-left: 4px solid var(--accent);
   border-radius: 8px;
   background: #0e2c35;
   color: #a8e0e8;
@@ -1589,10 +1612,59 @@ img.pet-sprite[hidden] {
   font-weight: var(--weight-semibold);
   cursor: pointer;
   touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.reward-prompt-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(126, 230, 244, 0.22), transparent);
+  transform: skewX(-18deg);
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .reward-prompt-btn:active {
   background: #0a2028;
+}
+
+.reward-chip {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(69, 200, 220, 0.16);
+  color: #7fe6f4;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+
+.reward-prompt-btn .reward-chip {
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+@keyframes shimmer {
+  0% { left: -60%; }
+  55% { left: 130%; }
+  100% { left: 130%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-btn--reward::after,
+  .reward-prompt-btn::after {
+    animation: none;
+  }
 }
 
 @keyframes bounce {
