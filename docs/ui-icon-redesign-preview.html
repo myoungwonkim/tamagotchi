@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UI 아이콘 수정 시안 (sound / 도감)</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px 20px 60px;
+    background: #0e1620; color: #e8f0f7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .tag { font-size: .62rem; font-weight: 800; letter-spacing: .06em;
+    background: #ff5470; color: #1a0008; padding: 3px 8px; border-radius: 999px; }
+  .sub { color: #93a7b8; margin: 0 0 26px; font-size: .9rem; line-height: 1.5; max-width: 760px; }
+  .note { color: #f2c14e; font-size: .82rem; margin: -14px 0 26px; }
+  .icon { max-width: 940px; margin: 0 auto 34px; background: #16212e;
+    border: 1px solid #24333f; border-radius: 16px; padding: 20px 22px; }
+  .icon h2 { margin: 0 0 4px; font-size: 1.1rem; }
+  .icon h2 small { color: #8aa; font-weight: 500; font-size: .78rem; margin-left: 8px; }
+  .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
+  .cell { background: #0e1620; border: 1px solid #22303c; border-radius: 12px;
+    padding: 14px 10px 12px; text-align: center; }
+  .cell.current { border-color: #3a4b59; background: #101b26; }
+  .cell .label { font-size: .78rem; font-weight: 700; margin-bottom: 12px; color: #cfe0ee; }
+  .cell.current .label { color: #8aa0b2; }
+  .cell .label b { color: #6fd3ff; }
+  /* large preview */
+  .big { width: 96px; height: 96px; margin: 0 auto 14px; display: grid; place-items: center;
+    background: #1b2836; border-radius: 12px; }
+  .big img { width: 84px; height: 84px; object-fit: contain; image-rendering: pixelated; }
+  /* actual header size chip (~44px on dark header) */
+  .chips { display: flex; gap: 10px; justify-content: center; align-items: center; }
+  .chip { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 10px; }
+  .chip.dark { background: #0b1218; border: 1px solid #26333d; }
+  .chip.header { background: linear-gradient(180deg,#13202c,#0d1720); border: 1px solid #26333d; }
+  .chip img { width: 30px; height: 30px; object-fit: contain; image-rendering: pixelated; }
+  .chips .cap { font-size: .6rem; color: #6a7c8b; display: block; margin-top: 3px; }
+  .chipwrap { display: inline-flex; flex-direction: column; align-items: center; }
+  @media (max-width: 720px) { .row { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+  <h1>UI 아이콘 수정 시안 <span class="tag">STAGING ONLY</span></h1>
+  <p class="sub">
+    소리 켜기(sound-on) · 소리 끄기(sound-off) · 도감(encyclopedia) 아이콘을 더 크고 직관적으로 재설계한 시안입니다.
+    각 아이콘마다 <b>현재</b> vs <b>시안 1/2/3</b>. 위쪽 큰 미리보기(96px)와 아래 실제 헤더 크기(44px, 어두운 배경) 두 가지로 비교하세요.
+    게임 미반영 · 커밋 없음.
+  </p>
+  <p class="note">※ 도감 시안 3에는 생성 과정에서 일본어 "モンスター図鑑" 글자가 들어갔습니다. 채택 시 글자 제거/한글화하여 다시 생성합니다.</p>
+
+  <div id="root"></div>
+
+  <script>
+    const V = "uiredesign1";
+    const ICONS = [
+      { key: "sound-on",     ko: "소리 켜기", en: "sound-on",     desc: "스피커 + 음파 3개(직관적 ON)" },
+      { key: "sound-off",    ko: "소리 끄기", en: "sound-off",    desc: "스피커 + 뮤트 표시(X · 사선 · 금지)" },
+      { key: "encyclopedia", ko: "도감",     en: "encyclopedia", desc: "생물 수집 도감(펼친 책 · 로그북 · 인덱스)" },
+    ];
+    const root = document.getElementById("root");
+
+    for (const ic of ICONS) {
+      const sec = document.createElement("div");
+      sec.className = "icon";
+
+      const cells = [];
+      // current
+      cells.push(`
+        <div class="cell current">
+          <div class="label">현재</div>
+          <div class="big"><img src="../assets/sprites/ui/${ic.key}.png?v=${V}" alt="현재 ${ic.ko}"></div>
+          <div class="chips">
+            <span class="chipwrap"><span class="chip dark"><img src="../assets/sprites/ui/${ic.key}.png?v=${V}"></span><span class="cap">44px</span></span>
+          </div>
+        </div>`);
+      // variants
+      for (let n = 1; n <= 3; n++) {
+        cells.push(`
+          <div class="cell">
+            <div class="label">시안 <b>${n}</b></div>
+            <div class="big"><img src="../assets/custom/${ic.key}-redesign-${n}.png?v=${V}" alt="${ic.ko} 시안 ${n}"></div>
+            <div class="chips">
+              <span class="chipwrap"><span class="chip header"><img src="../assets/custom/${ic.key}-redesign-${n}.png?v=${V}"></span><span class="cap">44px</span></span>
+            </div>
+          </div>`);
+      }
+
+      sec.innerHTML = `
+        <h2>${ic.ko} <small>${ic.en} · ${ic.desc}</small></h2>
+        <div class="row">${cells.join("")}</div>`;
+      root.appendChild(sec);
+    }
+  </script>
+</body>
+</html>

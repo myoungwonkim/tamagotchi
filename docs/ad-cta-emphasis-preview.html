@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>광고 보기 CTA 강조 시안 · abysspet</title>
+<style>
+  /* ===== 게임 실제 팔레트 (css/style.css :root 에서 복사) ===== */
+  :root {
+    --bg: #0a2028;
+    --surface: #0f2f39;
+    --stats-surface: #0c2831;
+    --text: #cfe6ec;
+    --text-muted: #6a8b94;
+    --accent: #45c8dc;
+    --accent-dark: #2ba6bc;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+    --radius: 12px;
+    --border-subtle: #20464f;
+    --overlay-secondary: #123845;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --text-xl: 1.25rem;
+    --text-lg: 1rem;
+    --text-md: 0.875rem;
+    --text-sm: 0.8125rem;
+    --text-xs: 0.75rem;
+    --leading-tight: 1.2;
+    --leading-normal: 1.4;
+    --leading-relaxed: 1.45;
+    --weight-bold: 700;
+    --weight-semibold: 600;
+    --weight-medium: 500;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #103642 0%, transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+    padding: 32px 20px 72px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== 페이지 헤더 ===== */
+  .page-header {
+    max-width: 1100px;
+    margin: 0 auto 36px;
+    text-align: center;
+  }
+  .page-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(69, 200, 220, 0.12);
+    border: 1px solid var(--border-subtle);
+    color: var(--accent);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+  }
+  .page-header h1 {
+    font-size: 1.6rem;
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+  }
+  .page-header p {
+    max-width: 640px;
+    margin: 0 auto;
+    color: var(--text-muted);
+    font-size: var(--text-md);
+    line-height: var(--leading-relaxed);
+  }
+  .page-header .warn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: rgba(208, 146, 72, 0.12);
+    border: 1px solid #4a3a24;
+    color: #d6a45f;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+  }
+  code {
+    background: rgba(0, 0, 0, 0.25);
+    padding: 1px 5px;
+    border-radius: 5px;
+    font-size: 0.85em;
+  }
+
+  /* ===== 시안 그리드 ===== */
+  .variants {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: 900px) {
+    .variants { grid-template-columns: 1fr; max-width: 420px; }
+  }
+
+  .variant {
+    background: linear-gradient(180deg, rgba(15, 47, 57, 0.55) 0%, rgba(10, 32, 40, 0.55) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 20px 18px 24px;
+  }
+  .variant-head { margin-bottom: 18px; }
+  .variant-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #0a1820;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .variant h2 {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    margin: 0 0 6px;
+  }
+  .variant .desc {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .context-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    margin: 20px 0 10px;
+  }
+
+  /* ===== 목업: 게임오버 카드 ===== */
+  .mock-overlay {
+    background: rgba(6, 20, 26, 0.74);
+    border-radius: 14px;
+    padding: 20px 14px;
+  }
+  .overlay-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 22px 18px;
+    text-align: center;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+  .overlay-graphic {
+    font-size: 2.6rem;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .overlay-title {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    margin: 0 0 6px;
+  }
+  .overlay-text {
+    font-size: var(--text-md);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-relaxed);
+    color: var(--text-muted);
+    margin: 0 0 18px;
+  }
+
+  /* base overlay button (게임 원본) */
+  .overlay-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #0a1820;
+    font-family: inherit;
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-normal);
+    cursor: pointer;
+  }
+  .overlay-btn--secondary {
+    margin-top: 10px;
+    background: var(--overlay-secondary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text);
+  }
+
+  /* ===== 목업: 리워드 프롬프트 바 컨테이너 ===== */
+  .mock-reward-area {
+    background: var(--stats-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  /* base reward prompt button (게임 원본) */
+  .reward-prompt-btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid #23505b;
+    border-radius: 8px;
+    background: #0e2c35;
+    color: #a8e0e8;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* ============================================================
+     시안 A — 솔리드 강조 (Primary fill)
+     ============================================================ */
+  .cta-a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--accent);
+    color: #06222a;
+    border: none;
+    box-shadow: 0 6px 18px rgba(69, 200, 220, 0.32);
+  }
+  .cta-a:active { background: var(--accent-dark); }
+  .cta-a .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(6, 34, 42, 0.9);
+    color: #7fe6f4;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+  }
+  .cta-a .reward-hint {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    opacity: 0.85;
+  }
+
+  /* 리워드 바 버전 (A) */
+  .bar-a {
+    background: var(--accent);
+    color: #06222a;
+    border: none;
+  }
+  .bar-a .badge {
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: rgba(6, 34, 42, 0.9);
+    color: #7fe6f4;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+  }
+
+  /* ============================================================
+     시안 B — 리워드 글로우 (Animated glow/pulse)
+     ============================================================ */
+  .cta-b {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #45c8dc 0%, #2ba6bc 55%, #2f8fd6 100%);
+    color: #06222a;
+    border: none;
+    box-shadow: 0 0 0 0 rgba(69, 200, 220, 0.55);
+    animation: rewardPulse 2s ease-in-out infinite;
+  }
+  @keyframes rewardPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(69, 200, 220, 0.55), 0 6px 16px rgba(0,0,0,0.3); }
+    70%  { box-shadow: 0 0 0 12px rgba(69, 200, 220, 0), 0 6px 16px rgba(0,0,0,0.3); }
+    100% { box-shadow: 0 0 0 0 rgba(69, 200, 220, 0), 0 6px 16px rgba(0,0,0,0.3); }
+  }
+  .cta-b .gem { font-size: 1.15em; line-height: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25)); }
+  .cta-b .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(6, 34, 42, 0.88);
+    color: #8ef0ff;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+  }
+
+  /* 리워드 바 버전 (B) */
+  .bar-b {
+    background: linear-gradient(135deg, #1f6b7d 0%, #14505f 100%);
+    color: #d6f7ff;
+    border: 1px solid #45c8dc;
+    box-shadow: 0 0 0 0 rgba(69, 200, 220, 0.4);
+    animation: rewardPulseSoft 2.2s ease-in-out infinite;
+  }
+  @keyframes rewardPulseSoft {
+    0%   { box-shadow: 0 0 0 0 rgba(69, 200, 220, 0.4); }
+    70%  { box-shadow: 0 0 0 9px rgba(69, 200, 220, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(69, 200, 220, 0); }
+  }
+  .bar-b .pill {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(6, 34, 42, 0.7);
+    color: #8ef0ff;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+  }
+
+  /* ============================================================
+     시안 C — 하이라이트 아웃라인 (Accent outline + shimmer)
+     ============================================================ */
+  .cta-c {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #0e3340;
+    color: #a8e8f0;
+    border: 1px solid var(--accent);
+    border-left: 4px solid var(--accent);
+  }
+  .cta-c:active { background: #0b2a35; }
+  .cta-c::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(126, 230, 244, 0.28), transparent);
+    transform: skewX(-18deg);
+    animation: shimmer 2.8s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%   { left: -60%; }
+    55%  { left: 130%; }
+    100% { left: 130%; }
+  }
+  .cta-c .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(69, 200, 220, 0.16);
+    color: #7fe6f4;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+  }
+
+  /* 리워드 바 버전 (C) */
+  .bar-c {
+    position: relative;
+    overflow: hidden;
+    background: #0e2c35;
+    color: #a8e0e8;
+    border: 1px solid #23505b;
+    border-left: 4px solid var(--accent);
+  }
+  .bar-c::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(126, 230, 244, 0.22), transparent);
+    transform: skewX(-18deg);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  .bar-c .chip {
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: rgba(69, 200, 220, 0.16);
+    color: #7fe6f4;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+  }
+
+  .footnote {
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    line-height: var(--leading-relaxed);
+    text-align: center;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-b, .bar-b, .cta-c::after, .bar-c::after { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <header class="page-header">
+    <span class="page-badge">◆ 시안 PREVIEW</span>
+    <h1>광고 보기 CTA 강조 시안</h1>
+    <p>
+      abysspet의 “광고 보기(리워드)” 버튼 — 부활(<code>#btn-revive-ad</code>)과
+      응급 돌봄/방치 초기화 프롬프트 — 을 더 눈에 띄게 만들기 위한 3가지 디자인 방향입니다.
+      게임의 실제 딥씨 팔레트(teal/cyan on dark navy)를 그대로 사용해 실제 적용 느낌을 확인할 수 있습니다.
+    </p>
+    <span class="warn">⚠ 게임 미적용 · 시안 전용 (index.html / css / js 변경 없음)</span>
+  </header>
+
+  <div class="variants">
+
+    <!-- ===================== 시안 A ===================== -->
+    <section class="variant">
+      <div class="variant-head">
+        <span class="variant-tag">시안 A</span>
+        <h2>솔리드 강조 (Primary fill)</h2>
+        <p class="desc">
+          광고 CTA를 accent 컬러로 꽉 채운 솔리드 버튼으로 승격. “광고 ▶” 배지와
+          <b>+부활</b> 리워드 힌트를 붙여 가장 강한 시각적 무게를 줍니다.
+        </p>
+      </div>
+
+      <div class="context-label">① 게임오버 카드 — 광고 보고 부활</div>
+      <div class="mock-overlay">
+        <div class="overlay-card">
+          <div class="overlay-graphic">🫧</div>
+          <h3 class="overlay-title">치치가 떠났어요...</h3>
+          <p class="overlay-text">더 잘 돌봐줄 수 있을까요?</p>
+          <button type="button" class="overlay-btn cta-a">
+            <span class="badge">▶ 광고</span>
+            광고 보고 부활
+            <span class="reward-hint">+부활</span>
+          </button>
+          <button type="button" class="overlay-btn overlay-btn--secondary">새 펫 키우기</button>
+        </div>
+      </div>
+
+      <div class="context-label">② 리워드 바 — 광고 보고 응급 돌봄</div>
+      <div class="mock-reward-area">
+        <button type="button" class="reward-prompt-btn bar-a">
+          <span class="badge">▶ 광고</span>
+          광고 보고 응급 돌봄
+          <span class="reward-hint">+돌봄</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== 시안 B ===================== -->
+    <section class="variant">
+      <div class="variant-head">
+        <span class="variant-tag">시안 B</span>
+        <h2>리워드 글로우 (Animated glow)</h2>
+        <p class="desc">
+          그라디언트 필 + 은은하게 확산되는 글로우 펄스 애니메이션으로 움직임을 통해 시선을 끕니다.
+          💎 리워드 아이콘과 “리워드” 필을 함께 배치.
+        </p>
+      </div>
+
+      <div class="context-label">① 게임오버 카드 — 광고 보고 부활</div>
+      <div class="mock-overlay">
+        <div class="overlay-card">
+          <div class="overlay-graphic">🫧</div>
+          <h3 class="overlay-title">치치가 떠났어요...</h3>
+          <p class="overlay-text">더 잘 돌봐줄 수 있을까요?</p>
+          <button type="button" class="overlay-btn cta-b">
+            <span class="gem">💎</span>
+            광고 보고 부활
+            <span class="pill">리워드</span>
+          </button>
+          <button type="button" class="overlay-btn overlay-btn--secondary">새 펫 키우기</button>
+        </div>
+      </div>
+
+      <div class="context-label">② 리워드 바 — 광고 보고 응급 돌봄</div>
+      <div class="mock-reward-area">
+        <button type="button" class="reward-prompt-btn bar-b">
+          <span>🎁</span>
+          광고 보고 응급 돌봄
+          <span class="pill">리워드</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== 시안 C ===================== -->
+    <section class="variant">
+      <div class="variant-head">
+        <span class="variant-tag">시안 C</span>
+        <h2>하이라이트 아웃라인 (Outline + shimmer)</h2>
+        <p class="desc">
+          아웃라인 스타일을 유지하되 accent 좌측 바 + 은은한 shimmer 스윕과 리워드 칩을 더한
+          중간 강도 안. 가장 덜 공격적이면서도 눈에 띕니다.
+        </p>
+      </div>
+
+      <div class="context-label">① 게임오버 카드 — 광고 보고 부활</div>
+      <div class="mock-overlay">
+        <div class="overlay-card">
+          <div class="overlay-graphic">🫧</div>
+          <h3 class="overlay-title">치치가 떠났어요...</h3>
+          <p class="overlay-text">더 잘 돌봐줄 수 있을까요?</p>
+          <button type="button" class="overlay-btn cta-c">
+            <span class="chip">▶ 광고</span>
+            광고 보고 부활
+          </button>
+          <button type="button" class="overlay-btn overlay-btn--secondary">새 펫 키우기</button>
+        </div>
+      </div>
+
+      <div class="context-label">② 리워드 바 — 광고 보고 응급 돌봄</div>
+      <div class="mock-reward-area">
+        <button type="button" class="reward-prompt-btn bar-c">
+          <span class="chip">▶ 광고</span>
+          광고 보고 응급 돌봄
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="footnote">
+    비교 기준 — 현재 게임의 부활 버튼은 아웃라인/투명(<code>.overlay-btn--reward</code>: 배경 #123f4a, 테두리 #45c8dc)으로
+    솔리드 accent “새 펫 키우기” 버튼보다 시각적 무게가 낮습니다. 위 3안은 이 CTA의 강조 정도를 A(최고) → B(모션) → C(중간) 순으로 제안합니다.<br />
+    ※ 본 문서는 <code>docs/</code> 시안 프리뷰이며 게임 파일에는 반영되지 않았습니다.
+  </p>
+</body>
+</html>
