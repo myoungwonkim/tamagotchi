@@ -15,3 +15,6 @@ assets/grac-submission/_video_raw/
 assets/custom/
 _archive/
 .cursor/debug-*.log
+
+# GitHub Pages build artifact (assembled by .github/workflows/pages.yml)
+_site/

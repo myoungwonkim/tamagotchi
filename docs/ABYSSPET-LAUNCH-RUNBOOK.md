@@ -14,7 +14,7 @@
 | 영어 앱 이름 | Abyss Pet |
 | 부제 | 심해 가상펫 육성 및 수집 게임 |
 | 고객문의 | nolsoop.games@gmail.com |
-| 개인정보 URL | https://myoungwonkim.github.io/tamagotchi/docs/privacy.html |
+| 개인정보 URL | https://nolsoopgames.com/abysspet/privacy.html |
 | 스토어 에셋 | `assets/ait-store/` |
 | 스토어 문구 | [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md) |
 

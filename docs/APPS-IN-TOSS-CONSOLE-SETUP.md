@@ -59,7 +59,7 @@ npm run build:ait      # dist/ + .ait 번들
 ## 5. 검수 제출 서류
 
 - [ ] 등급분류증명서 (GRAC)
-- [ ] 개인정보 처리방침 URL: `https://myoungwonkim.github.io/tamagotchi/docs/privacy.html`
+- [ ] 개인정보 처리방침 URL: `https://nolsoopgames.com/abysspet/privacy.html`
 - [ ] 게임 설명·광고 노출 정책 → [MONETIZATION.md](./MONETIZATION.md) 링크
 
 ## 6. 출시 후
