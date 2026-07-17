@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a1028">
+  <title>인어 진화 5단계 · 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #1a1028; color: #d8cce8; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #ce93d8; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #8a7a98; margin-bottom: 16px; }
+    .notice {
+      background: #241838; border: 1px solid #4a3060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #a898b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #ce93d8; }
+    h2 {
+      font-size: 0.875rem; color: #ce93d8; margin: 24px 0 6px;
+      padding-bottom: 6px; border-bottom: 1px solid #4a3060;
+    }
+    h2 span { font-size: 0.625rem; color: #7a6888; font-weight: normal; margin-left: 6px; }
+    .tier { font-size: 0.625rem; color: #f48fb1; margin-bottom: 12px; }
+    .current-row {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
+      background: #1c1430; border: 1px solid #4a3060; border-radius: 10px; padding: 12px;
+    }
+    .current-item { text-align: center; flex: 1 1 72px; min-width: 72px; }
+    .current-item img {
+      width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated;
+      background: repeating-conic-gradient(#2a2040 0% 25%, #221838 0% 50%) 50% / 8px 8px;
+      border-radius: 6px; padding: 4px;
+    }
+    .current-item span { display: block; font-size: 0.5rem; color: #7a6888; margin-top: 4px; }
+    .current-item .cur { color: #ce93d8; font-size: 0.4375rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card {
+      background: #201430; border: 1px solid #4a3060; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 180px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #2a1848 0%, #1a1030 60%, #100820 100%);
+      box-shadow: inset 0 0 34px rgba(120, 60, 160, 0.25);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 128px; height: 128px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #f3eaf8; margin-bottom: 4px; }
+    .card .name { font-size: 0.5625rem; color: #ce93d8; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #9a88a8; min-height: 2.8em; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 32px; height: 32px; image-rendering: pixelated;
+      background: #2a2040; border-radius: 4px; padding: 2px;
+    }
+    .thumbs span { display: block; font-size: 0.4375rem; color: #6a5878; margin-top: 2px; }
+    .compare {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-top: 8px; padding-top: 8px; border-top: 1px solid #342448;
+    }
+    .compare img {
+      width: 40px; height: 40px; image-rendering: pixelated;
+      background: #2a2040; border-radius: 4px; padding: 2px;
+    }
+    .compare .vs { font-size: 0.5rem; color: #5a4870; }
+    .compare .lbl { font-size: 0.4375rem; color: #7a6888; }
+    code { color: #f8bbd0; }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a5878; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>인어 진화 5단계 · 시안</h1>
+    <p class="lead">진주 알 · 꼬물 인어 · 어린 인어 · 청소년 인어 · 유령 — 단계별 3종 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      256×256 픽셀아트 · outline-protected flood · <code>assets/sprites/mermaid/evolution/</code> bbox 정렬.
+      승인 후 mermaid 테마 진화 스프라이트로 반영.
+    </div>
+
+    <h2>현재 게임 스프라이트 <span>비교 기준</span></h2>
+    <div class="current-row">
+      <div class="current-item"><img src="../assets/sprites/mermaid/evolution/egg.png" alt="진주 알"><span>진주 알</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/mermaid/evolution/baby.png" alt="꼬물 인어"><span>꼬물 인어</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/mermaid/evolution/child.png" alt="어린 인어"><span>어린 인어</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/mermaid/evolution/teen.png" alt="청소년 인어"><span>청소년 인어</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/mermaid/evolution/ghost.png" alt="유령"><span>유령</span><span class="cur">현재</span></div>
+    </div>
+    <h2>진주 알 <span>egg</span></h2>
+    <p class="tier">3종 · 조개+진주 / 거품 알 / 닫힌 패각</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-egg-1.png" alt="시안 1 · 열린 조개"></div>
+        <h3>시안 1 · 열린 조개</h3>
+        <div class="name">클래식 진주 알</div>
+        <p>열린 조개 속 크림색 진주, 주황 하이라이트 점</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-egg-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/egg.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-egg-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-egg-2.png" alt="시안 2 · 거품 알"></div>
+        <h3>시안 2 · 거품 알</h3>
+        <div class="name">투명 거품 뭉치</div>
+        <p>진주를 감싼 거품 군집, 청록 반짝임</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-egg-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/egg.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-egg-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-egg-3.png" alt="시안 3 · 닫힌 패각"></div>
+        <h3>시안 3 · 닫힌 패각</h3>
+        <div class="name">나선 패각 · 금빛 틈</div>
+        <p>닫힌 화려한 패각, 금빛 틈새에서 진주</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-egg-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/egg.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-egg-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>꼬물 인어 <span>baby</span></h2>
+    <p class="tier">3종 · 올챙이형 / 조개모자 / 해파리형</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-baby-1.png" alt="시안 1 · 올챙이형"></div>
+        <h3>시안 1 · 올챙이형</h3>
+        <div class="name">큰 머리 · 작은 꼬리</div>
+        <p>피치 머리와 청록 꼬리, 현행과 가장 가까움</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-baby-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/baby.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-baby-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-baby-2.png" alt="시안 2 · 조개모자"></div>
+        <h3>시안 2 · 조개모자</h3>
+        <div class="name">아기 + 조개 모자</div>
+        <p>말린 아기 인어, 작은 조개 모자</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-baby-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/baby.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-baby-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-baby-3.png" alt="시안 3 · 해파리형"></div>
+        <h3>시안 3 · 해파리형</h3>
+        <div class="name">해파리 벨</div>
+        <p>해파리 우산형 몸, 작은 얼굴</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-baby-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/baby.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-baby-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>어린 인어 <span>child</span></h2>
+    <p class="tier">3종 · 단발 / 별핀 / 쌍꼬리</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-child-1.png" alt="시안 1 · 단발"></div>
+        <h3>시안 1 · 단발</h3>
+        <div class="name">산호색 단발</div>
+        <p>피치 피부, 산호 단발, 청록 꼬리</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-child-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/child.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-child-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-child-2.png" alt="시안 2 · 별핀"></div>
+        <h3>시안 2 · 별핀</h3>
+        <div class="name">청록 머리 · 별핀</div>
+        <p>별 머리핀, 짧은 청록 머리</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-child-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/child.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-child-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-child-3.png" alt="시안 3 · 쌍꼬리"></div>
+        <h3>시안 3 · 쌍꼬리</h3>
+        <div class="name">쌍꼬리 어린 인어</div>
+        <p>짧은 쌍꼬리 머리, 갈래 꼬리지느러미</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-child-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/child.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-child-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>청소년 인어 <span>teen</span></h2>
+    <p class="tier">3종 · 긴 머리 / 해초머리 / 산호땋음</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-teen-1.png" alt="시안 1 · 긴 머리"></div>
+        <h3>시안 1 · 긴 머리</h3>
+        <div class="name">청보라 긴 머리</div>
+        <p>별 장식, 긴 머리와 큰 꼬리</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-teen-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/teen.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-teen-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-teen-2.png" alt="시안 2 · 해초머리"></div>
+        <h3>시안 2 · 해초머리</h3>
+        <div class="name">녹색 해초 머리</div>
+        <p>흘러내리는 해초 머리, 조개 목걸이</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-teen-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/teen.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-teen-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-teen-3.png" alt="시안 3 · 산호땋음"></div>
+        <h3>시안 3 · 산호땋음</h3>
+        <div class="name">산호 땋은 머리</div>
+        <p>산호색 땋은 머리, 조개 구슬 장식</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-teen-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/teen.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-teen-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>유령 <span>ghost</span></h2>
+    <p class="tier">3종 · 슬픈 유령 / 청록 영혼 / 뼈 유령</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-ghost-1.png" alt="시안 1 · 슬픈 유령"></div>
+        <h3>시안 1 · 슬픈 유령</h3>
+        <div class="name">크림-청 유령 · 눈물</div>
+        <p>창백한 인어 유령, 눈물 한 방울</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-ghost-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/ghost.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-ghost-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-ghost-2.png" alt="시안 2 · 청록 영혼"></div>
+        <h3>시안 2 · 청록 영혼</h3>
+        <div class="name">반투명 발광 영혼</div>
+        <p>청록 빛 실루엣, 희미한 오라</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-ghost-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/ghost.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-ghost-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/mermaid-evo-ghost-3.png" alt="시안 3 · 뼈 유령"></div>
+        <h3>시안 3 · 뼈 유령</h3>
+        <div class="name">뼈 골격 · 푸른 잔광</div>
+        <p>인어 뼈 골격 유령</p>
+        <div class="thumbs"><div><img src="../assets/custom/mermaid-evo-ghost-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/mermaid/evolution/ghost.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/mermaid-evo-ghost-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+    <p class="foot">
+      스테이징: <code>assets/custom/mermaid-evo-{stage}-{1,2,3}.png</code> ·
+      후처리: <code>scripts/prepare_staging_mermaid_evolution.py</code> ·
+      게임 파일 변경 없음
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>심해경 인어 · 좌우 왕복 액션 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 560px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 18px;
+    }
+    .notice strong { color: #58b8c8; }
+    .notice del { color: #c98a8a; }
+
+    /* ===== 무대 (게임 pet-area 느낌) ===== */
+    .stage {
+      position: relative;
+      height: 260px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 46px rgba(16, 74, 104, 0.35);
+      border: 1px solid #23414d;
+    }
+    .floor {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 46px;
+      background: linear-gradient(180deg, rgba(10,30,40,0) 0%, rgba(6,18,24,0.9) 100%);
+    }
+    .lane {
+      position: absolute; left: 0; right: 0; bottom: 52px; height: 1px;
+      background: rgba(128, 222, 234, 0.12);
+    }
+
+    /* 이동(위치) — translateX */
+    .walker {
+      position: absolute;
+      bottom: 40px;
+      left: 12px;
+      width: var(--sprite, 120px);
+      height: var(--sprite, 120px);
+      animation: walkX var(--dur, 5s) ease-in-out infinite;
+      will-change: transform;
+    }
+    /* 방향(반전) — scaleX. 오른쪽 이동 구간만 뒤집힘 */
+    .sim {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45));
+      animation: faceFlip var(--dur, 5s) linear infinite;
+      transform-origin: 50% 50%;
+    }
+    .bob { animation: bob calc(var(--dur, 5s) / 6) ease-in-out infinite; height: 100%; }
+
+    @keyframes walkX {
+      0%   { transform: translateX(0); }
+      50%  { transform: translateX(var(--travel, 300px)); }
+      100% { transform: translateX(0); }
+    }
+    /* 스프라이트 원본은 좌향(능어와 동일).
+       0~50% = 오른쪽 이동 → 반전(scaleX -1), 50~100% = 왼쪽 이동 → 원본(scaleX 1) */
+    @keyframes faceFlip {
+      0%, 49.99%  { transform: scaleX(-1); }
+      50%, 100%   { transform: scaleX(1); }
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    .paused .walker, .paused .sim, .paused .bob { animation-play-state: paused; }
+
+    /* ===== 정지 비교 (양방향) ===== */
+    .compare { display: flex; gap: 12px; margin-top: 18px; }
+    .compare figure {
+      flex: 1; background: #10222c; border: 1px solid #23414d; border-radius: 10px;
+      padding: 12px 8px; text-align: center;
+    }
+    .compare img { width: 92px; height: 92px; image-rendering: pixelated; }
+    .compare .flip { transform: scaleX(-1); }
+    .compare figcaption { font-size: 0.625rem; color: #88a0b0; margin-top: 6px; }
+    .compare strong { color: #d8e4ec; }
+
+    /* ===== 컨트롤 ===== */
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    button {
+      font: inherit; font-size: 0.75rem; color: #cfe8ee;
+      background: #17303c; border: 1px solid #2f5866; border-radius: 8px;
+      padding: 7px 12px; cursor: pointer;
+    }
+    button:hover { background: #1d3d4b; }
+    button[aria-pressed="true"] { background: #2a5766; border-color: #4f93a6; color: #eaf7fb; }
+    .row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 0.75rem; color: #8aa0ac; }
+    input[type="range"] { flex: 1; accent-color: #58b8c8; }
+    .val { min-width: 46px; text-align: right; color: #cfe8ee; }
+    .sizes button { padding: 6px 10px; }
+    code { color: #9fe6c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>심해경 인어 · 좌우 왕복 액션 시안</h1>
+    <p class="lead">인어 defective 변종 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      기존 <del>투성 어인</del> → <strong>심해경 인어</strong>로 교체 제안. 첨부 이미지를 투명 PNG로 변환했습니다.<br>
+      액션은 <strong>능어와 동일</strong>: 스프라이트 원본은 왼쪽을 보고, 왼쪽 이동은 그대로 · <strong>오른쪽 이동 시 좌우 반전</strong>.
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="lane"></div>
+      <div class="floor"></div>
+      <div class="walker" id="walker">
+        <div class="bob">
+          <img class="sim" src="../assets/custom/simhaegyeong.png" alt="심해경 인어">
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="toggle" aria-pressed="false">⏸ 일시정지</button>
+      <span style="flex:1"></span>
+      <span class="sizes">
+        <button data-size="90">작게</button>
+        <button data-size="120" aria-pressed="true">보통</button>
+        <button data-size="160">크게</button>
+      </span>
+    </div>
+
+    <div class="row">
+      <span>속도</span>
+      <input type="range" id="speed" min="2" max="9" step="0.5" value="5">
+      <span class="val" id="speedVal">5.0s</span>
+    </div>
+
+    <div class="compare">
+      <figure>
+        <img src="../assets/custom/simhaegyeong.png" alt="왼쪽 이동">
+        <figcaption><strong>왼쪽 이동</strong><br>원본 (scaleX 1)</figcaption>
+      </figure>
+      <figure>
+        <img class="flip" src="../assets/custom/simhaegyeong.png" alt="오른쪽 이동">
+        <figcaption><strong>오른쪽 이동</strong><br>반전 (scaleX -1)</figcaption>
+      </figure>
+    </div>
+
+    <p style="margin-top:18px;font-size:0.625rem;color:#6a7888">
+      스프라이트: <code>assets/custom/simhaegyeong.png</code> · 반영 시 대상 슬롯: 인어 <code>adult/grumpy</code>(투성 어인) 자리.
+    </p>
+  </div>
+
+  <script>
+    const stage = document.getElementById("stage");
+    const walker = document.getElementById("walker");
+    const toggle = document.getElementById("toggle");
+    const speed = document.getElementById("speed");
+    const speedVal = document.getElementById("speedVal");
+
+    function recalcTravel() {
+      const pad = 12;
+      const travel = Math.max(0, stage.clientWidth - walker.clientWidth - pad * 2);
+      walker.style.setProperty("--travel", travel + "px");
+    }
+    function setSize(px) {
+      walker.style.setProperty("--sprite", px + "px");
+      requestAnimationFrame(recalcTravel);
+    }
+    function setDur(sec) {
+      walker.style.setProperty("--dur", sec + "s");
+      walker.querySelector(".sim").style.setProperty("--dur", sec + "s");
+      walker.querySelector(".bob").style.setProperty("--dur", sec + "s");
+      speedVal.textContent = Number(sec).toFixed(1) + "s";
+    }
+
+    toggle.addEventListener("click", () => {
+      const paused = document.body.classList.toggle("paused");
+      toggle.setAttribute("aria-pressed", String(paused));
+      toggle.textContent = paused ? "▶ 재생" : "⏸ 일시정지";
+    });
+    document.querySelectorAll(".sizes button").forEach((b) => {
+      b.addEventListener("click", () => {
+        document.querySelectorAll(".sizes button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+        b.setAttribute("aria-pressed", "true");
+        setSize(Number(b.dataset.size));
+      });
+    });
+    speed.addEventListener("input", () => setDur(Number(speed.value)));
+    window.addEventListener("resize", recalcTravel);
+
+    setSize(120);
+    setDur(5);
+    recalcTravel();
+  </script>
+</body>
+</html>

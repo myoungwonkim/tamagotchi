@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 · Melusine 시안 A/B/C</title>
+<style>
+  :root {
+    --bg: #0a141d; --panel: #101f2b;
+    --stage-top: #57b4d2; --stage-bot: #348fb0;
+    --ink: #d8ecf8; --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+    --tag-a: #6a4a9e; --tag-b: #1a3a5c; --tag-c: #3a8e9e;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: system-ui, sans-serif; padding: 40px 20px 60px; }
+  h1 { text-align: center; font-size: 22px; margin: 0 0 6px; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 32px; max-width: 640px; margin-left: auto; margin-right: auto; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; margin-left: 4px;
+    color: #fff;
+  }
+  .badge.fc { background: #5a6a7a; }
+  .badge.a { background: var(--tag-a); }
+  .badge.b { background: var(--tag-b); }
+  .badge.c { background: var(--tag-c); }
+  section { max-width: 720px; margin: 0 auto 36px; }
+  section h2 { font-size: 16px; margin: 0 0 6px; text-align: center; }
+  .desc { text-align: center; color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+  .row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .box {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; width: 300px; text-align: center;
+  }
+  .box h3 { font-size: 14px; color: var(--muted); margin: 0 0 12px; }
+  .stage {
+    border-radius: 12px; background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage img { width: 82%; height: 82%; object-fit: contain; }
+  .stage img.pix { image-rendering: pixelated; }
+  .ref { max-width: 720px; margin: 0 auto 36px; text-align: center; }
+  .ref img { max-width: 200px; border-radius: 8px; border: 1px solid var(--line); opacity: .85; }
+  .ref p { font-size: 12px; color: var(--muted); margin-top: 8px; }
+</style>
+</head>
+<body>
+  <h1>Melusine · 심해인어 성체 시안 <span class="badge fc">FC</span></h1>
+  <p class="sub">목판화 Melusine 참조 · 쌍꼬리·왕관·U자 포즈 · 90년대 페미콤 픽셀 (제한 팔레트·디더·1px 아웃라인) · 256×256 · 펫 스테이지 배경</p>
+
+  <div class="ref">
+    <img src="../assets/custom/melusine-reference.png" alt="Melusine woodcut reference">
+    <p>참조: Melusine 목판화</p>
+  </div>
+
+  <section>
+    <h2>시안 A · 목판화 충실형 <span class="badge a">Melusine</span></h2>
+    <p class="desc">쌍꼬리 U자 포즈·왕관·대칭 꼬리 들어올림 · 심해 청록/보라 + 발광 엣지</p>
+    <div class="row">
+      <div class="box">
+        <h3>HQ 원본</h3>
+        <div class="stage"><img src="../assets/custom/melusine-1.png" alt="A HQ"></div>
+      </div>
+      <div class="box">
+        <h3>픽셀 보정</h3>
+        <div class="stage"><img class="pix" src="../assets/custom/melusine-1-pixel.png" alt="A pixel"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>시안 B · 심해 보스형 <span class="badge b">심연</span></h2>
+    <p class="desc">어두운 심연 팔레트 · 왕관→아귀 유인등 · 뱀장어형 쌍꼬리 · 위압적 성체</p>
+    <div class="row">
+      <div class="box">
+        <h3>HQ 원본</h3>
+        <div class="stage"><img src="../assets/custom/melusine-2.png" alt="B HQ"></div>
+      </div>
+      <div class="box">
+        <h3>픽셀 보정</h3>
+        <div class="stage"><img class="pix" src="../assets/custom/melusine-2-pixel.png" alt="B pixel"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>시안 C · FC 정돈형 <span class="badge c">FC</span></h2>
+    <p class="desc">256 스프라이트용 단순 실루엣 · 쌍꼬리 소형 가독 · 픽셀 보정 없음</p>
+    <div class="row">
+      <div class="box" style="width:min(100%, 340px)">
+        <h3>스프라이트</h3>
+        <div class="stage"><img class="pix" src="../assets/custom/melusine-3.png" alt="C sprite"></div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

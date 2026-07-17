@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>능어 현재 버전 기반 시안 3종</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+    .ref {
+      display: flex; gap: 14px; align-items: center; margin-bottom: 24px;
+      background: #101c26; border: 1px solid #23414d; border-radius: 12px; padding: 14px;
+    }
+    .ref img, .stage img, .thumbs img {
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 10px 10px;
+    }
+    .ref img { width: 108px; height: 108px; object-fit: contain; border-radius: 8px; padding: 4px; }
+    .ref .txt { font-size: 0.75rem; color: #9fb2be; }
+    .ref .txt strong { color: #d8e4ec; }
+    h2 {
+      font-size: 0.875rem; color: #80deea; margin: 4px 0 12px;
+      padding-bottom: 6px; border-bottom: 1px solid #23414d;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card {
+      background: #10222c; border: 1px solid #23414d; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 200px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 150px; height: 150px; object-fit: contain;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+      border-radius: 8px; padding: 2px;
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card .name { font-size: 0.5625rem; color: #58b8c8; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; min-height: 3.8em; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img { width: 56px; height: 56px; object-fit: contain; border-radius: 6px; padding: 3px; }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+    .thumbs .flip img { transform: scaleX(-1); }
+    code { color: #9fe6c8; }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a7888; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>능어 현재 버전 기반 · 디자인 시안 3종</h1>
+    <p class="lead">현재 게임 반영 버전과 같은 골격을 유지한 성체 후보 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      기준은 <strong>assets/custom/lingyu-2.png</strong>입니다.
+      흰 얼굴·작은 팔과 다리·청록 비늘·큰 꼬리 지느러미·왼쪽 응시 측면을 유지하고,
+      팔레트와 인상만 나눠 3종으로 재생성했습니다. 후처리는 <strong>prepare_staging_adult.py</strong>로 완료했습니다.
+    </div>
+
+    <div class="ref">
+      <img src="../assets/custom/lingyu-2.png?v=lingyu-current-1" alt="현재 능어">
+      <div class="txt"><strong>현재 버전 · lingyu-2</strong><br>청록 인어형 능어. 아래 후보들은 이 실루엣과 방향을 기준으로 한 변주입니다.</div>
+    </div>
+
+    <h2>새 시안 (게임 배경 위)</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/lingyu-current-draft-1.png?v=lingyu-current-1" alt="능어 현재 기반 시안 1"></div>
+        <h3>시안 1 · 옥비늘 정돈형</h3>
+        <div class="name">현재형 보존 · 선명한 청록 비늘</div>
+        <p>기존 능어와 가장 가까운 방향. 얼굴과 실루엣은 유지하면서 비늘·지느러미 명암을 더 깨끗하게 정리한 버전</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/lingyu-current-draft-1.png?v=lingyu-current-1" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/lingyu-current-draft-1.png?v=lingyu-current-1" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/lingyu-current-draft-2.png?v=lingyu-current-1" alt="능어 현재 기반 시안 2"></div>
+        <h3>시안 2 · 심해 발광형</h3>
+        <div class="name">어두운 청록 · cyan glow</div>
+        <p>몸통을 더 어둡고 깊게 만들고 비늘 가장자리와 지느러미를 발광시킨 심해 쪽 변주. 성체감이 가장 강함</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/lingyu-current-draft-2.png?v=lingyu-current-1" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/lingyu-current-draft-2.png?v=lingyu-current-1" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/lingyu-current-draft-3.png?v=lingyu-current-1" alt="능어 현재 기반 시안 3"></div>
+        <h3>시안 3 · 둥근 다마고치형</h3>
+        <div class="name">큰 눈 · 귀여움 강화</div>
+        <p>현재 능어를 더 작고 둥근 캐릭터로 압축한 버전. 얼굴 표정과 비늘 대비가 귀여운 펫 화면에 잘 맞음</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/lingyu-current-draft-3.png?v=lingyu-current-1" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/lingyu-current-draft-3.png?v=lingyu-current-1" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot">
+      스프라이트: <code>assets/custom/lingyu-current-draft-1.png</code>,
+      <code>lingyu-current-draft-2.png</code>,
+      <code>lingyu-current-draft-3.png</code> · 256×256 · scruffy bbox 정렬 · 게임 미반영.
+    </p>
+  </div>
+</body>
+</html>

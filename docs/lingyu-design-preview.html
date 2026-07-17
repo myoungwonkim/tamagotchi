@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>陵魚(능어) 기반 심해인어 디자인 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+
+    .ref {
+      display: flex; gap: 14px; align-items: center; margin-bottom: 24px;
+      background: #101c26; border: 1px solid #23414d; border-radius: 12px; padding: 14px;
+    }
+    .ref img { width: 120px; height: auto; background: #f4f1e8; border-radius: 8px; padding: 4px; }
+    .ref .txt { font-size: 0.75rem; color: #9fb2be; }
+    .ref .txt strong { color: #d8e4ec; }
+
+    h2 { font-size: 0.8125rem; color: #58b8c8; margin: 4px 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card {
+      background: #10222c; border: 1px solid #23414d; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 200px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 150px; height: 150px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 56px; height: 56px; image-rendering: pixelated;
+      background: #1c2c38; border-radius: 6px; padding: 3px;
+    }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+    .thumbs .flip img { transform: scaleX(-1); }
+    code { color: #9fe6c8; }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a7888; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>陵魚(능어) 기반 · 심해인어 디자인 시안</h1>
+    <p class="lead">산해경 陵魚 목판화 → 심해인어 테마 픽셀 스프라이트 후보 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      첨부하신 <strong>陵魚</strong>(사람 얼굴·팔·다리 + 비늘 몸통 + 물고기 꼬리, 측면)를 바탕으로
+      게임 심해 픽셀 스타일 후보 3종을 만들었습니다. 방향은 <strong>능어와 동일하게 왼쪽 응시</strong>라
+      기존 좌우 왕복+반전 액션을 그대로 적용할 수 있습니다.
+    </div>
+
+    <div class="ref">
+      <img src="../assets/custom/lingyu-reference.png" alt="陵魚 원본">
+      <div class="txt"><strong>원본 레퍼런스</strong><br>산해경 陵魚 목판화 (흑백 라인)</div>
+    </div>
+
+    <h2>디자인 후보 (게임 배경 위)</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/lingyu-1.png" alt="시안 1"></div>
+        <h3>시안 1 · 목판화 충실형</h3>
+        <p>본·회녹색 톤, 원화에 가장 가까운 절제된 팔레트</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/lingyu-1.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/lingyu-1.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/lingyu-2.png" alt="시안 2"></div>
+        <h3>시안 2 · 청록 인어형</h3>
+        <p>청록·시안 비늘 + 진주빛 얼굴, 심해인어 팔레트</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/lingyu-2.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/lingyu-2.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/lingyu-3.png" alt="시안 3"></div>
+        <h3>시안 3 · 츄비 귀여움형</h3>
+        <p>큰 머리·큰 눈, 산호·옥색 비늘의 다마고치풍</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/lingyu-3.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/lingyu-3.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot">
+      스프라이트: <code>assets/custom/lingyu-1..3.png</code> (256×256 투명 PNG) · 각 카드의 오른쪽 썸네일은 <code>scaleX(-1)</code> 반전(=오른쪽 이동) 미리보기.<br>
+      다음 단계: 원하는 시안을 고르면 픽셀 정돈 후 심해인어 슬롯에 반영 + 능어와 동일한 왕복 액션 연결.
+    </p>
+  </div>
+</body>
+</html>

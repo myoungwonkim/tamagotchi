@@ -1,0 +1,250 @@
+"""Emit docs/ui-overall-preview.html — 3 full-screen UI design mockups."""
+
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "docs" / "ui-overall-preview.html"
+
+HTML = r"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <title>전체 UI 디자인 시안 3종</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #081418; color: #cfe6ec; line-height: 1.5;
+    padding: calc(20px + env(safe-area-inset-top)) 14px calc(40px + env(safe-area-inset-bottom));
+  }
+  .page-head { max-width: 1100px; margin: 0 auto 20px; text-align: center; }
+  .page-head h1 { font-size: 1.125rem; font-weight: 700; margin-bottom: 6px; }
+  .page-head p { font-size: 0.8125rem; color: #8fb4c4; max-width: 720px; margin: 0 auto; }
+
+  .grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 980px) { .grid { grid-template-columns: 1fr; max-width: 420px; } }
+
+  .card { background: #102830; border: 1px solid #234650; border-radius: 16px; padding: 14px; }
+  .card-head { margin-bottom: 10px; }
+  .card-num { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #04222c; background: linear-gradient(180deg,#7fe0f0,#45c8dc); border-radius: 6px; padding: 2px 8px; margin-bottom: 4px; }
+  .card-title { font-size: 0.95rem; font-weight: 800; color: #eaf6fb; }
+  .card-diff { font-size: 0.75rem; color: #9cc0ce; margin-top: 2px; }
+
+  .palette { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0 12px; }
+  .sw { width: 28px; height: 28px; border-radius: 6px; border: 1px solid rgba(255,255,255,.12); position: relative; }
+  .sw::after { content: attr(data-l); position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); font-size: 0.5rem; color: #6a8b94; white-space: nowrap; }
+
+  /* ===== phone mock ===== */
+  .phone {
+    width: 100%; max-width: 320px; margin: 0 auto 10px;
+    border-radius: 18px; overflow: hidden;
+    border: 2px solid var(--border-subtle, #20464f);
+    box-shadow: 0 12px 32px rgba(0,0,0,.35);
+    font-size: 11px;
+  }
+  .phone-inner { display: flex; flex-direction: column; min-height: 520px; background: var(--bg); color: var(--text); padding: 10px 12px 12px; }
+
+  .m-header { position: relative; text-align: center; padding: 4px 0 10px; }
+  .m-header h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .m-header p { font-size: 0.72rem; color: var(--text-muted); }
+  .m-icon { position: absolute; top: 0; width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--icon-border, rgba(69,200,220,.4)); background: var(--surface); display: grid; place-items: center; }
+  .m-icon--l { left: 0; } .m-icon--r { right: 0; }
+  .m-icon img { width: 18px; height: 18px; image-rendering: pixelated; }
+
+  .m-pet {
+    flex: 1; position: relative; min-height: 200px; border-radius: var(--radius, 12px);
+    border: 2px solid var(--pet-border, #6fb6d0);
+    background: var(--pet-viewport-bg);
+    box-shadow: var(--pet-glow, inset 0 0 44px rgba(16,74,104,.28));
+    overflow: hidden; margin-bottom: 8px;
+  }
+  .m-bubbles span { position: absolute; border-radius: 50%; background: radial-gradient(circle at 34% 30%, rgba(255,255,255,.85), rgba(255,255,255,.2) 55%, transparent 72%); }
+  .m-bubbles span:nth-child(1){left:18%;bottom:20%;width:6px;height:6px;opacity:.8}
+  .m-bubbles span:nth-child(2){left:55%;bottom:35%;width:4px;height:4px;opacity:.6}
+  .m-bubbles span:nth-child(3){left:78%;bottom:15%;width:7px;height:7px;opacity:.7}
+  .m-pet img.pet { position: absolute; left: 50%; top: 54%; transform: translate(-50%,-50%); width: 72px; image-rendering: pixelated; filter: drop-shadow(0 6px 10px rgba(6,40,62,.35)); }
+  .m-msg { position: absolute; top: 14%; left: 50%; transform: translateX(-50%); background: var(--msg-bg,#fff); color: var(--msg-text,#153039); font-size: 0.68rem; padding: 5px 10px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+  .m-mood { position: absolute; top: 8px; left: 8px; width: 22px; height: 22px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-subtle); display: grid; place-items: center; font-size: 0.75rem; }
+
+  .m-stats { background: var(--stats-surface); border-radius: var(--radius,12px); padding: 8px 10px; margin-bottom: 8px; border: 1px solid var(--border-subtle); }
+  .m-stat { display: grid; grid-template-columns: 42px 1fr 24px; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .m-stat:last-child { margin-bottom: 0; }
+  .m-stat label { font-size: 0.62rem; color: var(--text-muted); }
+  .m-bar { height: 7px; border-radius: 999px; background: var(--bar-track); overflow: hidden; }
+  .m-fill { height: 100%; border-radius: inherit; }
+  .m-val { font-size: 0.62rem; text-align: right; color: var(--text); font-weight: 600; }
+
+  .m-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+  .m-act { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 4px; border-radius: var(--radius,12px); border: 1px solid var(--border-subtle); background: var(--action-bg, var(--surface)); }
+  .m-act img { width: 28px; height: 28px; image-rendering: pixelated; }
+  .m-act span { font-size: 0.58rem; color: var(--text-muted); }
+
+  .m-modal-wrap { margin-top: 8px; }
+  .m-modal-label { font-size: 0.6rem; color: #6a8b94; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .m-modal {
+    border-radius: 12px; padding: 12px 14px; text-align: center;
+    background: var(--modal-bg); border: 1px solid var(--modal-border);
+    box-shadow: var(--modal-shadow, 0 8px 24px rgba(0,0,0,.35));
+  }
+  .m-modal .ghost { width: 36px; height: 36px; margin: 0 auto 6px; image-rendering: pixelated; }
+  .m-modal h3 { font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .m-modal p { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 8px; }
+  .m-modal .btn { display: inline-block; font-size: 0.65rem; font-weight: 700; color: #fff; background: var(--accent); border-radius: 999px; padding: 6px 14px; }
+
+  /* Variant A — Midnight Teal Classic (current) */
+  .phone--a {
+    --bg: #0a2028; --surface: #0f2f39; --stats-surface: #0c2831;
+    --text: #cfe6ec; --text-muted: #6a8b94; --accent: #45c8dc; --accent-dark: #2ba6bc;
+    --border-subtle: #20464f; --radius: 12px;
+    --pet-viewport-bg: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
+    --pet-border: #6fb6d0; --pet-glow: inset 0 0 44px rgba(16,74,104,.28);
+    --bar-track: #081c23; --msg-bg: #ffffff; --msg-text: #153039;
+    --action-bg: #123842; --icon-border: rgba(69,200,220,.4);
+    --modal-bg: #0f2f39; --modal-border: #2a5a68;
+  }
+
+  /* Variant B — Deep Channel (darker frame, stronger contrast) */
+  .phone--b {
+    --bg: #061218; --surface: #0a222a; --stats-surface: #081a20;
+    --text: #b8dce6; --text-muted: #5a7a84; --accent: #3db8cc; --accent-dark: #2a9aad;
+    --border-subtle: #183840; --radius: 10px;
+    --pet-viewport-bg: linear-gradient(180deg, #5ab0ce 0%, #3a96b8 55%, #2e88aa 100%);
+    --pet-border: #5aa8c4; --pet-glow: inset 0 0 56px rgba(8,50,70,.45), 0 0 20px rgba(58,150,184,.15);
+    --bar-track: #050f14; --msg-bg: #e8f4f8; --msg-text: #0e2830;
+    --action-bg: #0d2a34; --icon-border: rgba(61,184,204,.35);
+    --modal-bg: #0a222a; --modal-border: #1e4854; --modal-shadow: 0 10px 28px rgba(0,0,0,.5);
+  }
+  .phone--b .m-act { border-color: #1a3a44; }
+  .phone--b .m-header h2 { letter-spacing: .02em; }
+
+  /* Variant C — Glass Bridge (frosted panels, soft glow) */
+  .phone--c {
+    --bg: #0c242c; --surface: rgba(20,52,63,.72); --stats-surface: rgba(16,44,54,.65);
+    --text: #e8f6fa; --text-muted: #7aa8b4; --accent: #5fd4e8; --accent-dark: #3bb8cc;
+    --border-subtle: rgba(95,212,232,.22); --radius: 14px;
+    --pet-viewport-bg: linear-gradient(180deg, #62b8d6 0%, #48a4c4 58%, #3a96b6 100%);
+    --pet-border: rgba(120,210,230,.55); --pet-glow: inset 0 0 40px rgba(20,80,100,.25), 0 0 24px rgba(95,212,232,.12);
+    --bar-track: rgba(8,28,36,.8); --msg-bg: rgba(255,255,255,.92); --msg-text: #123038;
+    --action-bg: rgba(26,74,86,.55); --icon-border: rgba(95,212,232,.35);
+    --modal-bg: rgba(18,48,58,.88); --modal-border: rgba(95,212,232,.28); --modal-shadow: 0 12px 32px rgba(0,0,0,.4);
+  }
+  .phone--c .m-icon, .phone--c .m-stats, .phone--c .m-act, .phone--c .m-mood {
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 12px rgba(0,0,0,.15);
+  }
+  .phone--c .m-act:active-style { box-shadow: 0 0 12px rgba(95,212,232,.25); }
+
+  .summary { max-width: 1100px; margin: 28px auto 0; background: #102830; border: 1px solid #234650; border-radius: 14px; padding: 16px; overflow-x: auto; }
+  .summary h2 { font-size: 0.9rem; margin-bottom: 10px; color: #eaf6fb; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #234650; }
+  th { color: #8fb4c4; font-weight: 600; }
+  td { color: #cfe6ec; }
+  .rec { max-width: 1100px; margin: 18px auto 0; padding: 14px 16px; background: #12313b; border: 1px solid #2a5a68; border-radius: 12px; }
+  .rec strong { color: #7fe0f0; }
+  .back { display: block; text-align: center; margin-top: 24px; font-size: 0.8125rem; }
+  .back a { color: #7fb8cd; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>전체 UI 디자인 시안 3종</h1>
+    <p>헤더 · 밝은 바다 펫창(부유 거품) · 스탯 · 액션 4버튼 · 게임오버 모달을 <strong>한 화면</strong>에서 비교합니다. <strong>시안만</strong>(게임 미반영). 기준 테마: 자정청록 + 밝은 펫 뷰포트.</p>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <section class="summary">
+    <h2>3종 요약</h2>
+    <table>
+      <thead><tr><th>시안</th><th>한 줄 차이</th><th>헤더</th><th>펫창</th><th>스탯</th><th>액션</th><th>모달</th></tr></thead>
+      <tbody>
+        <tr><td>1 자정청록 클래식</td><td>현재 출시 기준과 동일한 검증된 밸런스</td><td>중앙 정렬·청록 아이콘 버튼</td><td>밝은 바다+거품·청록 테두리</td><td>어두운 패널·컬러 바</td><td>4분할·딥틸 버튼</td><td>다크 카드·시안 CTA</td></tr>
+        <tr><td>2 심해 항로</td><td>앱 프레임을 더 어둡게 낮춰 펫창 대비 극대화</td><td>타이트·낮은 채도 텍스트</td><td>강한 인셋 글로우·짙은 바다</td><td>플랫 다크·얇은 트랙</td><td>각진 버튼·딥 네이비</td><td>깊은 그림자·차분한 톤</td></tr>
+        <tr><td>3 유리 함교</td><td>반투명 글래스 패널과 발광 테두리로 현대적 심해 UI</td><td>블러 아이콘·밝은 텍스트</td><td>유리 테두리·외부 글로우</td><td>프로스트 글래스 패널</td><td>글래스 버튼·시안 글로우</td><td>반투명·발광 보더</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="rec">
+    <strong>추천: 1안 자정청록 클래식</strong><br>
+    밝은 펫 뷰포트와 앱 크롬의 대비가 이미 잘 맞고, 기존 말풍선·미니 기분 아이콘·상어 연출과 충돌 없이 그대로 이어갈 수 있습니다.
+    3안 유리 함교는 시각적으로 세련되지만 저사양 기기에서 블러 비용과 가독성 검증이 추가로 필요합니다.
+  </div>
+
+  <p class="back"><a href="index.html">← 시안 허브로</a></p>
+
+  <script>
+  const VARIANTS = [
+    { cls: "phone--a", num: 1, title: "자정청록 클래식", diff: "현재 출시 기준과 동일한 검증된 밸런스",
+      palette: [["#0a2028","bg"],["#0f2f39","surface"],["#45c8dc","accent"],["#cfe6ec","text"],["#57b4d2","pet"],["#d09248","hunger"],["#5cb47e","health"],["#123842","action"]] },
+    { cls: "phone--b", num: 2, title: "심해 항로", diff: "앱 프레임을 더 어둡게 낮춰 펫창 밝기 대비를 극대화",
+      palette: [["#061218","bg"],["#0a222a","surface"],["#3db8cc","accent"],["#b8dce6","text"],["#4aa8c8","pet"],["#c88640","hunger"],["#4fa86e","health"],["#0d2a34","action"]] },
+    { cls: "phone--c", num: 3, title: "유리 함교", diff: "반투명 글래스 패널과 발광 테두리로 현대적 심해 UI",
+      palette: [["#0c242c","bg"],["#14343f","glass"],["#5fd4e8","accent"],["#e8f6fa","text"],["#5eb8d4","pet"],["#e0a050","hunger"],["#6ec492","health"],["#1a4a56","action"]] },
+  ];
+
+  function mockPhone(v) {
+    const pal = v.palette.map(([c,l]) => `<span class="sw" style="background:${c}" data-l="${l}" title="${c}"></span>`).join("");
+    return `<article class="card">
+      <div class="card-head"><span class="card-num">${v.num}</span>
+        <div class="card-title">${v.title}</div>
+        <div class="card-diff">${v.diff}</div>
+      </div>
+      <div class="palette">${pal}</div>
+      <div class="phone ${v.cls}">
+        <div class="phone-inner">
+          <header class="m-header">
+            <div class="m-icon m-icon--l"><img src="../assets/sprites/ui/encyclopedia.png" alt=""></div>
+            <div class="m-icon m-icon--r"><img src="../assets/sprites/ui/sound-on.png" alt=""></div>
+            <h2>치치</h2><p>3일째 · 갯민숭달팽이</p>
+          </header>
+          <div class="m-pet">
+            <div class="m-bubbles"><span></span><span></span><span></span></div>
+            <div class="m-mood">😊</div>
+            <div class="m-msg">배고파요!</div>
+            <img class="pet" src="../assets/sprites/adult/standard.png" alt="">
+          </div>
+          <div class="m-stats">
+            <div class="m-stat"><label>배고픔</label><div class="m-bar"><div class="m-fill" style="width:79%;background:#d09248"></div></div><span class="m-val">79</span></div>
+            <div class="m-stat"><label>행복</label><div class="m-bar"><div class="m-fill" style="width:69%;background:#5ab8ca"></div></div><span class="m-val">69</span></div>
+            <div class="m-stat"><label>청결</label><div class="m-bar"><div class="m-fill" style="width:60%;background:#48aed2"></div></div><span class="m-val">60</span></div>
+            <div class="m-stat"><label>건강</label><div class="m-bar"><div class="m-fill" style="width:100%;background:#5cb47e"></div></div><span class="m-val">100</span></div>
+          </div>
+          <div class="m-actions">
+            <div class="m-act"><img src="../assets/sprites/ui/feed.png" alt=""><span>먹이</span></div>
+            <div class="m-act"><img src="../assets/sprites/ui/play.png" alt=""><span>놀이</span></div>
+            <div class="m-act"><img src="../assets/sprites/ui/clean.png" alt=""><span>청소</span></div>
+            <div class="m-act"><img src="../assets/sprites/ui/sleep.png" alt=""><span>재우기</span></div>
+          </div>
+          <div class="m-modal-wrap">
+            <div class="m-modal-label">게임오버 모달</div>
+            <div class="m-modal">
+              <img class="ghost" src="../assets/sprites/evolution/ghost.png" alt="">
+              <h3>치치가 유령이 되었어요...</h3>
+              <p>제발... 날 도와줘.</p>
+              <span class="btn">광고 보고 부활</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  document.getElementById("grid").innerHTML = VARIANTS.map(mockPhone).join("");
+  </script>
+</body>
+</html>
+"""
+
+
+def main() -> None:
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(HTML, encoding="utf-8")
+    print(f"wrote {OUT}")
+
+
+if __name__ == "__main__":
+    main()

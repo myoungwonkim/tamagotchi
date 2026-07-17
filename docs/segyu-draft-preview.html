@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>세규치 · 성체 시안 3종 (재작)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+    .refs {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
+      margin-bottom: 24px;
+    }
+    .ref {
+      display: flex; gap: 12px; align-items: center;
+      background: #101c26; border: 1px solid #23414d; border-radius: 12px; padding: 12px;
+    }
+    .ref img {
+      width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated;
+      background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 10px 10px;
+      border-radius: 8px; padding: 4px;
+    }
+    .ref .txt { font-size: 0.6875rem; color: #9fb2be; }
+    .ref .txt strong { color: #d8e4ec; display: block; margin-bottom: 2px; }
+    h2 {
+      font-size: 0.875rem; color: #80deea; margin: 8px 0 6px;
+      padding-bottom: 6px; border-bottom: 1px solid #23414d;
+    }
+    .tier { font-size: 0.625rem; color: #c084fc; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card {
+      background: #10222c; border: 1px solid #23414d; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 200px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 150px; height: 150px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card .name { font-size: 0.5625rem; color: #58b8c8; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; min-height: 3.2em; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 56px; height: 56px; image-rendering: pixelated;
+      background: #1c2c38; border-radius: 6px; padding: 3px;
+    }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+    .thumbs .flip img { transform: scaleX(-1); }
+    code { color: #9fe6c8; }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a7888; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>세규치 · 성체 시안 3종 (재작)</h1>
+    <p class="lead">개복치 인면 초대형 헤드샷 · 인어 <strong>farm</strong> 슬롯 후보 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      현재 게임 반영 버전(<code>farm.png</code>)과 같은 <strong>얼굴+옆지느러미 클로즈업</strong> 구도로 3종을 새로 만들었습니다.
+      256×256 · scruffy bbox 정렬 · 능어 워크플로 후처리 완료.
+    </div>
+
+    <div class="refs">
+      <div class="ref">
+        <img src="../assets/sprites/mermaid/adult/farm.png?v=segyu-draft-1" alt="현재 세규치">
+        <div class="txt"><strong>현재 게임 · 세규치</strong>인어 farm 슬롯 · 노안 개복치 기반 · 눈 깜빡 3프레임 idle</div>
+      </div>
+      <div class="ref">
+        <img src="../assets/sprites/adult/plain.png" alt="인면어">
+        <div class="txt"><strong>비교 · 인면어</strong>전신 측면(plain) — 세규치는 훨씬 큰 헤드 클로즈업</div>
+      </div>
+    </div>
+
+    <h2>세규치 <span>Human-faced Puffer · Close-up</span></h2>
+    <p class="tier">normal 후보 · 초대형 얼굴 · 옆지느러미만 노출 · 왼쪽 응시</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/segyu-draft-1.png?v=segyu-draft-1" alt="세규치 시안 1"></div>
+        <h3>시안 1 · 청회 노안</h3>
+        <div class="name">이름 후보: 세규치 · 청회 세규</div>
+        <p>청회 개복 피부·점박이, 깊은 주름 노인 얼굴. 현재 버전과 가장 가까운 정돈형</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/segyu-draft-1.png?v=segyu-draft-1" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/segyu-draft-1.png?v=segyu-draft-1" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/segyu-draft-2.png?v=segyu-draft-1" alt="세규치 시안 2"></div>
+        <h3>시안 2 · 창백 유령</h3>
+        <div class="name">이름 후보: 백규치 · 유령 세규</div>
+        <p>백색·창백한 피부, 공허한 눈, 관자놀이 청록 발광. 심해 유령 개복 느낌</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/segyu-draft-2.png?v=segyu-draft-1" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/segyu-draft-2.png?v=segyu-draft-1" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/segyu-draft-3.png?v=segyu-draft-1" alt="세규치 시안 3"></div>
+        <h3>시안 3 · 가시 독규</h3>
+        <div class="name">이름 후보: 독규치 · 가시 세규</div>
+        <p>부풀린 올리브 회색 몸·작은 가시, 찡그린 노인 얼굴·노란 눈. 가장 위협적</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/segyu-draft-3.png?v=segyu-draft-1" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/segyu-draft-3.png?v=segyu-draft-1" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot">
+      스프라이트: <code>assets/custom/segyu-draft-1.png</code> · <code>segyu-draft-2.png</code> · <code>segyu-draft-3.png</code><br>
+      기존 액션: <a href="segyu-blink-preview.html">눈 깜빡 idle</a> · <a href="gaebokchi-preview.html">이전 개복치 시안</a> · 게임 미반영
+    </p>
+  </div>
+</body>
+</html>

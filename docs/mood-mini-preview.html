@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <title>미니 기분 아이콘 시안</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #0a2028; color: #cfe6ec;
+    padding: 20px 14px 48px; line-height: 1.5;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.0625rem; margin-bottom: 6px; }
+  .lead { font-size: 0.75rem; color: #8fb4c4; margin-bottom: 16px; }
+  .notice {
+    background: #10303a; border: 1px solid #20464f; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.6875rem; color: #8fb4c4; margin-bottom: 20px;
+  }
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: #10303a; border: 1px solid #20464f; border-radius: 10px;
+    padding: 12px; margin-bottom: 20px;
+  }
+  .chip {
+    font: inherit; font-size: 0.72rem; font-weight: 600; color: #cfe6ec;
+    background: #17414e; border: 1px solid #2f5d6c; border-radius: 999px;
+    padding: 6px 11px; cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: #256e83; border-color: #45c8dc; color: #fff; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .card { background: #12313b; border: 1px solid #223f48; border-radius: 14px; padding: 12px; }
+  .card--pick { border-color: #45c8dc; box-shadow: 0 0 0 1px rgba(69,200,220,.25); }
+  .card h2 { font-size: 0.9rem; color: #eaf6fb; margin-bottom: 4px; }
+  .card .desc { font-size: 0.65rem; color: #86a6b4; margin-bottom: 10px; min-height: 2.4em; }
+  .stage {
+    position: relative; height: 220px; border-radius: 12px; overflow: hidden;
+    border: 2px solid #6fb6d0;
+    background: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
+    box-shadow: inset 0 0 40px rgba(16,74,104,.28);
+  }
+  .pet {
+    position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+    width: 96px; height: 96px; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,.3));
+  }
+  .mini {
+    position: absolute; top: 10px; left: 10px;
+    width: clamp(1.85rem, 7.5vw, 2.2rem);
+    height: clamp(1.85rem, 7.5vw, 2.2rem);
+    object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
+  }
+  .row { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+  .thumb { text-align: center; }
+  .thumb img {
+    width: 32px; height: 32px; object-fit: contain; image-rendering: pixelated;
+    background: #1a3040; border-radius: 4px; padding: 2px;
+  }
+  .thumb span { display: block; font-size: 0.4375rem; color: #6a8898; margin-top: 2px; }
+  .compare {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 8px; padding-top: 8px; border-top: 1px solid #1e3444;
+  }
+  .compare img {
+    width: 36px; height: 36px; object-fit: contain; image-rendering: pixelated;
+    background: #1a3040; border-radius: 4px; padding: 2px;
+  }
+  .compare .vs { font-size: 0.5rem; color: #4a6070; }
+  .foot { margin-top: 20px; font-size: 0.625rem; color: #6a8898; }
+  code { color: #9fe6c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>미니 기분 아이콘 시안</h1>
+    <p class="lead">펫 화면 좌상단 미니 아이콘 · 기분 5종 × 시안 3세트 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      실제 인게임 배치(프레임 없음, 좌상단 10px)로 미리보기.
+      32px 썸네일로 작은 크기 가독성 확인.
+      승인 후 <code>assets/sprites/mood/</code> 반영.
+    </div>
+    <div class="controls" id="controls"></div>
+    <div class="gallery" id="gallery"></div>
+    <p class="foot">스테이징: <code>assets/custom/mood-mini-{mood}-{1,2,3}.png</code> · 후처리: <code>scripts/prepare_staging_mood.py</code></p>
+  </div>
+  <script>
+    const PET = "../assets/sprites/adult/standard.png";
+    const MOODS = [{"id": "happy", "label": "행복"}, {"id": "neutral", "label": "보통"}, {"id": "sad", "label": "슬픔"}, {"id": "sick", "label": "아픔"}, {"id": "sleep", "label": "수면"}];
+    const SETS = [{"n": 1, "title": "시안 1 · 클래식 버블", "desc": "파스텔 원형 얼굴 · 현행 톤 강화", "pick": true}, {"n": 2, "title": "시안 2 · 심해 발광 오브", "desc": "어두운 오브 + 바이오루미네선스 표정", "pick": false}, {"n": 3, "title": "시안 3 · 컴팩트 배지", "desc": "굵은 외곽선 · 작은 크기 가독성", "pick": false}];
+    let mood = "happy";
+    const controls = document.getElementById("controls");
+    const gallery = document.getElementById("gallery");
+
+    function draftSrc(m, n) {
+      return `../assets/custom/mood-mini-${m}-${n}.png`;
+    }
+
+    MOODS.forEach(({ id, label }) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip mood-chip";
+      b.dataset.mood = id;
+      b.textContent = label;
+      b.setAttribute("aria-pressed", String(id === mood));
+      b.addEventListener("click", () => setMood(id));
+      controls.appendChild(b);
+    });
+
+    SETS.forEach(({ n, title, desc, pick }) => {
+      const card = document.createElement("article");
+      card.className = "card" + (pick ? " card--pick" : "");
+      card.dataset.set = String(n);
+      card.innerHTML = `
+        <h2>${title}</h2>
+        <p class="desc">${desc}</p>
+        <div class="stage">
+          <img class="pet" src="${PET}" alt="">
+          <img class="mini" data-set="${n}" src="${draftSrc(mood, n)}" alt="">
+        </div>
+        <div class="row">${MOODS.map(({ id, label }) => `
+          <div class="thumb"><img src="${draftSrc(id, n)}" alt=""><span>${label}</span></div>`).join("")}
+        </div>
+        <div class="compare">
+          <img data-role="current" src="../assets/sprites/mood/${mood}.png" alt="현재">
+          <span class="vs">vs</span>
+          <img data-role="draft" src="${draftSrc(mood, n)}" alt="시안">
+        </div>`;
+      gallery.appendChild(card);
+    });
+
+    function setMood(m) {
+      mood = m;
+      document.querySelectorAll(".mood-chip").forEach((c) => {
+        c.setAttribute("aria-pressed", String(c.dataset.mood === m));
+      });
+      document.querySelectorAll(".mini").forEach((img) => {
+        img.src = draftSrc(m, img.dataset.set);
+      });
+      document.querySelectorAll(".compare").forEach((row) => {
+        const card = row.closest(".card");
+        const n = card.dataset.set;
+        row.querySelector('[data-role="current"]').src = `../assets/sprites/mood/${m}.png`;
+        row.querySelector('[data-role="draft"]').src = draftSrc(m, n);
+      });
+    }
+  </script>
+</body>
+</html>

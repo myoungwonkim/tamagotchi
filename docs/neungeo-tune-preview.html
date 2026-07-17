@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>능어 · 크기·속도 변경 시안</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    background: #0a141d; color: #d8ecf8; padding: 28px 14px 56px; line-height: 1.5;
+  }
+  h1 { font-size: 1.0625rem; text-align: center; color: #80deea; margin-bottom: 6px; }
+  .sub { text-align: center; font-size: 0.75rem; color: #8fb0c6; margin-bottom: 20px; }
+  .notice {
+    max-width: 820px; margin: 0 auto 24px; padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8;
+    background: #101f2b; border: 1px solid rgba(120,170,200,.16); border-radius: 10px;
+  }
+  .notice strong { color: #58c6d6; }
+  .grid {
+    max-width: 820px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .panel {
+    background: #0e1c28; border: 1px solid rgba(120,170,200,.12); border-radius: 14px; padding: 14px;
+  }
+  .panel--new { border-color: rgba(88,198,214,.35); box-shadow: inset 0 0 0 1px rgba(88,198,214,.12); }
+  .panel h2 { font-size: 0.875rem; margin-bottom: 4px; }
+  .panel .tag { font-size: 0.625rem; color: #8fb0c6; margin-bottom: 10px; }
+  .panel--new h2 { color: #80deea; }
+  .stage {
+    position: relative; height: 220px; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+    box-shadow: inset 0 0 40px rgba(16,74,104,.35);
+  }
+  .lane { position: absolute; left: 0; right: 0; bottom: 48px; height: 1px; background: rgba(128,222,234,.12); }
+  .walker {
+    position: absolute; bottom: 36px; left: 10px;
+    width: var(--sprite, 102px); height: var(--sprite, 102px);
+    animation: walkX var(--dur, 6s) ease-in-out infinite;
+  }
+  .neungeo {
+    width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
+    animation: faceFlip var(--dur, 6s) linear infinite;
+    transform-origin: 50% 50%;
+  }
+  @keyframes walkX {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(var(--travel, 240px)); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes faceFlip {
+    0%, 49.99% { transform: scaleX(-1); }
+    50%, 100% { transform: scaleX(1); }
+  }
+  .spec { margin-top: 10px; font-size: 0.6875rem; color: #8fb0c6; }
+  .spec li { margin-left: 1.1em; }
+  .spec strong { color: #cfe8ee; }
+  .links {
+    max-width: 820px; margin: 20px auto 0; text-align: center; font-size: 0.6875rem; color: #6a8898;
+  }
+  .links a { color: #58b8c8; text-decoration: none; }
+  code { color: #9fe6c8; }
+</style>
+</head>
+<body>
+  <h1>능어 · 크기·속도 변경 시안</h1>
+  <p class="sub">인어 scruffy · <strong>게임 반영됨</strong> (펫 화면 + 도감)</p>
+
+  <div class="notice">
+    <strong>변경:</strong> 능어만 85% 크기 · 걷기 1.5× 빠름 (6s → 4s) · 핀백(grumpy)은 기존 유지
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>이전</h2>
+      <p class="tag">100% · 6s 왕복</p>
+      <div class="stage" data-travel>
+        <div class="lane"></div>
+        <div class="walker" style="--sprite: 120px; --dur: 6s">
+          <img class="neungeo" src="../assets/sprites/mermaid/adult/scruffy.png" alt="능어 이전">
+        </div>
+      </div>
+      <ul class="spec">
+        <li>크기 <strong>100%</strong></li>
+        <li>왕복 <strong>6초</strong></li>
+      </ul>
+    </section>
+
+    <section class="panel panel--new">
+      <h2>변경 후 ★</h2>
+      <p class="tag">85% · 4s 왕복</p>
+      <div class="stage" data-travel>
+        <div class="lane"></div>
+        <div class="walker" style="--sprite: 102px; --dur: 4s">
+          <img class="neungeo" src="../assets/sprites/mermaid/adult/scruffy.png" alt="능어 변경">
+        </div>
+      </div>
+      <ul class="spec">
+        <li>크기 <strong>85%</strong></li>
+        <li>왕복 <strong>4초</strong> (1.5× 빠름)</li>
+      </ul>
+    </section>
+  </div>
+
+  <p class="links">
+    게임에서 확인: 인어 테마 + 능어 성체 ·
+    <a href="cheongnyeong-action-preview.html">청령 어인 액션 시안 →</a>
+  </p>
+
+  <script>
+    function fitTravel(stage) {
+      const walker = stage.querySelector(".walker");
+      const pad = 10;
+      const travel = Math.max(0, stage.clientWidth - walker.clientWidth - pad * 2);
+      walker.style.setProperty("--travel", travel + "px");
+    }
+    document.querySelectorAll("[data-travel]").forEach(fitTravel);
+    window.addEventListener("resize", () => document.querySelectorAll("[data-travel]").forEach(fitTravel));
+  </script>
+</body>
+</html>

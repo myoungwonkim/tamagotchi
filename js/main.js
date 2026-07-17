@@ -225,6 +225,7 @@ async function initGracDemo() {
       renderPet(pet);
       savePet(pet);
     },
+    triggerSharkAttack,
   });
 }
 

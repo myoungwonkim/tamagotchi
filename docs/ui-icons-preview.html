@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <title>UI 액션 아이콘 시안</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #0a2028; color: #cfe6ec;
+    padding: 20px 14px 48px; line-height: 1.5;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.0625rem; margin-bottom: 6px; }
+  .lead { font-size: 0.75rem; color: #8fb4c4; margin-bottom: 16px; }
+  .notice {
+    background: #10303a; border: 1px solid #20464f; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.6875rem; color: #8fb4c4; margin-bottom: 20px;
+  }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+  .card { background: #12313b; border: 1px solid #223f48; border-radius: 14px; padding: 14px; }
+  .card--pick { border-color: #45c8dc; box-shadow: 0 0 0 1px rgba(69,200,220,.25); }
+  .card h2 { font-size: 0.9rem; color: #eaf6fb; margin-bottom: 4px; }
+  .card .desc { font-size: 0.65rem; color: #86a6b4; margin-bottom: 14px; }
+
+  .mock {
+    background: #0f2f39; border: 1px solid #20464f; border-radius: 12px; overflow: hidden;
+  }
+  .mock-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; background: #0a2028; border-bottom: 1px solid #20464f;
+  }
+  .mock-header button {
+    width: 36px; height: 36px; border: none; background: transparent; padding: 4px;
+  }
+  .mock-header img { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; }
+  .mock-pet {
+    height: 120px;
+    background: linear-gradient(180deg, #57b4d2 0%, #3f9cbe 60%, #348fb0 100%);
+    position: relative;
+  }
+  .mock-actions {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    padding: 12px; background: #0a2028;
+  }
+  .mock-actions button {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: #17414e; border: 1px solid #2f5d6c; border-radius: 10px;
+    padding: 8px 4px; color: #8fb4c4; font-size: 0.5625rem;
+  }
+  .mock-actions img {
+    width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated;
+  }
+
+  .grid-icons {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid #1e3444;
+  }
+  .icon-cell { text-align: center; }
+  .icon-cell img {
+    width: 48px; height: 48px; object-fit: contain; image-rendering: pixelated;
+    background: #1a3040; border-radius: 6px; padding: 4px;
+  }
+  .icon-cell span { display: block; font-size: 0.5rem; color: #6a8898; margin-top: 4px; }
+  .compare {
+    display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px;
+  }
+  .compare img { width: 28px; height: 28px; image-rendering: pixelated; background: #1a3040; border-radius: 4px; padding: 2px; }
+  .compare .vs { font-size: 0.4375rem; color: #4a6070; }
+  .foot { margin-top: 20px; font-size: 0.625rem; color: #6a8898; }
+  code { color: #9fe6c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>UI 액션 아이콘 시안</h1>
+    <p class="lead">먹이 · 놀이 · 청소 · 재우기/깨우기 · 도감 · 볼륨 ON/OFF · 시안 3세트 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      상단 헤더(도감·볼륨) + 하단 액션바(4버튼) 인게임 배치 목업.
+      승인 후 <code>assets/sprites/ui/</code> 반영.
+    </div>
+    <div class="gallery" id="gallery"></div>
+    <p class="foot">스테이징: <code>assets/custom/ui-{icon}-{1,2,3}.png</code></p>
+  </div>
+  <script>
+    const ICONS = [{"id": "feed", "label": "먹이"}, {"id": "play", "label": "놀이"}, {"id": "clean", "label": "청소"}, {"id": "sleep", "label": "재우기"}, {"id": "wake", "label": "깨우기"}, {"id": "encyclopedia", "label": "도감"}, {"id": "sound-on", "label": "볼륨 ON"}, {"id": "sound-off", "label": "볼륨 OFF"}];
+    const SETS = [{"n": 1, "title": "시안 1 · 클래식", "desc": "사과·공·빗자루·달·해·일지·스피커 — 현행 톤 강화", "pick": true}, {"n": 2, "title": "시안 2 · 잠수함 패널", "desc": "황동·청록 SUB-3 스타일 UI", "pick": false}, {"n": 3, "title": "시안 3 · 발광 오브", "desc": "어두운 원형 패널 + 청록 바이오루미네선스", "pick": false}];
+    const ACTIONS = ["feed", "play", "clean", "sleep"];
+    const ACTION_LABELS = { feed: "먹이", play: "놀이", clean: "청소", sleep: "재우기" };
+    const gallery = document.getElementById("gallery");
+
+    function src(icon, n) {
+      return `../assets/custom/ui-${icon}-${n}.png`;
+    }
+    function current(icon) {
+      return `../assets/sprites/ui/${icon}.png`;
+    }
+
+    SETS.forEach(({ n, title, desc, pick }) => {
+      const card = document.createElement("article");
+      card.className = "card" + (pick ? " card--pick" : "");
+      card.innerHTML = `
+        <h2>${title}</h2>
+        <p class="desc">${desc}</p>
+        <div class="mock">
+          <div class="mock-header">
+            <button type="button"><img src="${src("encyclopedia", n)}" alt="도감"></button>
+            <button type="button"><img src="${src("sound-on", n)}" alt="볼륨"></button>
+          </div>
+          <div class="mock-pet"></div>
+          <div class="mock-actions">
+            ${ACTIONS.map(id => `
+              <button type="button">
+                <img src="${src(id, n)}" alt="">
+                <span>${ACTION_LABELS[id]}</span>
+              </button>`).join("")}
+          </div>
+        </div>
+        <div class="grid-icons">
+          ${ICONS.map(({ id, label }) => `
+            <div class="icon-cell">
+              <img src="${src(id, n)}" alt="">
+              <span>${label}</span>
+              <div class="compare">
+                <img src="${current(id)}" alt="현재">
+                <span class="vs">vs</span>
+                <img src="${src(id, n)}" alt="시안">
+              </div>
+            </div>`).join("")}
+        </div>`;
+      gallery.appendChild(card);
+    });
+  </script>
+</body>
+</html>

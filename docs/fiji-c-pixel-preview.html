@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 · 시안 C 픽셀</title>
+<style>
+  :root {
+    --bg: #0a141d; --panel: #101f2b;
+    --stage-top: #57b4d2; --stage-bot: #348fb0;
+    --ink: #d8ecf8; --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+    --tag: #3a9e7a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 40px 20px 80px;
+  }
+  h1 { font-size: 22px; text-align: center; margin: 0 0 6px; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; margin-left: 4px;
+    background: var(--tag); color: #fff;
+  }
+  .row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; max-width: 900px; margin: 0 auto 32px; }
+  .ref {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 14px; text-align: center; width: 260px;
+  }
+  .ref h3 { font-size: 14px; margin: 0 0 10px; color: var(--muted); font-weight: 600; }
+  .stage {
+    border-radius: 12px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage img { width: 80%; height: 80%; object-fit: contain; image-rendering: pixelated; }
+  .stage img.smooth { image-rendering: auto; }
+  .note {
+    max-width: 640px; margin: 0 auto 28px; padding: 12px 16px;
+    background: rgba(58,158,122,.1); border: 1px solid rgba(58,158,122,.22);
+    border-radius: 10px; font-size: 13px; color: var(--muted); line-height: 1.5;
+  }
+  .hero {
+    max-width: 420px; margin: 0 auto 24px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 20px; text-align: center;
+  }
+  .hero h2 { font-size: 17px; margin: 0 0 8px; }
+  .hero p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; }
+  .hero .stage img { animation: bob 3.2s ease-in-out infinite; filter: drop-shadow(0 8px 12px rgba(0,0,0,.35)); }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .flips { display: flex; gap: 10px; margin-top: 14px; }
+  .flip {
+    flex: 1; text-align: center; background: linear-gradient(180deg, #1b3346, #10222f);
+    border-radius: 10px; padding: 8px; border: 1px solid var(--line);
+  }
+  .flip img { width: 80px; height: 80px; object-fit: contain; image-rendering: pixelated; }
+  .flip img.r { transform: scaleX(-1); }
+  .flip .lbl { color: var(--muted); font-size: 11px; margin-top: 4px; }
+</style>
+</head>
+<body>
+  <h1>심해인어 · 시안 C 픽셀화 <span class="badge">심연 부패형</span></h1>
+  <p class="sub">HQ 시안 C → 픽셀 아트 · 페미콤 팔레트·디더 살짝 · 256×256 · 스테이징</p>
+
+  <div class="row">
+    <div class="ref">
+      <h3>HQ 원본 (시안 C)</h3>
+      <div class="stage"><img class="smooth" src="../assets/custom/fiji-hq-3.png" alt="HQ"></div>
+    </div>
+    <div class="ref">
+      <h3>픽셀 변환</h3>
+      <div class="stage"><img src="../assets/custom/fiji-c-pixel.png" alt="pixel"></div>
+    </div>
+    <div class="ref">
+      <h3>사이즈 기준 · 능어</h3>
+      <div class="stage"><img src="../assets/sprites/mermaid/adult/scruffy.png" alt="scruffy"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    미라화 갈색 상체 + 청록 비늘·발광 반점. 제한 팔레트(20색)와 꼬리 디더만 페미콤 느낌.
+    마음에 들면 defective 슬롯 지정 후 게임 반영합니다.
+  </div>
+
+  <div class="hero">
+    <h2>시안 C · 심연 부패형 (픽셀)</h2>
+    <p>기어가는 자세, 해골·갈비뼈·발톱, 청록 발광 꼬리.</p>
+    <div class="stage"><img src="../assets/custom/fiji-c-pixel.png" alt="hero"></div>
+    <div class="flips">
+      <div class="flip"><img src="../assets/custom/fiji-c-pixel.png" alt=""><div class="lbl">좌향</div></div>
+      <div class="flip"><img class="r" src="../assets/custom/fiji-c-pixel.png" alt=""><div class="lbl">우향</div></div>
+    </div>
+  </div>
+</body>
+</html>

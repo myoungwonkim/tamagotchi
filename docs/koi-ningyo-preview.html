@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 · 잉어 인어 시안</title>
+<style>
+  :root {
+    --bg: #0a141d; --panel: #101f2b;
+    --stage-top: #57b4d2; --stage-bot: #348fb0;
+    --ink: #d8ecf8; --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+    --tag: #c45;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 40px 20px 80px;
+  }
+  h1 { font-size: 22px; text-align: center; margin: 0 0 6px; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; margin-left: 4px;
+    background: var(--tag); color: #fff;
+  }
+  .refs { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; max-width: 720px; margin: 0 auto 32px; }
+  .ref {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 12px; text-align: center; flex: 1; min-width: 200px; max-width: 340px;
+  }
+  .ref .box {
+    border-radius: 10px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .ref .box img { max-width: 92%; max-height: 92%; object-fit: contain; }
+  .ref .cap { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .note {
+    max-width: 680px; margin: 0 auto 32px; padding: 12px 16px;
+    background: rgba(196,68,85,.1); border: 1px solid rgba(196,68,85,.22);
+    border-radius: 10px; font-size: 13px; color: var(--muted); line-height: 1.5;
+  }
+  .grid {
+    display: grid; gap: 24px; max-width: 1180px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 20px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 4px; }
+  .card .desc { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; min-height: 44px; }
+  .stage {
+    border-radius: 14px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage img {
+    width: 82%; height: 82%; object-fit: contain;
+    animation: bob 3.2s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .flips { display: flex; gap: 10px; margin-top: 14px; }
+  .flip {
+    flex: 1; text-align: center; background: linear-gradient(180deg, #1b3346, #10222f);
+    border-radius: 10px; padding: 8px; border: 1px solid var(--line);
+  }
+  .flip img { width: 80px; height: 80px; object-fit: contain; }
+  .flip img.r { transform: scaleX(-1); }
+  .flip .lbl { color: var(--muted); font-size: 11px; margin-top: 4px; }
+</style>
+</head>
+<body>
+  <h1>심해인어 · 잉어 인어 시안 <span class="badge">錦鯉人魚</span></h1>
+  <p class="sub">첨부 참고(일본화 잉어 인어) · 인어만 · 256×256 · 스테이징 전용</p>
+
+  <div class="refs">
+    <div class="ref">
+      <div class="box"><img src="../assets/custom/koi-ningyo-reference.png" alt="참고"></div>
+      <div class="cap">참고 원본 · 잉어 인어 그림</div>
+    </div>
+    <div class="ref">
+      <div class="box"><img src="../assets/sprites/mermaid/adult/fluffy.png" alt="소라"></div>
+      <div class="cap">사이즈 기준 · 소라 어인 (fluffy)</div>
+    </div>
+  </div>
+
+  <div class="note">
+  pretty / standard / defective 슬롯 중 어디에 넣을지 정해주시면 게임에 반영합니다.
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>시안 A · 표본 충실형</h2>
+      <p class="desc">긴 흑발·백옥 피부·흰 붕대 상체. 백·적 잉어 비늘 꼬리, 투명 지느러미. 참고 구도 그대로.</p>
+      <div class="stage"><img src="../assets/custom/koi-ningyo-1.png" alt="A"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/koi-ningyo-1.png" alt=""><div class="lbl">좌향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/koi-ningyo-1.png" alt=""><div class="lbl">우향</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>시안 B · 심해 적응형</h2>
+      <p class="desc">청록 비늘 갑옷 상체 + 잉어 무늬 꼬리. 심해 발광 하이라이트, 유영 자세.</p>
+      <div class="stage"><img src="../assets/custom/koi-ningyo-2.png" alt="B"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/koi-ningyo-2.png" alt=""><div class="lbl">좌향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/koi-ningyo-2.png" alt=""><div class="lbl">우향</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>시안 C · 목판화형 (픽셀)</h2>
+      <p class="desc">니혼가 색감·굵은 잉어 반점·긴 머리카락. 제한 팔레트·가벼운 디더만 픽셀 느낌.</p>
+      <div class="stage"><img src="../assets/custom/koi-ningyo-3-pixel.png" alt="C pixel" style="image-rendering:pixelated"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/koi-ningyo-3-pixel.png" alt="" style="image-rendering:pixelated"><div class="lbl">좌향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/koi-ningyo-3-pixel.png" alt="" style="image-rendering:pixelated"><div class="lbl">우향</div></div>
+      </div>
+      <p class="desc" style="margin-top:12px;min-height:auto;font-size:12px">↳ 원본(HQ): <a href="../assets/custom/koi-ningyo-3.png" style="color:#8fb0c6">koi-ningyo-3.png</a></p>
+    </div>
+  </div>
+</body>
+</html>

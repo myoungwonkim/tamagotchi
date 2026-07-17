@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 · 변형 A 색상/표정 시안</title>
+<style>
+  :root {
+    --bg: #0a141d;
+    --panel: #101f2b;
+    --stage-top: #274a63;
+    --stage-bot: #12283a;
+    --ink: #d8ecf8;
+    --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 40px 20px 80px;
+  }
+  h1 { font-size: 22px; text-align: center; margin: 0 0 6px; letter-spacing: .02em; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+
+  .refs { display: flex; justify-content: center; margin: 0 auto 40px; }
+  .ref {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 12px; text-align: center; width: 200px;
+  }
+  .ref .box {
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    border-radius: 10px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+  }
+  .ref .box img { width: 78%; height: 78%; object-fit: contain; image-rendering: pixelated; }
+  .ref .cap { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+  .grid {
+    display: grid; gap: 24px; max-width: 1180px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 20px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 4px; }
+  .card .desc { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; min-height: 40px; }
+
+  .stage {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage::before, .stage::after {
+    content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.10);
+  }
+  .stage::before { width: 10px; height: 10px; top: 22%; left: 26%; }
+  .stage::after  { width: 7px;  height: 7px;  bottom: 24%; right: 30%; }
+  .stage img {
+    width: 76%; height: 76%; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 10px 14px rgba(0,0,0,.4));
+    animation: bob 3.4s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  .flips { display: flex; gap: 12px; margin-top: 16px; }
+  .flip {
+    flex: 1; border-radius: 10px; padding: 10px 0; text-align: center;
+    background: linear-gradient(180deg, #1b3346, #10222f);
+    border: 1px solid var(--line);
+  }
+  .flip img { width: 84px; height: 84px; object-fit: contain; image-rendering: pixelated; }
+  .flip .lbl { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .flip img.r { transform: scaleX(-1); }
+</style>
+</head>
+<body>
+  <h1>심해인어 · 변형 A 색상 다양화 + 표정 순화</h1>
+  <p class="sub">변형 A(청록 기본)를 기준으로 색을 다양화하고 얼굴을 약간 덜 험상궂게 조정한 3종 — 스테이징 전용(게임 미반영)</p>
+
+  <div class="refs">
+    <div class="ref">
+      <div class="box"><img src="../assets/custom/ningyo-v1.png" alt="변형 A 기준"></div>
+      <div class="cap">기준 · 변형 A (청록 기본)</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>A-1 · 청록 + 골드</h2>
+      <p class="desc">청록 비늘에 은은한 앤티크 골드 테두리와 금빛 지느러미. 따뜻하고 고급스러운 톤.</p>
+      <div class="stage"><img src="../assets/custom/ningyo-v1a.png" alt="A-1"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/ningyo-v1a.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/ningyo-v1a.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>A-2 · 청록 + 코랄</h2>
+      <p class="desc">청록 몸에 산호빛 지느러미와 발그레한 볼. 부드럽고 다정한 톤.</p>
+      <div class="stage"><img src="../assets/custom/ningyo-v1b.png" alt="A-2"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/ningyo-v1b.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/ningyo-v1b.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>A-3 · 청록 + 바이올렛</h2>
+      <p class="desc">등과 지느러미로 갈수록 보랏빛 무지갯빛이 감도는 몽환적인 톤.</p>
+      <div class="stage"><img src="../assets/custom/ningyo-v1c.png" alt="A-3"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/ningyo-v1c.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/ningyo-v1c.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

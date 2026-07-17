@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>금비늘 어인 · 액션 시안</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #0a141d; color: #d8ecf8; padding: 32px 16px 64px; line-height: 1.5;
+  }
+  h1 { font-size: 1.25rem; text-align: center; margin-bottom: 6px; }
+  .sub { text-align: center; font-size: 0.8125rem; color: #8fb0c6; margin-bottom: 24px; }
+  .notice {
+    max-width: 720px; margin: 0 auto 28px; padding: 12px 14px; font-size: 0.75rem; color: #8fb0c6;
+    background: #101f2b; border: 1px solid rgba(120,170,200,.16); border-radius: 10px;
+  }
+  .notice strong { color: #58c6d6; }
+
+  .grid {
+    display: grid; gap: 20px; max-width: 900px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .card {
+    background: #101f2b; border: 1px solid rgba(120,170,200,.16);
+    border-radius: 16px; padding: 16px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 0.9375rem; margin-bottom: 4px; color: #d8ecf8; }
+  .card .desc { font-size: 0.75rem; color: #8fb0c6; margin-bottom: 12px; min-height: 2.8em; }
+  .tag {
+    display: inline-block; font-size: 0.625rem; font-weight: 700; padding: 2px 7px;
+    border-radius: 4px; margin-bottom: 8px;
+  }
+  .tag--rec { background: #2a6; color: #fff; }
+  .tag--alt { background: #456; color: #cfe4f2; }
+
+  .stage {
+    position: relative; height: 200px; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(180deg, #274a63 0%, #12283a 55%, #0a1f2b 100%);
+    box-shadow: inset 0 0 40px rgba(16,74,104,.35);
+  }
+  .stage::before, .stage::after {
+    content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.08);
+  }
+  .stage::before { width: 8px; height: 8px; top: 18%; left: 22%; }
+  .stage::after  { width: 5px; height: 5px; bottom: 28%; right: 26%; }
+  .lane { position: absolute; left: 0; right: 0; bottom: 44px; height: 1px; background: rgba(128,222,234,.1); }
+
+  .actor {
+    position: absolute; bottom: 28px; left: 50%;
+    width: 100px; height: 100px;
+    margin-left: -50px;
+    --dur: 5s;
+  }
+  .actor img {
+    width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
+    transform-origin: 50% 85%;
+  }
+
+  /* A · 순찰 (능어와 동일) */
+  .act-a { animation: patrolMove var(--dur) ease-in-out infinite; }
+  .act-a img { animation: patrolFlip var(--dur) linear infinite; transform-origin: 50% 50%; }
+
+  @keyframes patrolMove {
+    0%   { transform: translateX(-70px); }
+    25%  { transform: translateX(0) translateY(-4px); }
+    50%  { transform: translateX(70px); }
+    75%  { transform: translateX(0) translateY(-4px); }
+    100% { transform: translateX(-70px); }
+  }
+  @keyframes patrolFlip {
+    0%, 49.99% { transform: scaleX(-1); }
+    50%, 100%  { transform: scaleX(1); }
+  }
+
+  /* B · 창 찌르기 (제자리 교대) */
+  .act-b { animation: thrustIdle calc(var(--dur) * 0.4) ease-in-out infinite; }
+  .act-b img { animation: thrustJab var(--dur) ease-in-out infinite; }
+
+  @keyframes thrustIdle {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+  @keyframes thrustJab {
+    0%, 18%, 100% { transform: scaleX(1) translateX(0) rotate(0deg); }
+    8%            { transform: scaleX(1) translateX(-14px) rotate(-4deg) scale(1.04); }
+    50%, 68%      { transform: scaleX(-1) translateX(0) rotate(0deg); }
+    58%           { transform: scaleX(-1) translateX(14px) rotate(4deg) scale(1.04); }
+  }
+
+  /* C · 방패 태세 */
+  .act-c { animation: guardSway var(--dur) ease-in-out infinite; }
+  .act-c img { animation: guardPulse calc(var(--dur) * 0.5) ease-in-out infinite; }
+
+  @keyframes guardSway {
+    0%, 100% { transform: translateX(-8px) rotate(-2deg); }
+    50%      { transform: translateX(8px) rotate(2deg); }
+  }
+  @keyframes guardPulse {
+    0%, 100% { transform: scaleX(1) scale(1); }
+    25%      { transform: scaleX(1) scale(1.03) translateX(-4px); }
+    75%      { transform: scaleX(-1) scale(1.03) translateX(4px); }
+  }
+
+  /* D · 순찰 + 창 찌르기 (추천) */
+  .act-d { animation: patrolThrustMove var(--dur) ease-in-out infinite; }
+  .act-d img { animation: patrolThrustImg var(--dur) ease-in-out infinite; transform-origin: 50% 85%; }
+
+  @keyframes patrolThrustMove {
+    0%   { transform: translateX(-70px); }
+    20%  { transform: translateX(-70px); }
+    35%  { transform: translateX(-90px); }
+    45%  { transform: translateX(-70px); }
+    50%  { transform: translateX(70px); }
+    70%  { transform: translateX(70px); }
+    85%  { transform: translateX(90px); }
+    95%  { transform: translateX(70px); }
+    100% { transform: translateX(-70px); }
+  }
+  @keyframes patrolThrustImg {
+    0%, 19%   { transform: scaleX(1) rotate(0deg); }
+    20%, 34%  { transform: scaleX(1) rotate(-6deg) scale(1.05); }
+    35%, 44%  { transform: scaleX(1) translateX(-8px) rotate(-3deg); }
+    45%, 49%  { transform: scaleX(1) rotate(0deg); }
+    50%, 69%  { transform: scaleX(-1) rotate(0deg); }
+    70%, 84%  { transform: scaleX(-1) rotate(6deg) scale(1.05); }
+    85%, 94%  { transform: scaleX(-1) translateX(8px) rotate(3deg); }
+    95%, 100% { transform: scaleX(-1) rotate(0deg); }
+  }
+
+  .controls {
+    max-width: 720px; margin: 24px auto 0; display: flex; flex-wrap: wrap; gap: 10px;
+    align-items: center; justify-content: center; font-size: 0.8125rem; color: #8fb0c6;
+  }
+  button {
+    font: inherit; font-size: 0.75rem; color: #cfe8ee; cursor: pointer;
+    background: #17303c; border: 1px solid #2f5866; border-radius: 8px; padding: 7px 14px;
+  }
+  button:hover { background: #1d3d4b; }
+  button[aria-pressed="true"] { background: #2a5766; border-color: #4f93a6; }
+  input[type="range"] { width: 140px; accent-color: #58c6d6; }
+  .paused .actor, .paused .actor img { animation-play-state: paused !important; }
+</style>
+</head>
+<body>
+  <h1>금비늘 어인 · 액션 시안</h1>
+  <p class="sub">pretty 성체(golden) · 스테이징 전용(게임 미반영)</p>
+  <div class="notice">
+    스프라이트는 <strong>단일 PNG</strong>라 창·방패는 몸과 함께 움직입니다.
+    실제 적용 시 능어처럼 <strong>컨테이너 이동 + 스프라이트 반전</strong>에
+    <strong>전진(lunge)·기울임(rotate)</strong>을 더해 공격/방어 느낌을 냅니다.
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="card">
+      <span class="tag tag--alt">A · 기본</span>
+      <h2>순찰 (능어와 동일)</h2>
+      <p class="desc">좌우 왕복 + 오른쪽 이동 시 반전. 호위병이 구역을 도는 느낌.</p>
+      <div class="stage"><div class="lane"></div>
+        <div class="actor act-a"><img src="../assets/sprites/mermaid/adult/golden.png" alt="순찰"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag--alt">B</span>
+      <h2>창 찌르기 (제자리)</h2>
+      <p class="desc">제자리에서 좌·우로 번갈아 창을 내미는 느낌. 이동 없이 idle 대용.</p>
+      <div class="stage"><div class="lane"></div>
+        <div class="actor act-b"><img src="../assets/sprites/mermaid/adult/golden.png" alt="창 찌르기"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag--alt">C</span>
+      <h2>방패 태세</h2>
+      <p class="desc">좁게 좌우로 흔들리며 방패를 든 채 경계. 공격보다 수비·대기 무드.</p>
+      <div class="stage"><div class="lane"></div>
+        <div class="actor act-c"><img src="../assets/sprites/mermaid/adult/golden.png" alt="방패 태세"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag tag--rec">D · 추천</span>
+      <h2>순찰 + 창 찌르기</h2>
+      <p class="desc">왕복 이동 중 양 끝에서 잠깐 멈춰 창을 찌름. 호위+경계가 한 번에.</p>
+      <div class="stage"><div class="lane"></div>
+        <div class="actor act-d"><img src="../assets/sprites/mermaid/adult/golden.png" alt="순찰+찌르기"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button type="button" id="toggle" aria-pressed="false">⏸ 정지</button>
+    <label>속도 <input type="range" id="speed" min="3" max="10" value="5"> <span id="speedVal">5s</span></label>
+  </div>
+
+  <script>
+    const grid = document.getElementById("grid");
+    const toggle = document.getElementById("toggle");
+    const speed = document.getElementById("speed");
+    const speedVal = document.getElementById("speedVal");
+    let paused = false;
+
+    function setDur(sec) {
+      document.querySelectorAll(".actor").forEach(el => el.style.setProperty("--dur", sec + "s"));
+      speedVal.textContent = sec + "s";
+    }
+
+    toggle.addEventListener("click", () => {
+      paused = !paused;
+      grid.classList.toggle("paused", paused);
+      toggle.textContent = paused ? "▶ 재생" : "⏸ 정지";
+      toggle.setAttribute("aria-pressed", String(paused));
+    });
+
+    speed.addEventListener("input", () => setDur(Number(speed.value)));
+    setDur(5);
+  </script>
+</body>
+</html>

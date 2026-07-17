@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 · 피지 인어 시안</title>
+<style>
+  :root {
+    --bg: #0a141d; --panel: #101f2b;
+    --stage-top: #57b4d2; --stage-bot: #348fb0;
+    --ink: #d8ecf8; --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+    --def: #a66; --pce: #c44;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 40px 20px 80px;
+  }
+  h1 { font-size: 22px; text-align: center; margin: 0 0 6px; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; margin-left: 4px; vertical-align: middle;
+  }
+  .badge--def { background: var(--def); color: #fff; }
+  .badge--pce { background: var(--pce); color: #fff; }
+  .refs { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; max-width: 720px; margin: 0 auto 32px; }
+  .ref {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 12px; text-align: center; flex: 1; min-width: 200px; max-width: 340px;
+  }
+  .ref .box {
+    border-radius: 10px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .ref .box img { max-width: 92%; max-height: 92%; object-fit: contain; }
+  .ref .box img.pix { image-rendering: pixelated; padding: 8px; }
+  .ref .cap { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .note {
+    max-width: 680px; margin: 0 auto 32px; padding: 12px 16px;
+    background: rgba(166,102,102,.12); border: 1px solid rgba(166,102,102,.25);
+    border-radius: 10px; font-size: 13px; color: var(--muted); line-height: 1.5;
+  }
+  .grid {
+    display: grid; gap: 24px; max-width: 1180px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 20px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 4px; }
+  .card .desc { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; min-height: 44px; }
+  .stage {
+    border-radius: 14px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage img {
+    width: 78%; height: 78%; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 8px 12px rgba(0,0,0,.35));
+    animation: bob 3.2s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .flips { display: flex; gap: 10px; margin-top: 14px; }
+  .flip {
+    flex: 1; text-align: center; background: linear-gradient(180deg, #1b3346, #10222f);
+    border-radius: 10px; padding: 8px; border: 1px solid var(--line);
+  }
+  .flip img { width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated; }
+  .flip img.r { transform: scaleX(-1); }
+  .flip .lbl { color: var(--muted); font-size: 11px; margin-top: 4px; }
+</style>
+</head>
+<body>
+  <h1>심해인어 · 피지 인어 시안
+    <span class="badge badge--def">defective</span>
+    <span class="badge badge--pce">FC</span>
+  </h1>
+  <p class="sub">첨부 참고(피지 인어 표본) · 90년대 페미콤 픽셀 · 능어 사이즈 · 스테이징 전용</p>
+
+  <div class="refs">
+    <div class="ref">
+      <div class="box"><img src="../assets/custom/fiji-defective-reference.png" alt="참고"></div>
+      <div class="cap">참고 원본 · 피지 인어 표본</div>
+    </div>
+    <div class="ref">
+      <div class="box"><img class="pix" src="../assets/sprites/mermaid/adult/scruffy.png" alt="능어"></div>
+      <div class="cap">사이즈 기준 · 능어 (scruffy)</div>
+    </div>
+  </div>
+
+  <div class="note">
+    defective 슬롯: <strong>능어</strong>(scruffy) · <strong>핀백 어인</strong>(grumpy) · <strong>반점 어인</strong>(sickly).
+    마음에 드는 시안과 넣을 슬롯을 정해주시면 게임에 반영합니다.
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>시안 A · 표본 충실형</h2>
+      <p class="desc">참고 표본 픽셀화 + FC 실루엣. 뼈대 드러난 상체, 갈비뼈, 날카로운 발톱, 비늘 꼬리.</p>
+      <div class="stage"><img src="../assets/custom/fiji-defective-1.png" alt="시안 A"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/fiji-defective-1.png" alt=""><div class="lbl">좌향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/fiji-defective-1.png" alt=""><div class="lbl">우향</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>시안 B · 해골 강조형</h2>
+      <p class="desc">빈 안구·갈비뼈·부패 반점을 더 키운 grotesque 버전. defective 톤 극대화.</p>
+      <div class="stage"><img src="../assets/custom/fiji-defective-2.png" alt="시안 B"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/fiji-defective-2.png" alt=""><div class="lbl">좌향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/fiji-defective-2.png" alt=""><div class="lbl">우향</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>시안 C · 심연 부패형</h2>
+      <p class="desc">짙은 녹청 비늘 + 표백 반점. 심해 적응·미라화가 섞인 defective 변종.</p>
+      <div class="stage"><img src="../assets/custom/fiji-defective-3.png" alt="시안 C"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/fiji-defective-3.png" alt=""><div class="lbl">좌향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/fiji-defective-3.png" alt=""><div class="lbl">우향</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

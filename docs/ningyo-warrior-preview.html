@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 성체 · 어인 전사 시안</title>
+<style>
+  :root {
+    --bg: #0a141d;
+    --panel: #101f2b;
+    --stage-top: #274a63;
+    --stage-bot: #12283a;
+    --ink: #d8ecf8;
+    --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 40px 20px 80px;
+  }
+  h1 { font-size: 22px; text-align: center; margin: 0 0 6px; letter-spacing: .02em; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+
+  .refs { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; max-width: 620px; margin: 0 auto 40px; }
+  .ref {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 12px; text-align: center; width: 200px;
+  }
+  .ref .box {
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    border-radius: 10px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+  }
+  .ref .box img { width: 82%; height: 82%; object-fit: contain; image-rendering: pixelated; }
+  .ref .box img.orig { image-rendering: auto; }
+  .ref .cap { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+  .grid {
+    display: grid; gap: 24px; max-width: 1180px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 20px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 4px; }
+  .card .desc { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; min-height: 40px; }
+
+  .stage {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage::before, .stage::after {
+    content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.10);
+  }
+  .stage::before { width: 10px; height: 10px; top: 20%; left: 24%; }
+  .stage::after  { width: 7px;  height: 7px;  bottom: 22%; right: 28%; }
+  .stage img {
+    width: 82%; height: 82%; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 10px 14px rgba(0,0,0,.4));
+    animation: bob 3.4s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  .flips { display: flex; gap: 12px; margin-top: 16px; }
+  .flip {
+    flex: 1; border-radius: 10px; padding: 10px 0; text-align: center;
+    background: linear-gradient(180deg, #1b3346, #10222f);
+    border: 1px solid var(--line);
+  }
+  .flip img { width: 90px; height: 90px; object-fit: contain; image-rendering: pixelated; }
+  .flip .lbl { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .flip img.r { transform: scaleX(-1); }
+</style>
+</head>
+<body>
+  <h1>심해인어 성체 · 어인(魚人) 전사 시안</h1>
+  <p class="sub">첨부한 창을 든 어인 전사 실루엣을 바탕으로 한 성체 시안 3종 (왼쪽 바라봄) — 스테이징 전용(게임 미반영)</p>
+
+  <div class="refs">
+    <div class="ref">
+      <div class="box"><img class="orig" src="../assets/custom/ningyo-warrior-reference.png" alt="참조 원본"></div>
+      <div class="cap">참조 원본 (어인 전사)</div>
+    </div>
+    <div class="ref">
+      <div class="box"><img src="../assets/sprites/mermaid/adult/scruffy.png" alt="능어"></div>
+      <div class="cap">톤 참조 · 능어(현재 게임)</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>전사 A · 청록 기본</h2>
+      <p class="desc">능어와 같은 청록·아쿠아 톤. 창과 지느러미 방패, 뿔볏을 충실히 유지.</p>
+      <div class="stage"><img src="../assets/custom/ningyo-warrior-1.png" alt="전사 A"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/ningyo-warrior-1.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/ningyo-warrior-1.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>전사 B · 청록 + 골드</h2>
+      <p class="desc">금빛 창끝·지느러미 테두리로 영웅적인 무드. 근육질 성체 느낌.</p>
+      <div class="stage"><img src="../assets/custom/ningyo-warrior-2.png" alt="전사 B"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/ningyo-warrior-2.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/ningyo-warrior-2.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>전사 C · 심연 발광</h2>
+      <p class="desc">짙은 청록·페트롤 블루에 은은한 청록 발광. 심해 수호자 무드.</p>
+      <div class="stage"><img src="../assets/custom/ningyo-warrior-3.png" alt="전사 C"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/ningyo-warrior-3.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/ningyo-warrior-3.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

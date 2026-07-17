@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 · 시안 C 픽셀</title>
+<style>
+  :root {
+    --bg: #0a141d; --panel: #101f2b;
+    --stage-top: #57b4d2; --stage-bot: #348fb0;
+    --ink: #d8ecf8; --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: system-ui, sans-serif; padding: 40px 20px 60px; }
+  h1 { text-align: center; font-size: 22px; margin: 0 0 6px; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; max-width: 700px; margin: 0 auto; }
+  .box {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; width: 300px; text-align: center;
+  }
+  .box h3 { font-size: 14px; color: var(--muted); margin: 0 0 12px; }
+  .stage {
+    border-radius: 12px; background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage img { width: 82%; height: 82%; object-fit: contain; }
+  .stage img.pix { image-rendering: pixelated; }
+</style>
+</head>
+<body>
+  <h1>시안 C · 목판화형 → 픽셀</h1>
+  <p class="sub">약한 픽셀 아트 (팔레트·디더) · 256×256</p>
+  <div class="row">
+    <div class="box">
+      <h3>HQ 원본</h3>
+      <div class="stage"><img src="../assets/custom/koi-ningyo-3.png" alt="원본"></div>
+    </div>
+    <div class="box">
+      <h3>픽셀 보정</h3>
+      <div class="stage"><img class="pix" src="../assets/custom/koi-ningyo-3-pixel.png" alt="픽셀"></div>
+    </div>
+  </div>
+</body>
+</html>

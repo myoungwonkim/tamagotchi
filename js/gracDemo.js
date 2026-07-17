@@ -130,10 +130,10 @@ export async function runGracDemo(ctx) {
       await act("clean");
     }
 
-    ctx.showMessage("방치하면 펫이 떠날 수 있어요…", 2500);
+    ctx.showMessage("활성 플레이 중 상어가 습격할 수 있어요…", 2500);
     await pause(2000);
 
-    ctx.triggerGameOver();
+    ctx.triggerSharkAttack();
     await pause(4500);
 
     const reviveBtn = document.getElementById("btn-revive-ad");

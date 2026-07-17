@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>인면어 · 성체 펫 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+
+    .ref {
+      background: #101c26; border: 1px solid #23414d; border-radius: 12px;
+      padding: 14px; margin-bottom: 24px; font-size: 0.75rem; color: #9fb2be;
+    }
+    .ref strong { color: #d8e4ec; }
+    .ref code { color: #9fe6c8; }
+
+    h2 { font-size: 0.8125rem; color: #58b8c8; margin: 4px 0 12px; }
+    .compare {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
+    }
+    .compare .mini {
+      flex: 1; min-width: 100px; text-align: center;
+      background: #10222c; border: 1px solid #23414d; border-radius: 10px; padding: 10px;
+    }
+    .compare img {
+      width: 72px; height: 72px; object-fit: contain;
+      image-rendering: pixelated;
+      background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 10px 10px;
+      border-radius: 6px;
+    }
+    .compare .lbl { font-size: 0.5625rem; color: #6a7888; margin-top: 4px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card {
+      background: #10222c; border: 1px solid #23414d; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 200px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 150px; height: 150px; object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card .name { font-size: 0.5625rem; color: #58b8c8; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; min-height: 3.2em; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 56px; height: 56px; image-rendering: pixelated;
+      background: #1c2c38; border-radius: 6px; padding: 3px;
+    }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+    .thumbs .flip img { transform: scaleX(-1); }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a7888; }
+    code { color: #9fe6c8; }
+    a { color: #58b8c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>인면어(人面魚) · 성체 펫 시안</h1>
+    <p class="lead">민담·전설 속 인면어 → 심해어 테마 성체 후보 · <strong>스테이징 (게임 미반영)</strong></p>
+
+    <div class="notice">
+      <strong>인면어</strong>는 물고기 몸통에 사람 얼굴이 붙은 요괴(능어·인어와 달리 팔·다리 없음).
+      능어 워크플로 · <strong>왼쪽 측면</strong> · 256×256 · scruffy bbox 정렬.
+    </div>
+
+    <div class="ref">
+      <strong>테마·슬롯 제안</strong><br>
+      기본: <code>deepsea</code> 테마 · defective <code>sickly</code> (기생어) — 불쾌한 골짜기·기이한 얼굴 톤.<br>
+      시안별 대안: 1→<code>plain</code>(진흙어) · 2→<code>standard</code>(갯민숭) 또는 mermaid <code>standard</code> · 3→<code>scruffy</code>(심해아귀).<br>
+      능어(<code>mermaid/scruffy</code>)는 사람 상체+꼬리 — 인면어와 별개 종.
+    </div>
+
+    <h2>능어(인어형)와 비교</h2>
+    <div class="compare">
+      <div class="mini">
+        <img src="../assets/sprites/mermaid/adult/scruffy.png" alt="능어">
+        <div class="lbl">능어 · 사람+꼬리</div>
+      </div>
+      <div class="mini">
+        <img src="../assets/custom/inmyeon-1.png" alt="인면어 1">
+        <div class="lbl">인면어 · 얼굴만</div>
+      </div>
+      <div class="mini">
+        <img src="../assets/custom/inmyeon-3.png" alt="인면어 3">
+        <div class="lbl">심해 변이형</div>
+      </div>
+    </div>
+
+    <h2>시안 3종</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/inmyeon-1.png" alt="시안 1"></div>
+        <h3>1 · 고전형</h3>
+        <div class="name">이름 후보: 면어(面魚) · 잉어인면</div>
+        <p>창백한 잉어 몸·칙칙한 비늘·울적한 성인 얼굴. 전설·목판화 톤.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/inmyeon-1.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/inmyeon-1.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/inmyeon-2.png" alt="시안 2"></div>
+        <h3>2 · 츄비형</h3>
+        <div class="name">이름 후보: 금면어(金面魚) · 방글이</div>
+        <p>통통 금붕어·큰 눈·볼터치. 다마고치풍 귀여운 인면어.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/inmyeon-2.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/inmyeon-2.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/inmyeon-3.png" alt="시안 3"></div>
+        <h3>3 · 심해 변이형</h3>
+        <div class="name">이름 후보: 아귀인면 · 심연면어</div>
+        <p>아귀과 몸·유인등·뼈 돋은 얼굴·송곳니. 심해아귀 계열 기괴함.</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/inmyeon-3.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/inmyeon-3.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot">
+      스프라이트: <code>assets/custom/inmyeon-{1,2,3}.png</code> (256×256) ·
+      후처리: <code>scripts/prepare_staging_adult.py</code><br>
+      <a href="inmyeon-variants-preview.html">→ 시안 1·3 변형 6종 보기</a><br>
+      <a href="inmyeon-action-preview.html">→ 시안 1·3-C 액션 6종 보기</a><br>
+      미리보기: 프로젝트 루트에서 <code>python3 -m http.server 8080</code> →
+      <a href="/docs/inmyeon-preview.html">http://localhost:8080/docs/inmyeon-preview.html</a>
+    </p>
+  </div>
+</body>
+</html>

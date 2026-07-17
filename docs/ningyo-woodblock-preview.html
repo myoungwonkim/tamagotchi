@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 · 시안 1 목판화 시안</title>
+<style>
+  :root {
+    --bg: #0a141d;
+    --panel: #101f2b;
+    --ink: #d8ecf8;
+    --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+    --stage-top: #274a63;
+    --stage-bot: #12283a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 40px 20px 80px;
+  }
+  h1 { font-size: 22px; text-align: center; margin: 0 0 6px; letter-spacing: .02em; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 32px; }
+
+  .refs { display: flex; justify-content: center; margin: 0 auto 40px; }
+  .ref {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 12px; text-align: center; width: 220px;
+  }
+  .ref .box {
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    border-radius: 10px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+  }
+  .ref .box img { width: 82%; height: 82%; object-fit: contain; image-rendering: pixelated; }
+  .ref .cap { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+  .grid {
+    display: grid; gap: 26px; max-width: 1100px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 20px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 4px; }
+  .card .desc { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; min-height: 40px; }
+
+  /* 액자(프린트) 느낌 */
+  .print {
+    border-radius: 8px; overflow: hidden;
+    box-shadow: 0 12px 26px rgba(0,0,0,.45), inset 0 0 0 1px rgba(0,0,0,.15);
+    background: #efe4c7;
+    padding: 10px;
+  }
+  .print img { width: 100%; display: block; border-radius: 3px; }
+</style>
+</head>
+<body>
+  <h1>심해인어 · 시안 1 목판화(우키요에) 시안</h1>
+  <p class="sub">헤엄치는 시안 1을 에도 목판화 느낌으로 재해석한 3종 — 스테이징 전용(게임 미반영)</p>
+
+  <div class="refs">
+    <div class="ref">
+      <div class="box"><img src="../assets/custom/ningyo-swim-1.png" alt="시안 1 기준"></div>
+      <div class="cap">기준 · 시안 1 (청록 헤엄, 픽셀)</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>목판 A · 컬러 우키요에</h2>
+      <p class="desc">청록·인디고·금빛의 다색 목판. 검은 윤곽선과 화지 질감, 은은한 판목결.</p>
+      <div class="print"><img src="../assets/custom/ningyo-wood-1.png" alt="목판 A"></div>
+    </div>
+
+    <div class="card">
+      <h2>목판 B · 남색(아이즈리) 단색</h2>
+      <p class="desc">쪽빛·청록 계열의 2톤 남색 목판. 차분하고 고전적인 인쇄 무드.</p>
+      <div class="print"><img src="../assets/custom/ningyo-wood-2.png" alt="목판 B"></div>
+    </div>
+
+    <div class="card">
+      <h2>목판 C · 먹선 + 옅은 채색</h2>
+      <p class="desc">먹선 위주에 옅은 청록 채색만. 옛 박물지 삽화에 가장 가까운 느낌.</p>
+      <div class="print"><img src="../assets/custom/ningyo-wood-3.png" alt="목판 C"></div>
+    </div>
+  </div>
+</body>
+</html>

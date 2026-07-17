@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <title>깨진 하트 아이콘 시안</title>
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    background: #0a2028; color: #cfe6ec; padding: 20px 14px 48px; line-height: 1.5; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.0625rem; margin-bottom: 6px; }
+  .lead { font-size: 0.75rem; color: #8fb4c4; margin-bottom: 16px; }
+  .notice { background: #10303a; border: 1px solid #20464f; border-radius: 8px;
+    padding: 12px 14px; font-size: 0.6875rem; color: #8fb4c4; margin-bottom: 20px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: #12313b; border: 1px solid #223f48; border-radius: 14px; padding: 14px; text-align: center; }
+  .card--pick { border-color: #45c8dc; box-shadow: 0 0 0 1px rgba(69,200,220,.25); }
+  .card h2 { font-size: 0.9rem; color: #eaf6fb; margin-bottom: 4px; }
+  .card .name { font-size: 0.5625rem; color: #45c8dc; margin-bottom: 4px; }
+  .card .desc { font-size: 0.65rem; color: #86a6b4; margin-bottom: 12px; min-height: 2.8em; }
+  .stage { height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 50% 40%, #16303c 0%, #0a1c24 70%);
+    box-shadow: inset 0 0 30px rgba(0,0,0,.4); margin-bottom: 10px; }
+  .stage img { width: 150px; height: 150px; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
+  .row { display: flex; gap: 10px; justify-content: center; align-items: center; }
+  .row .cell { text-align: center; }
+  .row img { image-rendering: pixelated; background: #1a3040; border-radius: 6px; padding: 4px; }
+  .row .big img { width: 48px; height: 48px; }
+  .row .sm img { width: 28px; height: 28px; }
+  .row span { display: block; font-size: 0.4375rem; color: #6a8898; margin-top: 3px; }
+  .compare { margin-top: 10px; padding-top: 10px; border-top: 1px solid #1e3444;
+    display: flex; gap: 8px; justify-content: center; align-items: center; }
+  .compare img { width: 36px; height: 36px; image-rendering: pixelated; background: #1a3040; border-radius: 4px; padding: 2px; }
+  .compare .vs { font-size: 0.5rem; color: #4a6070; }
+  .foot { margin-top: 20px; font-size: 0.625rem; color: #6a8898; }
+  code { color: #9fe6c8; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>깨진 하트 아이콘 시안</h1>
+    <p class="lead">게임 오버 화면 아이콘 · 시안 3종 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">256×256 · 두 조각 유지 처리 · 승인 후 <code>assets/sprites/ui/heart-broken.png</code> 반영.</div>
+    <div class="gallery">
+      <article class="card card--pick">
+        <h2>시안 1 · 클래식 핑크</h2>
+        <div class="name">선명한 핑크 · 지그재그 균열 · 파편</div>
+        <p class="desc">현행 톤 강화, 가장 익숙한 게임오버 하트</p>
+        <div class="stage"><img src="../assets/custom/ui-heartbroken-1.png" alt="시안 1 · 클래식 핑크"></div>
+        <div class="row">
+          <div class="cell big"><img src="../assets/custom/ui-heartbroken-1.png" alt=""><span>48px</span></div>
+          <div class="cell sm"><img src="../assets/custom/ui-heartbroken-1.png" alt=""><span>28px</span></div>
+        </div>
+        <div class="compare">
+          <img src="../assets/sprites/ui/heart-broken.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/ui-heartbroken-1.png" alt="시안">
+        </div>
+      </article>
+      <article class="card">
+        <h2>시안 2 · 심해 발광</h2>
+        <div class="name">청록 하트 · 발광 균열 · 산호/해파리 무늬</div>
+        <p class="desc">심해 테마에 어울리는 바이오루미네선스</p>
+        <div class="stage"><img src="../assets/custom/ui-heartbroken-2.png" alt="시안 2 · 심해 발광"></div>
+        <div class="row">
+          <div class="cell big"><img src="../assets/custom/ui-heartbroken-2.png" alt=""><span>48px</span></div>
+          <div class="cell sm"><img src="../assets/custom/ui-heartbroken-2.png" alt=""><span>28px</span></div>
+        </div>
+        <div class="compare">
+          <img src="../assets/sprites/ui/heart-broken.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/ui-heartbroken-2.png" alt="시안">
+        </div>
+      </article>
+      <article class="card">
+        <h2>시안 3 · 애상 눈물</h2>
+        <div class="name">창백한 회청 하트 · 파란 눈물 한 방울</div>
+        <p class="desc">쓸쓸하고 담담한 이별 정서</p>
+        <div class="stage"><img src="../assets/custom/ui-heartbroken-3.png" alt="시안 3 · 애상 눈물"></div>
+        <div class="row">
+          <div class="cell big"><img src="../assets/custom/ui-heartbroken-3.png" alt=""><span>48px</span></div>
+          <div class="cell sm"><img src="../assets/custom/ui-heartbroken-3.png" alt=""><span>28px</span></div>
+        </div>
+        <div class="compare">
+          <img src="../assets/sprites/ui/heart-broken.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/ui-heartbroken-3.png" alt="시안">
+        </div>
+      </article>
+    </div>
+    <p class="foot">스테이징: <code>assets/custom/ui-heartbroken-{1,2,3}.png</code> · 후처리: <code>scripts/prepare_staging_ui.py</code> (두 조각 유지)</p>
+  </div>
+</body>
+</html>

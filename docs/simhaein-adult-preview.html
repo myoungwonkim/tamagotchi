@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>심해 인어 · 성체 시안 3종</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+    .ref-row {
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 24px;
+      background: #101c26; border: 1px solid #23414d; border-radius: 12px; padding: 14px;
+    }
+    .ref-row img {
+      width: 72px; height: 72px; object-fit: contain; image-rendering: pixelated;
+      background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 10px 10px;
+      border-radius: 8px; padding: 4px;
+    }
+    .ref-row p { font-size: 0.75rem; color: #9fb2be; flex: 1; min-width: 200px; }
+    h2 { font-size: 0.8125rem; color: #58b8c8; margin: 4px 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+    .card {
+      background: #10222c; border: 1px solid #23414d; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 200px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 150px; height: 150px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; min-height: 2.8em; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated;
+      background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 8px 8px;
+      border-radius: 6px; padding: 3px;
+    }
+    .thumbs span { display: block; font-size: 0.5rem; color: #6a7888; margin-top: 2px; }
+    .thumbs .flip img { transform: scaleX(-1); }
+    code { color: #9fe6c8; }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a7888; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>심해 인어 · 성체 시안 3종</h1>
+    <p class="lead">mermaid 테마 성체 후보 · 256×256 픽셀 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      <strong>규격:</strong> 왼쪽 측면(side profile) · scruffy bbox 정렬 ·
+      능어와 동일하게 <strong>좌우 왕복 + 오른쪽 이동 시 반전</strong> 액션 적용 가능.<br>
+      기존 게임 스프라이트(청령·능어·산호) 톤을 참고해 심해 인어 성체 3컨셉을 제안합니다.
+    </div>
+
+    <div class="ref-row">
+      <img src="../assets/sprites/mermaid/adult/sparkle.png" alt="청령">
+      <img src="../assets/sprites/mermaid/adult/scruffy.png" alt="능어">
+      <img src="../assets/sprites/mermaid/adult/standard.png" alt="산호">
+      <p><strong>기준:</strong> mermaid sparkle / scruffy(능어) / standard(산호) · 심해 인어 팔레트·실루엣 참고</p>
+    </div>
+
+    <h2>성체 디자인 후보</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/simhaein-1.png" alt="시안 1"></div>
+        <h3>시안 1 · 진주 인어</h3>
+        <p>인어 꼬리형 · 청록 비늘·진주 장식 · 발광 문양. 청령 계열 우아한 실루엣</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/simhaein-1.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/simhaein-1.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/simhaein-2.png" alt="시안 2"></div>
+        <h3>시안 2 · 陵魚(능어)형</h3>
+        <p>어류 몸통 + 사람 팔·다리 · 청록 비늘 · 산해경 陵魚 계보. 현 능어(sl scruffy) 확장안</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/simhaein-2.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/simhaein-2.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/simhaein-3.png" alt="시안 3"></div>
+        <h3>시안 3 · 산호 츄비</h3>
+        <p>큰 머리·큰 눈 · 산호-청록 그라데이션 꼬리 · 다마고치풍 귀여운 심해 인어</p>
+        <div class="thumbs">
+          <div><img src="../assets/custom/simhaein-3.png" alt=""><span>← 왼쪽</span></div>
+          <div class="flip"><img src="../assets/custom/simhaein-3.png" alt=""><span>오른쪽 →</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot">
+      스프라이트: <code>assets/custom/simhaein-{1,2,3}.png</code> ·
+      오른쪽 썸네일은 <code>scaleX(-1)</code> 반전(능어 왕복 액션) 미리보기.<br>
+      승인 시 슬롯 지정 + 게임 반영. (예: 시안 2 → scruffy 대체, 시안 1 → sparkle 계열 등)<br>
+      <a href="simhaein-1-variants-preview.html" style="color:#58b8c8">→ 시안 1 확장 3종 보기</a>
+    </p>
+  </div>
+</body>
+</html>

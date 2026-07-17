@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1426">
+  <title>심해어 진화 5단계 · 시안</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #0c1426; color: #c8d4dc; padding: 20px 14px 48px; line-height: 1.5;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    h1 { font-size: 1.0625rem; color: #80deea; margin-bottom: 6px; }
+    .lead { font-size: 0.75rem; color: #7a8898; margin-bottom: 16px; }
+    .notice {
+      background: #1a2838; border: 1px solid #3a5060; border-radius: 8px;
+      padding: 12px 14px; font-size: 0.6875rem; color: #98a8b8; margin-bottom: 20px;
+    }
+    .notice strong { color: #58b8c8; }
+    h2 {
+      font-size: 0.875rem; color: #80deea; margin: 24px 0 6px;
+      padding-bottom: 6px; border-bottom: 1px solid #23414d;
+    }
+    h2 span { font-size: 0.625rem; color: #6a8898; font-weight: normal; margin-left: 6px; }
+    .tier { font-size: 0.625rem; color: #c084fc; margin-bottom: 12px; }
+    .current-row {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
+      background: #101c26; border: 1px solid #23414d; border-radius: 10px; padding: 12px;
+    }
+    .current-item { text-align: center; flex: 1 1 72px; min-width: 72px; }
+    .current-item img {
+      width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated;
+      background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 8px 8px;
+      border-radius: 6px; padding: 4px;
+    }
+    .current-item span { display: block; font-size: 0.5rem; color: #6a8898; margin-top: 4px; }
+    .current-item .cur { color: #58b8c8; font-size: 0.4375rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card {
+      background: #10222c; border: 1px solid #23414d; border-radius: 12px; padding: 12px; text-align: center;
+    }
+    .stage {
+      position: relative; height: 180px; border-radius: 10px; overflow: hidden;
+      background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+      box-shadow: inset 0 0 34px rgba(16, 74, 104, 0.35);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .stage img {
+      width: 128px; height: 128px; object-fit: contain;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45));
+    }
+    .card h3 { font-size: 0.8125rem; color: #eaf3f6; margin-bottom: 4px; }
+    .card .name { font-size: 0.5625rem; color: #58b8c8; margin-bottom: 4px; }
+    .card p { font-size: 0.625rem; color: #8aa0ac; min-height: 2.8em; }
+    .thumbs { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+    .thumbs div { text-align: center; }
+    .thumbs img {
+      width: 32px; height: 32px; image-rendering: pixelated;
+      background: #1c2c38; border-radius: 4px; padding: 2px;
+    }
+    .thumbs span { display: block; font-size: 0.4375rem; color: #6a7888; margin-top: 2px; }
+    .compare {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-top: 8px; padding-top: 8px; border-top: 1px solid #1e3444;
+    }
+    .compare img {
+      width: 40px; height: 40px; image-rendering: pixelated;
+      background: #1c2c38; border-radius: 4px; padding: 2px;
+    }
+    .compare .vs { font-size: 0.5rem; color: #4a6070; }
+    .compare .lbl { font-size: 0.4375rem; color: #6a8898; }
+    code { color: #9fe6c8; }
+    .foot { margin-top: 22px; font-size: 0.625rem; color: #6a7888; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>심해어 진화 5단계 · 시안</h1>
+    <p class="lead">알 · 라바 · 치어 · 청소년어 · 유령 — 단계별 3종 · <strong>스테이징 (게임 미반영)</strong></p>
+    <div class="notice">
+      256×256 픽셀아트 · outline-protected flood · 게임 진화 스프라이트 bbox 정렬.
+      시안마다 32px 썸네일로 인게임 크기 가독성 확인.
+      승인 후 <code>assets/sprites/evolution/</code> 반영.
+    </div>
+
+    <h2>현재 게임 스프라이트 <span>비교 기준</span></h2>
+    <div class="current-row">
+      <div class="current-item"><img src="../assets/sprites/evolution/egg.png" alt="알"><span>알</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/evolution/baby.png" alt="라바"><span>라바</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/evolution/child.png" alt="치어"><span>치어</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/evolution/teen.png" alt="청소년어"><span>청소년어</span><span class="cur">현재</span></div>
+      <div class="current-item"><img src="../assets/sprites/evolution/ghost.png" alt="유령"><span>유령</span><span class="cur">현재</span></div>
+    </div>
+    <h2>알 <span>egg</span></h2>
+    <p class="tier">3종 · 중앙 정렬 · 연어알 / 젤리알 / 가시 알주머니</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-egg-1.png" alt="시안 1 · 연어알"></div>
+        <h3>시안 1 · 연어알</h3>
+        <div class="name">클래식 — 현행 톤 강화</div>
+        <p>살몬 핑크 알 덩어리, 주황 발광 점. 익숙한 심해어 알 느낌</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-egg-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/egg.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-egg-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-egg-2.png" alt="시안 2 · 젤리알"></div>
+        <h3>시안 2 · 젤리알</h3>
+        <div class="name">투명 젤리 · 청록 발광</div>
+        <p>반투명 젤리 구체, 내부 청록 바이오루미네선스 점</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-egg-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/egg.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-egg-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-egg-3.png" alt="시안 3 · 가시 알주머니"></div>
+        <h3>시안 3 · 가시 알주머니</h3>
+        <div class="name">심해 성게형 · 보라-청 껍질</div>
+        <p>가시 돋친 알주머니, 노란 발광 점. 심해 기괴함 강조</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-egg-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/egg.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-egg-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>라바 <span>baby</span></h2>
+    <p class="tier">3종 · 왼쪽 응시 · 기본 라바 / 아귀 라바 / 장어 라바</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-baby-1.png" alt="시안 1 · 기본 라바"></div>
+        <h3>시안 1 · 기본 라바</h3>
+        <div class="name">큰 머리 · 가느다란 꼬리</div>
+        <p>청록 투명 라바, 둥근 머리와 얇은 꼬리. 현행과 가장 가까움</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-baby-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/baby.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-baby-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-baby-2.png" alt="시안 2 · 아귀 라바"></div>
+        <h3>시안 2 · 아귀 라바</h3>
+        <div class="name">미니 아귀 · 노란 루어</div>
+        <p>머리 위 얇은 촉수와 노란 발광 루어. 심해 아귀 씨앗</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-baby-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/baby.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-baby-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-baby-3.png" alt="시안 3 · 장어 라바"></div>
+        <h3>시안 3 · 장어 라바</h3>
+        <div class="name">리본형 · 길쭉한 몸</div>
+        <p>가늘고 긴 장어형 라바, 물결치는 꼬리. 유선형 심해 초기형</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-baby-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/baby.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-baby-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>치어 <span>child</span></h2>
+    <p class="tier">3종 · 작은 물고기 · 기본 / 줄무늬 / 복어형</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-child-1.png" alt="시안 1 · 기본 치어"></div>
+        <h3>시안 1 · 기본 치어</h3>
+        <div class="name">청록 작은 물고기</div>
+        <p>단순한 몸체와 지느러미. 현행 치어 톤 유지</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-child-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/child.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-child-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-child-2.png" alt="시안 2 · 줄무늬 치어"></div>
+        <h3>시안 2 · 줄무늬 치어</h3>
+        <div class="name">가로 줄무늬 · 심해 치어</div>
+        <p>몸통 가로 줄무늬, 약간 날카로운 실루엣</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-child-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/child.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-child-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-child-3.png" alt="시안 3 · 복어 치어"></div>
+        <h3>시안 3 · 복어 치어</h3>
+        <div class="name">둥근 몸 · 작은 가시</div>
+        <p>통통한 복어형 치어, 귀여운 비율·작은 가시 지느러미</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-child-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/child.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-child-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>청소년어 <span>teen</span></h2>
+    <p class="tier">3종 · 등지느러미 성장 · 기본 / 아귀형 / 발광형</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-teen-1.png" alt="시안 1 · 기본 청소년어"></div>
+        <h3>시안 1 · 기본 청소년어</h3>
+        <div class="name">파란 몸 · 삼각 등지느러미</div>
+        <p>성장한 등지느러미, 현행 청소년어와 톤 일치</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-teen-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/teen.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-teen-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-teen-2.png" alt="시안 2 · 아귀 청소년"></div>
+        <h3>시안 2 · 아귀 청소년</h3>
+        <div class="name">길쭉한 몸 · 루어 촉수</div>
+        <p>늘씬한 청소년어, 머리 위 노란 루어. 성체 아귀 예고</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-teen-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/teen.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-teen-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-teen-3.png" alt="시안 3 · 발광 청소년"></div>
+        <h3>시안 3 · 발광 청소년</h3>
+        <div class="name">통통한 몸 · 청록 발광점</div>
+        <p>몸통에 바이오루미네선스 점, 넓은 등지느러미. 심해 특유 강조</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-teen-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/teen.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-teen-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>유령 <span>ghost</span></h2>
+    <p class="tier">3종 · 사망/유령 상태 · 슬픈 유령 / 청록 영혼 / 뼈 유령</p>
+    <div class="grid">
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-ghost-1.png" alt="시안 1 · 슬픈 유령"></div>
+        <h3>시안 1 · 슬픈 유령</h3>
+        <div class="name">크림-청 유령 · 눈물</div>
+        <p>창백한 유령 물고기, 처진 눈과 눈물. 현행 ghost 톤</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-ghost-1.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/ghost.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-ghost-1.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-ghost-2.png" alt="시안 2 · 청록 영혼"></div>
+        <h3>시안 2 · 청록 영혼</h3>
+        <div class="name">반투명 발광 영혼</div>
+        <p>청록 빛 영혼 실루엣, 희미한 오라. 몽환적 심해 유령</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-ghost-2.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/ghost.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-ghost-2.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="stage"><img src="../assets/custom/deepsea-evo-ghost-3.png" alt="시안 3 · 뼈 유령"></div>
+        <h3>시안 3 · 뼈 유령</h3>
+        <div class="name">뼈 골격 · 푸른 잔광</div>
+        <p>물고기 뼈 골격 유령, 푸른 잔광. 죽음을 직접적으로 표현</p>
+        <div class="thumbs"><div><img src="../assets/custom/deepsea-evo-ghost-3.png" alt=""><span>32px</span></div></div>
+        <div class="compare">
+          <img src="../assets/sprites/evolution/ghost.png" alt="현재">
+          <span class="vs">vs</span>
+          <img src="../assets/custom/deepsea-evo-ghost-3.png" alt="시안">
+          <span class="lbl">현재 / 시안</span>
+        </div>
+      </div>
+    </div>
+    <p class="foot">
+      스테이징: <code>assets/custom/deepsea-evo-{stage}-{1,2,3}.png</code> ·
+      후처리: <code>scripts/prepare_staging_evolution.py</code> ·
+      게임 파일 변경 없음
+    </p>
+  </div>
+</body>
+</html>

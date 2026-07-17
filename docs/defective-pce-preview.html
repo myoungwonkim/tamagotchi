@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>심해인어 defective · 페미콤 시안</title>
+<style>
+  :root {
+    --bg: #0a141d;
+    --panel: #101f2b;
+    --stage-top: #274a63;
+    --stage-bot: #12283a;
+    --ink: #d8ecf8;
+    --muted: #8fb0c6;
+    --line: rgba(120,170,200,.16);
+    --def: #a66;
+    --pce: #c44;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 40px 20px 80px;
+  }
+  h1 { font-size: 22px; text-align: center; margin: 0 0 6px; letter-spacing: .02em; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; margin-left: 4px; vertical-align: middle;
+  }
+  .badge--pce { background: var(--pce); color: #fff; }
+  .badge--def { background: var(--def); color: #fff; }
+
+  .refs { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; max-width: 680px; margin: 0 auto 40px; }
+  .ref {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 12px; text-align: center; width: 200px;
+  }
+  .ref .box {
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    border-radius: 10px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .ref .box img { max-width: 88%; max-height: 88%; object-fit: contain; }
+  .ref .box img.pix { image-rendering: pixelated; }
+  .ref .cap { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+  .note {
+    max-width: 680px; margin: 0 auto 32px; padding: 12px 16px;
+    background: rgba(166,102,102,.12); border: 1px solid rgba(166,102,102,.25);
+    border-radius: 10px; font-size: 13px; color: var(--muted); line-height: 1.5;
+  }
+
+  .grid {
+    display: grid; gap: 24px; max-width: 1180px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 20px; display: flex; flex-direction: column;
+  }
+  .card h2 { font-size: 17px; margin: 0 0 4px; }
+  .card .desc { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 16px; min-height: 40px; }
+
+  .stage {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: linear-gradient(180deg, var(--stage-top), var(--stage-bot));
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  }
+  .stage::before, .stage::after {
+    content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.10);
+  }
+  .stage::before { width: 10px; height: 10px; top: 22%; left: 26%; }
+  .stage::after  { width: 7px;  height: 7px;  bottom: 24%; right: 30%; }
+  .stage img {
+    width: 76%; height: 76%; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 10px 14px rgba(0,0,0,.4));
+    animation: bob 3.4s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  .flips { display: flex; gap: 12px; margin-top: 16px; }
+  .flip {
+    flex: 1; border-radius: 10px; padding: 10px 0; text-align: center;
+    background: linear-gradient(180deg, #1b3346, #10222f);
+    border: 1px solid var(--line);
+  }
+  .flip img { width: 84px; height: 84px; object-fit: contain; image-rendering: pixelated; }
+  .flip .lbl { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .flip img.r { transform: scaleX(-1); }
+</style>
+</head>
+<body>
+  <h1>심해인어 defective · 페미콤 시안 <span class="badge badge--def">defective</span> <span class="badge badge--pce">PCE</span></h1>
+  <p class="sub">첨부 참조(등에 껍데기·뒤돌아보는 자세)를 defective 성체 인어에 맞게 재해석 — 스테이징 전용(게임 미반영)</p>
+
+  <div class="refs">
+    <div class="ref">
+      <div class="box"><img src="../assets/custom/shellback-reference.png" alt="참조"></div>
+      <div class="cap">참조 원본</div>
+    </div>
+    <div class="ref">
+      <div class="box"><img class="pix" src="../assets/sprites/mermaid/adult/scruffy.png" alt="능어"></div>
+      <div class="cap">defective 예 · 능어(현재)</div>
+    </div>
+  </div>
+
+  <div class="note">
+    defective 티어 슬롯: <strong>능어</strong>(scruffy) · <strong>투성 어인</strong>(grumpy) · <strong>반점 어인</strong>(sickly).
+    마음에 드는 시안과 넣을 슬롯을 정해주시면 게임에 반영합니다.
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>시안 A · 달팽이 껍데기</h2>
+      <p class="desc">웅크린 자세, 뒤돌아보는 시선, 등의 거대 소라. 청록 꼬리 + 갈색 껍데기. 참조 구도 충실.</p>
+      <div class="stage"><img src="../assets/custom/defective-pce-1.png" alt="시안 A"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/defective-pce-1.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/defective-pce-1.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>시안 B · 적점 껍데기</h2>
+      <p class="desc">참조의 적색 점묘 질감을 껍데기에 반영. 목판화·페미콠 디더링이 섞인 느낌.</p>
+      <div class="stage"><img src="../assets/custom/defective-pce-2.png" alt="시안 B"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/defective-pce-2.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/defective-pce-2.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>시안 C · 심연 남색</h2>
+      <p class="desc">짙은 남색 껍데기 + 짧고 뭉툭한 꼬리. defective 특유의 어색한 비율 강조.</p>
+      <div class="stage"><img src="../assets/custom/defective-pce-3.png" alt="시안 C"></div>
+      <div class="flips">
+        <div class="flip"><img src="../assets/custom/defective-pce-3.png" alt=""><div class="lbl">원본 방향</div></div>
+        <div class="flip"><img class="r" src="../assets/custom/defective-pce-3.png" alt=""><div class="lbl">반전(우측)</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세규치 전신 3 · 눈 깜빡 액션 시안 3종</title>
+<!-- assets v: segyu-full3-blink-1 -->
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    background: #0c1426; color: #c8d4dc; padding: 32px 16px 64px; line-height: 1.5;
+  }
+  h1 { font-size: 1.25rem; text-align: center; margin-bottom: 6px; color: #80deea; }
+  .sub { text-align: center; font-size: 0.8125rem; color: #7a8898; margin-bottom: 24px; }
+  .back { max-width: 820px; margin: 0 auto 14px; font-size: 0.6875rem; }
+  .back a { color: #58b8c8; text-decoration: none; }
+  .notice {
+    max-width: 820px; margin: 0 auto 28px; padding: 12px 14px; font-size: 0.75rem; color: #98a8b8;
+    background: #1a2838; border: 1px solid #3a5060; border-radius: 10px;
+  }
+  .notice strong { color: #58b8c8; }
+  .ref-row {
+    max-width: 820px; margin: 0 auto 28px; display: flex; gap: 16px; align-items: center;
+    background: #101c26; border: 1px solid #23414d; border-radius: 12px; padding: 12px;
+  }
+  .ref-row img {
+    width: 108px; height: 108px; object-fit: contain; image-rendering: pixelated;
+    background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 12px 12px;
+    border-radius: 8px; padding: 4px;
+  }
+  .ref-row p { font-size: 0.75rem; color: #9fb2be; }
+  .concept {
+    max-width: 960px; margin: 0 auto 40px;
+    background: #10222c; border: 1px solid #23414d; border-radius: 16px;
+    padding: 18px 14px 22px;
+  }
+  .concept h2 { font-size: 1rem; color: #80deea; margin-bottom: 4px; text-align: center; }
+  .concept .desc { font-size: 0.75rem; color: #8aa0ac; text-align: center; margin-bottom: 16px; }
+  .row-wrap {
+    display: grid; grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 8px; align-items: center; margin-bottom: 18px;
+  }
+  @media (max-width: 720px) { .row-wrap { grid-template-columns: 1fr; } .arrow { display: none !important; } }
+  .frame-card {
+    background: #12212e; border: 1px solid rgba(120,200,220,.16);
+    border-radius: 14px; padding: 12px; text-align: center;
+  }
+  .frame-card.base { border-color: rgba(88,198,214,.35); }
+  .frame-card h3 { font-size: 0.8125rem; margin-bottom: 2px; color: #eaf3f6; }
+  .frame-card .ang { font-size: 0.625rem; color: #8aa0ac; margin-bottom: 8px; min-height: 2.6em; }
+  .frame-card img {
+    width: 130px; height: 130px; object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
+    background: repeating-conic-gradient(#1a3040 0% 25%, #152838 0% 50%) 50% / 12px 12px;
+    border-radius: 10px;
+  }
+  .arrow { font-size: 1.125rem; color: #80deea; text-align: center; }
+  .anim-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+  .anim-block {
+    flex: 1; min-width: 220px; max-width: 320px;
+    background: #12212e; border: 1px solid rgba(120,200,220,.16);
+    border-radius: 14px; padding: 16px; text-align: center;
+  }
+  .anim-block h3 { font-size: 0.8125rem; margin-bottom: 4px; color: #eaf3f6; }
+  .anim-block p { font-size: 0.625rem; color: #8aa0ac; margin-bottom: 12px; }
+  .stage {
+    position: relative; height: 200px; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(180deg, #123244 0%, #0a1f2b 60%, #06141b 100%);
+    box-shadow: inset 0 0 40px rgba(16,74,104,.35);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .swimmer { position: relative; width: 140px; height: 140px; }
+  .swimmer img {
+    position: absolute; inset: 0; margin: auto; width: 140px; height: 140px;
+    object-fit: contain; image-rendering: pixelated;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
+    opacity: 0; animation: cycle var(--dur, 2.4s) steps(1) infinite;
+  }
+  .swimmer img:nth-child(1) { animation-delay: calc(var(--dur) * 0 / 3); }
+  .swimmer img:nth-child(2) { animation-delay: calc(var(--dur) * -1 / 3); }
+  .swimmer img:nth-child(3) { animation-delay: calc(var(--dur) * -2 / 3); }
+  @keyframes cycle { 0%, 33.32% { opacity: 1; } 33.33%, 100% { opacity: 0; } }
+  .controls {
+    max-width: 820px; margin: 0 auto 24px; display: flex; flex-wrap: wrap; gap: 10px;
+    align-items: center; justify-content: center; font-size: 0.8125rem; color: #8aa0ac;
+  }
+  button {
+    font: inherit; font-size: 0.75rem; color: #eaf3f6; cursor: pointer;
+    background: #163040; border: 1px solid rgba(120,200,220,.3); border-radius: 8px; padding: 7px 14px;
+  }
+  input[type="range"] { width: 130px; accent-color: #80deea; }
+  body.paused .swimmer img { animation-play-state: paused !important; }
+  .files { max-width: 820px; margin: 20px auto 0; font-size: 0.625rem; color: #6a7888; text-align: center; }
+  .files code { color: #9fe6c8; }
+</style>
+</head>
+<body>
+  <p class="back"><a href="segyu-draft-1-full-preview.html">← 전신 3종</a></p>
+  <h1>세규치 전신 3 · 눈 깜빡 액션 시안 3종</h1>
+  <p class="sub">전신 3(하강) 포즈 고정 · <strong>눈만</strong> 변화 · 스테이징 (게임 미반영)</p>
+
+  <div class="notice">
+    <strong>기준:</strong> <code>segyu-draft-1-full-3.png</code> (전신 3 · 하강).<br>
+    프레임 1·3 = 눈 뜸(기본 포즈와 동일) · 프레임 2 = 눈 깜빡(시안마다 방식 다름). 몸·지느러미·꼬리는 고정.
+  </div>
+
+  <div class="ref-row">
+    <img src="../assets/custom/segyu-draft-1-full-3.png?v=segyu-full3-blink-1" alt="전신 3">
+    <p>기준 포즈: <strong>전신 3 · 하강</strong> — 청회 노안 · 꼬리 아래로 휘어진 자세</p>
+  </div>
+
+  <section class="concept">
+    <h2>액션 A · 기본 깜빡</h2>
+    <p class="desc">눈을 완전히 감았다 뜸 — 표준 3프레임 blink</p>
+    <div class="row-wrap">
+      <div class="frame-card base">
+        <h3>프레임 1</h3>
+        <p class="ang">눈 뜸<br>= 전신 3</p>
+        <img src="../assets/custom/segyu-full3-blinka-1.png?v=segyu-full3-blink-1" alt="A1">
+      </div>
+      <span class="arrow">→</span>
+      <div class="frame-card">
+        <h3>프레임 2</h3>
+        <p class="ang">눈 완전히 감음</p>
+        <img src="../assets/custom/segyu-full3-blinka-2.png?v=segyu-full3-blink-1" alt="A2">
+      </div>
+      <span class="arrow">→</span>
+      <div class="frame-card base">
+        <h3>프레임 3</h3>
+        <p class="ang">눈 뜸<br>프레임 1과 동일</p>
+        <img src="../assets/custom/segyu-full3-blinka-3.png?v=segyu-full3-blink-1" alt="A3">
+      </div>
+    </div>
+    <div class="anim-row">
+      <div class="anim-block" data-dur="2.4">
+        <h3>3프레임 루프</h3>
+        <p>1 → 2 → 3 → 1 …</p>
+        <div class="stage">
+          <div class="swimmer">
+            <img src="../assets/custom/segyu-full3-blinka-1.png?v=segyu-full3-blink-1" alt="">
+            <img src="../assets/custom/segyu-full3-blinka-2.png?v=segyu-full3-blink-1" alt="">
+            <img src="../assets/custom/segyu-full3-blinka-3.png?v=segyu-full3-blink-1" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="concept">
+    <h2>액션 B · 느린 반쯤 감음</h2>
+    <p class="desc">노안 느낌 — 눈꺼풀만 무겁게 내려앉았다 올림</p>
+    <div class="row-wrap">
+      <div class="frame-card base">
+        <h3>프레임 1</h3>
+        <p class="ang">눈 뜸</p>
+        <img src="../assets/custom/segyu-full3-blinkb-1.png?v=segyu-full3-blink-1" alt="B1">
+      </div>
+      <span class="arrow">→</span>
+      <div class="frame-card">
+        <h3>프레임 2</h3>
+        <p class="ang">눈 반쯤 감음<br>처진 눈꺼풀</p>
+        <img src="../assets/custom/segyu-full3-blinkb-2.png?v=segyu-full3-blink-1" alt="B2">
+      </div>
+      <span class="arrow">→</span>
+      <div class="frame-card base">
+        <h3>프레임 3</h3>
+        <p class="ang">눈 뜸</p>
+        <img src="../assets/custom/segyu-full3-blinkb-3.png?v=segyu-full3-blink-1" alt="B3">
+      </div>
+    </div>
+    <div class="anim-row">
+      <div class="anim-block" data-dur="2.8">
+        <h3>3프레임 루프</h3>
+        <p>1 → 2 → 3 → 1 …</p>
+        <div class="stage">
+          <div class="swimmer">
+            <img src="../assets/custom/segyu-full3-blinkb-1.png?v=segyu-full3-blink-1" alt="">
+            <img src="../assets/custom/segyu-full3-blinkb-2.png?v=segyu-full3-blink-1" alt="">
+            <img src="../assets/custom/segyu-full3-blinkb-3.png?v=segyu-full3-blink-1" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="concept">
+    <h2>액션 C · 꽉 감음</h2>
+    <p class="desc">주름진 눈꺼풀을 꽉 오므렸다 뜸 — 짧고 단단한 blink</p>
+    <div class="row-wrap">
+      <div class="frame-card base">
+        <h3>프레임 1</h3>
+        <p class="ang">눈 뜸</p>
+        <img src="../assets/custom/segyu-full3-blinkc-1.png?v=segyu-full3-blink-1" alt="C1">
+      </div>
+      <span class="arrow">→</span>
+      <div class="frame-card">
+        <h3>프레임 2</h3>
+        <p class="ang">눈 꽉 감음<br>주름 더 깊음</p>
+        <img src="../assets/custom/segyu-full3-blinkc-2.png?v=segyu-full3-blink-1" alt="C2">
+      </div>
+      <span class="arrow">→</span>
+      <div class="frame-card base">
+        <h3>프레임 3</h3>
+        <p class="ang">눈 뜸</p>
+        <img src="../assets/custom/segyu-full3-blinkc-3.png?v=segyu-full3-blink-1" alt="C3">
+      </div>
+    </div>
+    <div class="anim-row">
+      <div class="anim-block" data-dur="2.0">
+        <h3>3프레임 루프</h3>
+        <p>1 → 2 → 3 → 1 …</p>
+        <div class="stage">
+          <div class="swimmer">
+            <img src="../assets/custom/segyu-full3-blinkc-1.png?v=segyu-full3-blink-1" alt="">
+            <img src="../assets/custom/segyu-full3-blinkc-2.png?v=segyu-full3-blink-1" alt="">
+            <img src="../assets/custom/segyu-full3-blinkc-3.png?v=segyu-full3-blink-1" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="controls">
+    <button type="button" id="toggle">⏸ 정지</button>
+    <label>속도 <input type="range" id="speed" min="0.5" max="2.5" step="0.1" value="1.0"> <span id="speedVal">1.0×</span></label>
+  </div>
+
+  <p class="files">
+    <code>assets/custom/segyu-full3-blink{a,b,c}-{1,2,3}.png</code> · 프레임 1·3 = <code>segyu-draft-1-full-3.png</code> · 게임 미반영
+  </p>
+
+  <script>
+    const toggle = document.getElementById("toggle");
+    const speed = document.getElementById("speed");
+    const speedVal = document.getElementById("speedVal");
+    const blocks = [...document.querySelectorAll(".anim-block")];
+    let paused = false;
+
+    function applySpeed(mult) {
+      speedVal.textContent = mult.toFixed(1) + "×";
+      blocks.forEach((b) => {
+        const base = Number(b.dataset.dur);
+        b.style.setProperty("--dur", (base / mult).toFixed(2) + "s");
+      });
+    }
+    toggle.addEventListener("click", () => {
+      paused = !paused;
+      document.body.classList.toggle("paused", paused);
+      toggle.textContent = paused ? "▶ 재생" : "⏸ 정지";
+    });
+    speed.addEventListener("input", () => applySpeed(Number(speed.value)));
+    applySpeed(1);
+  </script>
+</body>
+</html>
