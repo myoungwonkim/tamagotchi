@@ -361,7 +361,7 @@ const ACTION_MESSAGES = {
 };
 
 const EMERGENCY_LABELS = {
-  hunger: "배고픔",
+  hunger: "포만감",
   happiness: "행복",
   cleanliness: "청결",
 };

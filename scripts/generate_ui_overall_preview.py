@@ -208,7 +208,7 @@ HTML = r"""<!DOCTYPE html>
             <img class="pet" src="../assets/sprites/adult/standard.png" alt="">
           </div>
           <div class="m-stats">
-            <div class="m-stat"><label>배고픔</label><div class="m-bar"><div class="m-fill" style="width:79%;background:#d09248"></div></div><span class="m-val">79</span></div>
+            <div class="m-stat"><label>포만감</label><div class="m-bar"><div class="m-fill" style="width:79%;background:#d09248"></div></div><span class="m-val">79</span></div>
             <div class="m-stat"><label>행복</label><div class="m-bar"><div class="m-fill" style="width:69%;background:#5ab8ca"></div></div><span class="m-val">69</span></div>
             <div class="m-stat"><label>청결</label><div class="m-bar"><div class="m-fill" style="width:60%;background:#48aed2"></div></div><span class="m-val">60</span></div>
             <div class="m-stat"><label>건강</label><div class="m-bar"><div class="m-fill" style="width:100%;background:#5cb47e"></div></div><span class="m-val">100</span></div>

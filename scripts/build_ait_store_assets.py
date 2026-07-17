@@ -358,7 +358,7 @@ def make_thumbnail_square_from_portrait(portrait: Image.Image) -> Image.Image:
 
 
 def draw_stat_bars(draw: ImageDraw.ImageDraw, x: int, y: int, w: int) -> None:
-    bars = [("배고픔", 82, BAR_HUNGER), ("행복", 91, BAR_HAPPY), ("청결", 74, BAR_CLEAN)]
+    bars = [("포만감", 82, BAR_HUNGER), ("행복", 91, BAR_HAPPY), ("청결", 74, BAR_CLEAN)]
     row_h = 28
     for i, (label, value, color) in enumerate(bars):
         by = y + i * row_h
