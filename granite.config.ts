@@ -5,8 +5,8 @@ export default defineConfig({
   brand: {
     displayName: "어비스펫: 심해 가상 펫",
     primaryColor: "#58b8c8",
-    // 콘솔 로고 업로드 URL로 교체. 임시: GitHub Pages 정적 호스팅
-    icon: "https://myoungwonkim.github.io/tamagotchi/assets/ait-store/app-logo-light.png",
+    // 콘솔 로고 업로드 URL로 교체. 임시: 커스텀 도메인 정적 호스팅
+    icon: "https://nolsoopgames.com/assets/ait-store/app-logo-light.png",
   },
   web: {
     host: "localhost",

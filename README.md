@@ -2,7 +2,7 @@
 
 모바일 브라우저에서 키우는 **심해어 / 인어** 다마고치 게임입니다. 90년대 패미컴 스타일 32×32 픽셀 PNG 스프라이트(256px nearest-neighbor).
 
-**플레이:** https://myoungwonkim.github.io/tamagotchi/
+**플레이:** https://nolsoopgames.com/ (커스텀 도메인, DNS 연결 후) · https://myoungwonkim.github.io/tamagotchi/ (연결 시 위 도메인으로 리디렉트)
 
 ## 기능
 
@@ -234,7 +234,8 @@ npm run build:ait              # dist/ + .ait 번들 (콘솔 업로드용)
 | [docs/GRAC-RATING-CHECKLIST.md](docs/GRAC-RATING-CHECKLIST.md) | 게임물 등급 심의 |
 | [docs/GRAC-SUBMISSION-PACK.md](docs/GRAC-SUBMISSION-PACK.md) | GRAC 제출용 게임 설명서 |
 | [docs/GRAC-DEMO-SUBMISSION.md](docs/GRAC-DEMO-SUBMISSION.md) | GRAC 시연 영상·.ait·QR 가이드 |
-| [docs/privacy.html](docs/privacy.html) | 개인정보 처리방침 (검수 URL) |
+| [privacy.html](privacy.html) | 개인정보 처리방침 정식본 (검수 URL: https://nolsoopgames.com/privacy.html) |
+| [terms-of-service.html](terms-of-service.html) | 이용약관 정식본 (https://nolsoopgames.com/terms-of-service.html) |
 | [docs/MONETIZATION.md](docs/MONETIZATION.md) | 광고 지점·보상 정책 |
 | [docs/APPS-IN-TOSS-LAUNCH.md](docs/APPS-IN-TOSS-LAUNCH.md) | 출시·QA 체크리스트 |
 | [docs/AD-TUNING.md](docs/AD-TUNING.md) | 출시 후 eCPM·빈도 튜닝 |
@@ -322,8 +323,14 @@ npm run build:ait              # dist/ + .ait 번들 (콘솔 업로드용)
 1. `main` 브랜치에 push
 2. **Settings → Pages → Source:** Deploy from a branch
 3. Branch: `main`, Folder: `/ (root)`
+4. **Settings → Pages → Custom domain:** `nolsoopgames.com` 입력 후 저장 (저장소 루트 `CNAME` 파일이 이미 있음)
+5. DNS 연결 방법은 [docs/NOLSOOPGAMES-DOMAIN-SETUP.md](docs/NOLSOOPGAMES-DOMAIN-SETUP.md) 참고
 
-배포 URL: https://myoungwonkim.github.io/tamagotchi/
+배포 URL: https://nolsoopgames.com/ (커스텀 도메인) · https://myoungwonkim.github.io/tamagotchi/ (리디렉트)
+
+개인정보/약관 정식 URL (검수 제출용):
+- https://nolsoopgames.com/privacy.html
+- https://nolsoopgames.com/terms-of-service.html
 
 ### 디자인 시안 (docs/, 게임 미반영)
 
