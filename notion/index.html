@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Freelancer OS — Notion templates for freelancers</title>
+  <meta name="description" content="Run your freelance business from quote to payment in one Notion workspace. Free starter board, Project Tracker $19, Freelancer OS $39." />
+  <link rel="canonical" href="https://nolsoopgames.com/notion/" />
+  <meta name="robots" content="index,follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nolsoopgames.com/notion/" />
+  <meta property="og:title" content="Freelancer OS — Notion templates for freelancers" />
+  <meta property="og:description" content="Run your freelance business from quote to payment in one Notion workspace. Free Mini, Project Tracker $19, Freelancer OS $39." />
+  <meta property="og:image" content="https://nolsoopgames.com/notion/assets/og-cover.png" />
+  <meta property="og:image:width" content="1500" />
+  <meta property="og:image:height" content="600" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="Freelancer OS" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Freelancer OS — Notion templates for freelancers" />
+  <meta name="twitter:description" content="Quote to payment in one Notion workspace. Free Mini · Tracker $19 · OS $39." />
+  <meta name="twitter:image" content="https://nolsoopgames.com/notion/assets/og-cover.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-nav" role="banner">
+    <a class="nav-brand" href="#top">Freelancer OS</a>
+    <nav class="nav-links" aria-label="Page">
+      <a href="#free">Free</a>
+      <a href="#tracker">Tracker</a>
+      <a href="#os">OS</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- 1. Hero — brand + H1 + sub + CTA + full-bleed visual -->
+    <section id="top" class="hero" aria-labelledby="hero-brand">
+      <div class="hero-bg" aria-hidden="true">
+        <img
+          src="./assets/cover-1920x480.png"
+          alt=""
+          width="1920"
+          height="480"
+          fetchpriority="high"
+        />
+        <div class="hero-bg-wash"></div>
+      </div>
+      <div class="hero-inner">
+        <p id="hero-brand" class="brand-mark">Freelancer OS</p>
+        <h1 class="hero-title">
+          Run your freelance business from quote to payment in one Notion workspace
+        </h1>
+        <p class="hero-sub">
+          Clients, quotes, contracts, invoices, payments, and tasks — connected, not scattered.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#free">Get Free Mini</a>
+          <a class="btn btn-ghost" href="#os">View Freelancer OS</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Free Mini -->
+    <section id="free" class="section section-free" aria-labelledby="free-heading">
+      <div class="section-inner narrow">
+        <p class="section-kicker">Free · $0</p>
+        <h2 id="free-heading">A free board to organize this month’s freelance projects and payments in five minutes</h2>
+        <p class="section-lead">
+          Start with Projects + Payments. Upgrade when you want quotes, contracts, and tax prep in one system.
+        </p>
+
+        <!-- TODO: Replace with Beehiiv / ConvertKit / MailerLite embed when ESP is ready -->
+        <form class="email-form" id="free-mini-form" action="#" method="post" novalidate>
+          <label class="sr-only" for="free-email">Email</label>
+          <input
+            id="free-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="you@studio.com"
+            inputmode="email"
+          />
+          <button class="btn btn-primary" type="submit">Get the free starter board</button>
+        </form>
+        <p class="form-note" id="form-note" role="status" aria-live="polite" hidden>
+          Email capture is not connected yet. Use the mailto below, or wire your ESP embed (see landing/README.md).
+        </p>
+        <p class="form-fallback">
+          <!-- Placeholder until ESP: open mail client with request subject -->
+          Prefer email?
+          <a href="mailto:hello@nolsoopgames.com?subject=Free%20Mini%20Notion%20board">hello@nolsoopgames.com</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Products — one column, no card spam -->
+    <section id="products" class="section section-products" aria-labelledby="products-heading">
+      <div class="section-inner">
+        <h2 id="products-heading" class="sr-only">Products</h2>
+
+        <article id="tracker" class="product-row" aria-labelledby="tracker-heading">
+          <div class="product-meta">
+            <p class="product-emoji" aria-hidden="true">📋</p>
+            <div>
+              <p class="product-name">Project Tracker</p>
+              <p class="product-price"><span class="price">$19</span> · single-user license</p>
+            </div>
+          </div>
+          <h3 id="tracker-heading">A Notion tracker that keeps freelance projects and deadlines under control</h3>
+          <p class="product-upsell">
+            When you are ready to connect quotes, contracts, and payments, upgrade to Freelancer OS.
+          </p>
+          <!-- TODO: Replace data-ls-url with Lemon Squeezy hosted checkout URL for Project Tracker $19 -->
+          <a
+            class="btn btn-primary ls-cta"
+            href="#"
+            data-ls-url=""
+            data-product="project-tracker"
+            rel="noopener"
+          >Buy Project Tracker</a>
+        </article>
+
+        <div class="product-rule" aria-hidden="true"></div>
+
+        <article id="os" class="product-row product-os" aria-labelledby="os-heading">
+          <div class="product-meta">
+            <p class="product-emoji" aria-hidden="true">🗂️</p>
+            <div>
+              <p class="product-name">Freelancer OS</p>
+              <p class="product-price"><span class="price">$39</span> · single-user license · delivered immediately</p>
+            </div>
+          </div>
+          <h3 id="os-heading">Quote to payment — the full workspace</h3>
+          <ul class="product-bullets">
+            <li>See Quoted / In Progress / Done at a glance</li>
+            <li>Keep deposits, balances, and overdue amounts linked to work</li>
+            <li>Start tax prep from a monthly board — not a blank spreadsheet</li>
+          </ul>
+          <p class="product-includes">
+            Includes Clients, Projects, Quotes, Contracts, Payments, Tasks · Today · Money · Pipeline · Cashflow Risk · Tax Prep · sample data + Start Here guide.
+          </p>
+          <!-- TODO: Replace data-ls-url with Lemon Squeezy hosted checkout URL for Freelancer OS $39 -->
+          <a
+            class="btn btn-primary ls-cta"
+            href="#"
+            data-ls-url=""
+            data-product="freelancer-os"
+            rel="noopener"
+          >Get started with Freelancer OS today</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. Trust / boundaries -->
+    <section id="trust" class="section section-trust" aria-labelledby="trust-heading">
+      <div class="section-inner narrow">
+        <h2 id="trust-heading">What’s not included</h2>
+        <p class="section-lead">
+          Clear boundaries so you know exactly what you are buying.
+        </p>
+        <ul class="trust-list">
+          <li>One-on-one customization</li>
+          <li>Installation service / screen-share setup</li>
+          <li>Individual consulting</li>
+          <li>Unlimited revision requests</li>
+        </ul>
+        <p class="trust-support">
+          Support covers payment confirmation, resending a missing link, and duplicate-permission checks — not template restructuring or tax advice.
+        </p>
+      </div>
+    </section>
+
+    <!-- 5. FAQ + Refund -->
+    <section id="faq" class="section section-faq" aria-labelledby="faq-heading">
+      <div class="section-inner narrow">
+        <h2 id="faq-heading">FAQ</h2>
+
+        <div class="faq-list">
+          <details>
+            <summary>Do I need a paid Notion plan?</summary>
+            <p>No. The template works on Notion’s free plan. Team sharing and advanced features are subject to Notion’s current plan limits.</p>
+          </details>
+          <details>
+            <summary>How will I receive the template?</summary>
+            <p>After checkout, the Notion duplicate link and getting-started guide are sent automatically by email.</p>
+          </details>
+          <details>
+            <summary>Will you customize it for my business?</summary>
+            <p>No. This product is a ready-made template. Customization and setup services are not included.</p>
+          </details>
+          <details>
+            <summary>What if I do not know how to use it?</summary>
+            <p>Start with the in-template Start Here guide and this FAQ. One-on-one chat support is not provided.</p>
+          </details>
+          <details>
+            <summary>Can multiple people use one purchase?</summary>
+            <p>Each purchase includes one user license. Purchase one license per person for team use.</p>
+          </details>
+          <details>
+            <summary>Are updates included?</summary>
+            <p>A purchase includes the version available at checkout. There is no annual update pass or ongoing update subscription.</p>
+          </details>
+          <details>
+            <summary>Is this for ecommerce sellers?</summary>
+            <p>No. It is designed for freelancers, independent contractors, and project-based work.</p>
+          </details>
+        </div>
+
+        <div id="refund" class="refund-block">
+          <h3>Refund policy</h3>
+          <ul>
+            <li>Refunds are available within seven days of purchase if the duplicate link has not been opened or used.</li>
+            <li>Because this is a digital product, refunds are not available after the template has been duplicated.</li>
+            <li>Payment errors and duplicate charges are handled as exceptions.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-brand">nolsoopgames · Freelancer OS</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#faq">FAQ</a>
+        <a href="#refund">Refund</a>
+        <a href="mailto:hello@nolsoopgames.com">Support</a>
+        <a href="/abysspet/">Studio</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="./js/main.js" defer></script>
+</body>
+</html>
