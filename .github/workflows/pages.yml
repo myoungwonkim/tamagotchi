@@ -41,6 +41,12 @@ jobs:
           # App logo referenced by granite.config.ts icon URL
           [ -d assets/ait-store ] && cp -R assets/ait-store _site/abysspet/assets/ait-store
 
+          if [ -d notion ]; then
+          mkdir -p _site/notion
+          cp -R notion/. _site/notion/
+          touch _site/notion/.nojekyll
+          fi
+
           # Disable Jekyll processing (keeps files starting with _ etc.)
           touch _site/.nojekyll _site/abysspet/.nojekyll
 
