@@ -46,18 +46,9 @@
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      // TODO: Wire Beehiiv / ConvertKit / MailerLite — until then show note
+      // Do NOT auto-open mailto — that can spam the mail client (open/close loop).
+      // TODO: Wire Beehiiv / ConvertKit / MailerLite. Until then, show note + manual link.
       if (note) note.hidden = false;
-      var email = form.querySelector("#free-email");
-      if (email && email.value) {
-        var subject = encodeURIComponent("Free Mini Notion board");
-        var body = encodeURIComponent(
-          "Please send me the Free Mini starter board.\n\nEmail: " + email.value
-        );
-        // Soft fallback — does not replace ESP auto-delivery
-        window.location.href =
-          "mailto:hello@nolsoopgames.com?subject=" + subject + "&body=" + body;
-      }
     });
   }
 })();
