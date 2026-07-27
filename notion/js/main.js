@@ -3,8 +3,8 @@
  *
  * Env-style placeholders (set when LS / ESP are ready):
  *   window.NOTION_LS = {
- *     tracker: "https://YOURSTORE.lemonsqueezy.com/checkout/buy/VARIANT_ID",
- *     os:      "https://YOURSTORE.lemonsqueezy.com/checkout/buy/VARIANT_ID"
+ *     tracker: "https://nolsoop.lemonsqueezy.com/checkout/buy/3a83d2fa-e67a-41ec-b54e-9b254187e68a",
+ *     os:      "https://nolsoop.lemonsqueezy.com/checkout/buy/d2ce463d-ce36-4909-8d43-b8b8911a685d"
  *   };
  * Or set data-ls-url on each .ls-cta anchor in index.html.
  */
