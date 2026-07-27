@@ -1,12 +1,11 @@
 /**
  * Freelancer OS /notion — minimal client script
  *
- * Env-style placeholders (set when LS / ESP are ready):
- *   window.NOTION_LS = {
- *     tracker: "https://nolsoop.lemonsqueezy.com/checkout/buy/3a83d2fa-e67a-41ec-b54e-9b254187e68a",
- *     os:      "https://nolsoop.lemonsqueezy.com/checkout/buy/d2ce463d-ce36-4909-8d43-b8b8911a685d"
- *   };
- * Or set data-ls-url on each .ls-cta anchor in index.html.
+ * Lemon Squeezy checkout URLs are set via data-ls-url on .ls-cta anchors.
+ * Optional override:
+ *   window.NOTION_LS = { tracker: "...", os: "..." };
+ *
+ * IMPORTANT: Never navigate to mailto: — it can open/close the OS mail app in a loop.
  */
 
 (function () {
@@ -41,14 +40,46 @@
     }
   });
 
+  function copyEmail(email, btn) {
+    var done = function () {
+      if (!btn) return;
+      var prev = btn.textContent;
+      btn.textContent = "Copied!";
+      window.setTimeout(function () {
+        btn.textContent = prev;
+      }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email).then(done).catch(function () {
+        window.prompt("Copy this email:", email);
+      });
+    } else {
+      window.prompt("Copy this email:", email);
+    }
+  }
+
+  document.querySelectorAll(".copy-email").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var email = btn.getAttribute("data-email") || "hello@nolsoopgames.com";
+      copyEmail(email, btn);
+    });
+  });
+
   var form = document.getElementById("free-mini-form");
   var note = document.getElementById("form-note");
+  var submitBtn = document.getElementById("free-mini-submit");
+
+  function showEspNote(e) {
+    if (e) e.preventDefault();
+    if (note) note.hidden = false;
+  }
+
   if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      // Do NOT auto-open mailto — that can spam the mail client (open/close loop).
-      // TODO: Wire Beehiiv / ConvertKit / MailerLite. Until then, show note + manual link.
-      if (note) note.hidden = false;
-    });
+    form.addEventListener("submit", showEspNote);
+  }
+  if (submitBtn) {
+    submitBtn.addEventListener("click", showEspNote);
   }
 })();

@@ -81,7 +81,7 @@
         </p>
 
         <!-- TODO: Replace with Beehiiv / ConvertKit / MailerLite embed when ESP is ready -->
-        <form class="email-form" id="free-mini-form" action="#" method="post" novalidate>
+        <form class="email-form" id="free-mini-form" action="" method="get" novalidate>
           <label class="sr-only" for="free-email">Email</label>
           <input
             id="free-email"
@@ -92,15 +92,16 @@
             placeholder="you@studio.com"
             inputmode="email"
           />
-          <button class="btn btn-primary" type="submit">Get the free starter board</button>
+          <button class="btn btn-primary" type="button" id="free-mini-submit">Get the free starter board</button>
         </form>
         <p class="form-note" id="form-note" role="status" aria-live="polite" hidden>
-          Email capture is not connected yet. Click the address below if you want to email us manually (we do not auto-open your mail app).
+          Email capture is not connected yet. Use “Copy email” below — we never open your mail app from this page.
         </p>
         <p class="form-fallback">
-          <!-- Placeholder until ESP: open mail client with request subject -->
           Prefer email?
-          <a href="mailto:hello@nolsoopgames.com?subject=Free%20Mini%20Notion%20board">hello@nolsoopgames.com</a>
+          <button type="button" class="linkish copy-email" data-email="hello@nolsoopgames.com">
+            Copy hello@nolsoopgames.com
+          </button>
         </p>
       </div>
     </section>
@@ -236,11 +237,11 @@
       <nav class="footer-nav" aria-label="Footer">
         <a href="#faq">FAQ</a>
         <a href="#refund">Refund</a>
-        <a href="mailto:hello@nolsoopgames.com">Support</a>
+        <button type="button" class="linkish copy-email" data-email="hello@nolsoopgames.com">Support</button>
       </nav>
     </div>
   </footer>
 
-  <script src="./js/main.js" defer></script>
+  <script src="./js/main.js?v=20260728a" defer></script>
 </body>
 </html>
