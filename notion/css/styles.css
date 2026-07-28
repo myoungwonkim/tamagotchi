@@ -587,7 +587,8 @@ button.linkish:hover {
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
 }
 
 .footer-brand {
