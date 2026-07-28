@@ -2,8 +2,7 @@
  * Freelancer OS /notion — minimal client script
  *
  * Lemon Squeezy checkout URLs are set via data-ls-url on .ls-cta anchors.
- * Never use mailto: anywhere — it can open/close the OS mail app in a loop
- * (also remove mailto from Lemon Squeezy product HTML / confirmation email).
+ * Never use mailto: anywhere — it can open/close the OS mail app in a loop.
  */
 
 (function () {
@@ -14,12 +13,11 @@
   document.querySelectorAll(".ls-cta").forEach(function (el) {
     var product = el.getAttribute("data-product");
     var fromData = el.getAttribute("data-ls-url");
-    var fromCfg =
-      product === "project-tracker"
-        ? cfg.tracker
-        : product === "freelancer-os"
-          ? cfg.os
-          : "";
+    var fromCfg = "";
+    if (product === "project-tracker") fromCfg = cfg.tracker || "";
+    else if (product === "freelancer-os") fromCfg = cfg.os || "";
+    else if (product === "free-mini") fromCfg = cfg.freeMini || "";
+
     var url = (fromData && fromData.trim()) || fromCfg || "";
 
     if (url) {
@@ -37,20 +35,4 @@
       });
     }
   });
-
-  var form = document.getElementById("free-mini-form");
-  var note = document.getElementById("form-note");
-  var submitBtn = document.getElementById("free-mini-submit");
-
-  function showEspNote(e) {
-    if (e) e.preventDefault();
-    if (note) note.hidden = false;
-  }
-
-  if (form) {
-    form.addEventListener("submit", showEspNote);
-  }
-  if (submitBtn) {
-    submitBtn.addEventListener("click", showEspNote);
-  }
 })();
