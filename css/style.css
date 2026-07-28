@@ -994,6 +994,19 @@ img.pet-sprite[hidden] {
   z-index: 50;
 }
 
+.site-credit {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.625rem;
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  opacity: 0.7;
+  user-select: none;
+  pointer-events: none;
+}
+
 .actions--care-blocked .action-btn--feed,
 .actions--care-blocked .action-btn--play,
 .actions--care-blocked .action-btn--clean {
@@ -1940,6 +1953,10 @@ body.capture-mode.capture-thumbnail .stats {
 
 body.capture-mode.capture-thumbnail .actions {
   padding: 8px 10px 12px;
+}
+
+body.capture-mode.capture-thumbnail .site-credit {
+  display: none;
 }
 
 body.capture-mode.capture-thumbnail .message {
