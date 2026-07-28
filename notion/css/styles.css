@@ -601,17 +601,26 @@ button.linkish:hover {
 }
 
 .footer-nav a,
-.footer-nav button.linkish {
+.footer-nav .footer-email {
   color: rgba(248, 250, 252, 0.85);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
-.footer-nav a:hover,
-.footer-nav button.linkish:hover {
+.footer-nav a:hover {
   color: var(--white);
-  text-decoration: underline;
+}
+
+.footer-nav .footer-email {
+  opacity: 0.9;
+  user-select: all;
+}
+
+.email-plain {
+  color: var(--slate-deep);
+  font-weight: 600;
+  user-select: all;
 }
 
 @media (max-width: 520px) {

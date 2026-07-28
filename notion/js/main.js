@@ -2,10 +2,8 @@
  * Freelancer OS /notion — minimal client script
  *
  * Lemon Squeezy checkout URLs are set via data-ls-url on .ls-cta anchors.
- * Optional override:
- *   window.NOTION_LS = { tracker: "...", os: "..." };
- *
- * IMPORTANT: Never navigate to mailto: — it can open/close the OS mail app in a loop.
+ * Never use mailto: anywhere — it can open/close the OS mail app in a loop
+ * (also remove mailto from Lemon Squeezy product HTML / confirmation email).
  */
 
 (function () {
@@ -33,38 +31,11 @@
         e.preventDefault();
         alert(
           "Checkout link not configured yet.\n\n" +
-            "Set data-ls-url on this button, or window.NOTION_LS via a small inline script.\n" +
+            "Set data-ls-url on this button.\n" +
             "See landing/README.md."
         );
       });
     }
-  });
-
-  function copyEmail(email, btn) {
-    var done = function () {
-      if (!btn) return;
-      var prev = btn.textContent;
-      btn.textContent = "Copied!";
-      window.setTimeout(function () {
-        btn.textContent = prev;
-      }, 1600);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(email).then(done).catch(function () {
-        window.prompt("Copy this email:", email);
-      });
-    } else {
-      window.prompt("Copy this email:", email);
-    }
-  }
-
-  document.querySelectorAll(".copy-email").forEach(function (btn) {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var email = btn.getAttribute("data-email") || "hello@nolsoopgames.com";
-      copyEmail(email, btn);
-    });
   });
 
   var form = document.getElementById("free-mini-form");
