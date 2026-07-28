@@ -600,8 +600,7 @@ button.linkish:hover {
   gap: 1.25rem;
 }
 
-.footer-nav a,
-.footer-nav .footer-email {
+.footer-nav a {
   color: rgba(248, 250, 252, 0.85);
   text-decoration: none;
   font-size: 0.9rem;
@@ -610,17 +609,6 @@ button.linkish:hover {
 
 .footer-nav a:hover {
   color: var(--white);
-}
-
-.footer-nav .footer-email {
-  opacity: 0.9;
-  user-select: all;
-}
-
-.email-plain {
-  color: var(--slate-deep);
-  font-weight: 600;
-  user-select: all;
 }
 
 @media (max-width: 520px) {
