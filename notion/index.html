@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-7E8BR8HQE7"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-7E8BR8HQE7');
-</script>
-  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Freelancer OS — Notion templates for freelancers</title>
@@ -39,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./css/styles.css?v=20260730a" />
+  <link rel="stylesheet" href="./css/styles.css?v=20260730b" />
   <link rel="icon" href="./assets/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png" />
@@ -109,13 +98,18 @@
           Start with Projects + Payments. Upgrade when you want quotes, contracts, and tax prep in one system.
         </p>
 
-        <div class="preview-gallery" aria-label="Free Mini previews">
+        <div class="preview-slider" data-preview-slider aria-roledescription="carousel" aria-label="Free Mini previews">
+          <button type="button" class="preview-nav preview-prev" aria-label="Previous preview">‹</button>
+          <div class="preview-track">
           <figure class="preview-shot">
             <img src="./assets/previews/free-mini-01.jpg" alt="Free Mini Notion board preview — projects and payments" width="1600" height="1200" loading="lazy" decoding="async" />
           </figure>
           <figure class="preview-shot">
             <img src="./assets/previews/free-mini-02.jpg" alt="Free Mini Notion template preview" width="1600" height="1200" loading="lazy" decoding="async" />
           </figure>
+          </div>
+          <button type="button" class="preview-nav preview-next" aria-label="Next preview">›</button>
+          <p class="preview-status" aria-live="polite"><span data-preview-index>1</span> / <span data-preview-total></span></p>
         </div>
 
         <a
@@ -126,9 +120,6 @@
           target="_blank"
           rel="noopener noreferrer"
         >Get the free starter board</a>
-        <p class="form-fallback">
-          Delivered via Lemon Squeezy — you’ll get the Notion duplicate link after checkout ($0).
-        </p>
       </div>
     </section>
 
@@ -149,7 +140,9 @@
           <p class="product-upsell">
             When you are ready to connect quotes, contracts, and payments, upgrade to Freelancer OS.
           </p>
-          <div class="preview-gallery" aria-label="Project Tracker previews">
+          <div class="preview-slider" data-preview-slider aria-roledescription="carousel" aria-label="Project Tracker previews">
+          <button type="button" class="preview-nav preview-prev" aria-label="Previous preview">‹</button>
+          <div class="preview-track">
             <figure class="preview-shot">
               <img src="./assets/previews/tracker-01.jpg" alt="Project Tracker preview — projects overview" width="1600" height="1200" loading="lazy" decoding="async" />
             </figure>
@@ -159,7 +152,10 @@
             <figure class="preview-shot">
               <img src="./assets/previews/tracker-03.jpg" alt="Project Tracker preview — workflow" width="1600" height="1200" loading="lazy" decoding="async" />
             </figure>
-          </div>
+            </div>
+          <button type="button" class="preview-nav preview-next" aria-label="Next preview">›</button>
+          <p class="preview-status" aria-live="polite"><span data-preview-index>1</span> / <span data-preview-total></span></p>
+        </div>
           <a
             class="btn btn-primary ls-cta"
             href="https://nolsoop.lemonsqueezy.com/checkout/buy/3a83d2fa-e67a-41ec-b54e-9b254187e68a"
@@ -189,7 +185,9 @@
           <p class="product-includes">
             Includes Clients, Projects, Quotes, Contracts, Payments, Tasks · Today · Money · Pipeline · Cashflow Risk · Tax Prep · sample data + Start Here guide.
           </p>
-          <div class="preview-gallery preview-gallery-os" aria-label="Freelancer OS previews">
+          <div class="preview-slider" data-preview-slider aria-roledescription="carousel" aria-label="Freelancer OS previews">
+          <button type="button" class="preview-nav preview-prev" aria-label="Previous preview">‹</button>
+          <div class="preview-track">
             <figure class="preview-shot">
               <img src="./assets/previews/os-01.jpg" alt="Freelancer OS preview — clients and projects" width="1600" height="1200" loading="lazy" decoding="async" />
             </figure>
@@ -205,7 +203,10 @@
             <figure class="preview-shot">
               <img src="./assets/previews/os-05.jpg" alt="Freelancer OS preview — tax prep" width="1600" height="1200" loading="lazy" decoding="async" />
             </figure>
-          </div>
+            </div>
+          <button type="button" class="preview-nav preview-next" aria-label="Next preview">›</button>
+          <p class="preview-status" aria-live="polite"><span data-preview-index>1</span> / <span data-preview-total></span></p>
+        </div>
           <a
             class="btn btn-primary ls-cta"
             href="https://nolsoop.lemonsqueezy.com/checkout/buy/d2ce463d-ce36-4909-8d43-b8b8911a685d"
@@ -290,6 +291,6 @@
     </div>
   </footer>
 
-  <script src="./js/main.js?v=20260729b" defer></script>
+  <script src="./js/main.js?v=20260730b" defer></script>
 </body>
 </html>
