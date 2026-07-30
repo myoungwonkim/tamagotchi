@@ -1,23 +1,22 @@
 # GRAC 등급분류 제출용 게임 설명서
 
-**게임명 (한글):** 어비스펫: 심해 가상 펫  
-**게임명 (영문):** Abyss Pet  
+**등급분류 신청 제명 (본제목):** 어비스펫: 심해 가상 펫  
+**영문 병기:** Abyss Pet  
+**자료 표기:** 어비스펫: 심해 가상 펫 (Abyss Pet)  
 **부제:** 심해 가상펫 육성 및 수집 게임  
-**플랫폼:** 앱인토스 WebView 미니앱 (`appName`: `abysspet`)  
+**플랫폼:** 웹 / 앱인토스 WebView 미니앱 (`appName`: `abysspet`)  
 **장르:** 시뮬레이션 / 육성  
-**개발·운영:** nolsoop.games@gmail.com  
 **유료 결제:** 없음 (1차 출시)  
-**광고:** 인앱 전면형·보상형 (Google AdMob 연동)
-**자료 갱신 기준:** 2026년 7월 16일
-
-> 본 문서를 PDF로 변환하여 GRAC 신청 시 «게임 설명서»로 첨부하세요.  
-> 스크린샷: `assets/ait-store/screenshot-portrait-01~04.png`, `screenshot-landscape-01.png`
+**광고:** 인앱 전면형·보상형 (Google AdMob 연동)  
+**실행 URL:** https://nolsoopgames.com/abysspet/  
+**게임 이용 용량:** 약 4.70 MB (상세: `07-game-capacity.md`)  
+**자료 갱신 기준:** 2026년 7월 30일
 
 ---
 
 ## 1. 게임 개요
 
-«어비스펫»은 심해를 배경으로 한 **무료 가상 펫 육성·수집 게임**입니다.  
+«어비스펫: 심해 가상 펫 (Abyss Pet)»은 심해를 배경으로 한 **무료 가상 펫 육성·수집 게임**입니다.  
 플레이어는 불가사의한 알을 돌보며 5단계(알 → 라바 → 치어 → 청소년어 → 성체)로 진화시키고,  
 성체 펫은 «비밀 탐사 일지»(도감)에 기록합니다.
 
@@ -149,19 +148,14 @@ https://nolsoopgames.com/abysspet/privacy.html
 
 ---
 
-## 8. 시연 영상·빌드
+## 8. 시연·실행·용량
 
-| 자료 | 경로 |
+| 자료 | 내용 |
 |------|------|
-| 시연 영상 (WebM/MP4) | `assets/grac-submission/abysspet-grac-demo.webm` |
-| 제출 zip 패키지 | `assets/grac-submission/abysspet-grac-submission.zip` |
-| 샌드박스 `.ait` | `assets/grac-submission/abysspet-sandbox.ait` (로컬 빌드 후) |
-| 온라인 시연 URL | https://nolsoopgames.com/abysspet/ |
+| **게임명** | 어비스펫: 심해 가상 펫 (Abyss Pet) |
+| **온라인 실행 URL** | https://nolsoopgames.com/abysspet/ |
+| 시연 영상 | `04-demo-video.mp4` |
+| 용량 확인 자료 | `07-game-capacity.md` (약 **4.70 MB**, 10 MB 미만) |
+| 보완 안내 | `00-보완제출-안내.md` |
 
-생성·제출 방법: [GRAC-DEMO-SUBMISSION.md](./GRAC-DEMO-SUBMISSION.md)
-
----
-
-## 9. 문의
-
-nolsoop.games@gmail.com
+회원가입·로그인 없이 브라우저에서 실행 가능합니다.

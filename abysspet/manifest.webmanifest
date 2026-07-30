@@ -1,0 +1,18 @@
+{
+  "name": "어비스펫: 심해 가상 펫",
+  "short_name": "어비스펫",
+  "description": "심해 가상펫 육성 및 수집 게임. 불가사의한 알을 돌보며 나만의 펫을 키우고 비밀 탐사일지에 기록하세요.",
+  "lang": "ko",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a2028",
+  "theme_color": "#0a2028",
+  "icons": [
+    { "src": "assets/app-icon/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/app-icon/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/app-icon/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/app-icon/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

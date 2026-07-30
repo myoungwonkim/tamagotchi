@@ -7,7 +7,6 @@
 | 게임명 | 어비스펫: 심해 가상 펫 |
 | appName | `abysspet` |
 | 온라인 시연 (웹) | https://nolsoopgames.com/abysspet/ |
-| 문의 | nolsoop.games@gmail.com |
 | 자료 갱신 기준 | 2026년 7월 16일 |
 
 ---
@@ -140,7 +139,6 @@ npm run dev
 플랫폼: 앱인토스 WebView 미니앱 (appName: abysspet)
 빌드: abysspet-sandbox.ait (첨부 또는 별도 전달)
 실기 시연: 토스앱 샌드박스 + 콘솔 QR (심의 담당자 요청 시 안내 가능)
-문의: nolsoop.games@gmail.com
 ```
 
 QR은 콘솔에서만 발급되므로 **스크린샷으로 GRAC에 첨부**하거나, 담당자 연락 시 이메일로 QR·접속 방법을 안내하세요.

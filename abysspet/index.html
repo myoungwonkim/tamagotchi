@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VZ2DXER02Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VZ2DXER02Y');
+</script>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2028">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="심해 가상펫 육성 및 수집 게임. 불가사의한 알을 돌보며 나만의 펫을 키우고 비밀 탐사일지에 기록하세요.">
+  <meta name="app-version" content="kaffeine-credit-1">
+  <title>어비스펫: 심해 가상 펫</title>
+  <link rel="icon" href="favicon.ico?v=appicon-3s" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/app-icon/favicon-32.png?v=appicon-3s">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/app-icon/favicon-16.png?v=appicon-3s">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/app-icon/apple-touch-icon.png?v=appicon-3s">
+  <meta name="apple-mobile-web-app-title" content="어비스펫">
+  <link rel="manifest" href="manifest.webmanifest?v=appicon-3s">
+  <link rel="stylesheet" href="css/style.css?v=kaffeine-credit-1">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <button type="button" class="encyclopedia-btn" id="btn-encyclopedia" aria-label="탐사 일지">
+        <img class="header-icon" src="assets/sprites/ui/encyclopedia.png?v=ui-icons-1" alt="" width="28" height="28" decoding="async">
+      </button>
+      <button type="button" class="mute-btn" id="btn-mute" aria-label="소리 끄기" aria-pressed="false">
+        <img class="header-icon" id="mute-icon" src="assets/sprites/ui/sound-on.png?v=ui-icons-1" alt="" width="28" height="28" decoding="async">
+      </button>
+      <h1 class="pet-name" id="pet-name">치치</h1>
+      <div class="pet-substat">
+        <p class="pet-age" id="pet-age">0일째</p>
+        <p class="pet-stage" id="pet-stage">알</p>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="pet-area" id="pet-area">
+        <div class="pet-water" aria-hidden="true">
+          <div class="pet-water__ripple"></div>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+          <span class="pet-water__bubble"></span>
+        </div>
+        <p class="message" id="message" role="status" aria-live="polite" hidden></p>
+        <div class="mess-layer" id="mess-layer" aria-hidden="true"></div>
+        <div class="care-fx" id="care-fx" aria-hidden="true"></div>
+        <div class="pet-display">
+          <div class="pet-evolution" id="pet-evolution" aria-hidden="true"></div>
+        </div>
+        <div class="pet-mood-bubble" id="pet-mood-bubble" aria-hidden="true">
+          <div class="pet-mood-emoji" id="pet-mood-emoji"></div>
+        </div>
+        <div class="shark-fx" id="shark-fx" aria-hidden="true">
+          <div class="shark-fx__darken"></div>
+          <img class="shark-fx__shark" src="assets/sprites/ui/shark.png?v=locked-seal-fix-2" alt="">
+          <div class="shark-fx__flash"></div>
+        </div>
+      </div>
+
+      <button type="button" class="new-pet-fab" id="btn-new-pet-side" hidden>새 펫 키우기</button>
+
+      <div class="reward-prompts" id="reward-prompts" hidden>
+        <button type="button" class="reward-prompt-btn" id="btn-reward-emergency" hidden><span class="reward-chip">▶ 광고</span>광고 보고 응급 돌봄</button>
+        <button type="button" class="reward-prompt-btn" id="btn-reward-neglect" hidden><span class="reward-chip">▶ 광고</span>광고 보고 방치 타이머 초기화</button>
+      </div>
+
+      <section class="stats" aria-label="펫 상태">
+        <div class="stat">
+          <label for="bar-hunger">포만감</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--hunger" id="bar-hunger" style="width: 80%"></div>
+          </div>
+          <span class="stat-value" id="val-hunger">80</span>
+        </div>
+        <div class="stat">
+          <label for="bar-happiness">행복</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--happiness" id="bar-happiness" style="width: 70%"></div>
+          </div>
+          <span class="stat-value" id="val-happiness">70</span>
+        </div>
+        <div class="stat">
+          <label for="bar-cleanliness">청결</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--cleanliness" id="bar-cleanliness" style="width: 60%"></div>
+          </div>
+          <span class="stat-value" id="val-cleanliness">60</span>
+        </div>
+        <div class="stat">
+          <label for="bar-health">건강</label>
+          <div class="stat-bar">
+            <div class="stat-fill stat-fill--health" id="bar-health" style="width: 100%"></div>
+          </div>
+          <span class="stat-value" id="val-health">100</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="actions" id="actions">
+      <button type="button" class="action-btn action-btn--feed" id="btn-feed" data-action="feed">
+        <img class="action-icon" src="assets/sprites/ui/feed.png" alt="먹이" width="48" height="48" decoding="async">
+        <span class="action-label">먹이</span>
+      </button>
+      <button type="button" class="action-btn action-btn--play" id="btn-play" data-action="play">
+        <img class="action-icon" src="assets/sprites/ui/play.png" alt="놀이" width="48" height="48" decoding="async">
+        <span class="action-label">놀이</span>
+      </button>
+      <button type="button" class="action-btn action-btn--clean" id="btn-clean" data-action="clean">
+        <img class="action-icon" src="assets/sprites/ui/clean.png" alt="청소" width="48" height="48" decoding="async">
+        <span class="action-label">청소</span>
+      </button>
+      <button type="button" class="action-btn action-btn--sleep" id="btn-sleep" data-action="sleep">
+        <img class="action-icon" src="assets/sprites/ui/sleep.png" alt="재우기" width="48" height="48" decoding="async">
+        <span class="action-label">재우기</span>
+      </button>
+    </footer>
+
+    <p class="site-credit">Copyright © Kaffeine. All rights reserved.</p>
+
+    <div class="overlay" id="encyclopedia-overlay" hidden>
+      <div class="overlay-card overlay-card--wide encyclopedia-panel">
+        <div class="encyclopedia-list" id="encyclopedia-list">
+          <header class="encyclopedia-header">
+            <h2 class="overlay-title" id="encyclopedia-title">탐사 일지</h2>
+            <p class="encyclopedia-subtitle" id="encyclopedia-subtitle">심해어 · 수집 0 / 9</p>
+          </header>
+          <div class="encyclopedia-tabs" role="tablist" aria-label="어종 선택">
+            <button type="button" class="encyclopedia-tab encyclopedia-tab--deepsea" role="tab" id="encyclopedia-tab-deepsea" aria-selected="true" aria-controls="encyclopedia-page">심해어</button>
+            <button type="button" class="encyclopedia-tab encyclopedia-tab--mermaid" role="tab" id="encyclopedia-tab-mermaid" aria-selected="false" aria-controls="encyclopedia-page">심해인어</button>
+            <button type="button" class="encyclopedia-tab encyclopedia-tab--vent" role="tab" id="encyclopedia-tab-vent" aria-selected="false" aria-controls="encyclopedia-page" disabled>업데이트 예정</button>
+          </div>
+          <div class="encyclopedia-page" id="encyclopedia-page" role="tabpanel">
+            <div class="encyclopedia-grid" id="encyclopedia-grid"></div>
+          </div>
+          <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-close-encyclopedia">닫기</button>
+        </div>
+        <div class="encyclopedia-detail" id="encyclopedia-detail" hidden>
+          <div class="encyclopedia-detail__graphic" id="encyclopedia-detail-graphic" aria-hidden="true"></div>
+          <h2 class="encyclopedia-detail__name" id="encyclopedia-detail-name"></h2>
+          <p class="encyclopedia-detail__species" id="encyclopedia-detail-species"></p>
+          <p class="encyclopedia-detail__desc" id="encyclopedia-detail-desc"></p>
+          <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-encyclopedia-detail-back">목록으로</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="graduate-overlay" hidden>
+      <div class="overlay-card">
+        <div class="overlay-graphic" id="graduate-graphic" aria-hidden="true"></div>
+        <h2 class="overlay-title">새 펫을 키울까요?</h2>
+        <p class="overlay-text" id="graduate-text">지금 키우는 친구는 탐사 일지에 남고, 새 알부터 시작해요.</p>
+        <button type="button" class="overlay-btn" id="btn-graduate-confirm">새 펫 시작</button>
+        <button type="button" class="overlay-btn overlay-btn--secondary" id="btn-graduate-cancel">계속 키우기</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="game-over-overlay" hidden>
+      <div class="overlay-card">
+        <div class="overlay-graphic" id="game-over-graphic" aria-hidden="true"></div>
+        <h2 class="overlay-title" id="game-over-title">치치가 떠났어요...</h2>
+        <p class="overlay-text" id="game-over-text">더 잘 돌봐줄 수 있을까요?</p>
+        <button type="button" class="overlay-btn overlay-btn--reward" id="btn-revive-ad" hidden><span class="reward-chip">▶ 광고</span>광고 보고 부활</button>
+        <button type="button" class="overlay-btn" id="btn-new-pet">새 펫 키우기</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="name-overlay" hidden>
+      <div class="overlay-card">
+        <h2 class="overlay-title">펫 이름 짓기</h2>
+        <p class="overlay-text">새로운 친구의 이름을 지어주세요!</p>
+        <input type="text" class="name-input" id="name-input" maxlength="12" placeholder="이름 입력" autocomplete="off">
+        <button type="button" class="overlay-btn" id="btn-start-pet">시작하기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay boot-error" id="boot-error" hidden>
+    <div class="overlay-card">
+      <h2 class="overlay-title">게임을 불러오지 못했어요</h2>
+      <p class="overlay-text" id="boot-error-text"></p>
+      <p class="overlay-text boot-error__hint">로컬: 프로젝트 폴더에서 <code>python3 -m http.server 8080</code> 실행 후 <code>http://localhost:8080</code> 으로 접속하세요.</p>
+    </div>
+  </div>
+
+  <script>
+    function showBootError(err) {
+      const overlay = document.getElementById("boot-error");
+      const text = document.getElementById("boot-error-text");
+      if (!overlay || !text) return;
+
+      const isFile = location.protocol === "file:";
+      text.textContent = isFile
+        ? "파일을 직접 열면(file://) ES 모듈이 차단되어 그래픽과 버튼이 동작하지 않습니다. 로컬 서버나 배포 URL로 접속해 주세요."
+        : "JavaScript 모듈을 불러오지 못했습니다. 새로고침하거나 캐시를 비운 뒤 다시 시도해 주세요.";
+
+      overlay.hidden = false;
+    }
+
+    (function injectJsImportMap() {
+      const v = document.querySelector('meta[name="app-version"]')?.content || "";
+      const scope = new URL("js/", document.baseURI).href;
+      const files = [
+        "pet.js", "actions.js", "storage.js", "evolution.js", "speciesThemes.js", "adultVariants.js",
+        "adultSpriteFrames.js",
+        "encyclopedia.js", "dialogue.js", "ghostDialogue.js", "audio.js", "sprites.js", "effects.js",
+        "korean.js", "ui.js", "mess.js", "dev.js", "adConfig.js", "tossEnv.js",
+        "platformEnv.js", "adsEmpty.js", "adsToss.js", "adsAdMob.js", "playNative.js",
+        "deathSnapshot.js", "sharkAttack.js", "ads.js", "main.js",
+      ];
+      const scoped = {};
+      for (const file of files) {
+        scoped[`./js/${file}`] = `./js/${file}?v=${encodeURIComponent(v)}`;
+      }
+      const el = document.createElement("script");
+      el.type = "importmap";
+      el.textContent = JSON.stringify({ scopes: { [scope]: scoped } });
+      document.head.appendChild(el);
+    })();
+  </script>
+  <script type="module">
+    const v = document.querySelector('meta[name="app-version"]')?.content || "";
+    if (location.protocol === "file:") {
+      showBootError(new Error("file protocol blocked"));
+    } else {
+      import(`./js/main.js?v=${v}`).catch((err) => showBootError(err));
+    }
+  </script>
+</body>
+</html>

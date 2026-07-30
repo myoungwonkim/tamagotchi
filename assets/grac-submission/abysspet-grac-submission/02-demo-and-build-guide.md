@@ -4,11 +4,13 @@
 
 | 항목 | 값 |
 |------|-----|
-| 게임명 | 어비스펫: 심해 가상 펫 |
+| 등급분류 신청 제명 | 어비스펫: 심해 가상 펫 |
+| 영문 병기 | Abyss Pet |
+| 자료 표기 | 어비스펫: 심해 가상 펫 (Abyss Pet) |
 | appName | `abysspet` |
-| 온라인 시연 (웹) | https://nolsoopgames.com/abysspet/ |
-| 문의 | nolsoop.games@gmail.com |
-| 자료 갱신 기준 | 2026년 7월 16일 |
+| 온라인 실행 URL | https://nolsoopgames.com/abysspet/ |
+| 게임 이용 용량 | 약 4.70 MB (`07-game-capacity.md`) |
+| 자료 갱신 기준 | 2026년 7월 30일 |
 
 ---
 
@@ -78,15 +80,15 @@ Node.js가 있으면 `.ait`까지 포함합니다. 없으면 영상·스크린�
 신청서 «시연 방법» 또는 «비고»란에 아래 문구를 복붙하세요.
 
 ```
-[온라인 시연]
+[게임 실행 — 어비스펫: 심해 가상 펫 (Abyss Pet)]
 URL: https://nolsoopgames.com/abysspet/
 설명: 모바일·PC 브라우저에서 무료 플레이 가능. 회원가입·로그인 없음.
 주요 화면 직접 링크:
-- 메인: .../index.html?capture=main
-- 진화: .../index.html?capture=evolution
-- 탐사 일지: .../index.html?capture=encyclopedia
-- 게임 오버: .../index.html?capture=gameover
-광고 UI 모의: .../index.html?toss=1&mockAds=1 (토스 미니앱 광고 플로우 확인용)
+- 메인: https://nolsoopgames.com/abysspet/index.html?capture=main
+- 진화: https://nolsoopgames.com/abysspet/index.html?capture=evolution
+- 탐사 일지: https://nolsoopgames.com/abysspet/index.html?capture=encyclopedia
+- 게임 오버: https://nolsoopgames.com/abysspet/index.html?capture=gameover
+광고 UI 모의: https://nolsoopgames.com/abysspet/index.html?toss=1&mockAds=1
 ```
 
 ---
@@ -140,7 +142,6 @@ npm run dev
 플랫폼: 앱인토스 WebView 미니앱 (appName: abysspet)
 빌드: abysspet-sandbox.ait (첨부 또는 별도 전달)
 실기 시연: 토스앱 샌드박스 + 콘솔 QR (심의 담당자 요청 시 안내 가능)
-문의: nolsoop.games@gmail.com
 ```
 
 QR은 콘솔에서만 발급되므로 **스크린샷으로 GRAC에 첨부**하거나, 담당자 연락 시 이메일로 QR·접속 방법을 안내하세요.
