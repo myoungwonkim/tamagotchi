@@ -7,7 +7,7 @@ import {
   INTERSTITIAL_TRIGGERS,
   REWARD_TYPES,
 } from "./adConfig.js";
-import { getPlatform, isMockAdsEnabled, isTossEnv } from "./platformEnv.js";
+import { getPlatform, isMockAdsEnabled } from "./platformEnv.js";
 
 const SESSION_KEY = "tamagotchi-ad-session";
 
@@ -56,12 +56,10 @@ async function loadProvider() {
       const platform = getPlatform();
       // Empty-ads: VITE_PLAY_ADS=0 forces no-op on Play (Phase 1 shell)
       const playAdsOff = import.meta.env?.VITE_PLAY_ADS === "0";
-      if (isMockAdsEnabled() || platform === "toss" || (isTossEnv() && isMockAdsEnabled())) {
+      if (platform === "toss" || isMockAdsEnabled()) {
         provider = await import("./adsToss.js");
       } else if (platform === "play" && !playAdsOff) {
         provider = await import("./adsAdMob.js");
-      } else if (platform === "play" && playAdsOff) {
-        provider = await import("./adsEmpty.js");
       } else {
         provider = await import("./adsEmpty.js");
       }

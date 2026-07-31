@@ -6,13 +6,23 @@
     "dev": "vite --port 5173 --host",
     "build": "vite build && node scripts/copy-ait-static.mjs",
     "build:ait": "npm run build && npx ait build",
+    "build:play": "vite build && node scripts/copy-ait-static.mjs && npx cap sync android",
+    "build:play:empty-ads": "VITE_PLAY_ADS=0 vite build && node scripts/copy-ait-static.mjs && npx cap sync android",
+    "open:android": "npx cap open android",
     "build:store-assets": "python3 scripts/build_ait_store_assets.py",
+    "build:play-store-assets": "python3 scripts/build_play_store_assets.py",
     "preview": "vite preview --port 5173"
   },
   "dependencies": {
-    "@apps-in-toss/web-framework": "^1.7.0"
+    "@apps-in-toss/web-framework": "^1.7.0",
+    "@capacitor-community/admob": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0"
   },
   "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
     "vite": "^6.2.0"
   }
 }

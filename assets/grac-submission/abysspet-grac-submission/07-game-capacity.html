@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>게임물 용량 확인 자료</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;line-height:1.55;max-width:820px;margin:32px auto;padding:0 20px;color:#111;font-size:14px}
+h1{font-size:22px;border-bottom:2px solid #333;padding-bottom:8px}
+h2{font-size:17px;margin-top:28px}
+h3{font-size:15px}
+table{border-collapse:collapse;width:100%;margin:12px 0}
+th,td{border:1px solid #ccc;padding:6px 10px;text-align:left;vertical-align:top}
+th{background:#f3f3f3}
+code,pre{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+pre{background:#f6f8fa;padding:12px;overflow:auto;border-radius:6px}
+a{color:#0b57d0}
+hr{border:none;border-top:1px solid #ddd;margin:24px 0}
+ul{padding-left:1.3em}
+</style></head><body><h1>게임물 용량 확인 자료</h1><br><p><strong>게임명:</strong> 어비스펫: 심해 가상 펫 (Abyss Pet)  </p><p><strong>용도:</strong> 웹 실행 게임물 등급분류 수수료 산정을 위한 용량 확인  </p><p><strong>작성일:</strong> 2026-07-30  </p><br><hr><br><h2>1. 결론</h2><br><table><tr><th>항목</th><th>내용</th></tr><tr><td><strong>게임 이용에 필요한 총 용량</strong></td><td><strong>약 4.70 MB</strong> (4,929,119 bytes)</td></tr><tr><td>수수료 조견 참고 구간</td><td>기타(단순 캐주얼 플래시 게임 등) <strong>10 MB 미만</strong></td></tr><tr><td>실행 방식</td><td>웹 브라우저 / 앱인토스 WebView (설치형 APK 아님)</td></tr><tr><td>실행 URL</td><td><a href="https://nolsoopgames.com/abysspet/">https://nolsoopgames.com/abysspet/</a></td></tr></table><br><p>플레이어가 게임을 실행·이용하는 데 필요한 <strong>클라이언트 정적 리소스</strong>만 합산했습니다.  </p><p>심의·마케팅용 대용량 원본(<code>assets/custom</code> 등)과 GRAC 제출 패키지 자체는 제외합니다.</p><br><hr><br><h2>2. 용량 내역 (이용에 필요한 자료)</h2><br><p>측정 기준일: 2026-07-30  </p><p>측정 방법: 저장소 내 배포용 게임 리소스 파일 크기 합산</p><br><table><tr><th>구성</th><th>경로</th><th>용량 (약)</th></tr><tr><td>진입 HTML</td><td><code>index.html</code></td><td>12.9 KB</td></tr><tr><td>PWA 매니페스트</td><td><code>manifest.webmanifest</code></td><td>0.9 KB</td></tr><tr><td>파비콘</td><td><code>favicon.ico</code></td><td>9.9 KB</td></tr><tr><td>스타일</td><td><code>css/</code></td><td>50.8 KB</td></tr><tr><td>스크립트</td><td><code>js/</code></td><td>246.5 KB</td></tr><tr><td>게임 스프라이트</td><td><code>assets/sprites/</code></td><td>4.2 MB</td></tr><tr><td>폰트</td><td><code>assets/fonts/</code></td><td>162.3 KB</td></tr><tr><td>개인정보·약관 페이지</td><td><code>privacy.html</code>, <code>terms-of-service.html</code></td><td>6.7 KB</td></tr><tr><td><strong>합계</strong></td><td></td><td><strong>약 4.70 MB</strong></td></tr></table><br><hr><br><h2>3. 제외한 항목 (플레이 필수 아님)</h2><br><p>수수료용 「이용에 필요한 용량」에서 제외한 예시:</p><br><ul><li><code>assets/custom/</code> — 스프라이트 제작·스테이징 원본</li><li><code>assets/grac-submission/</code> — 등급분류 제출 자료</li><li><code>assets/ait-store/</code>, <code>assets/play-store/</code> — 스토어 마케팅 이미지</li><li><code>Screenshot/</code> — 개발용 캡처</li><li><code>node_modules/</code>, 소스 빌드 도구</li></ul><br><hr><br><h2>4. 확인 방법 (재현)</h2><br><p>프로젝트 루트에서:</p><br><pre># HTML·CSS·JS·sprites·fonts 등 플레이 필수 경로 합산du -sh index.html manifest.webmanifest favicon.ico css js \  assets/sprites assets/fonts privacy.html terms-of-service.html</pre><br><p>합계가 약 <strong>4.7 MB</strong>이면 본 자료와 동일합니다.</p></body></html>

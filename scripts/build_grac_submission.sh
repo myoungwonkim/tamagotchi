@@ -80,8 +80,6 @@ GRAC 신청 시
 ------------
 - 게임 설명서 PDF + 스크린샷 + 시연 영상(또는 온라인 시연 URL) 첨부
 - 자세한 절차: docs/GRAC-DEMO-SUBMISSION.md
-
-문의: nolsoop.games@gmail.com
 EOF
 
 # 4. Zip

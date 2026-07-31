@@ -1,0 +1,11 @@
+{
+  "appId": "com.nolsoopgames.abysspet",
+  "appName": "어비스펫",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

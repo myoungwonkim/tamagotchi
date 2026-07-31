@@ -31,6 +31,7 @@ import {
   canOfferNeglectReset,
   INTERSTITIAL_TRIGGERS,
 } from "./ads.js";
+import { initPlayNative } from "./playNative.js";
 import {
   captureDeathSnapshot,
   getDeathSnapshot,
@@ -249,6 +250,7 @@ async function init() {
     canOfferEmergencyCare,
     canOfferNeglectReset,
   });
+  await initPlayNative();
   await initAds();
 
   const saved = loadPet();

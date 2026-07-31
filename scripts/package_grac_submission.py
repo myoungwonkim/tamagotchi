@@ -52,8 +52,6 @@ def main() -> None:
 screenshots/               현재 게임 화면 스크린샷 5장
 04-demo-video.*            현재 게임 시연 영상 (돌보기·진화·도감·상어 습격·부활)
 05-abysspet-sandbox.ait    샌드박스 .ait (있는 경우)
-
-문의: nolsoop.games@gmail.com
 """,
         encoding="utf-8",
     )
