@@ -83,7 +83,7 @@ from generate_mermaid_preview import (
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "docs" / "mermaid-side-preview"
+OUT = ROOT / "docs" / "previews" / "mermaid-side-preview"
 GAME = ROOT / "assets" / "sprites" / "mermaid"
 
 PET_SPRITES = [

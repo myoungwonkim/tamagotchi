@@ -31,7 +31,7 @@
 **흰/크림 몸통:** prep은 outline 보호 flood만 사용. near-white 손실 >30%이면 스크립트가 exit 1 — 프리뷰·게임 반영 전에 재실행. 상세: `.cursor/rules/sprite-white-body-guard.mdc`
 
 - 규칙: `.cursor/rules/adult-sprite-lingyu.mdc`
-- 시안 예시: `docs/lingyu-design-preview.html`
+- 시안 예시: `docs/previews/lingyu-design-preview.html`
 - 스테이징: `assets/custom/{name}-{1,2,3}.png` → 승인 후 `assets/sprites/mermaid/adult/`에 복사
 
 ---

@@ -38,6 +38,6 @@ alwaysApply: true
 
 ## 참고
 
-- 규격: `docs/PNG-SPRITE-GUIDE.md` · 시안 예시: `docs/lingyu-design-preview.html`
+- 규격: `docs/PNG-SPRITE-GUIDE.md` · 시안 예시: `docs/previews/lingyu-design-preview.html`
 - **흰/크림 몸통 투명화 방지:** `.cursor/rules/sprite-white-body-guard.mdc` (minsung 사례 — prep 실패 시 배포 금지)
 - 게임 스프라이트(`assets/sprites/mermaid/adult/*`)는 승인 전 수정하지 않음

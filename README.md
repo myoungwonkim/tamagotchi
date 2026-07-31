@@ -117,7 +117,7 @@ python3 scripts/generate_mermaid_side_preview.py --install
 
 ```bash
 python3 scripts/generate_all_sprites.py              # → .sprite-staging-deepsea/
-python3 scripts/generate_mermaid_side_preview.py       # → docs/mermaid-side-preview/
+python3 scripts/generate_mermaid_side_preview.py       # → docs/previews/mermaid-side-preview/
 python3 scripts/generate_action_preview.py           # 액션 버튼 시안
 python3 scripts/generate_mess_preview.py             # 배변물·파리 시안
 python3 scripts/generate_defective_eye_preview.py    # 불량 눈 시안
@@ -334,17 +334,17 @@ npm run build:ait              # dist/ + .ait 번들 (콘솔 업로드용)
 - https://nolsoopgames.com/abysspet/privacy.html
 - https://nolsoopgames.com/abysspet/terms-of-service.html
 
-### 디자인 시안 (docs/, 게임 미반영)
+### 디자인 시안 (docs/previews/, 게임 미반영)
 
 | 문서 | 내용 |
 |------|------|
-| [docs/index.html](docs/index.html) | 시안 목록 허브 |
-| [docs/ui-theme-preview.html](docs/ui-theme-preview.html) | UI 테마 A·B·C·D |
-| [docs/ui-theme-bd-preview.html](docs/ui-theme-bd-preview.html) | UI 테마 B+D 조합 |
-| [docs/ui-theme-sub-preview.html](docs/ui-theme-sub-preview.html) | 잠수함 테마 mockup |
-| [docs/encyclopedia-size-preview.html](docs/encyclopedia-size-preview.html) | 도감 스프라이트 크기 |
-| [docs/encyclopedia-layout-preview.html](docs/encyclopedia-layout-preview.html) | 도감 레이아웃 |
-| [docs/message-position-preview.html](docs/message-position-preview.html) | 메시지 위치 |
+| [docs/previews/index.html](docs/previews/index.html) | 시안 목록 허브 |
+| [docs/previews/ui-theme-preview.html](docs/previews/ui-theme-preview.html) | UI 테마 A·B·C·D |
+| [docs/previews/ui-theme-bd-preview.html](docs/previews/ui-theme-bd-preview.html) | UI 테마 B+D 조합 |
+| [docs/previews/ui-theme-sub-preview.html](docs/previews/ui-theme-sub-preview.html) | 잠수함 테마 mockup |
+| [docs/previews/encyclopedia-size-preview.html](docs/previews/encyclopedia-size-preview.html) | 도감 스프라이트 크기 |
+| [docs/previews/encyclopedia-layout-preview.html](docs/previews/encyclopedia-layout-preview.html) | 도감 레이아웃 |
+| [docs/previews/message-position-preview.html](docs/previews/message-position-preview.html) | 메시지 위치 |
 
 ## 프로젝트 구조
 

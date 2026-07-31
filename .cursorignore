@@ -7,8 +7,11 @@ assets/custom/**
 # Archived duplicates of docs/assets
 _archive/**
 
-# Design preview HTML (81+ files); open via @ path when editing
-docs/*-preview.html
+# Design preview HTML + gallery (100+ files); open via @ path when editing
+docs/previews/**
+
+# Superseded redirect stubs; canonical pages live at repo root
+docs/legacy/**
 
 # Local / OS noise
 .cursor/debug-*.log

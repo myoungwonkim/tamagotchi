@@ -18,7 +18,7 @@ from generate_all_sprites import (
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT_DIR = ROOT / "docs" / "vent-theme-preview" / "sprites"
+OUT_DIR = ROOT / "docs" / "previews" / "vent-theme-preview" / "sprites"
 
 WHITE = (252, 250, 245, 255)
 ROCK2 = (62, 52, 56, 255)

@@ -6,6 +6,7 @@ Thumbs.db
 node_modules/
 dist/
 .env.ait
+.env.play
 *.ait
 !assets/grac-submission/
 assets/grac-submission/_video_raw/
@@ -16,5 +17,22 @@ assets/custom/
 _archive/
 .cursor/debug-*.log
 
+# Cloud-sync duplicate copies ("main 2.js"); originals stay, copies go to _archive/duplicates/
+* [0-9].*
+* [0-9][0-9].*
+* [0-9]
+* [0-9][0-9]
+
 # GitHub Pages build artifact (assembled by .github/workflows/pages.yml)
 _site/
+
+# Capacitor / Android signing
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/captures/
+*.jks
+*.keystore
+play-upload.keystore
+keystore.properties

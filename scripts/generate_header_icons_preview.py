@@ -16,7 +16,7 @@ from generate_all_sprites import (
 
 ROOT = Path(__file__).resolve().parent.parent
 STAGING = ROOT / ".sprite-staging-ui-icons"
-DOCS_OUT = ROOT / "docs" / "header-icons-preview"
+DOCS_OUT = ROOT / "docs" / "previews" / "header-icons-preview"
 
 
 def grid_to_image(g):

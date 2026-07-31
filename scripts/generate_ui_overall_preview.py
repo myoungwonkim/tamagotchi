@@ -1,9 +1,9 @@
-"""Emit docs/ui-overall-preview.html — 3 full-screen UI design mockups."""
+"""Emit docs/previews/ui-overall-preview.html — 3 full-screen UI design mockups."""
 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "docs" / "ui-overall-preview.html"
+OUT = ROOT / "docs" / "previews" / "ui-overall-preview.html"
 
 HTML = r"""<!DOCTYPE html>
 <html lang="ko">

@@ -1,17 +1,17 @@
-"""Emit docs/shark-mouth-design-preview.html.
+"""Emit docs/previews/shark-mouth-design-preview.html.
 
 Staging preview for `assets/sprites/ui/shark.png` candidates: a screen-covering
 shark maw approaching. Reference: segyu draft variant 1 (enormous head close-up),
 left-gazing, 256px, lingyu workflow. Staging + preview only; no game changes.
 
-docs/*-preview.html is .cursorignore'd, so this generator writes it via a normal
+docs/previews/ is .cursorignore'd, so this generator writes it via a normal
 script run instead of the editor.
 """
 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "docs" / "shark-mouth-design-preview.html"
+OUT = ROOT / "docs" / "previews" / "shark-mouth-design-preview.html"
 
 HTML = r"""<!DOCTYPE html>
 <html lang="ko">

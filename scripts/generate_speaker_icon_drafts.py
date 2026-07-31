@@ -24,7 +24,7 @@ from generate_all_sprites import (
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "docs" / "speaker-icon-preview"
+OUT = ROOT / "docs" / "previews" / "speaker-icon-preview"
 
 
 def draw_speaker_box_cone(g, ox=6, oy=10, body_w=6, body_h=12, cone_tip=20, fill=PAPER, fill2=PAPER2):
