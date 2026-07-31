@@ -12,13 +12,28 @@ before pushing when game assets change:
 """
 from __future__ import annotations
 
+import re
 import shutil
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / "abysspet"
-IGNORE = shutil.ignore_patterns(".DS_Store", "* 2.*", "* 3.*", "* 4.*")
+
+# macOS/iCloud collision copies: "main 2.js", "splash 7.png", ...
+DUPLICATE_COPY = re.compile(r" \d+(\.[^.]+)?$")
+
+
+def _ignore(_dir: str, names: list[str]) -> set[str]:
+    skipped = set()
+    for name in names:
+        stem = Path(name).stem
+        if name.startswith(".") or DUPLICATE_COPY.search(stem):
+            skipped.add(name)
+    return skipped
+
+
+IGNORE = _ignore
 
 
 def main() -> int:

@@ -1007,6 +1007,24 @@ img.pet-sprite[hidden] {
   pointer-events: none;
 }
 
+/* 게임산업진흥에 관한 법률 제33조 등급·등급분류번호 표시 */
+.site-rating {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.625rem;
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  opacity: 0.8;
+  user-select: none;
+  pointer-events: none;
+}
+
+.site-rating + .site-credit {
+  margin-top: 4px;
+}
+
 .actions--care-blocked .action-btn--feed,
 .actions--care-blocked .action-btn--play,
 .actions--care-blocked .action-btn--clean {
@@ -1956,6 +1974,11 @@ body.capture-mode.capture-thumbnail .actions {
 }
 
 body.capture-mode.capture-thumbnail .site-credit {
+  display: none;
+}
+
+/* Keep committed store captures pixel-stable */
+body.capture-mode .site-rating {
   display: none;
 }
 

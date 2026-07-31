@@ -15,6 +15,7 @@
 | 부제 | 심해 가상펫 육성 및 수집 게임 |
 | 고객문의 | nolsoop.games@gmail.com |
 | 개인정보 URL | https://nolsoopgames.com/abysspet/privacy.html |
+| 게임물 등급 | 전체이용가 · 제SC-OM-260731-001호 (2026-07-31) |
 | 스토어 에셋 | `assets/ait-store/` |
 | 스토어 문구 | [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md) |
 
@@ -51,14 +52,13 @@ icon URL: https://...
 
 ---
 
-## Step 2 — GRAC 등급 심의 (병렬, 7~14영업일)
+## Step 2 — GRAC 등급 심의 ✅ 완료 (2026-07-31)
 
-1. [게임물관리위원회](https://www.grac.or.kr) 등급분류 신청
-2. 게임 설명서: [GRAC-SUBMISSION-PACK.md](./GRAC-SUBMISSION-PACK.md) → PDF 변환 후 첨부
-3. 스크린샷 5장: `assets/ait-store/screenshot-portrait-0*.png` + landscape
-4. 시연 영상 또는 빌드: `assets/grac-submission/abysspet-grac-submission.zip` ([가이드](./GRAC-DEMO-SUBMISSION.md))
-5. 수수료 납부
-6. **등급분류증명서 PDF** 보관
+**전체이용가 / 등급분류번호 제SC-OM-260731-001호**
+
+남은 일은 **등급분류증명서 PDF 보관** 뿐입니다. Step 5 검수 요청에 첨부합니다.
+
+등급 표시 문구는 게임(`index.html` `.site-rating`)과 스토어 상세 설명에 반영되어 있습니다.
 
 체크리스트: [GRAC-RATING-CHECKLIST.md](./GRAC-RATING-CHECKLIST.md)
 
@@ -125,9 +125,9 @@ npm run build:ait
 ## 한 장 체크리스트
 
 - [ ] appName = `abysspet` (다른 값 금지)
-- [ ] 스토어 문구·이미지 업로드
+- [ ] 스토어 문구·이미지 업로드 (등급 표시 문구 포함)
 - [ ] 정산 승인
-- [ ] GRAC 접수 → 증명서 PDF
+- [x] GRAC 접수 → **전체이용가 확정** (제SC-OM-260731-001호) · 증명서 PDF 보관
 - [ ] 광고 그룹 2개 → ID 전달
 - [ ] 로고 URL → 에이전트 전달
 - [ ] `.ait` 업로드 + QR 테스트
