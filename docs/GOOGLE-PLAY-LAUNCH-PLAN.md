@@ -65,7 +65,7 @@
 |--------|------------|-----------|
 | 환경 감지 | `js/tossEnv.js` (`isTossEnv`) | `isPlayEnv()` / `getPlatform()` — Capacitor `Capacitor.getPlatform() === 'android'` 등 |
 | 광고 로드·표시 | `js/ads.js` → `@apps-in-toss/web-framework` `loadFullScreenAd` / `showFullScreenAd` | `adsToss.js` + `adsAdMob.js` (또는 `ads/` 폴더) — **동일 public API** (`isAdsSupported`, interstitial/rewarded, audio suspend) |
-| 빌드 엔트리 | `npm run build` + `ait build` | `build` + Capacitor `sync` / `open android` — **AIT 의존성은 Play 번들에서 트리셰이킹 또는 동적 import 실패 허용 유지** |
+| 빌드 엔트리 | `npm run build` + `granite build` | `build` + Capacitor `sync` / `open android` — **AIT 의존성은 Play 번들에서 트리셰이킹 또는 동적 import 실패 허용 유지** |
 | 스토어 에셋 | `assets/ait-store/` | **신규** `assets/play-store/` (규격 다름) |
 
 설계 원칙:

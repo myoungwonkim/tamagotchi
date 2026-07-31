@@ -234,16 +234,20 @@
       }
       const el = document.createElement("script");
       el.type = "importmap";
-      el.textContent = JSON.stringify({ scopes: { [scope]: scoped } });
+      el.textContent = JSON.stringify({
+        // Versions the entry module itself; scopes cover its internal imports.
+        imports: { "./js/main.js": scoped["./js/main.js"] },
+        scopes: { [scope]: scoped },
+      });
       document.head.appendChild(el);
     })();
   </script>
   <script type="module">
-    const v = document.querySelector('meta[name="app-version"]')?.content || "";
     if (location.protocol === "file:") {
       showBootError(new Error("file protocol blocked"));
     } else {
-      import(`./js/main.js?v=${v}`).catch((err) => showBootError(err));
+      // Specifier must stay a static literal so the bundler can resolve it.
+      import("./js/main.js").catch((err) => showBootError(err));
     }
   </script>
 </body>

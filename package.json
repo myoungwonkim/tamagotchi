@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --port 5173 --host",
     "build": "vite build && node scripts/copy-ait-static.mjs",
-    "build:ait": "npm run build && npx ait build",
+    "build:ait": "npm run build && npx granite build",
     "build:play": "vite build && node scripts/copy-ait-static.mjs && npx cap sync android",
     "build:play:empty-ads": "VITE_PLAY_ADS=0 vite build && node scripts/copy-ait-static.mjs && npx cap sync android",
     "open:android": "npx cap open android",

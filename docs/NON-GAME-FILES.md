@@ -13,6 +13,7 @@
 | `docs/previews/` | 디자인 시안 HTML 95개 + 갤러리 `index.html` + 프리뷰 폴더 4종 | 추적 (`.cursorignore` 처리) |
 | `docs/legacy/` | 구 리다이렉트 스텁 `privacy.html`·`terms-of-service.html` | 추적 (`.cursorignore` 처리) |
 | `_archive/duplicates/` | 클라우드 동기화 중복본 597개 (`main 2.js` 등), 원본 경로 구조 유지 | 미추적 (`.gitignore`) |
+| `_archive/screenshots/Screenshot-phone-captures/` | 구 `Screenshot/` 폴더 — 폰 캡처 7장 + `banner-1932x828.png`·`screenshot_N_636x1048.png` 5장. 스토어 정본은 `assets/ait-store/`·`assets/play-store/` | 미추적 (`.gitignore`) |
 
 `.gitignore`에 `* [0-9].*` 계열 규칙을 넣어 중복본이 다시 추적되지 않습니다.
 프리뷰 생성 스크립트 6종의 출력 경로도 `docs/previews/`로 변경했습니다.
@@ -22,7 +23,7 @@
 배포 대상이 2개이며, 서로 다른 하위집합만 나갑니다.
 
 - **GitHub Pages (공개 사이트 `nolsoopgames.com/abysspet/`)** — `.github/workflows/pages.yml`이 `_site/`에 복사하는 것: `index.html`, `privacy.html`, `terms-of-service.html`, `css/`, `js/`, `assets/sprites/`, `assets/ait-store/`, `CNAME`, `.nojekyll`. → **`docs/`는 배포되지 않음.**
-- **Apps-in-Toss (`npm run build`)** — `vite build`가 `index.html` 진입 JS 그래프를 번들, `scripts/copy-ait-static.mjs`가 `assets/`·`css/` 전체를 `dist/`로 복사(참조 여부 무관 통째 복사).
+- **Apps-in-Toss (`npm run build`)** — `vite build`가 `index.html` 진입 JS 그래프를 번들, `scripts/copy-ait-static.mjs`가 **허용목록**(`assets/sprites/`·`assets/app-icon/`·`css/`)만 `dist/`로 복사. `assets/custom/`·`grac-submission/`·`play-store/`는 런타임 미참조라 `.ait` 번들에서 제외.
 
 따라서 `docs/*-preview.html` 시안은 **공개 사이트에서 404 날 일이 없음**(애초에 배포 안 됨).
 
