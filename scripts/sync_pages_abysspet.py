@@ -56,13 +56,15 @@ def main() -> int:
         if src.is_dir():
             shutil.copytree(src, assets / optional, ignore=IGNORE)
 
-    app_icon_src = ROOT / "assets" / "app-icon"
-    if app_icon_src.is_dir():
-        app_icon = assets / "app-icon"
-        app_icon.mkdir()
-        for p in sorted(app_icon_src.iterdir()):
+    for icon_dir in ("app-icon", "brand-icon"):
+        icon_src = ROOT / "assets" / icon_dir
+        if not icon_src.is_dir():
+            continue
+        icon_dest = assets / icon_dir
+        icon_dest.mkdir()
+        for p in sorted(icon_src.iterdir()):
             if p.is_file() and " " not in p.name and not p.name.startswith("."):
-                shutil.copy2(p, app_icon / p.name)
+                shutil.copy2(p, icon_dest / p.name)
 
     for name in ("favicon.ico", "manifest.webmanifest"):
         src = ROOT / name

@@ -9,7 +9,7 @@ import { basename, extname } from "node:path";
 // added ~100MB to the .ait package while never being requested at runtime.
 // The app logo in assets/ait-store is served from the Pages deploy over an
 // absolute URL (granite.config.ts), so it does not belong in the bundle.
-const ASSET_DIRS = ["sprites", "app-icon"];
+const ASSET_DIRS = ["sprites", "app-icon", "brand-icon"];
 
 // macOS/iCloud collision copies: "main 2.js", "splash 7.png", ...
 const DUPLICATE_COPY = / \d+(\.[^.]+)?$/;
