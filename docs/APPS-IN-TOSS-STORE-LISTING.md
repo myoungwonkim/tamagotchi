@@ -8,7 +8,7 @@
 | 한국어 앱 이름 | **어비스펫: 심해 가상 펫** |
 | 영어 앱 이름 | **Abyss Pet** |
 | 부제 | **심해 가상펫 육성 및 수집 게임** |
-| 고객문의 이메일 | `nolsoop.games@gmail.com` |
+| 고객문의 이메일 | `contact@nolsoopgames.com` |
 | 게임물 등급 | **전체이용가** (GRAC, 2026-07-31 확정) |
 | 등급분류번호 | **제SC-OM-260731-001호** |
 
@@ -117,7 +117,7 @@ python3 scripts/build_ait_store_assets.py
 - [ ] 콘솔 `appName` = **`abysspet`**
 - [ ] 콘솔 `부제` = **심해 가상펫 육성 및 수집 게임**
 - [ ] `granite.config.ts` `displayName`과 콘솔 일치
-- [ ] 고객문의 이메일 = **nolsoop.games@gmail.com**
+- [ ] 고객문의 이메일 = **contact@nolsoopgames.com**
 - [x] GRAC 신청서 게임명 일치 → 전체이용가 확정 (제SC-OM-260731-001호)
 - [ ] 상세 설명 마지막 줄에 등급 표시 문구 포함
 - [ ] 썸네일·스크린샷 업로드 → [assets/ait-store/](../assets/ait-store/)

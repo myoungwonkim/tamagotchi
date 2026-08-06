@@ -12,7 +12,7 @@
 | 앱 이름 | `brand.displayName` | `어비스펫: 심해 가상 펫` |
 | 부제 | 콘솔 앱 정보 | `심해 가상펫 육성 및 수집 게임` |
 | 영어 앱 이름 | 콘솔 앱 정보 | `Abyss Pet` |
-| 고객문의 이메일 | 콘솔 앱 정보 | `nolsoop.games@gmail.com` |
+| 고객문의 이메일 | 콘솔 앱 정보 | `contact@nolsoopgames.com` |
 | 앱 아이콘 URL | `brand.icon` | 콘솔 업로드 이미지 우클릭 → 링크 복사 |
 | primaryColor | `brand.primaryColor` | `#58b8c8` |
 

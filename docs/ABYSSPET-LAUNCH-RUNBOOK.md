@@ -13,7 +13,7 @@
 | 한국어 앱 이름 | 어비스펫: 심해 가상 펫 |
 | 영어 앱 이름 | Abyss Pet |
 | 부제 | 심해 가상펫 육성 및 수집 게임 |
-| 고객문의 | nolsoop.games@gmail.com |
+| 고객문의 | contact@nolsoopgames.com |
 | 개인정보 URL | https://nolsoopgames.com/abysspet/privacy.html |
 | 게임물 등급 | 전체이용가 · 제SC-OM-260731-001호 (2026-07-31) |
 | 스토어 에셋 | `assets/ait-store/` |
@@ -32,7 +32,7 @@ appName: abysspet
 한국어 앱 이름: 어비스펫: 심해 가상 펫
 영어 앱 이름: Abyss Pet
 부제: 심해 가상펫 육성 및 수집 게임
-고객문의: nolsoop.games@gmail.com
+고객문의: contact@nolsoopgames.com
 ```
 
 4. **상세 설명** — STORE-LISTING 문서의 «상세 설명» 블록 복붙

@@ -121,4 +121,4 @@ dig +short www.nolsoopgames.com      # myoungwonkim.github.io.
 ## 대안 — 게임을 루트에 두고 싶어지면
 
 `_site` 조립을 `/abysspet/` 대신 루트로 바꾸거나(워크플로 수정), Pages Source를 다시
-"Deploy from a branch"로 돌리면 됩니다. 문의: nolsoop.games@gmail.com
+"Deploy from a branch"로 돌리면 됩니다. 문의: contact@nolsoopgames.com

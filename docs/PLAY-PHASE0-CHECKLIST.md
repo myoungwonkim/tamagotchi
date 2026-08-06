@@ -8,13 +8,28 @@
 |------|-----|
 | applicationId | `com.nolsoopgames.abysspet` |
 | 표시명 | 어비스펫: 심해 가상 펫 |
-| 문의 | nolsoop.games@gmail.com |
+| 문의 | contact@nolsoopgames.com |
 | 개인정보 URL | https://nolsoopgames.com/abysspet/privacy.html |
 | 이용약관 URL | https://nolsoopgames.com/abysspet/terms-of-service.html |
 
-## Play Console (운영자)
+## Play Console 개발자 계정 — **조직(Organization) 유형**
 
-- [ ] Google Play Console 개발자 계정 (결제·신원)
+계정 유형: 조직. 전화번호 인증은 아래 항목이 모두 승인된 뒤에야 활성화된다.
+
+- [x] 개발자 이메일 주소 확인
+- [ ] **D-U-N-S 번호** — 9자리, 무료. 한국은 [나이스디앤비](https://www.dnbkorea.com) 발급. 최대 30일 소요 → **크리티컬 경로**. 기존 보유 여부 먼저 조회
+- [ ] 결제 프로필(조직) — 법인명·주소가 D-U-N-S 레코드와 **정확히 일치**
+- [ ] 등록비 $25 결제
+- [ ] 조직 서류 업로드 — 사업자등록증(또는 고유번호증) 한국어 원본
+- [ ] 대표자/계정 소유자 신원 서류 — 정부 발행 신분증
+- [ ] 조직 웹사이트 인증 — `nolsoopgames.com` (Search Console 소유권 확인)
+- [x] 개발자 이메일: 조직 도메인 주소 사용 (`contact@nolsoopgames.com`) (일반·개인 Gmail은 조직 계정에 부적합)
+- [ ] **연락처 전화번호 인증** (`+82 10…`, 앞 0 제외) → SMS 6자리 → **변경사항 저장**
+
+조직 계정은 신규 개인 계정의 «비공개 테스터 12명 × 14일» 게이트가 **면제**된다.
+
+## Play Console 앱 (운영자)
+
 - [ ] 앱 생성: 게임 / 무료 / 광고 포함 예정
 - [ ] 기본 스토어 등록정보(한) + 연락처
 - [ ] 개인정보처리방침 URL 등록 (레포 개정분 배포 후)

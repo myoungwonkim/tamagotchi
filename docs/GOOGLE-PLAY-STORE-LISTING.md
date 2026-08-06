@@ -1,7 +1,7 @@
 # Google Play 스토어 등록정보 — 어비스펫
 
 applicationId: `com.nolsoopgames.abysspet`  
-문의: nolsoop.games@gmail.com  
+문의: contact@nolsoopgames.com  
 개인정보: https://nolsoopgames.com/abysspet/privacy.html  
 약관: https://nolsoopgames.com/abysspet/terms-of-service.html  
 게임물 등급: 전체이용가 · 등급분류번호 제SC-OM-260731-001호 (2026-07-31)

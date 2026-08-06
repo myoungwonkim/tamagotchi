@@ -125,7 +125,7 @@ AIT 출시가 진행 중이므로 `platforms/play` 장기 브랜치는 **머지 
 **할 일**
 
 - [ ] Google Play Console 개발자 계정 (결제·신원 확인) — **사용자**
-- [x] `applicationId` / 스토어 표시명 / 패키지 소유자 이메일 확정 → `com.nolsoopgames.abysspet`, 표시명 «어비스펫: 심해 가상 펫», `nolsoop.games@gmail.com`
+- [x] `applicationId` / 스토어 표시명 / 패키지 소유자 이메일 확정 → `com.nolsoopgames.abysspet`, 표시명 «어비스펫: 심해 가상 펫», `contact@nolsoopgames.com`
 - [ ] GRAC: Android 출시 시 기존 등급분류증명 재사용 가능 여부 확인 (위원회·서류 “플랫폼”란) — **사용자**
 - [x] 개인정보·약관 개정 초안 (AdMob·Android·광고 식별자) — 레포 `privacy.html` / `terms-of-service.html` (호스팅 배포는 별도)
 - [x] Open decisions → §7 확정값 반영
@@ -215,7 +215,7 @@ AIT 출시가 진행 중이므로 `platforms/play` 장기 브랜치는 **머지 
 - [ ] 콘텐츠 등급 설문
 - [ ] 타겟 국가 (1차: 한국 권장)
 - [ ] 앱 카테고리: 게임 > 시뮬레이션 또는 캐주얼
-- [ ] 연락처: `nolsoop.games@gmail.com`
+- [ ] 연락처: `contact@nolsoopgames.com`
 
 ### 5.2 Signing & applicationId
 
