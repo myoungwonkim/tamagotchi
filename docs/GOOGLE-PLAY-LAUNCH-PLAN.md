@@ -39,7 +39,7 @@
      ┌──────────┴──────────┐
      ▼                     ▼
  AIT (Granite/ait)    Capacitor Android
- granite.config.ts    android/ + WebView
+ apps-in-toss.config.ts    android/ + WebView
  @apps-in-toss/*      applicationId 별도
  Toss Ad SDK          AdMob (Phase 2+)
 ```
@@ -65,7 +65,7 @@
 |--------|------------|-----------|
 | 환경 감지 | `js/tossEnv.js` (`isTossEnv`) | `isPlayEnv()` / `getPlatform()` — Capacitor `Capacitor.getPlatform() === 'android'` 등 |
 | 광고 로드·표시 | `js/ads.js` → `@apps-in-toss/web-framework` `loadFullScreenAd` / `showFullScreenAd` | `adsToss.js` + `adsAdMob.js` (또는 `ads/` 폴더) — **동일 public API** (`isAdsSupported`, interstitial/rewarded, audio suspend) |
-| 빌드 엔트리 | `npm run build` + `granite build` | `build` + Capacitor `sync` / `open android` — **AIT 의존성은 Play 번들에서 트리셰이킹 또는 동적 import 실패 허용 유지** |
+| 빌드 엔트리 | `npm run build` + `ait build` | `build` + Capacitor `sync` / `open android` — **AIT 의존성은 Play 번들에서 트리셰이킹 또는 동적 import 실패 허용 유지** |
 | 스토어 에셋 | `assets/ait-store/` | **신규** `assets/play-store/` (규격 다름) |
 
 설계 원칙:
@@ -78,7 +78,7 @@
 
 | | Apps in Toss | Google Play |
 |--|--------------|-------------|
-| 앱 ID | `abysspet` (`granite.config.ts`) | `com.nolsoopgames.abysspet` (가칭, 확정 필요) |
+| 앱 ID | `abysspet` (`apps-in-toss.config.ts`) | `com.nolsoopgames.abysspet` (가칭, 확정 필요) |
 | 표시명 | 어비스펫: 심해 가상 펫 | 동일 권장 |
 | 광고 | Toss Ad 그룹 ID (`VITE_AD_*`) | AdMob App ID + Ad Unit IDs |
 | 개인정보 URL | `https://nolsoopgames.com/abysspet/privacy.html` | 동일 URL 가능 — **본문에 Android/AdMob 명시 보강** |
@@ -114,7 +114,7 @@ AIT 출시가 진행 중이므로 `platforms/play` 장기 브랜치는 **머지 
 | 트랙 | 담당 | 금지 |
 |------|------|------|
 | AIT | 현재 부모 채팅 | Play용 Capacitor/AdMob 패키지 설치로 `package.json`을 흔들지 않기 |
-| Play | 별도 채팅/스프린트 | `granite.config.ts`·AIT 광고 ID·`assets/ait-store` 덮어쓰기 금지 |
+| Play | 별도 채팅/스프린트 | `apps-in-toss.config.ts`·AIT 광고 ID·`assets/ait-store` 덮어쓰기 금지 |
 
 ---
 
@@ -277,7 +277,7 @@ AIT `thumbnail-1932x828`·`636×1048` 캡처는 **규격·알파·권장 해상�
 
 ### 5.8 기술 회귀 (AIT 보호)
 
-- [ ] `granite.config.ts` `appName: abysspet` 유지
+- [ ] `apps-in-toss.config.ts` `appName: abysspet` 유지
 - [ ] `npm run build:ait` 성공
 - [ ] Toss 광고 경로: `isTossEnv()`일 때만 framework import
 - [ ] `?toss=1&mockAds=1` 브라우저 플로우 유지

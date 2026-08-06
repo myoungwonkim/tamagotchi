@@ -4,17 +4,13 @@
 
 1. [앱인토스 콘솔](https://developers-apps-in-toss.toss.im/) 로그인 (토스 비즈니스)
 2. **미니앱 만들기** → 게임 카테고리
-3. 콘솔 입력값과 [`granite.config.ts`](../granite.config.ts) **완전 일치** 필수:
+3. SDK 3.x 기준 [`apps-in-toss.config.ts`](../apps-in-toss.config.ts)에 넣는 값과 콘솔 스토어 정보가 겹치는 필드:
 
-| 콘솔 필드 | granite.config.ts | 예시 |
-|-----------|-------------------|------|
+| 콘솔 필드 | apps-in-toss.config.ts (SDK 3) | 예시 |
+|-----------|-------------------------------|------|
 | appName (수정 불가) | `appName` | `abysspet` |
-| 앱 이름 | `brand.displayName` | `어비스펫: 심해 가상 펫` |
-| 부제 | 콘솔 앱 정보 | `심해 가상펫 육성 및 수집 게임` |
-| 영어 앱 이름 | 콘솔 앱 정보 | `Abyss Pet` |
-| 고객문의 이메일 | 콘솔 앱 정보 | `contact@nolsoopgames.com` |
-| 앱 아이콘 URL | `brand.icon` | 콘솔 업로드 이미지 우클릭 → 링크 복사 |
 | primaryColor | `brand.primaryColor` | `#58b8c8` |
+| 앱 이름 / 영문 / 부제 / 아이콘 | **콘솔만** (config에 displayName·icon 없음) | 어비스펫: 심해 가상 펫 등 |
 
 스토어 문구·이미지: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md) · 에셋 폴더 [assets/ait-store/](../assets/ait-store/)  
 **한 장 실행서:** [ABYSSPET-LAUNCH-RUNBOOK.md](./ABYSSPET-LAUNCH-RUNBOOK.md)
@@ -64,5 +60,5 @@ npm run build:ait      # dist/ + .ait 번들
 
 ## 6. 출시 후
 
-- 인앱 광고 → **분석** 탭 (SDK 2.7.0+, D+1 08시 갱신)
+- 인앱 광고 → **분석** 탭 (SDK 3.x (현재 @apps-in-toss/web-framework ^3.0.2), D+1 08시 갱신)
 - 정산: 익월 말 입금, 광고 수수료 15% 공제 ([FAQ](https://developers-apps-in-toss.toss.im/faq.html))

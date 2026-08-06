@@ -102,7 +102,7 @@ dig +short www.nolsoopgames.com      # myoungwonkim.github.io.
 
 - App-in-Toss 콘솔 개인정보 URL: `https://nolsoopgames.com/abysspet/privacy.html`
 - GRAC 제출 문서(`01-game-description.md`)의 개인정보 URL
-- `granite.config.ts` 아이콘 URL: `https://nolsoopgames.com/abysspet/assets/ait-store/app-logo-light.png`
+- `apps-in-toss.config.ts` 아이콘 URL: `https://nolsoopgames.com/abysspet/assets/ait-store/app-logo-light.png`
 
 ---
 

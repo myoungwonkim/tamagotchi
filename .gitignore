@@ -36,3 +36,4 @@ android/captures/
 *.keystore
 play-upload.keystore
 keystore.properties
+.granite/

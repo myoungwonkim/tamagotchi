@@ -12,7 +12,7 @@
 | 게임물 등급 | **전체이용가** (GRAC, 2026-07-31 확정) |
 | 등급분류번호 | **제SC-OM-260731-001호** |
 
-`granite.config.ts`의 `brand.displayName`은 한국어 앱 이름과 **동일**해야 합니다.
+SDK 3.x부터 표시 이름·아이콘은 **콘솔 앱 정보**에만 입력합니다. config에는 `appName`·`brand.primaryColor`만 맞춥니다.
 
 ---
 
@@ -96,7 +96,7 @@ python3 scripts/build_ait_store_assets.py
 # 단일 캡처만: python3 scripts/build_ait_store_assets.py --only gameover
 ```
 
-콘솔 업로드 후 `app-logo-light.png` URL을 `granite.config.ts` `brand.icon`에 입력하세요.
+로고는 콘솔에 업로드합니다 (SDK 3 config에는 icon 필드가 없습니다). Pages 호스팅 경로는 `assets/ait-store/app-logo-light.png`입니다.
 
 ---
 
@@ -116,7 +116,7 @@ python3 scripts/build_ait_store_assets.py
 
 - [ ] 콘솔 `appName` = **`abysspet`**
 - [ ] 콘솔 `부제` = **심해 가상펫 육성 및 수집 게임**
-- [ ] `granite.config.ts` `displayName`과 콘솔 일치
+- [ ] `apps-in-toss.config.ts` `appName`/`primaryColor` 확인 · 콘솔 표시 이름·아이콘 일치
 - [ ] 고객문의 이메일 = **contact@nolsoopgames.com**
 - [x] GRAC 신청서 게임명 일치 → 전체이용가 확정 (제SC-OM-260731-001호)
 - [ ] 상세 설명 마지막 줄에 등급 표시 문구 포함

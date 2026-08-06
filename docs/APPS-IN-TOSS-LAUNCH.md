@@ -4,7 +4,7 @@
 
 - [ ] `npm install` 성공
 - [ ] `npm run build:ait` → `dist/` 생성, `.ait` 번들 생성
-- [ ] `granite.config.ts` appName = `abysspet`, displayName / icon = 콘솔과 일치
+- [ ] `apps-in-toss.config.ts` appName = `abysspet`, brand.primaryColor 확인 (표시 이름·아이콘은 콘솔)
 - [ ] 첫 화면 **10초 이내** (저사양 기기)
 - [ ] GitHub Pages 정적 빌드 회귀 (`python3 -m http.server` + `index.html`)
 

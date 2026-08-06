@@ -240,7 +240,7 @@ npm run build:ait              # dist/ + .ait 번들 (콘솔 업로드용)
 | [docs/APPS-IN-TOSS-LAUNCH.md](docs/APPS-IN-TOSS-LAUNCH.md) | 출시·QA 체크리스트 |
 | [docs/AD-TUNING.md](docs/AD-TUNING.md) | 출시 후 eCPM·빈도 튜닝 |
 
-`granite.config.ts`의 `appName`(`abysspet`)·`displayName`·`icon`은 콘솔과 **동일**해야 합니다.
+`apps-in-toss.config.ts`의 `appName`(`abysspet`)·`brand.primaryColor`를 맞추고, 표시 이름·아이콘은 콘솔과 동일하게 설정합니다 (SDK 3).
 
 ## 모바일 테스트
 

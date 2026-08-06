@@ -5,16 +5,17 @@
   "scripts": {
     "dev": "vite --port 5173 --host",
     "build": "vite build && node scripts/copy-ait-static.mjs",
-    "build:ait": "npm run build && npx granite build",
+    "build:ait": "vite build --mode ait && node scripts/copy-ait-static.mjs && npx ait build",
     "build:play": "vite build && node scripts/copy-ait-static.mjs && npx cap sync android",
     "build:play:empty-ads": "VITE_PLAY_ADS=0 vite build && node scripts/copy-ait-static.mjs && npx cap sync android",
     "open:android": "npx cap open android",
     "build:store-assets": "python3 scripts/build_ait_store_assets.py",
     "build:play-store-assets": "python3 scripts/build_play_store_assets.py",
-    "preview": "vite preview --port 5173"
+    "preview": "vite preview --port 5173",
+    "deploy:ait": "npx ait deploy"
   },
   "dependencies": {
-    "@apps-in-toss/web-framework": "^1.7.0",
+    "@apps-in-toss/web-framework": "^3.0.2",
     "@capacitor-community/admob": "^7.0.0",
     "@capacitor/app": "^7.0.0",
     "@capacitor/core": "^7.0.0",

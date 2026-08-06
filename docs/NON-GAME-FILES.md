@@ -32,7 +32,7 @@
 - **런타임**: `index.html`, `css/style.css`, `js/*.js` 전 25개(전부 import 그래프에 포함; `dev.js`/`storeCapture.js`/`gracDemo.js`는 URL 파라미터 게이트지만 번들됨).
 - **스프라이트/자산**: `assets/sprites/**`(동적 경로 로드, `vent/**` 포함 — 도감 비활성이지만 향후 콘텐츠라 유지), `assets/ait-store/**`(앱 아이콘 `app-logo-light.png` 포함).
 - **법적/루트 페이지**: 루트 `privacy.html`, `terms-of-service.html`, `CNAME`, `.nojekyll`.
-- **배포/빌드 설정**: `.github/workflows/pages.yml`, `package.json`, `vite.config.js`, `granite.config.ts`, `.gitignore`, `.cursorignore`, `.env.ait.example`, `scripts/copy-ait-static.mjs`.
+- **배포/빌드 설정**: `.github/workflows/pages.yml`, `package.json`, `vite.config.js`, `apps-in-toss.config.ts`, `.gitignore`, `.cursorignore`, `.env.ait.example`, `scripts/copy-ait-static.mjs`.
 - **package.json/CI/README에 연결된 툴링 스크립트**(런타임 아님이나 사용됨): `build_ait_store_assets.py`, `qa-smoke.sh`, `bump-version.sh`, `generate_all_sprites.py`, `generate_mermaid_side_preview.py`, `generate_action_preview.py`, `generate_mess_preview.py`, `generate_defective_eye_preview.py`, `prepare_staging_adult.py`, `package_grac_submission.py`, `record_grac_demo.py`, `build_grac_submission.sh`, `generate_speaker_icon_drafts.py`.
 
 ## 게임 미적용 (참조 제외 대상)

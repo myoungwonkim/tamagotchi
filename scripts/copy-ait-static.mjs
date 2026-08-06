@@ -8,7 +8,7 @@ import { basename, extname } from "node:path";
 // assets/grac-submission and assets/play-store are repo-only material and
 // added ~100MB to the .ait package while never being requested at runtime.
 // The app logo in assets/ait-store is served from the Pages deploy over an
-// absolute URL (granite.config.ts), so it does not belong in the bundle.
+// absolute URL (apps-in-toss.config.ts), so it does not belong in the bundle.
 const ASSET_DIRS = ["sprites", "app-icon", "brand-icon"];
 
 // macOS/iCloud collision copies: "main 2.js", "splash 7.png", ...
