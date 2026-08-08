@@ -7,17 +7,19 @@
 
 ## 사전 확인
 
-| 항목 | 값 |
-|------|-----|
-| appName (수정 불가) | `abysspet` |
-| 한국어 앱 이름 | 어비스펫: 심해 가상 펫 |
-| 영어 앱 이름 | Abyss Pet |
-| 부제 | 심해 가상펫 육성 및 수집 게임 |
-| 고객문의 | contact@nolsoopgames.com |
-| 개인정보 URL | https://nolsoopgames.com/abysspet/privacy.html |
-| 게임물 등급 | 전체이용가 · 제SC-OM-260731-001호 (2026-07-31) |
-| 스토어 에셋 | `assets/ait-store/` |
-| 스토어 문구 | [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md) |
+
+| 항목              | 값                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| appName (수정 불가) | `abysspet`                                                                                       |
+| 한국어 앱 이름        | 어비스펫: 심해 가상 펫                                                                                    |
+| 영어 앱 이름         | Abyss Pet                                                                                        |
+| 부제              | 심해 가상펫 육성 및 수집 게임                                                                                |
+| 고객문의            | [nolsoop.games@gmail.com](mailto:nolsoop.games@gmail.com)                                        |
+| 개인정보 URL        | [https://nolsoopgames.com/abysspet/privacy.html](https://nolsoopgames.com/abysspet/privacy.html) |
+| 게임물 등급          | 전체이용가 · 제SC-OM-260731-001호 (2026-07-31)                                                          |
+| 스토어 에셋          | `assets/ait-store/`                                                                              |
+| 스토어 문구          | [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)                                 |
+
 
 ---
 
@@ -32,15 +34,17 @@ appName: abysspet
 한국어 앱 이름: 어비스펫: 심해 가상 펫
 영어 앱 이름: Abyss Pet
 부제: 심해 가상펫 육성 및 수집 게임
-고객문의: contact@nolsoopgames.com
+고객문의: nolsoop.games@gmail.com
 ```
 
-4. **상세 설명** — STORE-LISTING 문서의 «상세 설명» 블록 복붙
-5. **이미지 업로드** (`assets/ait-store/`):
-   - 로고 light/dark (600×600)
-   - 썸네일 1932×828, 1000×1000
-   - 스크린샷 portrait 4장 + landscape 1장
-6. 정산 정보 **승인** 상태 확인 (워크스페이스 → 정보)
+1. **상세 설명** — STORE-LISTING 문서의 «상세 설명» 블록 복붙
+2. **이미지 업로드** (`assets/ait-store/`):
+  - 로고 light/dark (600×600)
+  - 썸네일 1932×828, 1000×1000
+  - 스크린샷 portrait 4장 + landscape 1장
+3. 정산 정보 **승인** 상태 확인 (워크스페이스 → 정보)
+
+
 
 ### 에이전트에 전달 (1줄)
 
@@ -51,6 +55,8 @@ icon URL: https://...
 ```
 
 ---
+
+
 
 ## Step 2 — GRAC 등급 심의 ✅ 완료 (2026-07-31)
 
@@ -64,14 +70,20 @@ icon URL: https://...
 
 ---
 
+
+
 ## Step 3 — 인앱 광고 (20분 + 최대 2시간 대기)
 
 콘솔 → 인앱 광고 → 약관 동의 → 광고 그룹 2개:
 
-| 이름 | 유형 | 리워드 |
-|------|------|--------|
-| `abysspet_gameover_interstitial` | 전면형 | — |
-| `abysspet_reward_revive` | 보상형 | 부활 1회 / 수량 1 |
+
+| 이름                               | 유형  | 리워드          |
+| -------------------------------- | --- | ------------ |
+| `abysspet_gameover_interstitial` | 전면형 | —            |
+| `abysspet_reward_revive`         | 보상형 | 부활 1회 / 수량 1 |
+
+
+
 
 ### 에이전트에 전달
 
@@ -84,6 +96,8 @@ VITE_AD_REWARDED_ID=...
 
 ---
 
+
+
 ## Step 4 — 빌드·테스트
 
 로컬 (Node.js 필요):
@@ -95,11 +109,15 @@ cp .env.ait.example .env.ait   # 운영 ID 반영 시
 npm run build:ait
 ```
 
+
+
 ### 샌드박스
 
 1. 샌드박스 앱 설치
 2. `npm run dev` → `intoss://abysspet`
 3. [APPS-IN-TOSS-LAUNCH.md](./APPS-IN-TOSS-LAUNCH.md) L1~L10 확인
+
+
 
 ### 실기기 (필수)
 
@@ -108,38 +126,50 @@ npm run build:ait
 
 ---
 
+
+
 ## Step 5 — 검수 제출 (2~3영업일)
 
 콘솔 → 검수 요청:
 
-| 첨부 | 파일/URL |
-|------|----------|
-| 등급분류증명서 | GRAC PDF |
+
+| 첨부        | 파일/URL               |
+| --------- | -------------------- |
+| 등급분류증명서   | GRAC PDF             |
 | 개인정보 처리방침 | privacy.html URL (위) |
-| 빌드 | 최신 `.ait` |
+| 빌드        | 최신 `.ait`            |
+
 
 승인 후 → **출시하기**
 
 ---
 
+
+
 ## 한 장 체크리스트
 
-- [ ] appName = `abysspet` (다른 값 금지)
-- [ ] 스토어 문구·이미지 업로드 (등급 표시 문구 포함)
-- [ ] 정산 승인
+- [x] appName = `abysspet` (다른 값 금지)
+- [x] 스토어 문구·이미지 업로드 (등급 표시 문구 포함)
+- [x] 정산 승인
 - [x] GRAC 접수 → **전체이용가 확정** (제SC-OM-260731-001호) · 증명서 PDF 보관
-- [ ] 광고 그룹 2개 → ID 전달
-- [ ] 로고 URL → 에이전트 전달
-- [ ] `.ait` 업로드 + QR 테스트
-- [ ] 검수 제출 → 출시
+- [x] 광고 그룹 2개 → 운영 ID 반영·`.ait` 빌드
+- [x] 로고·스토어 자산 콘솔 반영
+- [x] `.ait` 업로드 + 실기기 QR 테스트
+- [x] **검수(검토) 요청 완료** (2026-08-06)
+- [ ] 검수 승인 → 콘솔 **출시하기**
 
 ---
 
+
+
 ## 관련 문서
 
-| 문서 | 용도 |
-|------|------|
-| [APPS-IN-TOSS-CONSOLE-SETUP.md](./APPS-IN-TOSS-CONSOLE-SETUP.md) | 콘솔 상세 |
-| [APPS-IN-TOSS-LAUNCH.md](./APPS-IN-TOSS-LAUNCH.md) | 광고 QA |
-| [MONETIZATION.md](./MONETIZATION.md) | 광고 정책 |
-| [GRAC-SUBMISSION-PACK.md](./GRAC-SUBMISSION-PACK.md) | 심의 설명서 |
+
+| 문서                                                               | 용도     |
+| ---------------------------------------------------------------- | ------ |
+| [APPS-IN-TOSS-CONSOLE-SETUP.md](./APPS-IN-TOSS-CONSOLE-SETUP.md) | 콘솔 상세  |
+| [APPS-IN-TOSS-LAUNCH.md](./APPS-IN-TOSS-LAUNCH.md)               | 광고 QA  |
+| [MONETIZATION.md](./MONETIZATION.md)                             | 광고 정책  |
+| [GRAC-SUBMISSION-PACK.md](./GRAC-SUBMISSION-PACK.md)             | 심의 설명서 |
+
+

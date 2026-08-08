@@ -160,21 +160,26 @@ export function resetNeglectTimer(pet) {
   return true;
 }
 
-const EMERGENCY_CARE_OPTIONS = [
-  { key: "hunger", delta: 30 },
-  { key: "happiness", delta: 25 },
-  { key: "cleanliness", delta: 40 },
-];
-
+/** R2: 건강 제외 포만·행복·청결을 100. 평균 케어로 방치 타이머도 해제될 수 있음. */
 export function applyEmergencyCare(pet) {
   if (!pet?.isAlive || pet.isSleeping) return null;
-  const pick = EMERGENCY_CARE_OPTIONS[Math.floor(Math.random() * EMERGENCY_CARE_OPTIONS.length)];
-  pet[pick.key] = clamp(pet[pick.key] + pick.delta);
-  if (getAverageCare(pet) >= 10) {
+  pet.hunger = 100;
+  pet.happiness = 100;
+  pet.cleanliness = 100;
+  if (getAverageCare(pet) >= NEGLECT_THRESHOLD) {
     pet.neglectStartedAt = null;
   }
   pet.lastUpdated = Date.now();
-  return pick;
+  return { hunger: 100, happiness: 100, cleanliness: 100 };
+}
+
+/** R3: 건강을 target%로 회복 (이미 더 높으면 유지). 방치 타이머도 초기화. */
+export function applyHealthRecoveryAd(pet, target = 50) {
+  if (!pet?.isAlive) return false;
+  pet.health = clamp(Math.max(pet.health, target));
+  pet.neglectStartedAt = null;
+  pet.lastUpdated = Date.now();
+  return true;
 }
 
 export function tickPet(pet, elapsedMs = 1000) {

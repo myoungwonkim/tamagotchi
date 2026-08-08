@@ -1,4 +1,4 @@
-import { applyTimeDelta, checkGameOver, createNewPet, tickPet, applyEmergencyCare, resetNeglectTimer } from "./pet.js";
+import { applyTimeDelta, checkGameOver, createNewPet, tickPet, applyEmergencyCare, applyHealthRecoveryAd } from "./pet.js";
 import { feed, play, clean, toggleSleep, resetActionCooldown } from "./actions.js";
 import { savePet, loadPet, clearPet } from "./storage.js";
 import {
@@ -362,12 +362,6 @@ const ACTION_MESSAGES = {
   sleep: (p) => (p.isSleeping ? "잠들었어요..." : "깨어났어요!"),
 };
 
-const EMERGENCY_LABELS = {
-  hunger: "포만감",
-  happiness: "행복",
-  cleanliness: "청결",
-};
-
 function getActionMessage(pet, messageKey) {
   const adultMessage = getAdultActionMessage(pet, messageKey);
   if (adultMessage) return adultMessage;
@@ -461,7 +455,7 @@ async function handleEmergencyCareAd() {
   pet.lastUpdated = Date.now();
   renderPet(pet);
   savePet(pet);
-  showMessage(`응급 돌봄! ${EMERGENCY_LABELS[applied.key]}이(가) 올랐어요.`, 4000);
+  showMessage("올케어! 포만·행복·청결이 가득 찼어요.", 4000);
 }
 
 async function handleNeglectResetAd() {
@@ -469,10 +463,10 @@ async function handleNeglectResetAd() {
   unlockAudioOnce();
   const rewarded = await showRewardedNeglectReset();
   if (!rewarded) return;
-  resetNeglectTimer(pet);
+  if (!applyHealthRecoveryAd(pet, 50)) return;
   renderPet(pet);
   savePet(pet);
-  showMessage("방치 타이머가 초기화됐어요. 서둘러 돌봐 주세요!", 4000);
+  showMessage("건강 회복! 건강이 50%까지 올랐어요.", 4000);
 }
 
 function setupMuteButton() {
