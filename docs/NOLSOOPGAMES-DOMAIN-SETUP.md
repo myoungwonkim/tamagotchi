@@ -1,124 +1,68 @@
-# nolsoopgames.com 도메인 · /abysspet/ 배포 가이드
+# 도메인 · 웹 게임 분리 배포
 
-`nolsoopgames.com`을 스튜디오 도메인으로 쓰고, 어비스펫 게임은 **`/abysspet/` 하위 경로**로 서빙합니다.
-게임 소스는 저장소 루트에 그대로 두고(스프라이트·빌드 스크립트 유지), 배포 시점에만
-GitHub Actions가 `/abysspet/` 경로를 조립합니다.
-
-연결 후 최종 URL:
+Play 앱(`com.nolsoopgames.abysspet`)은 Capacitor 로컬 `dist`를 씁니다. **AAB 재빌드 없음.**  
+웹 게임은 **별도 호스트**입니다.
 
 | 항목 | URL |
 |------|-----|
-| 게임 | https://nolsoopgames.com/abysspet/ |
-| 개인정보 처리방침 (검수 제출용) | https://nolsoopgames.com/abysspet/privacy.html |
-| 이용약관 | https://nolsoopgames.com/abysspet/terms-of-service.html |
-| 루트 | https://nolsoopgames.com/ → `/abysspet/`로 리디렉트 (추후 스튜디오 랜딩으로 교체 가능) |
+| 웹 게임 | https://abysspet.nolsoopgames.com/ |
+| 개인정보 (Play 정책 URL) | https://abysspet.nolsoopgames.com/privacy.html |
+| 이용약관 | https://abysspet.nolsoopgames.com/terms-of-service.html |
+| 스튜디오 apex | https://nolsoopgames.com/ → 웹 게임으로 리디렉트 |
+| 구 경로 | https://nolsoopgames.com/abysspet/ → 웹 게임으로 리디렉트 |
+| ads.txt (apex 유지) | https://nolsoopgames.com/ads.txt · `/app-ads.txt` |
+| Notion | https://nolsoopgames.com/notion/ |
 
-> `nolsoopgames.com/privacy.html`, `myoungwonkim.github.io/tamagotchi/...`, 기존 `docs/privacy.html`
-> 링크는 모두 `/abysspet/...`로 자동 리디렉트됩니다.
+다른 서브도메인(건드리지 말 것):
 
----
-
-## 구조 개요
-
-- **소스는 루트 유지:** `index.html`, `css/`, `js/`, `assets/` 는 이동하지 않음 → 스프라이트 생성·AiT 빌드 스크립트 그대로 동작.
-- **배포는 Actions가 조립:** `.github/workflows/pages.yml` 이 push마다 아래를 만들어 Pages에 올림.
-  - `_site/abysspet/` ← `index.html` + `css/` + `js/` + `assets/sprites` (+ `assets/ait-store`) + `privacy.html` + `terms-of-service.html`
-  - `_site/CNAME`, `_site/.nojekyll`
-  - `_site/index.html`, `_site/privacy.html`, `_site/terms-of-service.html` ← `/abysspet/...`로 리디렉트
-- 게임 내부 경로는 전부 상대경로라 `/abysspet/` 아래에서 그대로 동작합니다.
+| 호스트 | 호스팅 |
+|--------|--------|
+| `bazi.nolsoopgames.com` | Cloudflare Pages (`bazi-8le.pages.dev`) |
+| `apartments.nolsoopgames.com` | Cloudflare Pages (`apartments-4vu.pages.dev`) |
 
 ---
 
-## 1단계 — Pages Source를 "GitHub Actions"로 변경 (1회)
+## 구조
 
-1. GitHub 저장소 → **Settings → Pages**
-2. **Build and deployment → Source:** `GitHub Actions` 선택
-   - 기존 "Deploy from a branch"에서 바꾸는 것입니다.
-3. `main`에 push하면 `Deploy game to GitHub Pages (/abysspet/)` 워크플로가 자동 실행됩니다.
-   - **Actions** 탭에서 성공(초록 체크) 확인.
+- **소스는 루트 유지:** `index.html`, `css/`, `js/`, `assets/`
+- **GitHub Pages (apex `nolsoopgames.com`):** [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) — `CNAME`은 `nolsoopgames.com` 유지. ads.txt · notion · 구 URL 리디렉트.
+- **Cloudflare Pages (웹 게임):** [`scripts/assemble_web_game.sh`](../scripts/assemble_web_game.sh) → `_site_game/` 루트. [`wrangler.toml`](../wrangler.toml) 프로젝트명 `abysspet`.
 
----
-
-## 2단계 — 커스텀 도메인 등록
-
-1. **Settings → Pages → Custom domain** 에 `nolsoopgames.com` 입력 → **Save**
-   - 워크플로가 아티팩트에 `CNAME`을 포함하므로 도메인 값이 유지됩니다.
+GitHub Pages는 커스텀 도메인 1개라, 서브도메인 게임은 bazi/apartments와 같이 **별도 Pages 프로젝트**입니다.
 
 ---
 
-## 3단계 — 도메인 등록업체(레지스트라) DNS 설정
+## 1회 설정 — Cloudflare Pages (bazi와 동일)
 
-`nolsoopgames.com` 구매처(가비아·Cloudflare·GoDaddy·Namecheap 등)의 DNS 관리 화면에서:
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → Pages 프로젝트 이름 `abysspet` (이 저장소 연결 가능).
+2. 빌드: `bash scripts/assemble_web_game.sh _site_game` · 출력 디렉터리 `_site_game`.
+3. 또는 GitHub 시크릿 `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` → [`.github/workflows/cloudflare-web-game.yml`](../.github/workflows/cloudflare-web-game.yml)이 `wrangler pages deploy` 실행.
+4. Pages 프로젝트 **Custom domain:** `abysspet.nolsoopgames.com`.
 
-### (a) 루트 도메인 `nolsoopgames.com` — A 레코드 4개
+## DNS (가비아 / hosting.co.kr)
 
-호스트/이름 `@`(또는 공란), 타입 `A`:
+`bazi` / `apartments` / apex A 레코드는 **수정하지 않음.** 추가만:
 
-```
-185.199.108.153
-185.199.109.153
-185.199.110.153
-185.199.111.153
-```
+| 타입 | 호스트 | 값 |
+|------|--------|-----|
+| CNAME | `abysspet` | Cloudflare가 안내하는 `abysspet.pages.dev` 또는 `abysspet-xxxx.pages.dev` |
 
-> IPv6도 원하면 같은 값들의 AAAA 레코드 추가(선택):
-> `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`
-
-### (b) `www.nolsoopgames.com` — CNAME (권장)
-
-| 타입 | 호스트/이름 | 값 |
-|------|-------------|-----|
-| CNAME | `www` | `myoungwonkim.github.io.` |
-
-> 기존 파킹/포워딩 레코드가 루트(@)에 있으면 **삭제**하세요.
-
-### Cloudflare 사용 시
-
-- A 레코드는 초기 연결 동안 **"DNS only"(회색 구름)** 로 두세요(프록시 켜면 인증서 발급 실패 가능).
-- SSL/TLS 모드는 **Full** 이상.
-
----
-
-## 4단계 — 확인 및 HTTPS 강제
+회색 구름(DNS only)으로 인증서 발급 후 프록시 가능.
 
 ```bash
-dig +short nolsoopgames.com          # 185.199.108.153 등 4개
-dig +short www.nolsoopgames.com      # myoungwonkim.github.io.
+dig +short abysspet.nolsoopgames.com CNAME
+# 브라우저: https://abysspet.nolsoopgames.com/privacy.html
 ```
 
-1. **Settings → Pages** 에서 "DNS check successful" 확인.
-2. **Enforce HTTPS** 체크(인증서 발급 후 활성화됨).
-3. 브라우저 확인:
-   - https://nolsoopgames.com/abysspet/ → 게임
-   - https://nolsoopgames.com/abysspet/privacy.html → 개인정보 처리방침
-   - https://nolsoopgames.com/abysspet/terms-of-service.html → 이용약관
-   - https://nolsoopgames.com/ , /privacy.html → `/abysspet/...`로 리디렉트
+## Play Console (앱 업로드 없음)
 
----
+1. 위 privacy URL이 200인지 확인.
+2. **앱 콘텐츠 → 개인정보처리방침** (약관을 넣었다면 그쪽도)을  
+   `https://abysspet.nolsoopgames.com/privacy.html`  
+   `https://abysspet.nolsoopgames.com/terms-of-service.html`  
+   로 저장.
+3. 개발자 웹사이트는 `https://nolsoopgames.com` 유지 (Search Console·ads.txt).
 
-## 5단계 — 검수/콘솔 반영 확인
+앱인토스 콘솔 개인정보 URL도 웹을 쓰면 같은 privacy URL로 맞출 것.
 
-문서에는 이미 새 URL이 반영되어 있습니다:
-
-- App-in-Toss 콘솔 개인정보 URL: `https://nolsoopgames.com/abysspet/privacy.html`
-- GRAC 제출 문서(`01-game-description.md`)의 개인정보 URL
-- `apps-in-toss.config.ts` 아이콘 URL: `https://nolsoopgames.com/abysspet/assets/ait-store/app-logo-light.png`
-
----
-
-## 트러블슈팅
-
-| 증상 | 원인/해결 |
-|------|-----------|
-| Actions 실패 | Actions 탭 로그 확인. Source가 "GitHub Actions"인지 재확인 |
-| 도메인 미연결 | DNS 전파 대기 또는 A 레코드 오타. `dig`로 확인 |
-| HTTPS 체크박스 비활성 | 인증서 발급 대기(수십 분). 이후 다시 켜기 |
-| `/abysspet/`는 되는데 스프라이트 404 | 워크플로가 `assets/sprites`를 복사하는지 확인 |
-| 파킹 페이지가 대신 뜸 | 레지스트라 기본 포워딩/파킹 레코드 삭제 |
-
----
-
-## 대안 — 게임을 루트에 두고 싶어지면
-
-`_site` 조립을 `/abysspet/` 대신 루트로 바꾸거나(워크플로 수정), Pages Source를 다시
-"Deploy from a branch"로 돌리면 됩니다. 문의: contact@nolsoopgames.com
+문의: contact@nolsoopgames.com

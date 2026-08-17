@@ -1,56 +1,172 @@
-# Google Play 스토어 등록정보 — 어비스펫
+# Play 스토어 문구 — 어비스펫
 
-applicationId: `com.nolsoopgames.abysspet`  
-문의: contact@nolsoopgames.com  
-개인정보: https://nolsoopgames.com/abysspet/privacy.html  
-약관: https://nolsoopgames.com/abysspet/terms-of-service.html  
-게임물 등급: 전체이용가 · 등급분류번호 제SC-OM-260731-001호 (2026-07-31)
+`com.nolsoopgames.abysspet` · contact@nolsoopgames.com  
+개인정보 / 약관: abysspet.nolsoopgames.com  
+등급: 전체이용가 · 제SC-OM-260731-001호  
+에셋: `assets/play-store/` · 카테고리: 게임 > 시뮬레이션
 
-에셋 생성: `npm run build:play-store-assets` → [`assets/play-store/`](../assets/play-store/)
+아래 블록을 Console에 그대로 붙여넣기. (제목 ≤30 · 짧은 설명 ≤80)
 
-## 짧은 설명 (80자 이내)
+---
 
-심해에서 알을 키우고 진화·수집하는 가상 펫 육성 게임.
+## English (기본 언어)
 
-## 긴 설명
+**Title**
+```
+Abyss Pet: Virtual Pet Game
+```
 
-어비스펫: 심해 가상 펫은 심해를 배경으로 한 무료 가상 펫 육성·수집 게임입니다.
+**Short description**
+```
+Hatch a deep-sea egg. Raise, evolve & collect virtual pets. Free to play.
+```
 
-알을 돌보고, 먹이·놀아주기·씻기기로 스탯을 관리하세요. 성장하면 다양한 성체로 진화하고, 탐사 일지(도감)에 기록이 남습니다.
+**Full description**
+```
+Something hatched in the dark.
 
-• 심해어·심해인어 테마 육성
-• 진화와 도감 수집
-• 전면형·보상형 인앱 광고 (유료 결제 없음)
+Abyss Pet is a free virtual pet game set in the deep sea. Raise a strange little life—feed, play, clean, and put it to sleep. Care every day and it can evolve into rare deep-sea fish or uncanny mermaid forms. Neglect it, and the deep says goodbye.
 
-Google Play / Android 앱으로 제공됩니다. 게임 데이터는 기기 localStorage에만 저장됩니다.
+Looking for a free pet raising & collecting game with no pay-to-win? Start here.
+
+WHAT YOU DO
+• Hatch an egg and raise your virtual pet from baby to adult
+• Evolve deep-sea fish and mermaid variants
+• Collect discoveries in the Exploration Log (encyclopedia)
+• Name your pet, check moods, and keep stats healthy
+• Save on your device (offline-friendly)
+
+CARE LOOP
+Feed · Play · Clean · Sleep
+Simple controls, cozy pixel art, real consequences if you neglect your pet.
+
+FREE TO PLAY
+• No in-app purchases
+• No gacha cash shop
+• Optional rewarded ads for emergency care / revive
+• Interstitial ads support free play
+
+WHY PLAYERS STAY
+• Multiple evolutions and collectible adult forms
+• Deep-sea + mermaid themes
+• Short daily sessions that still matter
+
+Data stays on your device (local storage).
+Rated for all ages (GRAC: 전체이용가 · No. SC-OM-260731-001).
+
+Download Abyss Pet and raise your deep-sea virtual pet today.
+The abyss is waiting.
+```
+
+---
+
+## 한국어
+
+**제목**
+```
+어비스펫: 심해 가상펫 키우기
+```
+
+**짧은 설명**
+```
+심해에서 알을 키우고 진화·수집하는 가상 펫 육성 수집 게임.
+```
+
+**긴 설명**
+```
+어둠 속에서 무언가가 부화했습니다.
+
+어비스펫은 심해를 배경으로 한 무료 가상펫 키우기·육성 게임입니다. 먹이·놀이·청소·재우기로 작은 생명을 돌보세요. 꾸준히 키우면 심해어나 심해인어(인어) 성체로 진화하고, 방치하면 이별합니다.
+
+짧고 따뜻한 케어 루프와 픽셀 감성 시뮬레이션을 좋아한다면 잘 맞습니다.
+
+이런 분을 위한 게임
+• 가상펫·펫키우기·육성게임
+• 진화·도감 수집 캐주얼
+• 인어·심해 테마 캐릭터 수집
+• 결제 없는 무료 게임
+
+주요 콘텐츠
+• 알 → 성체 성장·진화
+• 심해어 / 심해인어 육성
+• 탐사 일지(도감) 수집
+• 이름 짓기, 기분·스탯 관리
+• 기기 저장 (localStorage)
+
+케어 루프
+먹이 · 놀이 · 청소 · 재우기
+
+과금
+• 인앱 결제(IAP) 없음
+• 뽑기 상점 없음
+• 선택형 보상 광고 (응급 케어·부활)
+• 전면 광고로 무료 플레이 유지
 
 전체이용가 · 등급분류번호 제SC-OM-260731-001호
 
-## 카테고리
+지금 어비스펫을 설치하고 나만의 심해 가상펫을 키워 보세요.
+심해가 기다립니다.
+```
 
-게임 > 시뮬레이션 (또는 캐주얼)
+---
 
-## 콘텐츠·정책 (Console)
+## 日本語
 
-- [ ] IARC 콘텐츠 등급 설문 (GRAC 전체이용가 결과 반영)
-- [ ] 광고 포함 선언
-- [ ] Data safety: 기기 로컬 저장 + 광고 SDK(AdMob) 수집
-- [ ] 타겟 국가: 1차 한국
-- [ ] GRAC 증명서 «플랫폼»란 Android 병기 여부 확인 → 필요 시 추가 신청
-- [x] GRAC 등급 표시 문구 확정 → 긴 설명 마지막 줄
+**タイトル**
+```
+アビスペット：深海育成ゲーム
+```
 
-## 에셋 체크
+**短い説明**
+```
+深海で卵を育て、進化・収集する仮想ペット育成コレクションゲーム。
+```
 
-| 파일 | 규격 |
-|------|------|
-| `icon-512.png` | 512×512, 알파 없음 |
-| `feature-graphic-1024x500.png` | 1024×500, 알파 없음 |
-| `screenshot-phone-01`…`04` | 1080×1920 |
+**詳しい説明**
+```
+暗闇の奥で、何かがかえりました。
 
-## 출시 트랙
+アビスペットは、深海を舞台にした無料のバーチャルペット育成ゲームです。えさ・あそび・そうじ・ねむりで小さな命を育てましょう。世話すれば深海魚や人魚（マーメイド）へ進化し、放置すればお別れになります。
 
-1. 내부 테스트 (AAB)
-2. 비공개/오픈 테스트
-3. 프로덕션
+短いケアループとピクセル感のシミュレーションが好きな方にぴったりです。
 
-AIT 문구 참고: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)
+こんな人におすすめ
+• バーチャルペット・育成ゲーム
+• 進化・図鑑コレクション
+• 人魚・深海キャラ集め
+• 課金なしの無料ゲーム
+
+主なコンテンツ
+• 卵 → 成体の成長・進化
+• 深海魚 / 人魚の育成
+• 探査日誌（図鑑）収集
+• なまえ・きぶん・ステータス
+• 端末保存（localStorage）
+
+ケアループ
+えさ · あそび · そうじ · ねむり
+
+課金
+• アプリ内課金（IAP）なし
+• ガチャショップなし
+• 任意リワード広告（緊急ケア・復活）
+• インタースティシャルで無料プレイ支援
+
+全年齢向け（韓国 GRAC：全体利用可 · 第SC-OM-260731-001号）
+
+今すぐインストールして、深海バーチャルペットを育てましょう。
+深海が、待っています。
+```
+
+---
+
+## 에셋 · 체크
+
+```bash
+npm run build:play-store-assets
+npm run build:play-store-play-videos
+```
+
+- [ ] IARC · [x] 광고 선언 · [x] Data safety · [ ] EN/JA/KO 문구 업로드 · [ ] 그래픽 업로드  
+- 출시: 내부 테스트 → (선택) 오픈 테스트 → 프로덕션  
+- AIT: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)

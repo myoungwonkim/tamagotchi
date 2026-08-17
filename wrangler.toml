@@ -1,0 +1,5 @@
+# Cloudflare Pages — web game only (https://abysspet.nolsoopgames.com/)
+# Apex nolsoopgames.com stays on GitHub Pages. Do not point bazi/apartments here.
+name = "abysspet"
+compatibility_date = "2026-08-17"
+pages_build_output_dir = "_site_game"

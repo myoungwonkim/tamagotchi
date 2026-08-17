@@ -23,8 +23,9 @@ _archive/
 * [0-9]
 * [0-9][0-9]
 
-# GitHub Pages build artifact (assembled by .github/workflows/pages.yml)
+# GitHub Pages / Cloudflare Pages build artifacts
 _site/
+_site_game/
 
 # Capacitor / Android signing
 android/app/build/

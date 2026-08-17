@@ -81,7 +81,7 @@
 | 앱 ID | `abysspet` (`apps-in-toss.config.ts`) | `com.nolsoopgames.abysspet` (가칭, 확정 필요) |
 | 표시명 | 어비스펫: 심해 가상 펫 | 동일 권장 |
 | 광고 | Toss Ad 그룹 ID (`VITE_AD_*`) | AdMob App ID + Ad Unit IDs |
-| 개인정보 URL | `https://nolsoopgames.com/abysspet/privacy.html` | 동일 URL 가능 — **본문에 Android/AdMob 명시 보강** |
+| 개인정보 URL | `https://abysspet.nolsoopgames.com/privacy.html` | 웹 게임 호스트. Play 앱은 이 URL을 로드하지 않음 — Console 정책 링크만 |
 | GRAC | AIT WebView 플랫폼으로 제출 중 | **Android 플랫폼 주석/갱신** (재심의 여부 확인 — Open decision) |
 
 ---
@@ -264,7 +264,7 @@ AIT `thumbnail-1932x828`·`636×1048` 캡처는 **규격·알파·권장 해상�
 - [x] AdMob / 광고 식별자(ADID) / 측정 목적 명확화 (레포 초안)
 - [x] localStorage·sessionStorage 설명 유지 (서버 미전송)
 - [x] 아동·전체이용가·문의 메일 유지
-- [ ] 시행일 갱신 후 `https://nolsoopgames.com/abysspet/privacy.html` · `terms-of-service.html` **배포**
+- [ ] 시행일 갱신 후 `https://abysspet.nolsoopgames.com/privacy.html` · `terms-of-service.html` **배포**
 - [ ] Play Console URL과 동기화
 
 ### 5.7 Android UX

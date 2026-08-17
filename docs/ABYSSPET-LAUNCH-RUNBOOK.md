@@ -15,7 +15,7 @@
 | 영어 앱 이름         | Abyss Pet                                                                                        |
 | 부제              | 심해 가상펫 육성 및 수집 게임                                                                                |
 | 고객문의            | [nolsoop.games@gmail.com](mailto:nolsoop.games@gmail.com)                                        |
-| 개인정보 URL        | [https://nolsoopgames.com/abysspet/privacy.html](https://nolsoopgames.com/abysspet/privacy.html) |
+| 개인정보 URL        | [https://abysspet.nolsoopgames.com/privacy.html](https://abysspet.nolsoopgames.com/privacy.html) |
 | 게임물 등급          | 전체이용가 · 제SC-OM-260731-001호 (2026-07-31)                                                          |
 | 스토어 에셋          | `assets/ait-store/`                                                                              |
 | 스토어 문구          | [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)                                 |

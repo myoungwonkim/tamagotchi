@@ -22,7 +22,7 @@
 
 배포 대상이 2개이며, 서로 다른 하위집합만 나갑니다.
 
-- **GitHub Pages (공개 사이트 `nolsoopgames.com/abysspet/`)** — `.github/workflows/pages.yml`이 `_site/`에 복사하는 것: `index.html`, `privacy.html`, `terms-of-service.html`, `css/`, `js/`, `assets/sprites/`, `assets/ait-store/`, `CNAME`, `.nojekyll`. → **`docs/`는 배포되지 않음.**
+- **GitHub Pages (apex `nolsoopgames.com`)** — 리디렉트·ads.txt·notion. **웹 게임은 `https://abysspet.nolsoopgames.com/`** ([`.github/workflows/pages.yml`](../.github/workflows/pages.yml) · [`scripts/assemble_web_game.sh`](../scripts/assemble_web_game.sh)). → **`docs/`는 배포되지 않음.**
 - **Apps-in-Toss (`npm run build`)** — `vite build`가 `index.html` 진입 JS 그래프를 번들, `scripts/copy-ait-static.mjs`가 **허용목록**(`assets/sprites/`·`assets/app-icon/`·`css/`)만 `dist/`로 복사. `assets/custom/`·`grac-submission/`·`play-store/`는 런타임 미참조라 `.ait` 번들에서 제외.
 
 따라서 `docs/*-preview.html` 시안은 **공개 사이트에서 404 날 일이 없음**(애초에 배포 안 됨).
