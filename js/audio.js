@@ -53,6 +53,7 @@ export function setMuted(value) {
 
 export function toggleMuted() {
   setMuted(!muted);
+  window.__syncWebAdConfig?.();
   return muted;
 }
 

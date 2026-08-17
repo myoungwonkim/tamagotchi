@@ -65,7 +65,8 @@
 
 - 개발·샌드박스: `ait-ad-test-interstitial-id`, `ait-ad-test-rewarded-id`만 사용
 - 운영 ID로 로컬 테스트 금지 (정책 위반)
-- 브라우저: `?toss=1&mockAds=1` 로 UI 플로우만 검증
+- 브라우저 UI: `?toss=1&mockAds=1` 로 플로우만 검증
+- 웹 AdSense: `docs/ADS-WEB.md` — `data-adbreak-test` (localhost / `*.pages.dev`)
 
 ## 환불
 

@@ -7,7 +7,7 @@ import {
   INTERSTITIAL_TRIGGERS,
   REWARD_TYPES,
 } from "./adConfig.js";
-import { getPlatform, isMockAdsEnabled } from "./platformEnv.js";
+import { getPlatform, isMockAdsEnabled, isWebAdsEnabled } from "./platformEnv.js";
 
 const SESSION_KEY = "tamagotchi-ad-session";
 
@@ -58,6 +58,8 @@ async function loadProvider() {
       const playAdsOff = import.meta.env?.VITE_PLAY_ADS === "0";
       if (platform === "toss" || isMockAdsEnabled()) {
         provider = await import("./adsToss.js");
+      } else if (platform === "web" && isWebAdsEnabled()) {
+        provider = await import("./adsWeb.js");
       } else if (platform === "play" && !playAdsOff) {
         provider = await import("./adsAdMob.js");
       } else {

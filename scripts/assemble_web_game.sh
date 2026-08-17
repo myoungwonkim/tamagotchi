@@ -17,6 +17,9 @@ copy_tree() {
 }
 
 cp index.html privacy.html terms-of-service.html "$DEST/"
+if [ -f ads.txt ]; then
+  cp ads.txt "$DEST/ads.txt"
+fi
 copy_tree "$ROOT/css" "$DEST"
 copy_tree "$ROOT/js" "$DEST"
 copy_tree "$ROOT/assets/sprites" "$DEST/assets"

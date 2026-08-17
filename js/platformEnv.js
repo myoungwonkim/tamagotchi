@@ -33,6 +33,29 @@ export function isPlayEnv() {
   return false;
 }
 
+function readMeta(name) {
+  if (typeof document === "undefined") return "";
+  return document.querySelector(`meta[name="${name}"]`)?.content?.trim() || "";
+}
+
+/** AdSense ca-pub-… from index.html meta (static web deploy). */
+export function getWebAdsenseClient() {
+  try {
+    if (typeof import.meta !== "undefined" && import.meta.env?.VITE_WEB_ADSENSE_CLIENT) {
+      return import.meta.env.VITE_WEB_ADSENSE_CLIENT;
+    }
+  } catch {
+    // ignore
+  }
+  return readMeta("web-adsense-client");
+}
+
+export function isWebAdsEnabled() {
+  if (getPlatform() !== "web") return false;
+  if (readMeta("web-ads") === "0") return false;
+  return Boolean(getWebAdsenseClient());
+}
+
 /** @returns {'toss' | 'play' | 'web'} */
 export function getPlatform() {
   if (isTossEnv()) return "toss";
