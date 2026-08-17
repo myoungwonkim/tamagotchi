@@ -9,19 +9,25 @@ cd "$ROOT"
 rm -rf "$DEST"
 mkdir -p "$DEST/assets"
 
+copy_tree() {
+  local src="$1"
+  local dest_parent="$2"
+  tar -C "$(dirname "$src")" --exclude='.DS_Store' -cf - "$(basename "$src")" \
+    | tar -C "$dest_parent" -xf -
+}
+
 cp index.html privacy.html terms-of-service.html "$DEST/"
-cp -R css "$DEST/css"
-cp -R js "$DEST/js"
-# Exclude Finder junk; fail the copy only if sprites missing
-rsync -a --exclude '.DS_Store' assets/sprites "$DEST/assets/"
+copy_tree "$ROOT/css" "$DEST"
+copy_tree "$ROOT/js" "$DEST"
+copy_tree "$ROOT/assets/sprites" "$DEST/assets"
 if [ -d assets/ait-store ]; then
-  rsync -a --exclude '.DS_Store' assets/ait-store "$DEST/assets/"
+  copy_tree "$ROOT/assets/ait-store" "$DEST/assets"
 fi
 if [ -d assets/brand-icon ]; then
-  rsync -a --exclude '.DS_Store' assets/brand-icon "$DEST/assets/"
+  copy_tree "$ROOT/assets/brand-icon" "$DEST/assets"
 fi
 if [ -d assets/app-icon ]; then
-  rsync -a --exclude '.DS_Store' assets/app-icon "$DEST/assets/"
+  copy_tree "$ROOT/assets/app-icon" "$DEST/assets"
 fi
 if [ -f favicon.ico ]; then
   cp favicon.ico "$DEST/favicon.ico"
