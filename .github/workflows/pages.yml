@@ -1,7 +1,11 @@
-name: Deploy game to GitHub Pages (/abysspet/)
+name: Deploy site to GitHub Pages
 
-# Publishes the web game under https://nolsoopgames.com/abysspet/ while keeping
-# the source tree at the repo root (so sprite/build scripts stay unchanged).
+# Publishes the landing page at https://nolsoopgames.com/ and the web game under
+# /abysspet/, while keeping the source tree at the repo root (so sprite/build
+# scripts stay unchanged).
+#
+# 주의: _site 에 명시적으로 복사한 것만 배포된다. 저장소에 파일을 두는 것만으로는
+# 라이브에 뜨지 않는다. ads.txt·파비콘이 404였던 원인이 이것이었다.
 # One-time setup: Settings → Pages → Source = "GitHub Actions".
 
 on:
@@ -38,6 +42,12 @@ jobs:
           cp -R js _site/abysspet/js
           mkdir -p _site/abysspet/assets
           cp -R assets/sprites _site/abysspet/assets/sprites
+
+          # 아이콘 — index.html 이 참조하는 경로 그대로 (없으면 파비콘이 404)
+          cp favicon.ico _site/abysspet/favicon.ico
+          cp manifest.webmanifest _site/abysspet/manifest.webmanifest
+          cp -R assets/brand-icon _site/abysspet/assets/brand-icon
+          cp -R assets/app-icon _site/abysspet/assets/app-icon
           # App logo referenced by granite.config.ts icon URL
           [ -d assets/ait-store ] && cp -R assets/ait-store _site/abysspet/assets/ait-store
 
@@ -53,12 +63,23 @@ jobs:
           # Custom domain
           cp CNAME _site/CNAME
 
-          # Root + legacy redirects → canonical /abysspet/ URLs
+          # 루트 랜딩 페이지 + 루트에서 참조하는 아이콘
+          mkdir -p _site/assets
+          cp home/index.html _site/index.html
+          cp favicon.ico _site/favicon.ico
+          cp -R assets/brand-icon _site/assets/brand-icon
+          cp -R assets/app-icon _site/assets/app-icon
+
+          # 판매자 인증 — 루트 도메인에만 두어야 유효하다.
+          # ads.txt 는 웹 애드센스, app-ads.txt 는 Play 앱 AdMob 용.
+          cp ads.txt _site/ads.txt
+          cp app-ads.txt _site/app-ads.txt
+
+          # 구 URL만 정규 주소로 넘긴다. 루트는 랜딩 페이지이므로 리다이렉트하지 않는다.
           make_redirect() {
             target="$1"; out="$2"
             printf '<!DOCTYPE html>\n<html lang="ko"><head><meta charset="UTF-8">\n<link rel="canonical" href="%s">\n<meta http-equiv="refresh" content="0; url=%s">\n<script>location.replace("%s");</script>\n</head><body><p><a href="%s">%s</a></p></body></html>\n' "$target" "$target" "$target" "$target" "$target" > "$out"
           }
-          make_redirect "https://nolsoopgames.com/abysspet/" _site/index.html
           make_redirect "https://nolsoopgames.com/abysspet/privacy.html" _site/privacy.html
           make_redirect "https://nolsoopgames.com/abysspet/terms-of-service.html" _site/terms-of-service.html
 
