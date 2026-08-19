@@ -41,3 +41,5 @@ keystore.properties
 
 # Pages 조립 산출물 (로컬 검증용)
 _site/
+brand-logo.png
+.DS_Store
