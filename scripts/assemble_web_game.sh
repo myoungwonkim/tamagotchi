@@ -17,6 +17,8 @@ copy_tree() {
 }
 
 cp index.html privacy.html terms-of-service.html "$DEST/"
+# 없는 경로가 게임 페이지(200)로 응답하지 않도록 실제 404를 제공한다
+cp 404.html "$DEST/404.html"
 if [ -f ads.txt ]; then
   cp ads.txt "$DEST/ads.txt"
 fi

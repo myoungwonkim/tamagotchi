@@ -2,15 +2,23 @@
 <html lang="ko">
 <head>
   
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VZ2DXER02Y"></script>
+<!-- Google tag (gtag.js) — 운영 웹 호스트에서만 로드 -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VZ2DXER02Y');
-  gtag('config', 'G-4HJZRPTNN2');
+  (function bootstrapAnalytics() {
+    var allowed = ["abysspet.nolsoopgames.com", "nolsoopgames.com", "www.nolsoopgames.com"];
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    window.gtag = gtag;
+    // 미리보기(*.pages.dev)·로컬·앱 웹뷰(localhost)는 수집 대상이 아니다.
+    if (allowed.indexOf(location.hostname) === -1) return;
+    gtag('js', new Date());
+    gtag('config', 'G-VZ2DXER02Y');
+    gtag('config', 'G-4HJZRPTNN2');
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=G-VZ2DXER02Y";
+    document.head.appendChild(s);
+  })();
 </script>
   
   <meta charset="UTF-8">
