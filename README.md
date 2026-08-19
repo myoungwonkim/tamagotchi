@@ -386,3 +386,38 @@ tamagotchi/
     bump-version.sh                 app-version 동기화
   docs/                 QA·시안·가이드
 ```
+
+## 배포 (GitHub Pages)
+
+`main`에 push하면 `.github/workflows/pages.yml`이 `_site/`를 조립해 배포한다.
+GitHub Pages Source는 "GitHub Actions"이다.
+
+**저장소에 파일을 두는 것만으로는 배포되지 않는다.** 워크플로가 `_site`로 명시적으로
+복사한 것만 라이브에 뜬다. `ads.txt`와 파비콘이 커밋돼 있는데도 404였던 원인이 이것이다.
+새 정적 파일을 추가하면 반드시 워크플로의 복사 목록에도 넣을 것.
+
+배포되는 구조:
+
+```
+/                       home/index.html (3개 언어 랜딩)
+/abysspet/              게임 — 저장소 루트의 index.html·css·js·assets/sprites
+/notion/                notion/
+/ads.txt                애드센스 판매자 인증  ← 루트 도메인에만 두어야 유효
+/app-ads.txt            AdMob 판매자 인증 (Play 앱용)
+/favicon.ico            브랜드 아이콘
+/assets/brand-icon/     파비콘 16·32·48
+/assets/app-icon/       앱 아이콘·apple-touch-icon
+/privacy.html           → /abysspet/privacy.html 리다이렉트 (구 URL 호환)
+/terms-of-service.html  → /abysspet/terms-of-service.html 리다이렉트
+```
+
+루트는 리다이렉트가 아니라 실제 랜딩 페이지다. 예전에는 `/abysspet/`로 자동 이동시켰는데,
+루트의 검색 신호가 전부 게임 페이지로 넘어가고 도메인에 다른 제품(사주만세력)이 생기면서
+맞지 않게 됐다.
+
+워크플로를 고쳤으면 push 전에 로컬에서 조립해 볼 것:
+
+```bash
+# pages.yml의 run 블록을 그대로 실행한 뒤
+cd _site && python3 -m http.server 4180
+```

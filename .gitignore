@@ -38,3 +38,6 @@ android/captures/
 play-upload.keystore
 keystore.properties
 .granite/
+
+# Pages 조립 산출물 (로컬 검증용)
+_site/

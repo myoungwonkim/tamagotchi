@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Nolsoop — 어비스펫 · 사주만세력</title>
+<meta name="description" content="Nolsoop이 만드는 것들. 심해 가상펫 육성 게임 어비스펫과, 무료 사주 만세력 계산기.">
+<meta name="theme-color" content="#0a2028">
+<link rel="canonical" href="https://nolsoopgames.com/">
+<link rel="alternate" hreflang="ko" href="https://nolsoopgames.com/">
+<link rel="alternate" hreflang="x-default" href="https://nolsoopgames.com/">
+
+<link rel="icon" href="/favicon.ico?v=brandicon-1" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/brand-icon/favicon-32.png?v=brandicon-1">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/brand-icon/favicon-16.png?v=brandicon-1">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/app-icon/apple-touch-icon.png?v=appicon-3s">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nolsoop — 어비스펫 · 사주만세력">
+<meta property="og:description" content="심해 가상펫 육성 게임과 무료 사주 만세력 계산기.">
+<meta property="og:url" content="https://nolsoopgames.com/">
+<meta property="og:image" content="https://nolsoopgames.com/assets/app-icon/icon-512.png">
+
+<!-- Google tag (gtag.js) — 운영 호스트에서만 -->
+<script>
+  (function () {
+    var allowed = ["nolsoopgames.com", "www.nolsoopgames.com"];
+    if (allowed.indexOf(location.hostname) === -1) return;
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4HJZRPTNN2');
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-4HJZRPTNN2';
+    document.head.appendChild(s);
+  })();
+</script>
+
+<style>
+  :root {
+    --bg: #0a2028; --surface: #0f2f39; --text: #cfe6ec; --muted: #6a8b94;
+    --accent: #45c8dc; --accent-dark: #2ba6bc; --border: #20464f;
+  }
+  * { box-sizing: border-box; }
+  html { word-break: keep-all; overflow-wrap: break-word; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    line-height: 1.75; font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP",
+      "Hiragino Sans", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, sans-serif;
+  }
+  .wrap { max-width: 660px; margin: 0 auto; padding: 56px 20px 72px; }
+
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .brand img { width: 40px; height: 40px; border-radius: 10px; }
+  .brand h1 { margin: 0; font-size: 1.5rem; letter-spacing: .02em; }
+  .tagline { color: var(--muted); margin: 0 0 26px; font-size: .98rem; }
+
+  .langs { display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+  .langs button {
+    background: transparent; color: var(--muted); border: 1px solid var(--border);
+    border-radius: 999px; padding: 7px 16px; font: inherit; font-size: .88rem;
+    cursor: pointer;
+  }
+  .langs button:hover { color: var(--text); border-color: var(--accent-dark); }
+  .langs button[aria-current="true"] {
+    background: var(--accent); color: #06181e; border-color: var(--accent); font-weight: 700;
+  }
+
+  .card {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px 20px; margin-bottom: 16px;
+  }
+  .card:hover { border-color: var(--accent-dark); }
+  .card h2 { margin: 0 0 6px; font-size: 1.14rem; color: var(--accent); }
+  .card p { margin: 0 0 12px; color: var(--text); font-size: .95rem; }
+  .card .meta { margin: 0; color: var(--muted); font-size: .85rem; }
+  .card .go { color: var(--accent); font-weight: 700; }
+
+  footer {
+    margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: .85rem;
+  }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--text); }
+
+  @media (max-width: 560px) { .wrap { padding: 40px 16px 60px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <img src="/assets/brand-icon/favicon-48.png?v=brandicon-1" alt="" width="40" height="40">
+    <h1>Nolsoop</h1>
+  </div>
+  <p class="tagline" data-t="tagline">틈틈이 만든 것들을 그냥 공개해 둡니다. 전부 무료입니다.</p>
+
+  <nav class="langs" aria-label="Language">
+    <button type="button" data-lang="ko" aria-current="true">한국어</button>
+    <button type="button" data-lang="en">English</button>
+    <button type="button" data-lang="ja">日本語</button>
+  </nav>
+
+  <a class="card" href="/abysspet/">
+    <h2 data-t="petTitle">어비스펫</h2>
+    <p data-t="petDesc">심해에서 주운 알을 돌보며 키우는 가상펫 게임. 브라우저에서 바로 시작합니다.</p>
+    <p class="meta"><span class="go" data-t="petGo">플레이하기 →</span></p>
+  </a>
+
+  <a class="card" href="https://bazi.nolsoopgames.com/ko/">
+    <h2 data-t="baziTitle">사주만세력</h2>
+    <p data-t="baziDesc">생년월일만 넣으면 사주팔자와 풀이가 나옵니다. 일간, 신강신약, 용신, 십신, 신살 22종, 대운까지. 가입도 결제도 없습니다.</p>
+    <p class="meta"><span class="go" data-t="baziGo">계산기 열기 →</span> <span data-t="baziApp">· 안드로이드 앱: Play 스토어에서 '사주만세력'</span></p>
+  </a>
+
+  <footer>
+    <span data-t="contact">문의</span>: <a href="mailto:contact@nolsoopgames.com">contact@nolsoopgames.com</a><br>
+    <a href="/abysspet/privacy.html" data-t="privacy">개인정보처리방침</a> ·
+    <a href="/abysspet/terms-of-service.html" data-t="terms">이용약관</a>
+    · © 2026 Nolsoop
+  </footer>
+</div>
+
+<script>
+  // 정적 페이지 하나로 3개 언어를 처리한다. 텍스트가 적어 사전 하나로 충분하고,
+  // 언어별 경로를 파면 워크플로 복사 목록이 또 늘어난다.
+  var T = {
+    ko: {
+      tagline: "틈틈이 만든 것들을 그냥 공개해 둡니다. 전부 무료입니다.",
+      petTitle: "어비스펫",
+      petDesc: "심해에서 주운 알을 돌보며 키우는 가상펫 게임. 브라우저에서 바로 시작합니다.",
+      petGo: "플레이하기 →",
+      baziTitle: "사주만세력",
+      baziDesc: "생년월일만 넣으면 사주팔자와 풀이가 나옵니다. 일간, 신강신약, 용신, 십신, 신살 22종, 대운까지. 가입도 결제도 없습니다.",
+      baziGo: "계산기 열기 →",
+      baziApp: "· 안드로이드 앱: Play 스토어에서 '사주만세력'",
+      contact: "문의", privacy: "개인정보처리방침", terms: "이용약관",
+      title: "Nolsoop — 어비스펫 · 사주만세력"
+    },
+    en: {
+      tagline: "Things built in spare moments, put out as they are. All free.",
+      petTitle: "Abysspet",
+      petDesc: "Raise a creature hatched from an egg found in the deep sea. Runs in the browser, no install.",
+      petGo: "Play →",
+      baziTitle: "Bazi Calculator",
+      baziDesc: "Enter a birth date and get the full Four Pillars chart and reading: Day Master, strength, Useful God, Ten Gods, 22 classical stars, luck pillars. No signup, no payment.",
+      baziGo: "Open the calculator →",
+      baziApp: "· Android app: search '사주만세력' on Play",
+      contact: "Contact", privacy: "Privacy Policy", terms: "Terms of Service",
+      title: "Nolsoop — Abysspet · Bazi Calculator"
+    },
+    ja: {
+      tagline: "空き時間に作ったものを、そのまま置いています。すべて無料です。",
+      petTitle: "アビスペット",
+      petDesc: "深海で拾った卵を育てる仮想ペットゲーム。ブラウザですぐ始められます。",
+      petGo: "プレイする →",
+      baziTitle: "四柱推命 計算機",
+      baziDesc: "生年月日を入れるだけで命式と鑑定が出ます。日主、身強身弱、用神、十神、神殺22種、大運まで。登録も課金もありません。",
+      baziGo: "計算機を開く →",
+      baziApp: "· Android アプリ: Play ストアで「사주만세력」",
+      contact: "お問い合わせ", privacy: "プライバシーポリシー", terms: "利用規約",
+      title: "Nolsoop — アビスペット · 四柱推命計算機"
+    }
+  };
+  // 사주 계산기는 언어별 프리렌더 주소가 따로 있다. 루트는 영어 페이지다.
+  var BAZI = {
+    ko: "https://bazi.nolsoopgames.com/ko/",
+    en: "https://bazi.nolsoopgames.com/",
+    ja: "https://bazi.nolsoopgames.com/ja/"
+  };
+  var btns = document.querySelectorAll(".langs button");
+  var baziCard = document.querySelector('.card[href*="bazi."]');
+
+  function apply(code) {
+    var t = T[code]; if (!t) return;
+    document.documentElement.lang = code;
+    document.title = t.title;
+    document.querySelectorAll("[data-t]").forEach(function (el) {
+      var v = t[el.getAttribute("data-t")];
+      if (v != null) el.textContent = v;
+    });
+    // 사주 계산기는 언어별 주소가 따로 있다
+    baziCard.setAttribute("href", BAZI[code]);
+    btns.forEach(function (b) {
+      b.setAttribute("aria-current", b.dataset.lang === code ? "true" : "false");
+    });
+    try { localStorage.setItem("nolsoop-lang", code); } catch (e) {}
+  }
+
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.dataset.lang); });
+  });
+
+  (function initial() {
+    var saved = null;
+    try { saved = localStorage.getItem("nolsoop-lang"); } catch (e) {}
+    var nav = (navigator.language || "ko").slice(0, 2);
+    var code = T[saved] ? saved : (T[nav] ? nav : "ko");
+    if (code !== "ko") apply(code);
+  })();
+</script>
+</body>
+</html>
