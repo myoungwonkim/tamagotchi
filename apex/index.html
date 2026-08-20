@@ -15,349 +15,33 @@
   <meta property="og:locale" content="ko_KR">
   <meta property="og:locale:alternate" content="en_US">
   <meta property="og:locale:alternate" content="ja_JP">
-  <meta property="og:image" content="https://nolsoopgames.com/assets/brand-icon/icon-512.png">
-  <link rel="icon" href="/favicon.ico?v=brandicon-2" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand-icon/favicon-32.png?v=brandicon-2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand-icon/favicon-16.png?v=brandicon-2">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand-icon/apple-touch-icon.png?v=brandicon-2">
+  <meta property="og:image" content="https://nolsoopgames.com/assets/brand/icon-512.png">
+  <link rel="icon" href="/favicon.ico?v=pine-2" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png?v=pine-2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16.png?v=pine-2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=pine-2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-:root {
-  --bg: #f7f5ec;
-  --ink: #1c3b28;
-  --muted: rgba(28, 59, 40, .65);
-  --muted-2: rgba(28, 59, 40, .6);
-  --muted-3: rgba(28, 59, 40, .45);
-  --muted-4: rgba(28, 59, 40, .55);
-  --accent: #8bc34a;
-  --accent-text: #4d8a2c;
-  --label: #8a9b7a;
-  --card: #fff;
-  --card-border: #ece8d8;
-  --pill-track: #e7e9db;
-  color-scheme: light;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: Inter, "Apple SD Gothic Neo", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
-  line-height: 1.65;
-}
-a { color: var(--accent-text); text-decoration: none; }
-a:hover { color: var(--ink); text-decoration: underline; }
-a:focus-visible, button:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 3px;
-}
-.wordmark { font-family: Fredoka, sans-serif; font-weight: 600; }
-.shell {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px 20px;
-  flex-wrap: wrap;
-  padding: 24px 24px 0;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: inherit;
-  text-decoration: none;
-}
-.brand:hover { text-decoration: none; color: inherit; }
-.brand img {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  object-fit: cover;
-  display: block;
-}
-.brand .wordmark { font-size: 19px; }
-.header-end {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.nav a {
-  font-size: 13px;
-  color: rgba(28, 59, 40, .7);
-  text-decoration: none;
-}
-.nav a:hover { color: var(--ink); text-decoration: none; }
-.lang {
-  display: inline-flex;
-  align-items: center;
-  background: var(--pill-track);
-  border-radius: 999px;
-  padding: 4px;
-}
-.lang button {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  color: var(--muted-4);
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: .02em;
-  padding: 6px 11px;
-  border-radius: 999px;
-  cursor: pointer;
-  line-height: 1;
-}
-.lang button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--bg);
-}
-.hero { padding: 30px 24px 24px; }
-.hero h1 {
-  margin: 0;
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 1.15;
-  text-wrap: pretty;
-}
-.hero p {
-  margin: 12px 0 0;
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--muted);
-  max-width: 560px;
-}
-.section-label {
-  padding: 4px 24px;
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--label);
-}
-.games {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  padding: 12px 24px 8px;
-}
-.card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 22px;
-  padding: 16px 18px;
-  color: inherit;
-  text-decoration: none;
-  min-width: 0;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.card:hover {
-  color: inherit;
-  text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(28, 59, 40, .12);
-}
-.card h2 {
-  margin: 0;
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 13.5px;
-}
-.card p {
-  margin: 6px 0 0;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--muted-2);
-}
-.card .go {
-  margin-top: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent-text);
-}
-.card--featured {
-  grid-column: 1 / -1;
-  background: var(--accent);
-  border: 0;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 18px 20px;
-}
-.card--featured p { color: rgba(28, 59, 40, .75); }
-.card--featured .go { color: var(--ink); }
-.card--featured h2 { font-size: 15px; }
-.chip {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(28, 59, 40, .15);
-  color: var(--ink);
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 9.5px;
-  letter-spacing: .04em;
-  padding: 3px 9px;
-  border-radius: 999px;
-}
-.prose {
-  max-width: 720px;
-  padding: 28px 24px 8px;
-}
-.prose h1 {
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 32px;
-  margin: 0 0 8px;
-}
-.prose h2 {
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 22px;
-  margin: 0 0 12px;
-}
-.prose h3 {
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 17px;
-  margin: 28px 0 8px;
-}
-.prose p, .prose li {
-  font-size: 15px;
-  color: rgba(28, 59, 40, .82);
-}
-.prose p { margin: 0 0 14px; }
-.prose ul { margin: 0 0 16px; padding-left: 1.2em; }
-.prose .meta {
-  font-size: 13px;
-  color: var(--muted-3);
-  margin-bottom: 20px;
-}
-.article-block {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 22px;
-  padding: 22px 22px 8px;
-  margin: 16px 24px;
-  max-width: 720px;
-}
-.article-block h2 {
-  font-family: Fredoka, sans-serif;
-  font-weight: 600;
-  font-size: 20px;
-  margin: 0 0 10px;
-}
-.article-block p,
-.article-block li {
-  font-size: 15px;
-  color: rgba(28, 59, 40, .82);
-}
-.faq details {
-  border-top: 1px solid var(--card-border);
-  padding: 12px 0;
-}
-.faq details:first-of-type { border-top: 0; }
-.faq summary {
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-}
-.faq details p { margin: 8px 0 0; }
-.footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px 16px;
-  padding: 18px 24px 26px;
-  border-top: 1px solid var(--card-border);
-  font-size: 12px;
-  color: var(--muted-3);
-  margin-top: 40px;
-}
-.footer-links { display: flex; flex-wrap: wrap; gap: 8px 12px; }
-@media (min-width: 800px) {
-  .header { padding: 28px 64px; }
-  .brand { gap: 12px; }
-  .brand img { width: 38px; height: 38px; border-radius: 10px; }
-  .brand .wordmark { font-size: 21px; }
-  .nav { gap: 28px; }
-  .nav a { font-size: 14px; }
-  .lang button { font-size: 12px; padding: 6px 13px; }
-  .hero { padding: 56px 64px 40px; }
-  .hero h1 { font-size: 52px; line-height: 1.1; }
-  .hero p { margin-top: 18px; font-size: 17px; }
-  .section-label { padding: 8px 64px 4px; font-size: 13px; }
-  .games {
-    grid-template-columns: 1.4fr 1fr 1fr;
-    gap: 20px;
-    padding: 16px 64px 12px;
-  }
-  .card { border-radius: 24px; padding: 22px 24px; }
-  .card h2 { font-size: 16px; }
-  .card p { font-size: 13px; margin-top: 8px; }
-  .card .go { margin-top: 14px; font-size: 13px; }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(28, 59, 40, .12); }
-  .card--featured {
-    grid-column: auto;
-    padding: 26px;
-    gap: 8px;
-  }
-  .card--featured h2 { font-size: 18px; }
-  .chip { font-size: 10.5px; padding: 4px 11px; }
-  .prose { padding: 40px 64px 12px; }
-  .article-block { margin: 16px 64px; padding: 28px 28px 12px; }
-  .footer { padding: 26px 64px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .card, .card:hover { transition: none; transform: none; }
-}
-
-  </style>
-  <!-- Landing has no AdSense. Ads stay on product sites. -->
-  <script>
-    (function () {
-      var allowed = ["nolsoopgames.com", "www.nolsoopgames.com"];
-      if (allowed.indexOf(location.hostname) === -1) return;
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){window.dataLayer.push(arguments);}
-      gtag("js", new Date());
-      gtag("config", "G-4HJZRPTNN2");
-      var s = document.createElement("script");
-      s.async = true;
-      s.src = "https://www.googletagmanager.com/gtag/js?id=G-4HJZRPTNN2";
-      document.head.appendChild(s);
-    })();
-  </script>
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <!--
+    Analytics: GA4 G-VZ2DXER02Y (studio landing + Abyss Pet web).
+    Bazi property G-ZZE20NFCE9 lives in bazi-web — never wire it here.
+    Do not load AdSense on this marketing page. Ads belong on the product sites after approval.
+  -->
+  <script src="/assets/js/gaConsent.js"></script>
+  <script>NolsoopConsent.bootstrap(NolsoopConsent.MEASUREMENT_ABYSSPET);</script>
 </head>
 <body>
   <header class="header shell">
     <a class="brand" href="/">
-      <img src="/assets/brand-icon/apple-touch-icon.png?v=brandicon-2" width="38" height="38" alt="">
+      <img src="/assets/brand/apple-touch-icon.png?v=pine-2" width="38" height="38" alt="">
       <span class="wordmark">nolsoop</span>
     </a>
     <div class="header-end">
       <nav class="nav" aria-label="Primary">
         <a href="#games" data-i18n="navGames">만든 것들</a>
-        <a href="#about" data-i18n="navAbout">소개</a>
+        <a href="/about.html" data-i18n="navAbout">소개</a>
         <a href="#contact" data-i18n="navContact">문의</a>
       </nav>
       <div class="lang" role="group" aria-label="Language">
@@ -400,8 +84,6 @@ a:focus-visible, button:focus-visible {
         <p>nolsoop(놀숲)은 Kaffeine이 운영하는 작은 스튜디오입니다. 큰 팀을 꾸리거나 스토어에 맞춘 콘텐츠 농장을 만들지 않습니다. 직접 쓰는 도구와 게임을 만들고, 쓸 만하면 웹에 올려 둡니다.</p>
         <p>지금 공개된 것은 세 가지입니다. 심해 가상펫 <a href="https://abysspet.nolsoopgames.com/">어비스펫</a>, 생년월일로 명식을 보는 <a href="https://bazi.nolsoopgames.com/ko/">사주만세력</a>, 국토교통부 신고 자료를 바탕으로 한 <a href="https://apartments.nolsoopgames.com/">팔린아파트</a>입니다. 세 서비스 모두 계정을 만들지 않아도 되고, 핵심 기능은 무료입니다.</p>
         <p>이 페이지는 그 세 서비스를 한곳에서 설명하기 위한 스튜디오 홈입니다. 광고 코드는 이 소개 페이지에 넣지 않습니다. 광고가 있다면 각 제품 안, 이용 흐름이 끊기지 않는 지점에만 있습니다.</p>
-        <p>만드는 방식은 단순합니다. 직접 쓰고 싶은 것을 만들고, 남에게 켜도 되겠다는 판단이 나면 웹에 올립니다. 데이터가 꼭 서버에 있어야 하는 경우가 아니면 기기 안에서 처리합니다. 사주 풀이에 클라우드 언어 모델을 쓰지 않고, 없는 데이터를 있는 것처럼 채우지 않습니다.</p>
-        <p>개인정보 처리방침과 이용약관은 어비스펫 페이지에 있습니다. 스튜디오 문의 메일은 contact@nolsoopgames.com이며, 회신 시간을 약속하지는 않습니다.</p>
       </div>
     </section>
 
@@ -445,7 +127,7 @@ a:focus-visible, button:focus-visible {
         </details>
         <details>
           <summary>개인정보는 어디로 가나요?</summary>
-          <p>게임 진행·생년월일은 운영자 서버로 보내지 않습니다. 웹 통계에는 Google Analytics 4를 쓸 수 있고, 제품 웹·앱에는 Google 광고가 있을 수 있습니다. 자세한 내용은 <a href="/abysspet/privacy.html">개인정보 처리방침</a>을 봅니다.</p>
+          <p>게임 진행·생년월일은 운영자 서버로 보내지 않습니다. 웹 통계에는 Google Analytics 4를 쓸 수 있고, 제품 웹·앱에는 Google 광고가 있을 수 있습니다. 자세한 내용은 <a href="/privacy.html">개인정보 처리방침</a>을 봅니다.</p>
         </details>
         <details>
           <summary>누구 문의인가요?</summary>
@@ -458,106 +140,13 @@ a:focus-visible, button:focus-visible {
   <footer class="footer shell" id="contact">
     <span>© 2026 nolsoop · <span data-i18n="contact">문의</span>: <a href="mailto:contact@nolsoopgames.com">contact@nolsoopgames.com</a></span>
     <span class="footer-links">
-      <a href="#about" data-i18n="navAboutFooter">소개</a>
-      <a href="/abysspet/privacy.html" data-i18n="privacy">개인정보 처리방침</a>
-      <a href="/abysspet/terms-of-service.html" data-i18n="terms">이용약관</a>
+      <a href="/about.html" data-i18n="navAboutFooter">소개</a>
+      <a href="/privacy.html" data-i18n="privacy">개인정보 처리방침</a>
+      <a href="/terms.html" data-i18n="terms">이용약관</a>
     </span>
   </footer>
 
-  <script>
-(function (global) {
-  "use strict";
-  var STORAGE_KEY = "nolsoop.lang";
-  var STORAGE_KEY_LEGACY = "nolsoop-lang";
-  var SUPPORTED = ["ko", "en", "ja"];
-  var originals = {};
-
-  function detect() {
-    try {
-      var saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(STORAGE_KEY_LEGACY);
-      if (saved && SUPPORTED.indexOf(saved) !== -1) return saved;
-    } catch (e) {}
-    var candidates = [];
-    if (navigator.languages && navigator.languages.length) {
-      for (var i = 0; i < navigator.languages.length; i++) candidates.push(navigator.languages[i]);
-    }
-    if (navigator.language) candidates.push(navigator.language);
-    for (var j = 0; j < candidates.length; j++) {
-      var base = String(candidates[j] || "").toLowerCase().split("-")[0];
-      if (SUPPORTED.indexOf(base) !== -1) return base;
-    }
-    return "ko";
-  }
-
-  function snapshot() {
-    var nodes = document.querySelectorAll("[data-i18n], [data-i18n-html]");
-    for (var i = 0; i < nodes.length; i++) {
-      var el = nodes[i];
-      var key = el.getAttribute("data-i18n") || el.getAttribute("data-i18n-html");
-      if (key && originals[key] == null) {
-        originals[key] = el.hasAttribute("data-i18n-html") ? el.innerHTML : el.textContent;
-      }
-    }
-  }
-
-  function apply(lang, dict, meta) {
-    if (SUPPORTED.indexOf(lang) === -1) lang = "ko";
-    dict = dict || {};
-    document.documentElement.lang = lang;
-    if (meta) {
-      if (meta.title) document.title = meta.title;
-      var desc = document.querySelector('meta[name="description"]');
-      if (desc && meta.description) desc.setAttribute("content", meta.description);
-      var ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle && meta.ogTitle) ogTitle.setAttribute("content", meta.ogTitle);
-      var ogDesc = document.querySelector('meta[property="og:description"]');
-      if (ogDesc && meta.description) ogDesc.setAttribute("content", meta.description);
-      var ogLocale = document.querySelector('meta[property="og:locale"]');
-      if (ogLocale && meta.ogLocale) ogLocale.setAttribute("content", meta.ogLocale);
-    }
-    var textNodes = document.querySelectorAll("[data-i18n]");
-    for (var i = 0; i < textNodes.length; i++) {
-      var key = textNodes[i].getAttribute("data-i18n");
-      if (lang === "ko" && originals[key] != null) textNodes[i].textContent = originals[key];
-      else if (dict[key] != null) textNodes[i].textContent = dict[key];
-    }
-    var htmlNodes = document.querySelectorAll("[data-i18n-html]");
-    for (var h = 0; h < htmlNodes.length; h++) {
-      var hkey = htmlNodes[h].getAttribute("data-i18n-html");
-      if (lang === "ko" && originals[hkey] != null) htmlNodes[h].innerHTML = originals[hkey];
-      else if (dict[hkey] != null) htmlNodes[h].innerHTML = dict[hkey];
-    }
-    var buttons = document.querySelectorAll(".lang button");
-    for (var b = 0; b < buttons.length; b++) {
-      buttons[b].setAttribute("aria-pressed", buttons[b].getAttribute("data-lang") === lang ? "true" : "false");
-    }
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-      localStorage.setItem(STORAGE_KEY_LEGACY, lang);
-    } catch (e) {}
-    return lang;
-  }
-
-  function bind(dicts, metas, onChange) {
-    snapshot();
-    function go(lang) {
-      var resolved = apply(lang, dicts && dicts[lang], metas && metas[lang]);
-      if (typeof onChange === "function") onChange(resolved);
-    }
-    go(detect());
-    var group = document.querySelector(".lang");
-    if (!group) return;
-    group.addEventListener("click", function (event) {
-      var btn = event.target.closest("button[data-lang]");
-      if (!btn) return;
-      go(btn.getAttribute("data-lang"));
-    });
-  }
-
-  global.NolsoopI18n = { detect: detect, apply: apply, bind: bind, SUPPORTED: SUPPORTED };
-})(typeof window !== "undefined" ? window : globalThis);
-
-</script>
+  <script src="/assets/js/site-i18n.js"></script>
   <script>
     var BAZI = {
       ko: "https://bazi.nolsoopgames.com/ko/",
