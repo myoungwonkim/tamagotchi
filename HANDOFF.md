@@ -76,7 +76,26 @@ push가 거부된다. GitHub 웹 편집기(`/edit/main/...`)로 우회하거나 
 루트 `bazi.nolsoopgames.com/`는 **영어 페이지**다. 한국어는 `/ko/`, 일본어는 `/ja/`.
 루트를 걸면 SNS 미리보기 카드가 영어로 뜬다. 이 실수를 두 번 했다.
 
-### 2-6. Play 앱과 웹의 계약
+### 2-6. 어비스펫 Play 앱은 웹 배포로 안 바뀐다 — 스테일 dist 함정
+
+어비스펫 안드로이드 앱(Capacitor, `com.nolsoopgames.abysspet`)은 **빌드 시점의
+`dist/`를 APK 안에 내장**한다. 원격 로드가 없으므로 웹을 배포해도 앱 화면은 안 바뀐다.
+(bazi 앱과 반대다 — 아래 2-7 참조.)
+
+따라서 APK를 빌드하기 전 **반드시 `npm run build:play`를 다시 실행**해야 한다.
+이 명령이 `vite build` + 정적 복사 + `cap sync android`를 전부 수행한다.
+이걸 건너뛰고 Android Studio에서 바로 빌드하면 **그 PC에 남아 있던 옛/불완전한
+dist가 그대로 APK에 들어간다.**
+
+증상: 앱이 JS가 전혀 실행되지 않은 정적 HTML만 표시 — 펫 이름이 기본값 "치치",
+알 스프라이트 없음, 이름 짓기 모달 없음, 수조가 밝은 하늘색. 2026-08-20에 실제로
+이 증상의 APK가 설치됐고, 번들 CSS가 07-18 이전 상태였다 (스테일 dist 확정).
+
+빌드 검증: 설치 전에 `android/app/src/main/assets/public/index.html`에
+`bootstrapAnalytics` 문자열이 있는지 확인 (08-19 이후 소스라는 뜻).
+기기에서 확인: USB 디버깅 + 데스크톱 크롬 `chrome://inspect`로 웹뷰 콘솔을 본다.
+
+### 2-7. bazi Play 앱과 웹의 계약
 
 앱은 WebView라 **웹을 배포하면 앱 화면이 즉시 바뀐다. 스토어 심사를 안 거친다.**
 계약은 클래스명과 엘리먼트 ID뿐이고 **테스트가 없다.** 이름을 바꾸면 조용히 깨진다.

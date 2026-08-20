@@ -250,8 +250,18 @@ async function init() {
     canOfferEmergencyCare,
     canOfferNeglectReset,
   });
-  await initPlayNative();
-  await initAds();
+  // 광고·네이티브 셸 초기화가 실패해도 게임 부팅은 막지 않는다.
+  // (Play 웹뷰에서 이게 던지면 이름 모달 전에 멈춰 정적 화면만 남는다)
+  try {
+    await initPlayNative();
+  } catch (err) {
+    console.warn("[boot] initPlayNative failed", err);
+  }
+  try {
+    await initAds();
+  } catch (err) {
+    console.warn("[boot] initAds failed", err);
+  }
 
   const saved = loadPet();
 
@@ -676,7 +686,10 @@ function mountDevToolsIfEnabled() {
   });
 }
 
-init();
+init().catch((err) => {
+  console.error("[boot] init failed", err);
+  if (typeof window.showBootError === "function") window.showBootError(err);
+});
 mountDevToolsIfEnabled();
 
 export { pet, handleEvolution, startNewPet };
