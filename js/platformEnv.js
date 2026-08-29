@@ -53,6 +53,10 @@ export function getWebAdsenseClient() {
 export function isWebAdsEnabled() {
   if (getPlatform() !== "web") return false;
   if (readMeta("web-ads") === "0") return false;
+  if (typeof location !== "undefined") {
+    const host = location.hostname;
+    if (host === "nolsoopgames.com" || host === "www.nolsoopgames.com") return false;
+  }
   return Boolean(getWebAdsenseClient());
 }
 

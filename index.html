@@ -42,8 +42,10 @@
     (function bootstrapWebAds() {
       var client = document.querySelector('meta[name="web-adsense-client"]')?.content?.trim();
       if (!client) return;
-      var testMode = document.querySelector('meta[name="web-ads-test"]')?.content?.trim() || "auto";
       var host = location.hostname;
+      // 스튜디오 루트 호스트의 /abysspet/ 미러에는 광고를 올리지 않는다.
+      if (host === "nolsoopgames.com" || host === "www.nolsoopgames.com") return;
+      var testMode = document.querySelector('meta[name="web-ads-test"]')?.content?.trim() || "auto";
       var useTest = testMode === "on"
         || (testMode === "auto" && (host === "localhost" || host === "127.0.0.1" || /\.pages\.dev$/i.test(host)));
       var s = document.createElement("script");

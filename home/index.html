@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>nolsoop — 어비스펫 · 사주만세력 · 팔린아파트</title>
-  <meta name="description" content="nolsoop은 틈틈이 만든 웹·모바일 도구를 무료로 공개합니다. 심해 가상펫 어비스펫, 사주만세력 계산기, 아파트 실거래 조회 팔린아파트.">
+  <title>nolsoop — 어비스펫 · 사주만세력 · 사주 궁합 · 오늘의 운세 · 팔린아파트</title>
+  <meta name="description" content="nolsoop은 틈틈이 만든 웹·모바일 도구를 무료로 공개합니다. 심해 가상펫 어비스펫, 사주만세력, 사주 궁합, 오늘의 운세, 아파트 실거래 조회 팔린아파트.">
   <meta name="theme-color" content="#f7f5ec">
   <link rel="canonical" href="https://nolsoopgames.com/">
   <meta name="robots" content="index,follow">
@@ -306,20 +306,20 @@ a:focus-visible, button:focus-visible {
   .hero p { margin-top: 18px; font-size: 17px; }
   .section-label { padding: 8px 64px 4px; font-size: 13px; }
   .games {
-    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
     padding: 16px 64px 12px;
+  }
+  .card--featured {
+    grid-column: 1 / -1;
+    padding: 26px;
+    gap: 8px;
   }
   .card { border-radius: 24px; padding: 22px 24px; }
   .card h2 { font-size: 16px; }
   .card p { font-size: 13px; margin-top: 8px; }
   .card .go { margin-top: 14px; font-size: 13px; }
   .card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(28, 59, 40, .12); }
-  .card--featured {
-    grid-column: auto;
-    padding: 26px;
-    gap: 8px;
-  }
   .card--featured h2 { font-size: 18px; }
   .chip { font-size: 10.5px; padding: 4px 11px; }
   .prose { padding: 40px 64px 12px; }
@@ -357,8 +357,8 @@ a:focus-visible, button:focus-visible {
     <div class="header-end">
       <nav class="nav" aria-label="Primary">
         <a href="#games" data-i18n="navGames">만든 것들</a>
-        <a href="#about" data-i18n="navAbout">소개</a>
-        <a href="#contact" data-i18n="navContact">문의</a>
+        <a href="/about.html" data-i18n="navAbout">소개</a>
+        <a href="/contact.html" data-i18n="navContact">문의</a>
       </nav>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="ko" aria-pressed="true">KO</button>
@@ -387,6 +387,16 @@ a:focus-visible, button:focus-visible {
         <p data-i18n="baziDesc">생년월일만 넣으면 사주팔자와 풀이가 나옵니다. 가입도 결제도 없습니다.</p>
         <span class="go" data-i18n="baziGo">계산기 열기 →</span>
       </a>
+      <a class="card" href="https://couple.nolsoopgames.com/ko/">
+        <h2 data-i18n="coupleTitle">사주 궁합</h2>
+        <p data-i18n="coupleDesc">두 사람의 사주를 다섯 축으로 대조합니다. 점수는 내지 않습니다.</p>
+        <span class="go" data-i18n="coupleGo">궁합 보기 →</span>
+      </a>
+      <a class="card" href="https://today.nolsoopgames.com/ko/">
+        <h2 data-i18n="todayTitle">오늘의 운세</h2>
+        <p data-i18n="todayDesc">일진과 내 사주를 실제로 대조합니다. 띠 운세가 아닙니다.</p>
+        <span class="go" data-i18n="todayGo">오늘 운세 →</span>
+      </a>
       <a class="card" href="https://apartments.nolsoopgames.com/">
         <h2 data-i18n="aptTitle">팔린아파트</h2>
         <p data-i18n="aptDesc">부르는 값이 아니라 팔린 값. 국토부에 신고된 실거래만 보여줍니다.</p>
@@ -398,10 +408,10 @@ a:focus-visible, button:focus-visible {
       <h2 data-i18n="aboutHeading">nolsoop이 하는 일</h2>
       <div data-i18n-html="aboutBody">
         <p>nolsoop(놀숲)은 Kaffeine이 운영하는 작은 스튜디오입니다. 큰 팀을 꾸리거나 스토어에 맞춘 콘텐츠 농장을 만들지 않습니다. 직접 쓰는 도구와 게임을 만들고, 쓸 만하면 웹에 올려 둡니다.</p>
-        <p>지금 공개된 것은 세 가지입니다. 심해 가상펫 <a href="https://abysspet.nolsoopgames.com/">어비스펫</a>, 생년월일로 명식을 보는 <a href="https://bazi.nolsoopgames.com/ko/">사주만세력</a>, 국토교통부 신고 자료를 바탕으로 한 <a href="https://apartments.nolsoopgames.com/">팔린아파트</a>입니다. 세 서비스 모두 계정을 만들지 않아도 되고, 핵심 기능은 무료입니다.</p>
-        <p>이 페이지는 그 세 서비스를 한곳에서 설명하기 위한 스튜디오 홈입니다. 광고 코드는 이 소개 페이지에 넣지 않습니다. 광고가 있다면 각 제품 안, 이용 흐름이 끊기지 않는 지점에만 있습니다.</p>
+        <p>지금 공개된 것은 다섯 가지입니다. 심해 가상펫 <a href="https://abysspet.nolsoopgames.com/">어비스펫</a>, 생년월일로 명식을 보는 <a href="https://bazi.nolsoopgames.com/ko/">사주만세력</a>, 두 사람 사주를 대조하는 <a href="https://couple.nolsoopgames.com/ko/">사주 궁합</a>, 일진과 내 사주를 대조하는 <a href="https://today.nolsoopgames.com/ko/">오늘의 운세</a>, 국토교통부 신고 자료를 바탕으로 한 <a href="https://apartments.nolsoopgames.com/">팔린아파트</a>입니다. 모두 계정을 만들지 않아도 되고, 핵심 기능은 무료입니다.</p>
+        <p>이 페이지는 그 제품들을 한곳에서 설명하기 위한 스튜디오 홈입니다. 광고 코드는 이 소개 페이지에 넣지 않습니다. 광고가 있다면 각 제품 안, 이용 흐름이 끊기지 않는 지점에만 있습니다.</p>
         <p>만드는 방식은 단순합니다. 직접 쓰고 싶은 것을 만들고, 남에게 켜도 되겠다는 판단이 나면 웹에 올립니다. 데이터가 꼭 서버에 있어야 하는 경우가 아니면 기기 안에서 처리합니다. 사주 풀이에 클라우드 언어 모델을 쓰지 않고, 없는 데이터를 있는 것처럼 채우지 않습니다.</p>
-        <p>개인정보 처리방침과 이용약관은 어비스펫 페이지에 있습니다. 스튜디오 문의 메일은 contact@nolsoopgames.com이며, 회신 시간을 약속하지는 않습니다.</p>
+        <p>스튜디오 소개는 <a href="/about.html">소개 페이지</a>에, 문의는 <a href="/contact.html">문의 페이지</a>에 있습니다. 개인정보 처리방침과 이용약관은 이 도메인에 있습니다. 스튜디오 문의 메일은 contact@nolsoopgames.com이며, 회신 시간을 약속하지는 않습니다.</p>
       </div>
     </section>
 
@@ -423,6 +433,22 @@ a:focus-visible, button:focus-visible {
       </div>
     </article>
 
+    <article class="article-block shell" id="couple">
+      <h2 data-i18n="coupleH">사주 궁합 — 점수 없는 다섯 축</h2>
+      <div data-i18n-html="coupleBody">
+        <p>사주 궁합은 두 사람의 생년월일로 명식을 세운 뒤, 일간 관계, 자리별 지지 관계, 오행 보완, 신강약, 배우자성까지 다섯 축을 각각 계산합니다. 띠만 보는 궁합과 다릅니다. 점수를 매기지 않고, 관계가 유지될지 끝날지를 판정하지 않습니다. 반복될 역학만 적습니다.</p>
+        <p>계산은 브라우저 안에서 이뤄지고 생년월일은 서버로 보내지 않습니다. 공유 링크에는 본인 정보만 담깁니다. 주소는 <a href="https://couple.nolsoopgames.com/ko/">couple.nolsoopgames.com/ko/</a>입니다. 한국어입니다.</p>
+      </div>
+    </article>
+
+    <article class="article-block shell" id="today">
+      <h2 data-i18n="todayH">오늘의 운세 — 일진과 내 사주</h2>
+      <div data-i18n-html="todayBody">
+        <p>오늘의 운세는 띠 하나로 수백만 명을 묶지 않습니다. 그날의 육십갑자 일진이 내 사주팔자와 실제로 어떤 관계인지를 계산합니다. 오늘의 십신, 용신 대비 흐름, 일지와의 합·충, 귀인일·역마일·도화일·공망일. 사건을 예언하지 않고, 그날 들어오는 기운의 성질과 대응만 적습니다.</p>
+        <p>생년월일을 이 기기에 저장해 두면 다음 방문부터 열자마자 그날 운세가 나옵니다. 서버로 보내지는 않습니다. 주소는 <a href="https://today.nolsoopgames.com/ko/">today.nolsoopgames.com/ko/</a>입니다. 한국어입니다.</p>
+      </div>
+    </article>
+
     <article class="article-block shell" id="sold-apt">
       <h2 data-i18n="aptH">팔린아파트 — 실거래가 조회</h2>
       <div data-i18n-html="aptBody">
@@ -437,7 +463,7 @@ a:focus-visible, button:focus-visible {
       <div data-i18n-html="faqBody">
         <details>
           <summary>유료인가요?</summary>
-          <p>세 서비스의 핵심 기능은 무료입니다. 인앱 결제나 구독으로 잠그는 기능은 없습니다. 웹·앱 일부 화면에 광고가 있을 수 있습니다.</p>
+          <p>핵심 기능은 무료입니다. 인앱 결제나 구독으로 잠그는 기능은 없습니다. 웹·앱 일부 화면에 광고가 있을 수 있습니다. 이 소개 사이트에는 광고 코드를 넣지 않습니다.</p>
         </details>
         <details>
           <summary>회원가입이 필요한가요?</summary>
@@ -445,7 +471,7 @@ a:focus-visible, button:focus-visible {
         </details>
         <details>
           <summary>개인정보는 어디로 가나요?</summary>
-          <p>게임 진행·생년월일은 운영자 서버로 보내지 않습니다. 웹 통계에는 Google Analytics 4를 쓸 수 있고, 제품 웹·앱에는 Google 광고가 있을 수 있습니다. 자세한 내용은 <a href="/abysspet/privacy.html">개인정보 처리방침</a>을 봅니다.</p>
+          <p>게임 진행·생년월일은 운영자 서버로 보내지 않습니다. 웹 통계에는 Google Analytics 4를 쓸 수 있고, 제품 웹·앱에는 Google 광고가 있을 수 있습니다. 자세한 내용은 <a href="/privacy.html">개인정보 처리방침</a>을 봅니다.</p>
         </details>
         <details>
           <summary>누구 문의인가요?</summary>
@@ -458,9 +484,10 @@ a:focus-visible, button:focus-visible {
   <footer class="footer shell" id="contact">
     <span>© 2026 nolsoop · <span data-i18n="contact">문의</span>: <a href="mailto:contact@nolsoopgames.com">contact@nolsoopgames.com</a></span>
     <span class="footer-links">
-      <a href="#about" data-i18n="navAboutFooter">소개</a>
-      <a href="/abysspet/privacy.html" data-i18n="privacy">개인정보 처리방침</a>
-      <a href="/abysspet/terms-of-service.html" data-i18n="terms">이용약관</a>
+      <a href="/about.html" data-i18n="navAboutFooter">소개</a>
+      <a href="/contact.html" data-i18n="navContact">문의</a>
+      <a href="/privacy.html" data-i18n="privacy">개인정보 처리방침</a>
+      <a href="/terms.html" data-i18n="terms">이용약관</a>
     </span>
   </footer>
 
@@ -566,14 +593,14 @@ a:focus-visible, button:focus-visible {
     };
     var META = {
       ko: {
-        title: "nolsoop — 어비스펫 · 사주만세력 · 팔린아파트",
-        description: "틈틈이 만든 웹·모바일 게임과 생활 도구입니다. 어비스펫, 사주만세력, 팔린아파트를 가입 없이 무료로 씁니다.",
+        title: "nolsoop — 어비스펫 · 사주만세력 · 사주 궁합 · 오늘의 운세 · 팔린아파트",
+        description: "틈틈이 만든 웹·모바일 게임과 생활 도구입니다. 어비스펫, 사주만세력, 사주 궁합, 오늘의 운세, 팔린아파트를 가입 없이 무료로 씁니다.",
         ogTitle: "nolsoop",
         ogLocale: "ko_KR"
       },
       en: {
-        title: "nolsoop — Abysspet · Bazi Calculator · Sold Apt",
-        description: "Free web games and tools by Kaffeine: a deep-sea virtual pet, a Bazi calculator, and Korean apartment sale-price lookup.",
+        title: "nolsoop — Abysspet · Bazi · compatibility · today's luck · Sold Apt",
+        description: "Free web games and tools by Kaffeine: a deep-sea virtual pet, Bazi calculator and compatibility, today's luck against your chart, and Korean apartment sale-price lookup.",
         ogTitle: "nolsoop",
         ogLocale: "en_US"
       },
@@ -600,19 +627,29 @@ a:focus-visible, button:focus-visible {
         baziTitle: "Bazi Calculator",
         baziDesc: "Enter a birth date and get the Four Pillars chart and reading. No signup, no payment.",
         baziGo: "Open the calculator →",
+        coupleTitle: "Bazi compatibility",
+        coupleDesc: "Two charts, five axes. No score.",
+        coupleGo: "Read compatibility →",
+        todayTitle: "Today's luck",
+        todayDesc: "Today's stem-branch against your chart. Not a zodiac horoscope.",
+        todayGo: "Today's reading →",
         aptTitle: "Sold Apt",
         aptDesc: "Asking prices are not prices. Official Korean apartment sales, jeonse, and monthly rent.",
         aptGo: "Look up real transactions →",
         aboutHeading: "What nolsoop is",
-        aboutBody: "<p>nolsoop is a small studio run by Kaffeine. There is no content farm and no large team. We make tools and games we would use ourselves, then put them on the web when they are fit to share.</p><p>Three things are public today: the deep-sea virtual pet <a href=\"https://abysspet.nolsoopgames.com/\">Abysspet</a>, the birth-chart calculator <a href=\"https://bazi.nolsoopgames.com/\">Bazi Calculator</a>, and <a href=\"https://apartments.nolsoopgames.com/\">Sold Apt</a>, which shows Korean apartment contracts as filed. None of them require an account. The core features are free.</p><p>This page exists to explain those products in one place. We do not put ad code on this studio homepage. If a product shows ads, they appear inside that product, at a break in the flow.</p>",
+        aboutBody: "<p>nolsoop is a small studio run by Kaffeine. There is no content farm and no large team. We make tools and games we would use ourselves, then put them on the web when they are fit to share.</p><p>Five things are public today: the deep-sea virtual pet <a href=\"https://abysspet.nolsoopgames.com/\">Abysspet</a>, the birth-chart calculator <a href=\"https://bazi.nolsoopgames.com/\">Bazi Calculator</a>, <a href=\"https://couple.nolsoopgames.com/ko/\">Bazi compatibility</a> (no scores), <a href=\"https://today.nolsoopgames.com/ko/\">today's luck</a> against your own chart, and <a href=\"https://apartments.nolsoopgames.com/\">Sold Apt</a>, which shows Korean apartment contracts as filed. None of them require an account. The core features are free.</p><p>This page exists to explain those products in one place. We do not put ad code on this studio homepage. If a product shows ads, they appear inside that product, at a break in the flow.</p><p>Longer studio notes: <a href=\"/about.html\">About</a>. Mail: <a href=\"/contact.html\">Contact</a>. Privacy and terms live on this domain. Email contact@nolsoopgames.com. We do not promise a reply time.</p>",
         abyssH: "Abysspet — deep-sea virtual pet",
         abyssBody: "<p>Abysspet is a free virtual-pet game. You care for an egg found in the deep sea with feed, play, clean, and sleep. Kept well, it grows into a deep-sea fish or a deep-sea mermaid. Left alone, it leaves. Past companions stay in the exploration journal, and you can start again from a new egg.</p><p>Play in the <a href=\"https://abysspet.nolsoopgames.com/\">browser</a> with no install. There is also a Google Play app (<code>com.nolsoopgames.abysspet</code>) and an Appintoss mini app. No in-app purchases and no gacha shop. Interstitial and optional rewarded ads may appear.</p><p>The pet name, progress, and journal stay in localStorage on your device. We do not upload play data to our servers. All ages; Korean rating SC-OM-260731-001.</p>",
         baziH: "Bazi Calculator — free Four Pillars chart",
         baziBody: "<p>Enter a birth date (and optionally time and country) to get a Four Pillars chart and a reading: year, month, day, and hour pillars, Day Master, strength, Useful God, Ten Gods, classical stars, and luck pillars. If you do not know the hour, leave it blank; the rest of the chart still computes.</p><p>The chart is calculated on your device. We do not store birth dates on our servers. No sign-up and no payment. Korean, English, and Japanese. The web app is <a href=\"https://bazi.nolsoopgames.com/\">bazi.nolsoopgames.com</a>. On Google Play search 사주만세력 (<code>com.nolsoopgames.bazi</code>).</p><p>For reflection, not medical, legal, or financial advice. Births near solar-term boundaries can differ by a day. Readings use published Bazi rules, not a cloud language model.</p>",
+        coupleH: "Bazi compatibility — five axes, no score",
+        coupleBody: "<p>Compatibility is two charts compared on five axes: Day Master relation, branch relations by palace, elemental supply, strength pairing, and spouse-star. It is not a zodiac-animal match. There is no score, and no verdict on whether a relationship will last. Only the repeating mechanics are described.</p><p>Calculation stays in the browser. Share links carry only your own birth data. Site: <a href=\"https://couple.nolsoopgames.com/ko/\">couple.nolsoopgames.com/ko/</a> (Korean).</p>",
+        todayH: "Today's luck — the day against your chart",
+        todayBody: "<p>This is not a one-line horoscope for everyone born in the same animal year. It computes how today's stem-branch meets your eight characters: today's Ten God, useful-god weather, branch relation to your Day Branch, and whether the day is a nobleman, horse, peach-blossom, or void day for you. It does not predict events.</p><p>You may save the birth date on this device so the next visit opens today's reading. It is not sent to our servers. Site: <a href=\"https://today.nolsoopgames.com/ko/\">today.nolsoopgames.com/ko/</a> (Korean).</p>",
         aptH: "Sold Apt — filed Korean apartment prices",
         aptBody: "<p>Sold Apt shows contracts actually filed with Korea’s Ministry of Land, not asking prices. Sales, jeonse, monthly rent, price per pyeong over time, plus loan and acquisition-tax calculators. Coverage is centered on Seoul and Gyeonggi. The service is in Korean.</p><p>Mixing list prices with closed prices creates a mirage. This tool keeps to filed deals so you see what actually sold. Site: <a href=\"https://apartments.nolsoopgames.com/\">apartments.nolsoopgames.com</a>.</p><p>It is a lookup over public filings, not brokerage or investment advice. Decisions should rest on the registry and the contract.</p>",
         faqHeading: "Questions",
-        faqBody: "<details><summary>Is it paid?</summary><p>Core features of all three products are free. Nothing is locked behind a subscription. Some web and app screens may show ads.</p></details><details><summary>Do I need an account?</summary><p>No. Abysspet progress and Bazi inputs stay on your device.</p></details><details><summary>Where does personal data go?</summary><p>Play progress and birth dates are not sent to our servers. The websites may use Google Analytics 4, and product pages or apps may show Google ads. See the <a href=\"/privacy.html\">privacy policy</a>.</p></details><details><summary>How do I get in touch?</summary><p>Email <a href=\"mailto:contact@nolsoopgames.com\">contact@nolsoopgames.com</a>. We do not promise a reply time.</p></details>",
+        faqBody: "<details><summary>Is it paid?</summary><p>Core features are free. Nothing is locked behind a subscription. Some web and app screens may show ads. This studio homepage has no ad code.</p></details><details><summary>Do I need an account?</summary><p>No. Abysspet progress and Bazi inputs stay on your device.</p></details><details><summary>Where does personal data go?</summary><p>Play progress and birth dates are not sent to our servers. The websites may use Google Analytics 4, and product pages or apps may show Google ads. See the <a href=\"/privacy.html\">privacy policy</a>.</p></details><details><summary>How do I get in touch?</summary><p>Email <a href=\"mailto:contact@nolsoopgames.com\">contact@nolsoopgames.com</a>. We do not promise a reply time. There is also a <a href=\"/contact.html\">contact page</a>.</p></details>",
         contact: "Contact",
         privacy: "Privacy Policy",
         terms: "Terms of Service"
@@ -632,19 +669,29 @@ a:focus-visible, button:focus-visible {
         baziTitle: "四柱推命 計算機",
         baziDesc: "生年月日を入れるだけで命式と鑑定が出ます。登録も課金もありません。",
         baziGo: "計算機を開く →",
+        coupleTitle: "四柱推命 相性",
+        coupleDesc: "二人の命式を五つの軸で対照します。点数は出しません。",
+        coupleGo: "相性を見る →",
+        todayTitle: "今日の運勢",
+        todayDesc: "今日の日干支と自分の命式を実際に対照します。十二支占いではありません。",
+        todayGo: "今日の運勢 →",
         aptTitle: "팔린아파트",
         aptDesc: "希望価格ではなく、実際に成立した価格。韓国の不動産実取引のみを表示します。",
         aptGo: "実取引価格を見る →",
         aboutHeading: "nolsoopについて",
-        aboutBody: "<p>nolsoopは Kaffeine が運営する小さなスタジオです。大きなチームや量産ブログではありません。自分が使う道具とゲームを作り、使えると判断したらウェブに置きます。</p><p>公開中なのは三つです。深海の仮想ペット <a href=\"https://abysspet.nolsoopgames.com/\">アビスペット</a>、生年月日から命式を出す <a href=\"https://bazi.nolsoopgames.com/ja/\">四柱推命計算機</a>、韓国国土交通省への申告ベースの <a href=\"https://apartments.nolsoopgames.com/\">팔린아파트</a>。アカウントは不要で、中核機能は無料です。</p><p>このページは三つを一か所で説明するスタジオのホームです。紹介ページには広告コードを置きません。広告がある場合は、各プロダクトの利用の区切りにだけ出ます。</p>",
+        aboutBody: "<p>nolsoopは Kaffeine が運営する小さなスタジオです。大きなチームや量産ブログではありません。自分が使う道具とゲームを作り、使えると判断したらウェブに置きます。</p><p>公開中なのは五つです。深海の仮想ペット <a href=\"https://abysspet.nolsoopgames.com/\">アビスペット</a>、生年月日から命式を出す <a href=\"https://bazi.nolsoopgames.com/ja/\">四柱推命計算機</a>、二人の命式を対照する <a href=\"https://couple.nolsoopgames.com/ko/\">相性</a>（点数なし）、日干支と自分の命式を対照する <a href=\"https://today.nolsoopgames.com/ko/\">今日の運勢</a>、韓国国土交通省への申告ベースの <a href=\"https://apartments.nolsoopgames.com/\">팔린아파트</a>。アカウントは不要で、中核機能は無料です。</p><p>このページはそれらを一か所で説明するスタジオのホームです。紹介ページには広告コードを置きません。広告がある場合は、各プロダクトの利用の区切りにだけ出ます。</p><p>詳しい紹介は <a href=\"/about.html\">紹介ページ</a>、連絡は <a href=\"/contact.html\">お問い合わせ</a>。プライバシーと利用規約はこのドメインにあります。メールは contact@nolsoopgames.com。返信時間の約束はしません。</p>",
         abyssH: "アビスペット — 深海の仮想ペット",
         abyssBody: "<p>アビスペットは、深海で拾った卵を世話する無料の育成ゲームです。餌・遊び・掃除・睡眠で調子を整え、世話を続けると深海魚か深海人魚の成体になります。放置すると別れます。育てた相手は探査日誌に残り、新しい卵からやり直せます。</p><p><a href=\"https://abysspet.nolsoopgames.com/\">ブラウザ</a>でインストールなしに遊べます。Google Play（<code>com.nolsoopgames.abysspet</code>）とアピントスのミニアプリもあります。アプリ内課金とガチャ店はありません。インタースティシャルと任意のリワード広告が出ることがあります。</p><p>名前・育成・図鑑は端末の localStorage にだけ残します。プレイデータは運営サーバーへ送りません。全年齢対象。韓国の等級分類番号は SC-OM-260731-001 です。</p>",
         baziH: "四柱推命計算機 — 無料の命式",
         baziBody: "<p>生年月日（任意で時刻と国）を入れると、年柱・月柱・日柱・時柱、日主、身強身弱、格局と用神、十神、神殺、大運まで出ます。時刻が分からなければ空欄のまま。時柱以外は計算されます。</p><p>計算は端末内で行います。生年月日をサーバーに保存しません。登録も課金もなく、한국어・English・日本語に対応します。ウェブは <a href=\"https://bazi.nolsoopgames.com/ja/\">bazi.nolsoopgames.com/ja/</a>。Play では「사주만세력」（<code>com.nolsoopgames.bazi</code>）です。</p><p>参考・内省用であり、医療・法律・財務の助言ではありません。節気の境目の出生は一日ずれることがあります。雲の言語モデルではなく、公開された命理の規則で計算します。</p>",
+        coupleH: "四柱推命 相性 — 点数のない五軸",
+        coupleBody: "<p>二人の生年月日から命式を立て、日主関係、宮ごとの支関係、五行の補い、身強身弱、配偶者星の五軸をそれぞれ計算します。十二支だけの相性ではありません。点数は出さず、関係が続くかどうかも判定しません。繰り返される力学だけを書きます。</p><p>計算はブラウザ内です。共有リンクには本人の情報だけが入ります。アドレスは <a href=\"https://couple.nolsoopgames.com/ko/\">couple.nolsoopgames.com/ko/</a>（韓国語）です。</p>",
+        todayH: "今日の運勢 — 日干支と自分の命式",
+        todayBody: "<p>十二支一つで数百万人をまとめません。その日の六十干支が自分の八文字と実際にどう関係するかを計算します。今日の十神、用神に対する流れ、日支との合・冲、貴人日・駅馬日・桃花日・空亡日。出来事を予言せず、その日入ってくる気の性質と対応だけを書きます。</p><p>生年月日をこの端末に保存すると、次から開いた瞬間にその日の運勢が出ます。サーバーへは送りません。アドレスは <a href=\"https://today.nolsoopgames.com/ko/\">today.nolsoopgames.com/ko/</a>（韓国語）です。</p>",
         aptH: "팔린아파트 — 韓国の実取引価格",
         aptBody: "<p>팔린아파트は売り希望価格ではなく、韓国国土交通省に申告されたマンション実取引だけを表示します。売買・チョンセ・月家賃、坪単価の推移、ローンと取得税の計算機。ソウル・京畿が中心で、韓国語のサービスです。</p><p>希望価格と成約価格を混ぜると錯覚が起きます。このツールは申告された契約だけを集めます。サイトは <a href=\"https://apartments.nolsoopgames.com/\">apartments.nolsoopgames.com</a> です。</p><p>公開データの照会であり、仲介や投資の勧誘ではありません。判断は登記と契約書を基準にしてください。</p>",
         faqHeading: "よくある質問",
-        faqBody: "<details><summary>有料ですか？</summary><p>三つの中核機能は無料です。サブスクでロックする機能はありません。ウェブやアプリの一部に広告が出ることがあります。</p></details><details><summary>会員登録は必要ですか？</summary><p>不要です。育成データと生年月日の入力は端末にだけ残ります。</p></details><details><summary>個人情報はどこへ行きますか？</summary><p>プレイ進行と生年月日は運営サーバーへ送りません。ウェブ統計に Google Analytics 4 を使うことがあり、プロダクトには Google 広告がある場合があります。<a href=\"/privacy.html\">プライバシーポリシー</a>を見てください。</p></details><details><summary>連絡先は？</summary><p><a href=\"mailto:contact@nolsoopgames.com\">contact@nolsoopgames.com</a> です。返信時間の約束はしません。</p></details>",
+        faqBody: "<details><summary>有料ですか？</summary><p>中核機能は無料です。サブスクでロックする機能はありません。ウェブやアプリの一部に広告が出ることがあります。この紹介サイトには広告コードを置きません。</p></details><details><summary>会員登録は必要ですか？</summary><p>不要です。育成データと生年月日の入力は端末にだけ残ります。</p></details><details><summary>個人情報はどこへ行きますか？</summary><p>プレイ進行と生年月日は運営サーバーへ送りません。ウェブ統計に Google Analytics 4 を使うことがあり、プロダクトには Google 広告がある場合があります。<a href=\"/privacy.html\">プライバシーポリシー</a>を見てください。</p></details><details><summary>連絡先は？</summary><p><a href=\"mailto:contact@nolsoopgames.com\">contact@nolsoopgames.com</a> です。返信時間の約束はしません。<a href=\"/contact.html\">お問い合わせページ</a>もあります。</p></details>",
         contact: "お問い合わせ",
         privacy: "プライバシーポリシー",
         terms: "利用規約"
