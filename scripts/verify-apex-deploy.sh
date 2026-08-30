@@ -43,6 +43,7 @@ need() {
 echo "== Local artifact =="
 need index.html
 need about.html
+need contact.html
 need privacy.html
 need terms.html
 need robots.txt
@@ -116,6 +117,7 @@ if [ "$LIVE" -eq 1 ]; then
   check_live /assets/css/site.css "css"
   check_live /notion/ "html"
   check_live /about.html "html"
+  check_live /contact.html "html"
   check_live /privacy.html "html"
 fi
 

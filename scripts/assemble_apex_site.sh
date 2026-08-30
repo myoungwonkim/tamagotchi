@@ -20,6 +20,7 @@ mkdir -p "$DEST/abysspet"
 
 cp apex/index.html "$DEST/index.html"
 cp apex/about.html "$DEST/about.html"
+cp apex/contact.html "$DEST/contact.html"
 cp apex/privacy.html "$DEST/privacy.html"
 cp apex/terms.html "$DEST/terms.html"
 cp apex/terms.html "$DEST/terms-of-service.html"
