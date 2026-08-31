@@ -224,9 +224,9 @@ a:focus-visible, button:focus-visible {
   border-radius: 999px;
 }
 .prose {
-  max-width: 720px;
   padding: 28px 24px 8px;
 }
+.prose > * { max-width: 592px; }
 .prose h1 {
   font-family: Fredoka, sans-serif;
   font-weight: 600;
@@ -262,6 +262,7 @@ a:focus-visible, button:focus-visible {
   border-radius: 22px;
   padding: 22px 22px 8px;
   margin: 16px 24px;
+  margin-left: calc(max(0px, (100% - 1280px) / 2) + 24px);
   max-width: 720px;
 }
 .article-block h2 {
@@ -332,7 +333,7 @@ a:focus-visible, button:focus-visible {
   .card--featured h2 { font-size: 18px; }
   .chip { font-size: 10.5px; padding: 4px 11px; }
   .prose { padding: 40px 64px 12px; }
-  .article-block { margin: 16px 64px; padding: 28px 28px 12px; }
+  .article-block { margin: 16px 64px; margin-left: calc(max(0px, (100% - 1280px) / 2) + 64px); padding: 28px 28px 12px; }
   .footer { padding: 26px 64px; }
 }
 @media (prefers-reduced-motion: reduce) {
