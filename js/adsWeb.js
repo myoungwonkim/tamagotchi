@@ -38,22 +38,34 @@ export function preloadInterstitial() {}
 
 export function preloadRewarded() {}
 
+// Ad Placement API가 비활성이면(스크립트 차단, 승인 전 도메인 등) adBreak 호출이
+// 어떤 콜백도 없이 사라진다. 광고가 시작되지 않은 채 이 시간이 지나면 실패로 간주한다.
+const AD_START_TIMEOUT_MS = 6000;
+
 function runInterstitialAdBreak(name) {
   const adBreak = adBreakFn();
   if (!adBreak) return Promise.resolve({ shown: false, rewarded: false });
 
   return new Promise((resolve) => {
     let settled = false;
+    let started = false;
     const settle = (result) => {
       if (settled) return;
       settled = true;
       resolve(result);
     };
 
+    setTimeout(() => {
+      if (!started) settle({ shown: false, rewarded: false });
+    }, AD_START_TIMEOUT_MS);
+
     adBreak({
       type: "next",
       name,
-      beforeAd: () => suspendAudioForAds(),
+      beforeAd: () => {
+        started = true;
+        suspendAudioForAds();
+      },
       afterAd: () => {
         resumeAudioAfterAds();
         settle({ shown: true, rewarded: false });
@@ -80,6 +92,7 @@ export async function showRewarded() {
 
   return new Promise((resolve) => {
     let settled = false;
+    let started = false;
     const settle = (result) => {
       if (settled) return;
       settled = true;
@@ -87,15 +100,23 @@ export async function showRewarded() {
       resolve(result);
     };
 
+    setTimeout(() => {
+      if (!started) settle({ shown: false, rewarded: false });
+    }, AD_START_TIMEOUT_MS);
+
     suspendAudioForAds();
     adBreak({
       type: "reward",
       name: "abysspet-reward",
       beforeReward: (showAdFn) => {
+        started = true;
         // Reward button click is already a user gesture; play immediately.
         showAdFn();
       },
-      beforeAd: () => suspendAudioForAds(),
+      beforeAd: () => {
+        started = true;
+        suspendAudioForAds();
+      },
       afterAd: () => resumeAudioAfterAds(),
       adViewed: () => settle({ shown: true, rewarded: true }),
       adDismissed: () => settle({ shown: true, rewarded: false }),

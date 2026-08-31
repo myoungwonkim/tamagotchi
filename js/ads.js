@@ -129,8 +129,7 @@ export function markReviveUsed(deathId) {
 }
 
 export async function showRewardedRevive() {
-  const result = await provider.showRewarded();
-  return result.rewarded;
+  return provider.showRewarded();
 }
 
 export function canOfferEmergencyCare() {
@@ -147,7 +146,7 @@ export function recordEmergencyCareUsed() {
 export async function showRewardedEmergencyCare() {
   const result = await provider.showRewarded();
   if (result.rewarded) recordEmergencyCareUsed();
-  return result.rewarded;
+  return result;
 }
 
 export function canOfferNeglectReset() {
@@ -164,7 +163,7 @@ export function recordNeglectResetUsed() {
 export async function showRewardedNeglectReset() {
   const result = await provider.showRewarded();
   if (result.rewarded) recordNeglectResetUsed();
-  return result.rewarded;
+  return result;
 }
 
 export async function initAds() {

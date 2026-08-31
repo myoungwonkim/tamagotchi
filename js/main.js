@@ -438,14 +438,26 @@ async function openNewPetAfterGameOver() {
   showNameModal();
 }
 
+// 광고가 안 뜨거나 중간에 닫혔을 때 무음으로 끝내지 않는다.
+function reportRewardOutcome(result) {
+  if (!result.shown) {
+    showMessage("지금은 광고를 불러올 수 없어요. 잠시 후 다시 시도해 주세요.", 4000);
+  } else if (!result.rewarded) {
+    showMessage("광고를 끝까지 보면 보상을 받을 수 있어요.", 4000);
+  }
+}
+
 async function handleReviveAd() {
   if (!pet) return;
   const snapshot = getDeathSnapshot();
   if (!snapshot || !canOfferRevive(snapshot.deathId)) return;
 
   unlockAudioOnce();
-  const rewarded = await showRewardedRevive();
-  if (!rewarded) return;
+  const result = await showRewardedRevive();
+  if (!result.rewarded) {
+    reportRewardOutcome(result);
+    return;
+  }
 
   applyDeathSnapshotToPet(pet, snapshot);
   markReviveUsed(snapshot.deathId);
@@ -458,8 +470,11 @@ async function handleReviveAd() {
 async function handleEmergencyCareAd() {
   if (!pet?.isAlive || !canOfferEmergencyCare()) return;
   unlockAudioOnce();
-  const rewarded = await showRewardedEmergencyCare();
-  if (!rewarded) return;
+  const result = await showRewardedEmergencyCare();
+  if (!result.rewarded) {
+    reportRewardOutcome(result);
+    return;
+  }
   const applied = applyEmergencyCare(pet);
   if (!applied) return;
   pet.lastUpdated = Date.now();
@@ -471,8 +486,11 @@ async function handleEmergencyCareAd() {
 async function handleNeglectResetAd() {
   if (!pet?.isAlive || !canOfferNeglectReset()) return;
   unlockAudioOnce();
-  const rewarded = await showRewardedNeglectReset();
-  if (!rewarded) return;
+  const result = await showRewardedNeglectReset();
+  if (!result.rewarded) {
+    reportRewardOutcome(result);
+    return;
+  }
   if (!applyHealthRecoveryAd(pet, 50)) return;
   renderPet(pet);
   savePet(pet);

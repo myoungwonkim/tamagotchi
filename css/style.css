@@ -1627,6 +1627,14 @@ img.pet-sprite[hidden] {
   margin-bottom: 8px;
 }
 
+/* display:flex가 UA의 [hidden]{display:none}을 이기므로 명시적으로 복원한다.
+   이게 없으면 보상 버튼이 조건과 무관하게 항상 보인다. */
+.reward-prompts[hidden],
+.reward-prompt-btn[hidden],
+.overlay-btn--reward[hidden] {
+  display: none;
+}
+
 .reward-prompt-btn {
   position: relative;
   overflow: hidden;
