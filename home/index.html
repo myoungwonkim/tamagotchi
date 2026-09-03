@@ -161,6 +161,9 @@ a:focus-visible, button:focus-visible {
 .games--3 .card--span { grid-column: 1 / -1; }
 .card--wide { grid-column: 1 / -1; }
 .card-links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.card-head { display: flex; align-items: center; gap: 10px; }
+.card-head img { width: 32px; height: 32px; border-radius: 8px; display: block; }
+.card-head h2 { margin: 0; }
 .card .card-links .go { margin-top: 0; }
 .card-links a { text-decoration: none; }
 .card-links a:hover { text-decoration: underline; }
@@ -391,7 +394,7 @@ a:focus-visible, button:focus-visible {
     <div class="section-label shell" id="games" data-i18n="groupFortune">사주 · 운세</div>
     <section class="games games--3 shell" aria-label="Bazi and fortune">
       <div class="card card--hot">
-        <h2 data-i18n="baziTitle">읽어주는 만세력</h2>
+        <span class="card-head"><img src="/assets/app-icon/bazi-192.png" width="32" height="32" alt=""><h2 data-i18n="baziTitle">읽어주는 만세력</h2></span>
         <p data-i18n="baziDesc">생년월일만 넣으면 사주팔자와 풀이가 나옵니다. 가입도 결제도 없습니다.</p>
         <span class="card-links">
           <a class="go" href="https://bazi.nolsoopgames.com/ko/" data-bazi data-i18n="baziGo">웹에서 바로 보기 →</a>
@@ -413,7 +416,7 @@ a:focus-visible, button:focus-visible {
     <div class="section-label section-label--group shell" data-i18n="groupGames">게임</div>
     <section class="games shell" aria-label="Games">
       <a class="card card--wide" href="https://play.google.com/store/apps/details?id=com.nolsoopgames.abysspet">
-        <h2 data-i18n="abyssTitle">어비스펫</h2>
+        <span class="card-head"><img src="/assets/app-icon/icon-192.png" width="32" height="32" alt=""><h2 data-i18n="abyssTitle">어비스펫</h2></span>
         <p data-i18n="abyssDesc">심해에서 주운 알을 돌보며 키우는 가상펫. 브라우저에서 바로 시작합니다.</p>
         <span class="go" data-i18n="abyssGo">Google Play에서 받기 →</span>
       </a>
