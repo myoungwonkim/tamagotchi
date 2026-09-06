@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
+# AdMob app-ads.txt crawler (https://support.google.com/admob/answer/9776740)
+User-agent: Google-adstxt
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
 Sitemap: https://nolsoopgames.com/sitemap.xml

@@ -1,1 +1,4 @@
+# Play / AdMob seller auth — https://nolsoopgames.com/app-ads.txt
+# Keep in sync with bazi-web/public/app-ads.txt (couple · bazi · today).
+# After Meta/Unity/Pangle are linked in AdMob, paste the console snippet below.
 google.com, pub-4999376453226791, DIRECT, f08c47fec0942fa0
