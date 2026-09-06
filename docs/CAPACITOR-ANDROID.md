@@ -3,13 +3,13 @@
 ## 사전 요구
 
 - Node 20+ (`npm`)
-- Android Studio + SDK 35
+- Android Studio + SDK 36
 - JDK 17+
 
 ## 빌드
 
 ```bash
-# 일반 (AdMob 샘플 유닛 포함)
+# Play (`.env.play` 운영 AdMob 유닛 + cap sync)
 npm run build:play
 
 # Phase 1 empty-ads 셸
@@ -29,6 +29,13 @@ cd android && ./gradlew bundleRelease
 
 `versionCode`는 [`android/app/build.gradle`](../android/app/build.gradle)에서 단조 증가.
 
+릴리스는 `targetSdk`/`compileSdk` **36**, R8(`minifyEnabled`)·네이티브 심볼을 AAB에 포함합니다.
+매핑은 Play가 번들에서 읽습니다. 사본: `android/app/build/outputs/mapping/release/mapping.txt`
+
+Play 출시에는 **AAB 하나만** 넣습니다. 예전 APK/AAB를 같은 버전에 남겨 두면
+「버전 코드가 더 높은 APK로 대체되어 제공되지 않음」오류와 API 35 경고가 납니다.
+초안에서 낮은 `versionCode` 아티팩트는 **포함되지 않음**으로 옮긴 뒤 저장하세요.
+
 ## applicationId
 
 `com.nolsoopgames.abysspet`
@@ -37,5 +44,6 @@ cd android && ./gradlew bundleRelease
 
 - [GOOGLE-PLAY-LAUNCH-PLAN.md](./GOOGLE-PLAY-LAUNCH-PLAN.md)
 - [ADMOB-PLAY.md](./ADMOB-PLAY.md)
+- [FIREBASE-PLAY.md](./FIREBASE-PLAY.md) — Analytics·Crashlytics, `google-services.json` 배치
 - [GOOGLE-PLAY-STORE-LISTING.md](./GOOGLE-PLAY-STORE-LISTING.md)
 - [PLAY-PHASE0-CHECKLIST.md](./PLAY-PHASE0-CHECKLIST.md)

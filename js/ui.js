@@ -1,4 +1,4 @@
-import { getAgeDays, getGameOverReason, getAverageCare } from "./pet.js";
+import { getAgeDays, getGameOverReason, getAverageCare, getProtectAdUiState } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { getAdultVariant, ADULT_VARIANTS } from "./adultVariants.js";
 import {
@@ -35,7 +35,7 @@ import {
 import { withSubjectParticle } from "./korean.js";
 import { syncMessLayer, scheduleMessLayer, clearMessLayer, syncMessWater } from "./mess.js";
 import { AD_TUNING } from "./adConfig.js";
-import { canOfferRevive } from "./ads.js";
+import { canOfferRevive, usesPlayProtectAds } from "./ads.js";
 import { getDeathSnapshot } from "./deathSnapshot.js";
 import { pickGhostLine } from "./ghostDialogue.js";
 
@@ -57,6 +57,9 @@ const elements = {
   btnReviveAd: document.getElementById("btn-revive-ad"),
   btnNewPet: document.getElementById("btn-new-pet"),
   rewardPrompts: document.getElementById("reward-prompts"),
+  btnRewardProtect: document.getElementById("btn-reward-protect"),
+  btnRewardProtectChip: document.getElementById("btn-reward-protect-chip"),
+  btnRewardProtectLabel: document.getElementById("btn-reward-protect-label"),
   btnRewardEmergency: document.getElementById("btn-reward-emergency"),
   btnRewardNeglect: document.getElementById("btn-reward-neglect"),
   nameOverlay: document.getElementById("name-overlay"),
@@ -481,6 +484,7 @@ function updateGameOver(pet) {
   const snapshot = getDeathSnapshot();
   const captureScene = new URLSearchParams(window.location.search).get("capture");
   const showRevive =
+    !usesPlayProtectAds() &&
     snapshot &&
     (canOfferRevive(snapshot.deathId) || captureScene === "gameover");
   if (elements.btnReviveAd) {
@@ -489,9 +493,46 @@ function updateGameOver(pet) {
   }
 }
 
+function formatProtectHms(ms) {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const seconds = total % 60;
+  return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
 function updateRewardPrompts(pet) {
   const wrap = elements.rewardPrompts;
   if (!wrap) return;
+
+  if (usesPlayProtectAds()) {
+    const showProtect = Boolean(pet?.isAlive);
+    wrap.hidden = !showProtect;
+    if (elements.btnRewardProtect) {
+      elements.btnRewardProtect.hidden = !showProtect;
+      const state = showProtect ? getProtectAdUiState(pet) : { kind: "available", remainMs: 0, canWatch: false };
+      elements.btnRewardProtect.disabled = !state.canWatch;
+      if (elements.btnRewardProtectChip) {
+        if (state.kind === "protecting") elements.btnRewardProtectChip.textContent = "보호";
+        else if (state.kind === "cooldown") elements.btnRewardProtectChip.textContent = "대기";
+        else elements.btnRewardProtectChip.textContent = "▶";
+      }
+      if (elements.btnRewardProtectLabel) {
+        if (state.kind === "protecting") {
+          elements.btnRewardProtectLabel.textContent = formatProtectHms(state.remainMs);
+        } else if (state.kind === "cooldown") {
+          elements.btnRewardProtectLabel.textContent = `다음 이용 ${formatProtectHms(state.remainMs)}`;
+        } else {
+          elements.btnRewardProtectLabel.textContent = "광고 보고 8시간 보호";
+        }
+      }
+    }
+    if (elements.btnRewardEmergency) elements.btnRewardEmergency.hidden = true;
+    if (elements.btnRewardNeglect) elements.btnRewardNeglect.hidden = true;
+    return;
+  }
+
+  if (elements.btnRewardProtect) elements.btnRewardProtect.hidden = true;
 
   if (!pet?.isAlive || pet.isSleeping) {
     wrap.hidden = true;
@@ -524,9 +565,30 @@ export function setAdsPromptApi(api) {
 
 export function refreshRewardPrompts(pet) {
   updateRewardPrompts(pet);
+  if (pet) updateGameOver(pet);
+}
+
+function syncMessageAnchor() {
+  const tank = elements.petArea;
+  if (!tank) return;
+  const top = Math.round(tank.getBoundingClientRect().top + 10);
+  document.documentElement.style.setProperty("--message-top", `${top}px`);
+}
+
+function bindMessageAnchor() {
+  syncMessageAnchor();
+  window.addEventListener("resize", syncMessageAnchor);
+  window.visualViewport?.addEventListener("resize", syncMessageAnchor);
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bindMessageAnchor);
+} else {
+  bindMessageAnchor();
 }
 
 export function showMessage(text, durationMs = 4000) {
+  syncMessageAnchor();
   elements.message.textContent = text;
   elements.message.hidden = false;
   elements.petArea?.classList.add("pet-area--message");

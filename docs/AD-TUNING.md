@@ -25,7 +25,6 @@
 export const AD_TUNING = {
   maxInterstitialPerSession: 3,      // A: 2 / B: 3 / C: 4
   interstitialCooldownMs: 8 * 60e3,  // A: 12분 / B: 8분
-  tutorialGraceMs: 10 * 60e3,      // 첫 세션 무광고 구간
   maxEmergencyCarePerSession: 3,     // R2
   maxNeglectResetPerSession: 2,      // R3
 };

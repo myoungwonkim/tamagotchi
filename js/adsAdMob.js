@@ -1,7 +1,8 @@
 /**
- * Google AdMob provider (Capacitor Android / Play).
- * Default units are Google samples — set VITE_ADMOB_* for production (no local click-tests).
+ * Play rewarded ads via the in-app AbyssPetAds native plugin.
+ * The community AdMob JS plugin never reached MobileAds on device (no I/Ads).
  */
+import { Capacitor, registerPlugin } from "@capacitor/core";
 import { suspendAudioForAds, resumeAudioAfterAds } from "./audio.js";
 
 const SAMPLE_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712";
@@ -18,120 +19,82 @@ function env(key, fallback) {
   return fallback;
 }
 
-const UNIT_INTERSTITIAL = env("VITE_ADMOB_INTERSTITIAL_ID", SAMPLE_INTERSTITIAL);
-const UNIT_REWARDED = env("VITE_ADMOB_REWARDED_ID", SAMPLE_REWARDED);
+const FORCE_TEST = env("VITE_ADMOB_FORCE_TEST", "") === "1";
+const UNIT_INTERSTITIAL = FORCE_TEST
+  ? SAMPLE_INTERSTITIAL
+  : env("VITE_ADMOB_INTERSTITIAL_ID", SAMPLE_INTERSTITIAL);
+const UNIT_REWARDED = FORCE_TEST
+  ? SAMPLE_REWARDED
+  : env("VITE_ADMOB_REWARDED_ID", SAMPLE_REWARDED);
+const USING_SAMPLE_UNITS =
+  FORCE_TEST ||
+  UNIT_INTERSTITIAL.includes("3940256099942544") ||
+  UNIT_REWARDED.includes("3940256099942544");
 
-let AdMob = null;
-let RewardAdPluginEvents = null;
+const AbyssPetAds = registerPlugin("AbyssPetAds");
+
 let initialized = false;
-const slotLoaded = { interstitial: false, rewarded: false };
+let initPromise = null;
 
-async function loadPlugin() {
-  if (AdMob) return AdMob;
+async function doInitialize() {
+  if (!Capacitor.isNativePlatform()) return false;
   try {
-    const mod = await import("@capacitor-community/admob");
-    AdMob = mod.AdMob;
-    RewardAdPluginEvents = mod.RewardAdPluginEvents;
-    return AdMob;
-  } catch {
-    return null;
-  }
-}
-
-export async function init() {
-  const plugin = await loadPlugin();
-  if (!plugin) return false;
-  try {
-    const testing = UNIT_INTERSTITIAL.includes("3940256099942544");
-    await plugin.initialize({
-      initializeForTesting: testing,
-    });
+    await AbyssPetAds.initialize();
     initialized = true;
-    await preloadInterstitial();
-    await preloadRewarded();
     return true;
   } catch (err) {
-    console.warn("[adsAdMob] init failed", err);
+    console.warn("[adsAdMob] native init failed", err);
     initialized = false;
     return false;
   }
 }
 
-export function isSupported() {
-  return initialized && Boolean(AdMob);
+export async function init() {
+  if (initialized) return true;
+  if (!initPromise) {
+    initPromise = doInitialize().finally(() => {
+      if (!initialized) initPromise = null;
+    });
+  }
+  return initPromise;
 }
 
-export async function preloadInterstitial() {
-  if (!isSupported()) return;
-  try {
-    await AdMob.prepareInterstitial({ adId: UNIT_INTERSTITIAL });
-    slotLoaded.interstitial = true;
-  } catch {
-    slotLoaded.interstitial = false;
-  }
+export async function ensureReady() {
+  return init();
 }
+
+export function isSupported() {
+  return initialized && Capacitor.isNativePlatform();
+}
+
+export async function preloadInterstitial() {}
 
 export async function preloadRewarded() {
-  if (!isSupported()) return;
-  try {
-    await AdMob.prepareRewardVideoAd({ adId: UNIT_REWARDED });
-    slotLoaded.rewarded = true;
-  } catch {
-    slotLoaded.rewarded = false;
-  }
+  await init();
 }
 
 export async function showInterstitial() {
-  if (!isSupported()) return { shown: false, rewarded: false };
-  if (!slotLoaded.interstitial) {
-    await preloadInterstitial();
-    if (!slotLoaded.interstitial) return { shown: false, rewarded: false };
-  }
-  suspendAudioForAds();
-  try {
-    await AdMob.showInterstitial();
-    slotLoaded.interstitial = false;
-    resumeAudioAfterAds();
-    preloadInterstitial();
-    return { shown: true, rewarded: false };
-  } catch {
-    resumeAudioAfterAds();
-    slotLoaded.interstitial = false;
-    preloadInterstitial();
-    return { shown: false, rewarded: false };
-  }
+  return { shown: false, rewarded: false };
 }
 
 export async function showRewarded() {
-  if (!isSupported()) return { shown: false, rewarded: false };
-  if (!slotLoaded.rewarded) {
-    await preloadRewarded();
-    if (!slotLoaded.rewarded) return { shown: false, rewarded: false };
+  if (!(await ensureReady()) || !isSupported()) {
+    return { shown: false, rewarded: false };
   }
-
-  let rewarded = false;
-  let rewardHandle = null;
-  if (RewardAdPluginEvents?.Rewarded) {
-    rewardHandle = await AdMob.addListener(RewardAdPluginEvents.Rewarded, () => {
-      rewarded = true;
-    });
-  }
-
   suspendAudioForAds();
   try {
-    await AdMob.showRewardVideoAd();
-    // If no Rewarded event API, treat successful resolve as earned (plugin contract)
-    if (!RewardAdPluginEvents?.Rewarded) rewarded = true;
-    slotLoaded.rewarded = false;
+    const result = await AbyssPetAds.showRewarded({
+      adId: UNIT_REWARDED,
+      isTesting: USING_SAMPLE_UNITS,
+    });
     resumeAudioAfterAds();
-    rewardHandle?.remove?.();
-    preloadRewarded();
-    return { shown: true, rewarded };
-  } catch {
+    return {
+      shown: Boolean(result?.shown),
+      rewarded: Boolean(result?.rewarded),
+    };
+  } catch (err) {
     resumeAudioAfterAds();
-    rewardHandle?.remove?.();
-    slotLoaded.rewarded = false;
-    preloadRewarded();
+    console.warn("[adsAdMob] native showRewarded failed", err);
     return { shown: false, rewarded: false };
   }
 }

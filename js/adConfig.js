@@ -20,7 +20,6 @@ function readEnv(key, fallback) {
 export const AD_TUNING = {
   maxInterstitialPerSession: 3,
   interstitialCooldownMs: 8 * 60 * 1000,
-  tutorialGraceMs: 10 * 60 * 1000,
   maxEmergencyCarePerSession: 3,
   maxNeglectResetPerSession: 2,
   emergencyCareStatThreshold: 40,
@@ -42,4 +41,5 @@ export const REWARD_TYPES = {
   REVIVE: "R1",
   EMERGENCY_CARE: "R2",
   NEGLECT_RESET: "R3",
+  STAT_PROTECT: "R4",
 };

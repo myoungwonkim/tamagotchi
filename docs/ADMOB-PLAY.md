@@ -10,7 +10,11 @@ VITE_ADMOB_REWARDED_ID=ca-app-pub-xxxxxxxx/zzzzzzzz
 VITE_PLAY_ADS=1
 ```
 
-기본값은 Google **샘플** 유닛 ID. 운영 유닛으로 로컬 클릭 테스트 금지.
+`npm run build:play`는 `vite build --mode play`라서 `.env.play`를 읽습니다.
+기본 `vite build`(웹)는 Google **샘플** 유닛 ID. 운영 유닛으로 로컬 클릭 테스트 금지.
+
+Android App ID는 `android/app/src/main/res/values/strings.xml`의 `admob_app_id`
+(운영 유닛과 같은 퍼블리셔, `~` 형태). 샘플 App ID + 운영 유닛은 요청이 전부 거절됩니다.
 
 ## Empty-ads 셸
 

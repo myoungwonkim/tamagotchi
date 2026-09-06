@@ -2,6 +2,7 @@
  * Capacitor Android shell helpers: back button, status bar.
  */
 import { getPlatform } from "./platformEnv.js";
+import { initFirebasePlay } from "./firebasePlay.js";
 
 function isOverlayOpen(el) {
   return Boolean(el && !el.hidden);
@@ -64,4 +65,8 @@ export async function initPlayNative() {
   } catch {
     // optional
   }
+
+  // Telemetry last and non-blocking: awaiting Firebase import/init here
+  // would stall showNameModal/renderPet the same way awaiting AdMob did.
+  void initFirebasePlay();
 }

@@ -1,5 +1,7 @@
 /** 플랫폼 감지: 웹 / 앱인토스 / Google Play(Capacitor) */
 
+import { Capacitor } from "@capacitor/core";
+
 export function isTossEnv() {
   if (typeof window === "undefined") return false;
   const params = new URLSearchParams(window.location.search);
@@ -17,6 +19,15 @@ export function isMockAdsEnabled() {
 
 export function isPlayEnv() {
   if (typeof window === "undefined") return false;
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("play")) return true;
+  try {
+    if (typeof Capacitor.isNativePlatform === "function" && Capacitor.isNativePlatform()) {
+      return true;
+    }
+  } catch {
+    // ignore
+  }
   try {
     const cap = window.Capacitor;
     if (!cap) return false;

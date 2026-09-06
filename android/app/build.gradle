@@ -3,12 +3,13 @@ apply plugin: 'com.android.application'
 android {
     namespace "com.nolsoopgames.abysspet"
     compileSdk rootProject.ext.compileSdkVersion
+    ndkVersion "27.2.12479018"
     defaultConfig {
         applicationId "com.nolsoopgames.abysspet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 29
+        versionName "1.0.25"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -31,8 +32,12 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
             if (rootProject.file("../keystore.properties").exists()) {
                 signingConfig signingConfigs.release
             }
@@ -52,6 +57,8 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
+    implementation "com.google.firebase:firebase-analytics:23.0.0"
+    implementation "com.google.android.gms:play-services-ads:25.4.+"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
@@ -64,7 +71,39 @@ try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
         apply plugin: 'com.google.gms.google-services'
+        // Crashlytics needs the google-services config; applying it without the
+        // file fails the build, so both stay inside this guard.
+        apply plugin: 'com.google.firebase.crashlytics'
     }
 } catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+    logger.warn("google-services.json not found, google-services plugin not applied. Firebase Analytics/Crashlytics will not run.")
+}
+
+def servicesFile = file('google-services.json')
+if (gradle.startParameter.taskNames.any { it.toLowerCase().contains("release") } && (!servicesFile.exists() || !servicesFile.text.trim())) {
+    throw new GradleException("android/app/google-services.json is required for release. Without it Play installs never reach Firebase Analytics.")
+}
+
+def mergedNativeLibsDir = layout.buildDirectory.dir("intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib")
+def shrinkAab = layout.buildDirectory.file("intermediates/intermediary_bundle/release/shrinkBundleReleaseResources/intermediary-bundle.aab")
+def injectScript = rootProject.file("../scripts/inject_aab_native_symbols.py")
+
+tasks.register("zipReleaseNativeDebugSymbols", Zip) {
+    from(mergedNativeLibsDir)
+    archiveFileName = "native-debug-symbols.zip"
+    destinationDirectory = layout.buildDirectory.dir("outputs/native-debug-symbols/release")
+}
+
+tasks.register("injectReleaseNativeDebugSymbols") {
+    dependsOn("shrinkBundleReleaseResources")
+    doLast {
+        exec {
+            commandLine "python3", injectScript.absolutePath, shrinkAab.get().asFile.absolutePath, mergedNativeLibsDir.get().asFile.absolutePath
+        }
+    }
+}
+
+afterEvaluate {
+    tasks.named("signReleaseBundle").configure { dependsOn("injectReleaseNativeDebugSymbols") }
+    tasks.named("bundleRelease").configure { finalizedBy("zipReleaseNativeDebugSymbols") }
 }

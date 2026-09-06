@@ -1,9 +1,32 @@
-import { createNewPet } from "./pet.js";
+import { createNewPet, STAT_PROTECT_MS } from "./pet.js";
 import { getEvolutionStage } from "./evolution.js";
 import { resolveAdultVariant } from "./adultVariants.js";
 import { DEFAULT_SPECIES_THEME, normalizeSpeciesTheme } from "./speciesThemes.js";
 
 const STORAGE_KEY = "tamagotchi-pet";
+const PROTECT_AD_KEY = "tamagotchi-protect-ad";
+
+export function readProtectUsedAt() {
+  try {
+    const raw = localStorage.getItem(PROTECT_AD_KEY);
+    if (!raw) return 0;
+    const parsed = JSON.parse(raw);
+    return typeof parsed?.usedAt === "number" && parsed.usedAt > 0 ? parsed.usedAt : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function writeProtectUsedAt(usedAt) {
+  if (typeof usedAt !== "number" || usedAt <= 0) return 0;
+  try {
+    const next = Math.max(readProtectUsedAt(), usedAt);
+    localStorage.setItem(PROTECT_AD_KEY, JSON.stringify({ usedAt: next }));
+    return next;
+  } catch {
+    return usedAt;
+  }
+}
 
 export function normalizePet(raw) {
   if (!raw || typeof raw !== "object") return null;
@@ -25,6 +48,11 @@ export function normalizePet(raw) {
       raw.neglectStartedAt === null || typeof raw.neglectStartedAt === "number"
         ? raw.neglectStartedAt
         : null,
+    protectUsedAt: Math.max(
+      typeof raw.protectUsedAt === "number" ? raw.protectUsedAt : 0,
+      readProtectUsedAt(),
+    ),
+    protectedUntil: 0,
     lastEvolutionStage:
       typeof raw.lastEvolutionStage === "string" ? raw.lastEvolutionStage : null,
     speciesTheme:
@@ -38,6 +66,12 @@ export function normalizePet(raw) {
         ? raw.adultCareSnapshot
         : null,
   };
+
+  const fromWatch = pet.protectUsedAt > 0 ? pet.protectUsedAt + STAT_PROTECT_MS : 0;
+  pet.protectedUntil = Math.max(
+    typeof raw.protectedUntil === "number" ? raw.protectedUntil : 0,
+    fromWatch,
+  );
 
   if (pet.isAlive && pet.lastEvolutionStage === null) {
     pet.lastEvolutionStage = getEvolutionStage(pet).id;
@@ -60,6 +94,9 @@ export function savePet(pet) {
 
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(pet));
+    if (typeof pet.protectUsedAt === "number" && pet.protectUsedAt > 0) {
+      writeProtectUsedAt(pet.protectUsedAt);
+    }
     return true;
   } catch {
     return false;
@@ -87,5 +124,5 @@ export function clearPet() {
 }
 
 export function loadOrCreatePet() {
-  return loadPet() ?? createNewPet();
+  return loadPet() ?? normalizePet(createNewPet());
 }

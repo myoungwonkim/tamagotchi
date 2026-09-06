@@ -1,21 +1,28 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Line numbers for Play / Crashlytics stack traces
+-keepattributes SourceFile,LineNumberTable,*Annotation*,Signature,InnerClasses,EnclosingMethod
+-renamesourcefileattribute SourceFile
+-keep public class * extends java.lang.Exception
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# App + Capacitor bridge (JS plugin methods are looked up by name)
+-keep class com.nolsoopgames.abysspet.** { *; }
+-keep class com.getcapacitor.** { *; }
+-keep class com.getcapacitor.community.** { *; }
+-keep class com.capacitorjs.** { *; }
+-keep public class * extends com.getcapacitor.Plugin { *; }
+-keepclassmembers class * extends com.getcapacitor.Plugin {
+    public *;
+}
+-dontwarn com.getcapacitor.**
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Cordova leftover from Capacitor Android template
+-keep class org.apache.cordova.** { *; }
+-dontwarn org.apache.cordova.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# AdMob — MainActivity writes AdRewardExecutor.preparedAds by field name
+-keep class com.google.android.gms.ads.** { *; }
+-keep class com.getcapacitor.community.admob.** { *; }
+-dontwarn com.google.android.gms.**
+
+# Firebase Analytics / Crashlytics
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**

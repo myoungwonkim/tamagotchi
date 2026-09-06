@@ -7,13 +7,19 @@ const NEGLECT_THRESHOLD = 10;
 const NEGLECT_DURATION_MS = 10 * 60 * 1000;
 
 // Day 7 balance: ~10분 방치 시 상태가 서서히 나빠지되, 즉시 위험하지 않도록 조정
+// Play 보호 패치: 감쇠는 당시 값의 1/2
 export const DECAY_RATES = {
-  hunger: 0.04,
-  happiness: 0.024,
-  cleanliness: 0.016,
+  hunger: 0.02,
+  happiness: 0.012,
+  cleanliness: 0.008,
 };
 
-export const HEALTH_DECAY_RATE = 0.016;
+export const HEALTH_DECAY_RATE = 0.008;
+
+/** Play 보상 광고: 시청 시 이 시간으로 리셋 (합산·연장 없음). */
+export const STAT_PROTECT_MS = 8 * 60 * 60 * 1000;
+/** Play 보상 광고: 시청 시각부터 24시간 동안 재시청 불가. */
+export const STAT_PROTECT_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 export function clamp(value, min = 0, max = 100) {
   return Math.min(max, Math.max(min, value));
@@ -32,6 +38,8 @@ export function createNewPet(name = "치치") {
     isAlive: true,
     lastUpdated: now,
     neglectStartedAt: null,
+    protectedUntil: 0,
+    protectUsedAt: 0,
     lastEvolutionStage: null,
     speciesTheme: pickRandomSpeciesTheme(),
     adultVariantId: null,
@@ -87,8 +95,55 @@ export function getPetEmoji(pet) {
   return getEvolutionEmoji(pet);
 }
 
-export function applyTimeDelta(pet, elapsedMs) {
+export function isStatProtected(pet, now = Date.now()) {
+  return Boolean(pet?.isAlive) && (pet.protectedUntil || 0) > now;
+}
+
+export function getProtectUsedAt(pet) {
+  return Math.max(pet?.protectUsedAt || 0, 0);
+}
+
+export function getProtectNextAvailableAt(pet) {
+  const usedAt = getProtectUsedAt(pet);
+  return usedAt > 0 ? usedAt + STAT_PROTECT_COOLDOWN_MS : 0;
+}
+
+/** Play 보호 버튼: available | protecting | cooldown */
+export function getProtectAdUiState(pet, now = Date.now()) {
+  const protectedUntil = pet?.protectedUntil || 0;
+  const nextAvailableAt = getProtectNextAvailableAt(pet);
+  if (pet?.isAlive && protectedUntil > now) {
+    return { kind: "protecting", remainMs: protectedUntil - now, canWatch: false };
+  }
+  if (nextAvailableAt > now) {
+    return { kind: "cooldown", remainMs: nextAvailableAt - now, canWatch: false };
+  }
+  return { kind: "available", remainMs: 0, canWatch: Boolean(pet?.isAlive) };
+}
+
+/** 시청 시 8시간 보호 + 24시간 쿨다운 시작. 연장은 없다. */
+export function applyStatProtection(pet, now = Date.now()) {
+  if (!pet?.isAlive) return false;
+  pet.protectUsedAt = now;
+  pet.protectedUntil = now + STAT_PROTECT_MS;
+  pet.neglectStartedAt = null;
+  pet.lastUpdated = now;
+  return true;
+}
+
+export function applyTimeDelta(pet, elapsedMs, now = Date.now()) {
   if (!pet.isAlive || elapsedMs <= 0) return;
+
+  const windowStart = now - elapsedMs;
+  const protectedUntil = pet.protectedUntil || 0;
+  if (protectedUntil > windowStart) {
+    const protectedMs = Math.min(elapsedMs, Math.max(0, protectedUntil - windowStart));
+    if (pet.neglectStartedAt !== null) {
+      pet.neglectStartedAt += protectedMs;
+    }
+    elapsedMs -= protectedMs;
+    if (elapsedMs <= 0) return;
+  }
 
   const seconds = elapsedMs / 1000;
   const hungerRate = pet.isSleeping ? DECAY_RATES.hunger * 0.5 : DECAY_RATES.hunger;
@@ -115,15 +170,15 @@ export function applyTimeDelta(pet, elapsedMs) {
     pet.health = clamp(pet.health - healthRate * seconds);
   }
 
-  updateNeglectTracking(pet, elapsedMs);
-  checkGameOver(pet);
+  updateNeglectTracking(pet, elapsedMs, now);
+  checkGameOver(pet, now);
 }
 
-function updateNeglectTracking(pet, elapsedMs = 0) {
+function updateNeglectTracking(pet, elapsedMs = 0, now = Date.now()) {
   const avg = getAverageCare(pet);
   if (avg < NEGLECT_THRESHOLD) {
     if (pet.neglectStartedAt === null) {
-      pet.neglectStartedAt = Date.now() - elapsedMs;
+      pet.neglectStartedAt = now - elapsedMs;
     }
   } else {
     pet.neglectStartedAt = null;
@@ -136,12 +191,13 @@ export function getGameOverReason(pet) {
   return "unknown";
 }
 
-export function checkGameOver(pet) {
+export function checkGameOver(pet, now = Date.now()) {
   if (!pet.isAlive) return false;
+  if (isStatProtected(pet, now)) return false;
 
   const neglectedTooLong =
     pet.neglectStartedAt !== null &&
-    Date.now() - pet.neglectStartedAt >= NEGLECT_DURATION_MS;
+    now - pet.neglectStartedAt >= NEGLECT_DURATION_MS;
 
   if (pet.health <= 0 || neglectedTooLong) {
     pet.isAlive = false;

@@ -1,11 +1,14 @@
 # 인계 문서 — nolsoopgames.com 도메인 전체
 
-작성 2026-08-19, 갱신 2026-08-20. **이 문서는 다음 작업자(사람 또는 AI)를 위한 것이다.**
+작성 2026-08-19, 갱신 2026-09-04. **이 문서는 다음 작업자(사람 또는 AI)를 위한 것이다.**
 작업은 여러 PC와 여러 저장소에 흩어져 있고, 저장소 하나만 봐서는 전체가 안 보인다.
 
 ---
 
-## 0. 진행 중 — 어비스펫 Play 앱 깨짐 (2026-08-20, 미완)
+## 0. 진행 중 — 어비스펫 Play 앱 깨짐 (2026-08-20 → AAB 재빌드 2026-08-31)
+
+**증상**: 안드로이드 앱 설치 후 첫 화면이 JS 미실행 정적 HTML로 뜬다 —
+펫 이름 "치치"(HTML 기본값), 알 스프라이트 없음, 이름 짓기 모달 없음, 수조가 밝은 하늘색.
 
 **증상**: 안드로이드 앱 설치 후 첫 화면이 JS 미실행 정적 HTML로 뜬다 —
 펫 이름 "치치"(HTML 기본값), 알 스프라이트 없음, 이름 짓기 모달 없음, 수조가 밝은 하늘색.
@@ -38,11 +41,55 @@
   클릭 시 실제 H5 테스트 보상형 광고 표시까지 확인.
 - 웹은 push로 자동 배포됨. **앱은 아래 재빌드를 해야 반영된다.**
 
+**재빌드 (2026-08-31, tamagotchi PC — SDK/Java 있음)**:
+- [x] `git pull` → `395aa30` (main)
+- [x] `npm run build:play` — vite build + `cap sync android` 완료
+- [x] 번들 검증 (`android/app/src/main/assets/public/`):
+  - `bootstrapAnalytics` 1, `showBootError` 1
+  - `main-CozluJCL.js`에 부팅 방어(`initPlayNative failed`) 포함
+  - `assets/sprites/*/evolution/egg.png` 3종 존재
+- [x] 서명 AAB: `android/app/build/outputs/bundle/release/app-release.aab`
+  - **versionCode 11 / versionName 1.0.7** · targetSdk **35** · ~12MB
+  - (Play에 이미 10까지 올렸을 수 있어 11로 bump — `android/app/build.gradle`)
+- [ ] **기기 검증 (운영자)**: 기존 앱 삭제 → AAB를 **프로덕션** 트랙에 업로드·설치 후 확인
+  1. 첫 화면: **「펫 이름 짓기」 모달 + 알 스프라이트**
+  2. 새 펫: 보상 광고 버튼 **숨김** (스탯<40일 때만 노출)
+  3. 광고 탭: 광고 표시 또는 「지금은 광고를 불러올 수 없어요」 메시지
+  4. 실패 시: USB + `chrome://inspect` 웹뷰 콘솔 → 결과를 아래에 추가
+
+**재수정 (2026-09-03) — 알·광고 버튼 미표시, 이전 수정 유실 복원**:
+- 원인: 08월 세션에서 넣은 Play 수정이 main에 커밋되지 않아 빠짐.
+  1. `vite base` 기본 `/` → Capacitor에서 해시 번들 로드 실패 가능 → **알/JS 미표시**
+  2. `await initAds()`가 AdMob preload에 막히면 `showNameModal`/`renderPet` 전에 정지 → **정적 셸(치치, 알 없음)**
+  3. `isAdsSupported()`만 쓰면 SDK 준비 전·실패 시 보상 CTA가 영구 숨김
+- 복원:
+  - `vite.config.js` `base: "./"`
+  - `js/adsAdMob.js` — SDK init만 await, preload는 백그라운드 + `ensureReady`
+  - `js/ads.js` — `adsUiAvailable` + 전면 광고 10s `GATE_MS`
+  - `js/main.js` — `void initAds()` (부팅 비차단) + 완료 후 `refreshRewardPrompts`
+- AAB: **versionCode 12 / 1.0.8** (`android/app/build/outputs/bundle/release/app-release.aab`)
+
+**재수정 (2026-09-04) — 광고 버튼 전부 숨김 vs 알 부팅, 이중 제약**:
+- 원인: `adsUiAvailable()`이 `provider` import 후에만 true. `void initAds()` 직후
+  첫 `renderPet`/`updateGameOver`는 provider=null이라 부활·올케어·건강회복 CTA가
+  전부 `hidden`. AdMob `initialize`가 멈추면 `refreshRewardPrompts`도 안 불림.
+  (`isAdsSupported()` 게이트는 이미 빠져 있었음. CSS `[hidden]` 복원·`base: "./"`는 유지.)
+- 수정 (알 회귀 금지):
+  - `adsUiAvailable()` — Play(+ Toss/웹 광고 의도)면 provider 로드 전에도 true.
+    부팅에서 `await initAds()` 하지 않음.
+  - `void initAds().then(() => refreshRewardPrompts(pet))` 유지. refresh는
+    게임오버 부활 버튼도 다시 그림.
+  - `initPlayNative()`의 Firebase는 `void` — 텔레메트리가 첫 페인트(알/이름 모달)를
+    막지 않게.
+- **이중 제약**: 광고 CTA를 살리려고 `initAds`를 await하면 알이 사라지고,
+  알을 살리려고 CTA를 `isAdsSupported()`에만 묶으면 버튼이 사라진다.
+  첫 페인트는 비차단, CTA 가시성은 플랫폼 의도(`VITE_PLAY_ADS !== "0"`)로 연다.
+
 **다음 작업자가 할 일 (Android SDK 있는 PC에서 — 이 진단을 한 PC(bahamoth)에는 SDK/Java 없음)**:
-1. `git pull`
-2. `npm run build:play` (vite build + 정적 복사 + `cap sync android`까지 수행)
-3. 검증: `grep -c bootstrapAnalytics android/app/src/main/assets/public/index.html` → 1 이상
-4. Android Studio(또는 gradle)로 재빌드, 기기의 기존 앱 **삭제 후** 설치
+1. `git pull` (09-04 `adsUiAvailable` 즉시-true 수정 포함)
+2. **다시** `npm run build:play` — 09-04 소스 수정은 아직 AAB/android public에 없음. `build:play:empty-ads` 쓰지 말 것.
+3. ~~검증: `grep -c bootstrapAnalytics android/app/src/main/assets/public/index.html` → 1 이상~~ (완료)
+4. Android Studio(또는 gradle)로 재빌드, 기기의 기존 앱 **삭제 후** 설치 — **AAB는 위 경로에 있음. Play Console → 테스트 및 출시 → 프로덕션 → 새 버전 → 업로드**
 5. 첫 화면 확인: "펫 이름 짓기" 모달 + 알 스프라이트가 떠야 한다.
    보상 광고 버튼은 **새 펫에서는 안 보여야 정상** (스탯이 임계 40 미만으로
    떨어지면 나타난다).
@@ -172,6 +219,31 @@ dist가 그대로 APK에 들어간다.**
 `.foo[hidden] { display: none; }`을 함께 추가할 것. 기존 예: `css/style.css`의
 `.reward-prompts[hidden]`, `.new-pet-fab[hidden]`, `.overlay[hidden]`.
 
+### 2-9. `google-services.json`은 앱마다 다르다
+
+`~/Downloads/google-services.json`에 있던 파일은 **사주만세력**
+(`com.nolsoopgames.bazi`, 프로젝트 `city-sound-4c962`) 것이었다. 어비스펫에 그대로
+넣으면 패키지가 안 맞아 Firebase가 붙지 않는다.
+
+어비스펫용은 Firebase Console에서 **패키지 `com.nolsoopgames.abysspet`로 Android 앱을
+따로 추가**해 받아야 한다. 파일 안 `package_name`을 열어 확인하고 `android/app/`에 둔다.
+없으면 Gradle이 `google-services`·`crashlytics` 플러그인을 건너뛰므로 **빌드는 성공하고
+Firebase만 조용히 죽는다.** 상세는 [`docs/FIREBASE-PLAY.md`](docs/FIREBASE-PLAY.md).
+
+**배치됨 (2026-09-04):** `android/app/google-services.json` — 프로젝트 `abysspet`,
+패키지 `com.nolsoopgames.abysspet`. AAB **1.0.9 / versionCode 13**에 google-services
+플러그인이 적용됨 (`google_app_id` 생성 확인).
+
+### 2-10. Capacitor 플러그인 메이저는 코어와 맞춰야 한다
+
+`package.json`에 `^7.0.0`이라 적혀 있어도 실제 설치본은 Capacitor **8**이었다
+(`@capacitor/core` 8.5.x). 이 상태에서 `@capacitor-firebase/*@7`을 넣으면 peer가 깨진다.
+플러그인을 추가하기 전에 `node -p "require('./node_modules/@capacitor/core/package.json').version"`
+으로 **실제 설치 버전**을 먼저 확인할 것. (09-03에 package.json 범위를 ^8로 정렬했다.)
+
+또한 iCloud 동기화 사본(`android 2/`, `package 2.json`)이 `node_modules`에 생기면
+npm이 `ENOTEMPTY: rename` 으로 실패한다. 해당 스코프 디렉터리를 지우고 재설치하면 된다.
+
 ---
 
 ## 3. 광고 · 분석
@@ -254,7 +326,7 @@ EN 21편 / KO 8편 / JA 8편이 각각 따로 쓰였고, 그래서 **아티클 �
 
 ## 6. 남은 일
 
-- [ ] **어비스펫 Play APK 재빌드·재설치 (섹션 0 — 최우선)**
+- [ ] **어비스펫 Play APK 재빌드·재설치 (섹션 0 — 1.0.8 AAB 준비됨, Play 업로드·기기 검증 대기)**
 - [ ] `nolsoopgames.com/robots.txt`·`sitemap.xml` 없음
 - [ ] 애드센스 ads.txt 경고 해소 확인 (복구 후 재크롤링 대기)
 - [ ] 신년 운세 아티클은 10월에 `updated` 갱신 + 해당 연도 내용 보강 (11월부터 검색 급증)

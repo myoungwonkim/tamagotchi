@@ -92,7 +92,6 @@
           <span class="pet-water__bubble"></span>
           <span class="pet-water__bubble"></span>
         </div>
-        <p class="message" id="message" role="status" aria-live="polite" hidden></p>
         <div class="mess-layer" id="mess-layer" aria-hidden="true"></div>
         <div class="care-fx" id="care-fx" aria-hidden="true"></div>
         <div class="pet-display">
@@ -111,6 +110,7 @@
       <button type="button" class="new-pet-fab" id="btn-new-pet-side" hidden>새 펫 키우기</button>
 
       <div class="reward-prompts" id="reward-prompts" hidden>
+        <button type="button" class="reward-prompt-btn" id="btn-reward-protect" hidden><span class="reward-chip" id="btn-reward-protect-chip">▶</span><span id="btn-reward-protect-label">광고 보고 8시간 보호</span></button>
         <button type="button" class="reward-prompt-btn" id="btn-reward-emergency" hidden><span class="reward-chip">▶</span>광고 보고 올케어</button>
         <button type="button" class="reward-prompt-btn" id="btn-reward-neglect" hidden><span class="reward-chip">▶</span>광고 보고 건강 회복</button>
       </div>
@@ -226,6 +226,8 @@
     </div>
   </div>
 
+  <p class="message" id="message" role="status" aria-live="polite" hidden></p>
+
   <div class="overlay boot-error" id="boot-error" hidden>
     <div class="overlay-card">
       <h2 class="overlay-title">게임을 불러오지 못했어요</h2>
@@ -257,6 +259,7 @@
         "encyclopedia.js", "dialogue.js", "ghostDialogue.js", "audio.js", "sprites.js", "effects.js",
         "korean.js", "ui.js", "mess.js", "dev.js", "adConfig.js", "tossEnv.js",
         "platformEnv.js", "adsEmpty.js", "adsToss.js", "adsAdMob.js", "adsWeb.js", "playNative.js",
+        "firebasePlay.js",
         "deathSnapshot.js", "sharkAttack.js", "ads.js", "main.js",
       ];
       const scoped = {};

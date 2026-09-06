@@ -1,6 +1,6 @@
-import { applyTimeDelta, checkGameOver, createNewPet, tickPet, applyEmergencyCare, applyHealthRecoveryAd } from "./pet.js";
+import { applyTimeDelta, checkGameOver, createNewPet, tickPet, applyEmergencyCare, applyHealthRecoveryAd, applyStatProtection } from "./pet.js";
 import { feed, play, clean, toggleSleep, resetActionCooldown } from "./actions.js";
-import { savePet, loadPet, clearPet } from "./storage.js";
+import { savePet, loadPet, clearPet, normalizePet } from "./storage.js";
 import {
   checkEvolution,
   getEvolutionStage,
@@ -21,17 +21,26 @@ import { playCareEffect } from "./effects.js";
 import { withSubjectParticle } from "./korean.js";
 import {
   initAds,
+  preloadRewarded,
   tryShowInterstitial,
   showRewardedRevive,
   showRewardedEmergencyCare,
   showRewardedNeglectReset,
+  showRewardedStatProtect,
   canOfferRevive,
   markReviveUsed,
   canOfferEmergencyCare,
   canOfferNeglectReset,
+  canOfferStatProtect,
   INTERSTITIAL_TRIGGERS,
 } from "./ads.js";
 import { initPlayNative } from "./playNative.js";
+import {
+  logPetHatch,
+  logPetEvolve,
+  logPetCare,
+  logEncyclopediaOpen,
+} from "./firebasePlay.js";
 import {
   captureDeathSnapshot,
   getDeathSnapshot,
@@ -59,6 +68,7 @@ import {
   setGameActive,
   syncSleepControls,
   setAdsPromptApi,
+  refreshRewardPrompts,
 } from "./ui.js?v=locked-seal-fix-2";
 import { getStoreCaptureScene, isStoreCaptureMode, setupStoreCapture } from "./storeCapture.js";
 import { isGracDemoMode, runGracDemo } from "./gracDemo.js";
@@ -102,6 +112,7 @@ function runGameOverCheck() {
   const died = checkGameOver(pet);
   if (died) {
     captureDeathSnapshot(pet);
+    preloadRewarded();
   }
   return died;
 }
@@ -109,6 +120,7 @@ function runGameOverCheck() {
 function noteDeathIfNeeded(wasAlive) {
   if (wasAlive && pet && !pet.isAlive) {
     captureDeathSnapshot(pet);
+    preloadRewarded();
   }
 }
 
@@ -129,6 +141,8 @@ function handleEvolution({ notify = true } = {}) {
   if (!pet?.isAlive) return false;
 
   const result = checkEvolution(pet);
+
+  if (result.evolved) logPetEvolve(pet, result.stage.id);
 
   if (result.evolved && result.stage.id === "adult") {
     handleAdultEvolution({ notify });
@@ -199,6 +213,7 @@ async function initGracDemo() {
   setAdsPromptApi({
     canOfferEmergencyCare,
     canOfferNeglectReset,
+    canOfferStatProtect,
   });
   await initAds();
 
@@ -249,18 +264,21 @@ async function init() {
   setAdsPromptApi({
     canOfferEmergencyCare,
     canOfferNeglectReset,
+    canOfferStatProtect,
   });
-  // 광고·네이티브 셸 초기화가 실패해도 게임 부팅은 막지 않는다.
-  // (Play 웹뷰에서 이게 던지면 이름 모달 전에 멈춰 정적 화면만 남는다)
+  // Native/ads must not block first paint. AdMob preloads are backgrounded;
+  // reward CTAs stay available via adsUiAvailable while SDK warms up.
+  // A hang here before showNameModal/renderPet leaves the static HTML shell
+  // (default 치치, no egg) — the previous Play breakage.
+  void initAds()
+    .then(() => {
+      if (pet) refreshRewardPrompts(pet);
+    })
+    .catch((err) => console.warn("[boot] initAds failed", err));
   try {
     await initPlayNative();
   } catch (err) {
     console.warn("[boot] initPlayNative failed", err);
-  }
-  try {
-    await initAds();
-  } catch (err) {
-    console.warn("[boot] initAds failed", err);
   }
 
   const saved = loadPet();
@@ -410,6 +428,8 @@ function handleAction(actionFn, messageKey) {
 
   const message = getActionMessage(pet, messageKey);
   if (message) showMessage(message);
+
+  logPetCare(messageKey);
 }
 
 function startNewPet(name) {
@@ -417,30 +437,31 @@ function startNewPet(name) {
   clearDeathSnapshot();
   resetActionCooldown();
   resetDialogueTimer();
-  pet = createNewPet(name);
+  pet = normalizePet(createNewPet(name));
   lastTickAt = Date.now();
   handleEvolution({ notify: false });
   setGameActive(true);
   renderPet(pet);
   savePet(pet);
+  logPetHatch(pet);
 }
 
 async function graduateToNewPet() {
   if (!pet) return;
   addToEncyclopedia(pet);
   hideGraduateModal();
-  await tryShowInterstitial(INTERSTITIAL_TRIGGERS.T3_GRADUATE);
   showNameModal();
+  void tryShowInterstitial(INTERSTITIAL_TRIGGERS.T3_GRADUATE);
 }
 
 async function openNewPetAfterGameOver() {
-  await tryShowInterstitial(INTERSTITIAL_TRIGGERS.T1_GAME_OVER);
   showNameModal();
+  void tryShowInterstitial(INTERSTITIAL_TRIGGERS.T1_GAME_OVER);
 }
 
 // 광고가 안 뜨거나 중간에 닫혔을 때 무음으로 끝내지 않는다.
 function reportRewardOutcome(result) {
-  if (!result.shown) {
+  if (!result?.shown) {
     showMessage("지금은 광고를 불러올 수 없어요. 잠시 후 다시 시도해 주세요.", 4000);
   } else if (!result.rewarded) {
     showMessage("광고를 끝까지 보면 보상을 받을 수 있어요.", 4000);
@@ -497,6 +518,31 @@ async function handleNeglectResetAd() {
   showMessage("건강 회복! 건강이 50%까지 올랐어요.", 4000);
 }
 
+async function handleStatProtectAd() {
+  if (!pet?.isAlive || !canOfferStatProtect(pet)) return;
+  unlockAudioOnce();
+  const btn = document.getElementById("btn-reward-protect");
+  if (btn) btn.disabled = true;
+  showMessage("광고를 불러오는 중...", 30000);
+  let result;
+  try {
+    result = await showRewardedStatProtect();
+  } catch (err) {
+    console.warn("[ads] protect rewarded failed", err);
+    result = { shown: false, rewarded: false };
+  }
+  if (!result.rewarded) {
+    if (btn) btn.disabled = !canOfferStatProtect(pet);
+    reportRewardOutcome(result);
+    return;
+  }
+  applyStatProtection(pet);
+  lastTickAt = Date.now();
+  renderPet(pet);
+  savePet(pet);
+  showMessage("8시간 동안 스탯과 상어로부터 보호돼요.", 4000);
+}
+
 function setupMuteButton() {
   const muteButton = document.getElementById("btn-mute");
   if (!muteButton) return;
@@ -518,7 +564,11 @@ function bindEvents() {
 
   const withAudioAsync = (handler) => async () => {
     unlockAudioOnce();
-    await handler();
+    try {
+      await handler();
+    } catch (err) {
+      console.warn("[ui] async action failed", err);
+    }
   };
 
   buttons.feed.addEventListener("click", withAudio(() => handleAction(feed, "feed")));
@@ -529,6 +579,8 @@ function bindEvents() {
   document.getElementById("btn-new-pet")?.addEventListener("click", withAudioAsync(openNewPetAfterGameOver));
 
   document.getElementById("btn-revive-ad")?.addEventListener("click", withAudioAsync(handleReviveAd));
+
+  document.getElementById("btn-reward-protect")?.addEventListener("click", withAudioAsync(handleStatProtectAd));
 
   document.getElementById("btn-reward-emergency")?.addEventListener("click", withAudioAsync(handleEmergencyCareAd));
 
@@ -548,6 +600,7 @@ function bindEvents() {
 
   document.getElementById("btn-encyclopedia")?.addEventListener("click", withAudio(() => {
     showEncyclopedia(pet);
+    logEncyclopediaOpen();
   }));
 
   document.getElementById("btn-close-encyclopedia")?.addEventListener("click", withAudio(() => {

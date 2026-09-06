@@ -203,12 +203,13 @@ body {
 }
 
 .message {
-  position: absolute;
-  top: 14px;
+  position: fixed;
+  /* Prefer tank top (--message-top from JS). Fallback: below header, inside the tank. */
+  top: var(--message-top, calc(var(--safe-top) + 94px));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 6;
-  max-width: 88%;
+  z-index: 130;
+  max-width: min(88vw, 380px);
   text-align: center;
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
@@ -1120,8 +1121,8 @@ img.pet-sprite[hidden] {
 }
 
 #encyclopedia-overlay {
-  padding: 12px;
-  align-items: flex-start;
+  padding: max(24px, var(--safe-top)) 12px max(24px, var(--safe-bottom));
+  align-items: center;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -1670,8 +1671,26 @@ img.pet-sprite[hidden] {
   pointer-events: none;
 }
 
-.reward-prompt-btn:active {
+.reward-prompt-btn:active:not(:disabled) {
   background: #0a2028;
+}
+
+.reward-prompt-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  border-color: #1a3a42;
+  border-left-color: #3a6a74;
+  color: #7aa0a8;
+  background: #0b232b;
+}
+
+.reward-prompt-btn:disabled::after {
+  display: none;
+}
+
+.reward-prompt-btn:disabled .reward-chip {
+  background: rgba(69, 200, 220, 0.08);
+  color: #6aa8b2;
 }
 
 .reward-chip {
