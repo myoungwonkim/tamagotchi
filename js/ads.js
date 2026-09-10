@@ -122,13 +122,19 @@ export function adsUiAvailable() {
   return false;
 }
 
-/** Play uses only the 8h protect rewarded ad. Web / toss keep T1–T4 + R1–R3. */
+/** Play: 8h protect rewarded interstitial + T1/T3 boundary interstitials. */
 export function usesPlayProtectAds() {
   return getPlatform() === "play" && playAdsEnabled();
 }
 
+function isPlayBoundaryInterstitial(trigger) {
+  return (
+    trigger === INTERSTITIAL_TRIGGERS.T1_GAME_OVER ||
+    trigger === INTERSTITIAL_TRIGGERS.T3_GRADUATE
+  );
+}
+
 export function preloadInterstitial() {
-  if (usesPlayProtectAds()) return;
   void (async () => {
     await ensureAdsReady();
     provider?.preloadInterstitial?.();
@@ -143,12 +149,15 @@ export function preloadRewarded() {
 }
 
 export function canShowInterstitial(trigger) {
-  if (usesPlayProtectAds()) return false;
-  if (!isAdsSupported()) return false;
-
   const s = readSession();
   const now = Date.now();
 
+  if (usesPlayProtectAds()) {
+    if (!isPlayBoundaryInterstitial(trigger)) return false;
+    return s.interstitialCount < AD_TUNING.playMaxInterstitialPerSession;
+  }
+
+  if (!isAdsSupported()) return false;
   if (s.interstitialCount >= AD_TUNING.maxInterstitialPerSession) return false;
   if (s.lastInterstitialAt && now - s.lastInterstitialAt < AD_TUNING.interstitialCooldownMs) {
     return false;
@@ -199,20 +208,21 @@ async function gatedRewarded({ waitForFill = false } = {}) {
 }
 
 export async function tryShowInterstitial(trigger) {
-  if (usesPlayProtectAds()) return false;
-  // Game flow (e.g. «새 펫 키우기») must not wait on AdMob. Callers should
-  // fire-and-forget this; the gates only cap how long a background show can run.
-  const GATE_MS = 4000;
+  if (!canShowInterstitial(trigger)) return false;
+  // Web/toss: do not block game flow. Play T1/T3 wait for a real fill.
+  const playBoundary = usesPlayProtectAds() && isPlayBoundaryInterstitial(trigger);
+  const readyMs = playBoundary ? 8000 : READY_GATE_MS;
+  const gateMs = playBoundary ? 25000 : 4000;
   try {
     const ready = await Promise.race([
       ensureAdsReady(),
-      new Promise((resolve) => setTimeout(() => resolve(false), READY_GATE_MS)),
+      new Promise((resolve) => setTimeout(() => resolve(false), readyMs)),
     ]);
     if (!ready || !canShowInterstitial(trigger)) return false;
     const result = await Promise.race([
       provider.showInterstitial(),
       new Promise((resolve) =>
-        setTimeout(() => resolve({ shown: false, rewarded: false }), GATE_MS),
+        setTimeout(() => resolve({ shown: false, rewarded: false }), gateMs),
       ),
     ]);
     if (result?.shown) recordInterstitialShown(trigger);

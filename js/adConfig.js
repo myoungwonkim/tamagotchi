@@ -19,6 +19,8 @@ function readEnv(key, fallback) {
 
 export const AD_TUNING = {
   maxInterstitialPerSession: 3,
+  /** Play T1/T3 only — one boundary interstitial per session. */
+  playMaxInterstitialPerSession: 1,
   interstitialCooldownMs: 8 * 60 * 1000,
   maxEmergencyCarePerSession: 3,
   maxNeglectResetPerSession: 2,

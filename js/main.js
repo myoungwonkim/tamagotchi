@@ -22,7 +22,9 @@ import { withSubjectParticle } from "./korean.js";
 import {
   initAds,
   preloadRewarded,
+  preloadInterstitial,
   tryShowInterstitial,
+  usesPlayProtectAds,
   showRewardedRevive,
   showRewardedEmergencyCare,
   showRewardedNeglectReset,
@@ -273,6 +275,8 @@ async function init() {
   void initAds()
     .then(() => {
       if (pet) refreshRewardPrompts(pet);
+      preloadRewarded();
+      preloadInterstitial();
     })
     .catch((err) => console.warn("[boot] initAds failed", err));
   try {
@@ -450,11 +454,21 @@ async function graduateToNewPet() {
   if (!pet) return;
   addToEncyclopedia(pet);
   hideGraduateModal();
+  if (usesPlayProtectAds()) {
+    await tryShowInterstitial(INTERSTITIAL_TRIGGERS.T3_GRADUATE);
+    showNameModal();
+    return;
+  }
   showNameModal();
   void tryShowInterstitial(INTERSTITIAL_TRIGGERS.T3_GRADUATE);
 }
 
 async function openNewPetAfterGameOver() {
+  if (usesPlayProtectAds()) {
+    await tryShowInterstitial(INTERSTITIAL_TRIGGERS.T1_GAME_OVER);
+    showNameModal();
+    return;
+  }
   showNameModal();
   void tryShowInterstitial(INTERSTITIAL_TRIGGERS.T1_GAME_OVER);
 }

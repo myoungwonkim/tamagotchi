@@ -6,5 +6,7 @@
     <string name="custom_url_scheme">com.nolsoopgames.abysspet</string>
     <!-- AdMob App ID (production). Unit IDs also baked from .env.play into JS. -->
     <string name="admob_app_id">ca-app-pub-4999376453226791~6330021465</string>
+    <string name="admob_interstitial_id">ca-app-pub-4999376453226791/5034219268</string>
     <string name="admob_rewarded_id">ca-app-pub-4999376453226791/7001907051</string>
+    <string name="admob_rewarded_interstitial_id">ca-app-pub-4999376453226791/1412639618</string>
 </resources>

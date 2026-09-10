@@ -43,8 +43,9 @@ Simple controls, cozy pixel art, real consequences if you neglect your pet.
 FREE TO PLAY
 • No in-app purchases
 • No gacha cash shop
-• Optional rewarded ads for emergency care / revive
-• Interstitial ads support free play
+• Optional rewarded ad: protect your pet for 8 hours
+• Full-screen ads only after a pet's farewell or graduation
+• No ads during feed / play / clean / sleep
 
 WHY PLAYERS STAY
 • Multiple evolutions and collectible adult forms
@@ -99,8 +100,9 @@ The abyss is waiting.
 과금
 • 인앱 결제(IAP) 없음
 • 뽑기 상점 없음
-• 선택형 보상 광고 (응급 케어·부활)
-• 전면 광고로 무료 플레이 유지
+• 선택형 보상 광고: 8시간 보호 (하루 1회)
+• 전면 광고는 이별·졸업 뒤에만
+• 먹이·놀이·청소·재우기 중에는 광고 없음
 
 전체이용가 · 등급분류번호 제SC-OM-260731-001호
 
@@ -149,8 +151,9 @@ The abyss is waiting.
 課金
 • アプリ内課金（IAP）なし
 • ガチャショップなし
-• 任意リワード広告（緊急ケア・復活）
-• インタースティシャルで無料プレイ支援
+• 任意リワード広告：8時間保護（1日1回）
+• 全画面広告は別れ・卒業のあとだけ
+• えさ・あそび・そうじ・ねむりのあいだは広告なし
 
 全年齢向け（韓国 GRAC：全体利用可 · 第SC-OM-260731-001号）
 
@@ -160,13 +163,38 @@ The abyss is waiting.
 
 ---
 
+## 출시 노트 (1.0.26) — Console «이번 버전의 새로운 기능»
+
+한국어 (500자 이내)
+
+```
+광고를 보고 8시간 동안 펫을 보호할 수 있어요. 전면 광고는 이별이나 졸업 뒤에만 나와요. 돌보는 동안에는 광고가 끼어들지 않습니다.
+```
+
+English
+
+```
+Watch an optional ad to protect your pet for 8 hours. Full-screen ads appear only after a farewell or graduation — never during daily care.
+```
+
+日本語
+
+```
+広告を見て8時間ペットを保護できます。全画面広告は別れ・卒業のあとだけ。世話のあいだは広告は出ません。
+```
+
+---
+
 ## 에셋 · 체크
 
 ```bash
 npm run build:play-store-assets
-npm run build:play-store-play-videos
 ```
 
-- [ ] IARC · [x] 광고 선언 · [x] Data safety · [ ] EN/JA/KO 문구 업로드 · [ ] 그래픽 업로드  
-- 출시: 내부 테스트 → (선택) 오픈 테스트 → 프로덕션  
-- AIT: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)
+산출: `assets/play-store/` (`?play=1` 캡처 — 보호 버튼 / 부활 버튼 없음)
+
+업로드 순서·Data safety 설문은 [PLAY-RELEASE-1.0.26.md](./PLAY-RELEASE-1.0.26.md).
+
+- [ ] IARC · [ ] 광고 선언 재확인 · [ ] Data safety (AdMob+Firebase) · [ ] EN/JA/KO 문구 · [ ] 그래픽(Play 스크린샷 4장)
+- 출시: 내부 테스트 → (선택) 오픈 테스트 → 프로덕션
+- AIT 문구(부활·올케어)를 Play에 쓰지 말 것. AIT: [APPS-IN-TOSS-STORE-LISTING.md](./APPS-IN-TOSS-STORE-LISTING.md)

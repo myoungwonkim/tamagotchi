@@ -8,8 +8,8 @@ android {
         applicationId "com.nolsoopgames.abysspet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 29
-        versionName "1.0.25"
+        versionCode 30
+        versionName "1.0.26"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -59,10 +59,22 @@ dependencies {
     implementation project(':capacitor-android')
     implementation "com.google.firebase:firebase-analytics:23.0.0"
     implementation "com.google.android.gms:play-services-ads:25.4.+"
+    implementation "com.google.ads.mediation:facebook:6.22.0.0"
+    implementation "com.google.ads.mediation:unity:4.20.0.1"
+    implementation "com.unity3d.ads:unity-ads:4.20.0"
+    implementation "com.google.ads.mediation:pangle:8.2.0.4.0"
+    // Mediation adapters pull browser 1.9+ which needs AGP 8.9; stay on 8.7.
+    implementation "androidx.browser:browser:1.8.0"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "androidx.browser:browser:1.8.0"
+    }
 }
 
 apply from: 'capacitor.build.gradle'
