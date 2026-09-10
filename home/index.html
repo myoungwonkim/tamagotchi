@@ -401,11 +401,14 @@ a:focus-visible, button:focus-visible {
           <a class="go" href="https://play.google.com/store/apps/details?id=com.nolsoopgames.bazi" data-i18n="baziPlay">Google Play에서 받기 →</a>
         </span>
       </div>
-      <a class="card card--hot" href="https://couple.nolsoopgames.com/ko/" data-couple>
-        <h2 data-i18n="coupleTitle">커플 궁합</h2>
+      <div class="card card--hot">
+        <span class="card-head"><img src="/assets/app-icon/couple-192.png" width="32" height="32" alt=""><h2 data-i18n="coupleTitle">읽어주는 궁합</h2></span>
         <p data-i18n="coupleDesc">두 사람의 사주를 다섯 축으로 대조합니다. 점수는 내지 않습니다.</p>
-        <span class="go" data-i18n="coupleGo">궁합 보기 →</span>
-      </a>
+        <span class="card-links">
+          <a class="go" href="https://couple.nolsoopgames.com/ko/" data-couple data-i18n="coupleGo">웹에서 바로 보기 →</a>
+          <a class="go" href="https://play.google.com/store/apps/details?id=com.nolsoopgames.couple" data-i18n="couplePlay">Google Play에서 받기 →</a>
+        </span>
+      </div>
       <a class="card card--hot card--span" href="https://today.nolsoopgames.com/ko/" data-today>
         <h2 data-i18n="todayTitle">오늘의 운세</h2>
         <p data-i18n="todayDesc">일진과 내 사주를 실제로 대조합니다. 띠 운세가 아닙니다.</p>
@@ -472,7 +475,7 @@ a:focus-visible, button:focus-visible {
       <h2 data-i18n="coupleH">커플 궁합 — 점수 없는 다섯 축</h2>
       <div data-i18n-html="coupleBody">
         <p>커플 궁합은 두 사람의 생년월일로 명식을 세운 뒤, 일간 관계, 자리별 지지 관계, 오행 보완, 신강약, 배우자성까지 다섯 축을 각각 계산합니다. 띠만 보는 궁합과 다릅니다. 점수를 매기지 않고, 관계가 유지될지 끝날지를 판정하지 않습니다. 반복될 역학만 적습니다.</p>
-        <p>계산은 브라우저 안에서 이뤄지고 생년월일은 서버로 보내지 않습니다. 공유 링크에는 본인 정보만 담깁니다. 주소는 <a href="https://couple.nolsoopgames.com/ko/">couple.nolsoopgames.com/ko/</a>이고, 한국어·영어·일본어를 지원합니다.</p>
+        <p>계산은 브라우저 안에서 이뤄지고 생년월일은 서버로 보내지 않습니다. 공유 링크에는 본인 정보만 담깁니다. 주소는 <a href="https://couple.nolsoopgames.com/ko/">couple.nolsoopgames.com/ko/</a>이고, 한국어·영어·일본어를 지원합니다. Android 앱은 Play 스토어의 <a href="https://play.google.com/store/apps/details?id=com.nolsoopgames.couple">«읽어주는 궁합»</a>입니다.</p>
       </div>
     </article>
 
@@ -683,9 +686,10 @@ a:focus-visible, button:focus-visible {
         baziDesc: "Enter a birth date and get the Four Pillars chart and reading. No signup, no payment.",
         baziGo: "Open on the web →",
         baziPlay: "Get it on Google Play →",
-        coupleTitle: "Couple Compatibility",
+        coupleTitle: "Couple Reading",
         coupleDesc: "Two charts, five axes. No score.",
-        coupleGo: "Read compatibility →",
+        coupleGo: "Open on the web →",
+        couplePlay: "Get it on Google Play →",
         todayTitle: "Today's luck",
         todayDesc: "Today's stem-branch against your chart. Not a zodiac horoscope.",
         todayGo: "Today's reading →",
@@ -703,7 +707,7 @@ a:focus-visible, button:focus-visible {
         baziH: "Bazi Reader — free Four Pillars chart",
         baziBody: "<p>Enter a birth date (and optionally time and country) to get a Four Pillars chart and a reading: year, month, day, and hour pillars, Day Master, strength, Useful God, Ten Gods, classical stars, and luck pillars. If you do not know the hour, leave it blank; the rest of the chart still computes.</p><p>The chart is calculated on your device. We do not store birth dates on our servers. No sign-up and no payment. Korean, English, and Japanese. The web app is <a href=\"https://bazi.nolsoopgames.com/\">bazi.nolsoopgames.com</a>. On Google Play: <a href=\"https://play.google.com/store/apps/details?id=com.nolsoopgames.bazi\">Bazi Reader</a>.</p><p>For reflection, not medical, legal, or financial advice. Births near solar-term boundaries can differ by a day. Readings use published Bazi rules, not a cloud language model.</p>",
         coupleH: "Couple Compatibility — five axes, no score",
-        coupleBody: "<p>Compatibility is two charts compared on five axes: Day Master relation, branch relations by palace, elemental supply, strength pairing, and spouse-star. It is not a zodiac-animal match. There is no score, and no verdict on whether a relationship will last. Only the repeating mechanics are described.</p><p>Calculation stays in the browser. Share links carry only your own birth data. Site: <a href=\"https://couple.nolsoopgames.com/\">couple.nolsoopgames.com</a> (Korean, English, and Japanese).</p>",
+        coupleBody: "<p>Compatibility is two charts compared on five axes: Day Master relation, branch relations by palace, elemental supply, strength pairing, and spouse-star. It is not a zodiac-animal match. There is no score, and no verdict on whether a relationship will last. Only the repeating mechanics are described.</p><p>Calculation stays in the browser. Share links carry only your own birth data. Site: <a href=\"https://couple.nolsoopgames.com/\">couple.nolsoopgames.com</a> (Korean, English, and Japanese). On Google Play: <a href=\"https://play.google.com/store/apps/details?id=com.nolsoopgames.couple\">Couple Reading - Four Pillars</a>.</p>",
         todayH: "Today's luck — the day against your chart",
         todayBody: "<p>This is not a one-line horoscope for everyone born in the same animal year. It computes how today's stem-branch meets your eight characters: today's Ten God, useful-god weather, branch relation to your Day Branch, and whether the day is a nobleman, horse, peach-blossom, or void day for you. It does not predict events.</p><p>You may save the birth date on this device so the next visit opens today's reading. It is not sent to our servers. Site: <a href=\"https://today.nolsoopgames.com/\">today.nolsoopgames.com</a> (Korean, English, and Japanese).</p>",
         aptH: "Sold Apt — filed Korean apartment prices",
@@ -734,9 +738,10 @@ a:focus-visible, button:focus-visible {
         baziDesc: "生年月日を入れるだけで命式と鑑定が出ます。登録も課金もありません。",
         baziGo: "ウェブで見る →",
         baziPlay: "Google Play で入手 →",
-        coupleTitle: "カップルの相性",
+        coupleTitle: "読める相性",
         coupleDesc: "二人の命式を五つの軸で対照します。点数は出しません。",
-        coupleGo: "相性を見る →",
+        coupleGo: "ウェブで見る →",
+        couplePlay: "Google Play で入手 →",
         todayTitle: "今日の運勢",
         todayDesc: "今日の日干支と自分の命式を実際に対照します。十二支占いではありません。",
         todayGo: "今日の運勢 →",
@@ -754,7 +759,7 @@ a:focus-visible, button:focus-visible {
         baziH: "読める四柱推命 — 無料の命式",
         baziBody: "<p>生年月日（任意で時刻と国）を入れると、年柱・月柱・日柱・時柱、日主、身強身弱、格局と用神、十神、神殺、大運まで出ます。時刻が分からなければ空欄のまま。時柱以外は計算されます。</p><p>計算は端末内で行います。生年月日をサーバーに保存しません。登録も課金もなく、한국어・English・日本語に対応します。ウェブは <a href=\"https://bazi.nolsoopgames.com/ja/\">bazi.nolsoopgames.com/ja/</a>。Play では<a href=\"https://play.google.com/store/apps/details?id=com.nolsoopgames.bazi\">「読める四柱推命」</a>です。</p><p>参考・内省用であり、医療・法律・財務の助言ではありません。節気の境目の出生は一日ずれることがあります。雲の言語モデルではなく、公開された命理の規則で計算します。</p>",
         coupleH: "カップルの相性 — 点数のない五軸",
-        coupleBody: "<p>二人の生年月日から命式を立て、日主関係、宮ごとの支関係、五行の補い、身強身弱、配偶者星の五軸をそれぞれ計算します。十二支だけの相性ではありません。点数は出さず、関係が続くかどうかも判定しません。繰り返される力学だけを書きます。</p><p>計算はブラウザ内です。共有リンクには本人の情報だけが入ります。アドレスは <a href=\"https://couple.nolsoopgames.com/ja/\">couple.nolsoopgames.com/ja/</a>（韓国語・英語・日本語）です。</p>",
+        coupleBody: "<p>二人の生年月日から命式を立て、日主関係、宮ごとの支関係、五行の補い、身強身弱、配偶者星の五軸をそれぞれ計算します。十二支だけの相性ではありません。点数は出さず、関係が続くかどうかも判定しません。繰り返される力学だけを書きます。</p><p>計算はブラウザ内です。共有リンクには本人の情報だけが入ります。アドレスは <a href=\"https://couple.nolsoopgames.com/ja/\">couple.nolsoopgames.com/ja/</a>（韓国語・英語・日本語）です。Play では<a href=\"https://play.google.com/store/apps/details?id=com.nolsoopgames.couple\">「読める相性 - 四柱八字・恋愛」</a>です。</p>",
         todayH: "今日の運勢 — 日干支と自分の命式",
         todayBody: "<p>十二支一つで数百万人をまとめません。その日の六十干支が自分の八文字と実際にどう関係するかを計算します。今日の十神、用神に対する流れ、日支との合・冲、貴人日・駅馬日・桃花日・空亡日。出来事を予言せず、その日入ってくる気の性質と対応だけを書きます。</p><p>生年月日をこの端末に保存すると、次から開いた瞬間にその日の運勢が出ます。サーバーへは送りません。アドレスは <a href=\"https://today.nolsoopgames.com/ja/\">today.nolsoopgames.com/ja/</a>（韓国語・英語・日本語）です。</p>",
         aptH: "팔린아파트 — 韓国の実取引価格",
