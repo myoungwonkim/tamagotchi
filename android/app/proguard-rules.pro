@@ -18,10 +18,18 @@
 -keep class org.apache.cordova.** { *; }
 -dontwarn org.apache.cordova.**
 
-# AdMob — MainActivity writes AdRewardExecutor.preparedAds by field name
+# AdMob + mediation adapters
 -keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.ads.mediation.** { *; }
+-keep class com.facebook.ads.** { *; }
+-keep class com.unity3d.ads.** { *; }
+-keep class com.unity3d.services.** { *; }
+-keep class com.bytedance.sdk.openadsdk.** { *; }
 -keep class com.getcapacitor.community.admob.** { *; }
 -dontwarn com.google.android.gms.**
+-dontwarn com.facebook.ads.**
+-dontwarn com.unity3d.**
+-dontwarn com.bytedance.sdk.**
 
 # Firebase Analytics / Crashlytics
 -keep class com.google.firebase.** { *; }

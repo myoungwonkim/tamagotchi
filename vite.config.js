@@ -22,6 +22,9 @@ export default defineConfig(({ mode }) => {
       "import.meta.env.VITE_ADMOB_REWARDED_ID": JSON.stringify(
         env.VITE_ADMOB_REWARDED_ID || "ca-app-pub-3940256099942544/5224354917",
       ),
+      "import.meta.env.VITE_ADMOB_REWARDED_INTERSTITIAL_ID": JSON.stringify(
+        env.VITE_ADMOB_REWARDED_INTERSTITIAL_ID || "ca-app-pub-3940256099942544/5354046379",
+      ),
       "import.meta.env.VITE_PLAY_ADS": JSON.stringify(env.VITE_PLAY_ADS || "1"),
       "import.meta.env.VITE_ADMOB_FORCE_TEST": JSON.stringify(env.VITE_ADMOB_FORCE_TEST || "0"),
     },
