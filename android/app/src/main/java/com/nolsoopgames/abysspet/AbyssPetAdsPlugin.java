@@ -14,13 +14,20 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Load and cache ads in the background. {@code showing} is true only while a
+ * fullscreen ad is on screen — a pending load must not block the other slot.
+ */
 @CapacitorPlugin(name = "AbyssPetAds")
 public class AbyssPetAdsPlugin extends Plugin {
     private static final String TAG = "AbyssPetAds";
@@ -28,31 +35,81 @@ public class AbyssPetAdsPlugin extends Plugin {
     private static final String SAMPLE_REWARDED = "ca-app-pub-3940256099942544/5224354917";
     private static final String SAMPLE_REWARDED_INTERSTITIAL =
         "ca-app-pub-3940256099942544/5354046379";
+    /** Keep in sync with js/adConfig.js PLAY_AD_LOAD.nativeLoadTimeoutMs */
     private static final long LOAD_TIMEOUT_MS = 25000;
+    /** Keep in sync with js/adConfig.js PLAY_AD_LOAD.nativeInitTimeoutMs */
+    private static final long INIT_TIMEOUT_MS = 8000;
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final List<Runnable> readyWaiters = new ArrayList<>();
 
     private boolean sdkStarted = false;
+    private boolean sdkReady = false;
     private boolean showing = false;
+
+    private InterstitialAd interstitial;
+    private boolean interstitialLoading = false;
+    private PluginCall pendingInterstitialShow;
+
+    private RewardedInterstitialAd rewardedInterstitial;
+    private boolean riLoading = false;
+    private PluginCall pendingRiShow;
+
+    private RewardedAd rewarded;
+    private boolean rewardedLoading = false;
+    private PluginCall pendingRewardedShow;
 
     @PluginMethod
     public void initialize(PluginCall call) {
-        startSdk();
-        Log.i(TAG, "initialize requested");
-        call.resolve();
+        startSdk(() -> {
+            Log.i(TAG, "initialize ready");
+            call.resolve();
+        });
+    }
+
+    @PluginMethod
+    public void preloadInterstitial(PluginCall call) {
+        String unit = unitId(call, Kind.INTERSTITIAL);
+        startSdk(() -> {
+            loadInterstitial(unit, null);
+            call.resolve();
+        });
+    }
+
+    @PluginMethod
+    public void preloadRewardedInterstitial(PluginCall call) {
+        String unit = unitId(call, Kind.REWARDED_INTERSTITIAL);
+        startSdk(() -> {
+            loadRewardedInterstitial(unit, null);
+            call.resolve();
+        });
+    }
+
+    @PluginMethod
+    public void preloadRewarded(PluginCall call) {
+        String unit = unitId(call, Kind.REWARDED);
+        startSdk(() -> {
+            loadRewarded(unit, null);
+            call.resolve();
+        });
     }
 
     @PluginMethod
     public void showInterstitial(PluginCall call) {
-        showFullScreen(call, Kind.INTERSTITIAL);
-    }
-
-    @PluginMethod
-    public void showRewarded(PluginCall call) {
-        showFullScreen(call, Kind.REWARDED);
+        String unit = unitId(call, Kind.INTERSTITIAL);
+        startSdk(() -> showOrLoadInterstitial(call, unit));
     }
 
     @PluginMethod
     public void showRewardedInterstitial(PluginCall call) {
-        showFullScreen(call, Kind.REWARDED_INTERSTITIAL);
+        String unit = unitId(call, Kind.REWARDED_INTERSTITIAL);
+        startSdk(() -> showOrLoadRi(call, unit));
+    }
+
+    @PluginMethod
+    public void showRewarded(PluginCall call) {
+        String unit = unitId(call, Kind.REWARDED);
+        startSdk(() -> showOrLoadRewarded(call, unit));
     }
 
     private enum Kind {
@@ -61,42 +118,368 @@ public class AbyssPetAdsPlugin extends Plugin {
         REWARDED_INTERSTITIAL
     }
 
-    private void showFullScreen(PluginCall call, Kind kind) {
-        if (showing) {
-            call.reject("ad already showing");
-            return;
-        }
+    private String unitId(PluginCall call, Kind kind) {
         boolean testing = Boolean.TRUE.equals(call.getBoolean("isTesting", false));
         String adId = call.getString("adId", "");
         if (testing || adId == null || adId.isEmpty()) {
-            if (kind == Kind.INTERSTITIAL) adId = SAMPLE_INTERSTITIAL;
-            else if (kind == Kind.REWARDED_INTERSTITIAL) adId = SAMPLE_REWARDED_INTERSTITIAL;
-            else adId = SAMPLE_REWARDED;
+            if (kind == Kind.INTERSTITIAL) return SAMPLE_INTERSTITIAL;
+            if (kind == Kind.REWARDED_INTERSTITIAL) return SAMPLE_REWARDED_INTERSTITIAL;
+            return SAMPLE_REWARDED;
         }
+        return adId;
+    }
+
+    private void startSdk(Runnable onReady) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            onReady.run();
+            return;
+        }
+        if (sdkReady) {
+            activity.runOnUiThread(onReady);
+            return;
+        }
+        readyWaiters.add(onReady);
+        if (sdkStarted) return;
+        sdkStarted = true;
+        activity.runOnUiThread(() -> {
+            Runnable timeout = () -> {
+                if (sdkReady) return;
+                Log.w(TAG, "MobileAds initialize timed out; trying loads anyway");
+                markSdkReady();
+            };
+            mainHandler.postDelayed(timeout, INIT_TIMEOUT_MS);
+            try {
+                MobileAds.initialize(
+                    activity.getApplicationContext(),
+                    status -> {
+                        mainHandler.removeCallbacks(timeout);
+                        Log.i(TAG, "MobileAds initialized");
+                        markSdkReady();
+                    }
+                );
+            } catch (Exception e) {
+                mainHandler.removeCallbacks(timeout);
+                Log.e(TAG, "MobileAds.initialize failed", e);
+                markSdkReady();
+            }
+        });
+    }
+
+    private void markSdkReady() {
+        sdkReady = true;
+        List<Runnable> waiters = new ArrayList<>(readyWaiters);
+        readyWaiters.clear();
+        Activity activity = getActivity();
+        Runnable runAll = () -> {
+            for (Runnable waiter : waiters) waiter.run();
+        };
+        if (activity != null) activity.runOnUiThread(runAll);
+        else mainHandler.post(runAll);
+    }
+
+    private void showOrLoadInterstitial(PluginCall call, String unit) {
         Activity activity = getActivity();
         if (activity == null) {
             call.reject("no activity");
             return;
         }
+        if (showing) {
+            call.reject("ad already showing");
+            return;
+        }
+        if (pendingInterstitialShow != null) {
+            call.reject("interstitial already pending");
+            return;
+        }
+        if (interstitial != null) {
+            presentInterstitial(call);
+            return;
+        }
+        pendingInterstitialShow = call;
+        if (interstitialLoading) {
+            watchLoad(call, LOAD_TIMEOUT_MS);
+            return;
+        }
+        loadInterstitial(unit, call);
+    }
 
-        Log.i(TAG, "show " + kind + " adId=" + adId + " testing=" + testing);
-        showing = true;
-        startSdk();
+    private void showOrLoadRi(PluginCall call, String unit) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            call.reject("no activity");
+            return;
+        }
+        if (showing) {
+            call.reject("ad already showing");
+            return;
+        }
+        if (pendingRiShow != null) {
+            call.reject("rewarded interstitial already pending");
+            return;
+        }
+        if (rewardedInterstitial != null) {
+            presentRi(call);
+            return;
+        }
+        pendingRiShow = call;
+        if (riLoading) {
+            watchLoad(call, LOAD_TIMEOUT_MS);
+            return;
+        }
+        loadRewardedInterstitial(unit, call);
+    }
 
-        final String unit = adId;
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final boolean[] settled = { false };
-        final boolean[] rewarded = { false };
+    private void showOrLoadRewarded(PluginCall call, String unit) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            call.reject("no activity");
+            return;
+        }
+        if (showing) {
+            call.reject("ad already showing");
+            return;
+        }
+        if (pendingRewardedShow != null) {
+            call.reject("rewarded already pending");
+            return;
+        }
+        if (rewarded != null) {
+            presentRewarded(call);
+            return;
+        }
+        pendingRewardedShow = call;
+        if (rewardedLoading) {
+            watchLoad(call, LOAD_TIMEOUT_MS);
+            return;
+        }
+        loadRewarded(unit, call);
+    }
 
+    private void watchLoad(PluginCall call, long timeoutMs) {
+        mainHandler.postDelayed(() -> {
+            if (call == pendingInterstitialShow) {
+                interstitialLoading = false;
+                failPending(call, "load timed out");
+            } else if (call == pendingRiShow) {
+                riLoading = false;
+                failPending(call, "load timed out");
+            } else if (call == pendingRewardedShow) {
+                rewardedLoading = false;
+                failPending(call, "load timed out");
+            }
+        }, timeoutMs);
+    }
+
+    private void loadInterstitial(String unit, PluginCall showCall) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            failPending(showCall, "no activity");
+            return;
+        }
+        if (interstitial != null || interstitialLoading) return;
+        interstitialLoading = true;
+        Log.i(TAG, "load interstitial " + unit);
         Runnable timeout = () -> {
-            if (settled[0]) return;
-            settled[0] = true;
-            showing = false;
-            Log.e(TAG, kind + " load timed out");
-            call.reject("load timed out");
+            if (!interstitialLoading) return;
+            interstitialLoading = false;
+            Log.e(TAG, "interstitial load timed out");
+            failPending(showCall, "load timed out");
         };
+        if (showCall != null) mainHandler.postDelayed(timeout, LOAD_TIMEOUT_MS);
+        AdRequest request = new AdRequest.Builder().build();
+        InterstitialAd.load(
+            activity,
+            unit,
+            request,
+            new InterstitialAdLoadCallback() {
+                @Override
+                public void onAdLoaded(InterstitialAd ad) {
+                    mainHandler.removeCallbacks(timeout);
+                    interstitialLoading = false;
+                    interstitial = ad;
+                    Log.i(TAG, "interstitial loaded");
+                    if (pendingInterstitialShow != null) presentInterstitial(pendingInterstitialShow);
+                }
 
-        FullScreenContentCallback fullscreen = new FullScreenContentCallback() {
+                @Override
+                public void onAdFailedToLoad(LoadAdError error) {
+                    mainHandler.removeCallbacks(timeout);
+                    interstitialLoading = false;
+                    interstitial = null;
+                    Log.e(TAG, "interstitial failed " + error.getCode() + " " + error.getMessage());
+                    failPending(
+                        showCall != null ? showCall : pendingInterstitialShow,
+                        error.getCode() + " " + error.getMessage()
+                    );
+                }
+            }
+        );
+    }
+
+    private void loadRewardedInterstitial(String unit, PluginCall showCall) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            failPending(showCall, "no activity");
+            return;
+        }
+        if (rewardedInterstitial != null || riLoading) return;
+        riLoading = true;
+        Log.i(TAG, "load rewarded interstitial " + unit);
+        Runnable timeout = () -> {
+            if (!riLoading) return;
+            riLoading = false;
+            Log.e(TAG, "rewarded interstitial load timed out");
+            failPending(showCall, "load timed out");
+        };
+        if (showCall != null) mainHandler.postDelayed(timeout, LOAD_TIMEOUT_MS);
+        AdRequest request = new AdRequest.Builder().build();
+        RewardedInterstitialAd.load(
+            activity,
+            unit,
+            request,
+            new RewardedInterstitialAdLoadCallback() {
+                @Override
+                public void onAdLoaded(RewardedInterstitialAd ad) {
+                    mainHandler.removeCallbacks(timeout);
+                    riLoading = false;
+                    rewardedInterstitial = ad;
+                    Log.i(TAG, "rewarded interstitial loaded");
+                    if (pendingRiShow != null) presentRi(pendingRiShow);
+                }
+
+                @Override
+                public void onAdFailedToLoad(LoadAdError error) {
+                    mainHandler.removeCallbacks(timeout);
+                    riLoading = false;
+                    rewardedInterstitial = null;
+                    Log.e(TAG, "rewarded interstitial failed " + error.getCode() + " " + error.getMessage());
+                    failPending(
+                        showCall != null ? showCall : pendingRiShow,
+                        error.getCode() + " " + error.getMessage()
+                    );
+                }
+            }
+        );
+    }
+
+    private void loadRewarded(String unit, PluginCall showCall) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            failPending(showCall, "no activity");
+            return;
+        }
+        if (rewarded != null || rewardedLoading) return;
+        rewardedLoading = true;
+        Log.i(TAG, "load rewarded " + unit);
+        Runnable timeout = () -> {
+            if (!rewardedLoading) return;
+            rewardedLoading = false;
+            Log.e(TAG, "rewarded load timed out");
+            failPending(showCall, "load timed out");
+        };
+        if (showCall != null) mainHandler.postDelayed(timeout, LOAD_TIMEOUT_MS);
+        AdRequest request = new AdRequest.Builder().build();
+        RewardedAd.load(
+            activity,
+            unit,
+            request,
+            new RewardedAdLoadCallback() {
+                @Override
+                public void onAdLoaded(RewardedAd ad) {
+                    mainHandler.removeCallbacks(timeout);
+                    rewardedLoading = false;
+                    rewarded = ad;
+                    Log.i(TAG, "rewarded loaded");
+                    if (pendingRewardedShow != null) presentRewarded(pendingRewardedShow);
+                }
+
+                @Override
+                public void onAdFailedToLoad(LoadAdError error) {
+                    mainHandler.removeCallbacks(timeout);
+                    rewardedLoading = false;
+                    rewarded = null;
+                    Log.e(TAG, "rewarded failed " + error.getCode() + " " + error.getMessage());
+                    failPending(
+                        showCall != null ? showCall : pendingRewardedShow,
+                        error.getCode() + " " + error.getMessage()
+                    );
+                }
+            }
+        );
+    }
+
+    private void presentInterstitial(PluginCall call) {
+        Activity activity = getActivity();
+        InterstitialAd ad = interstitial;
+        interstitial = null;
+        pendingInterstitialShow = null;
+        if (activity == null || ad == null) {
+            call.reject("no interstitial");
+            return;
+        }
+        if (showing) {
+            call.reject("ad already showing");
+            return;
+        }
+        showing = true;
+        final boolean[] rewarded = { false };
+        ad.setFullScreenContentCallback(fullscreen(call, rewarded, "interstitial"));
+        ad.show(activity);
+    }
+
+    private void presentRi(PluginCall call) {
+        Activity activity = getActivity();
+        RewardedInterstitialAd ad = rewardedInterstitial;
+        rewardedInterstitial = null;
+        pendingRiShow = null;
+        if (activity == null || ad == null) {
+            call.reject("no rewarded interstitial");
+            return;
+        }
+        if (showing) {
+            call.reject("ad already showing");
+            return;
+        }
+        showing = true;
+        final boolean[] rewardedFlag = { false };
+        ad.setFullScreenContentCallback(fullscreen(call, rewardedFlag, "rewarded interstitial"));
+        ad.show(activity, (OnUserEarnedRewardListener) rewardItem -> {
+            rewardedFlag[0] = true;
+            Log.i(TAG, "user earned reward type=" + rewardItem.getType());
+        });
+    }
+
+    private void presentRewarded(PluginCall call) {
+        Activity activity = getActivity();
+        RewardedAd ad = rewarded;
+        rewarded = null;
+        pendingRewardedShow = null;
+        if (activity == null || ad == null) {
+            call.reject("no rewarded");
+            return;
+        }
+        if (showing) {
+            call.reject("ad already showing");
+            return;
+        }
+        showing = true;
+        final boolean[] rewardedFlag = { false };
+        ad.setFullScreenContentCallback(fullscreen(call, rewardedFlag, "rewarded"));
+        ad.show(activity, rewardItem -> {
+            rewardedFlag[0] = true;
+            Log.i(TAG, "user earned reward type=" + rewardItem.getType());
+        });
+    }
+
+    private FullScreenContentCallback fullscreen(
+        PluginCall call,
+        boolean[] rewarded,
+        String kind
+    ) {
+        return new FullScreenContentCallback() {
+            private boolean settled = false;
+
             @Override
             public void onAdShowedFullScreenContent() {
                 Log.i(TAG, kind + " showed fullscreen");
@@ -104,136 +487,36 @@ public class AbyssPetAdsPlugin extends Plugin {
 
             @Override
             public void onAdDismissedFullScreenContent() {
-                if (settled[0]) return;
-                settled[0] = true;
-                showing = false;
-                JSObject ret = new JSObject();
-                ret.put("shown", true);
-                ret.put("rewarded", rewarded[0]);
-                Log.i(TAG, kind + " dismissed rewarded=" + rewarded[0]);
-                call.resolve(ret);
+                finishShow(call, rewarded[0], kind, null);
             }
 
             @Override
             public void onAdFailedToShowFullScreenContent(AdError error) {
-                if (settled[0]) return;
-                settled[0] = true;
+                finishShow(call, false, kind, error.getCode() + " " + error.getMessage());
+            }
+
+            private void finishShow(PluginCall showCall, boolean earned, String label, String error) {
+                if (settled) return;
+                settled = true;
                 showing = false;
-                Log.e(TAG, kind + " failed to show " + error);
-                call.reject(error.getCode() + " " + error.getMessage());
+                if (error != null) {
+                    Log.e(TAG, label + " failed to show " + error);
+                    showCall.reject(error);
+                    return;
+                }
+                JSObject ret = new JSObject();
+                ret.put("shown", true);
+                ret.put("rewarded", earned);
+                Log.i(TAG, label + " dismissed rewarded=" + earned);
+                showCall.resolve(ret);
             }
         };
-
-        activity.runOnUiThread(() -> {
-            handler.postDelayed(timeout, LOAD_TIMEOUT_MS);
-            AdRequest request = new AdRequest.Builder().build();
-            if (kind == Kind.INTERSTITIAL) {
-                InterstitialAd.load(
-                    activity,
-                    unit,
-                    request,
-                    new InterstitialAdLoadCallback() {
-                        @Override
-                        public void onAdLoaded(InterstitialAd ad) {
-                            if (settled[0]) return;
-                            handler.removeCallbacks(timeout);
-                            Log.i(TAG, "interstitial loaded, showing");
-                            ad.setFullScreenContentCallback(fullscreen);
-                            ad.show(activity);
-                        }
-
-                        @Override
-                        public void onAdFailedToLoad(LoadAdError error) {
-                            failLoad(handler, timeout, settled, call, error);
-                        }
-                    }
-                );
-                return;
-            }
-            if (kind == Kind.REWARDED_INTERSTITIAL) {
-                RewardedInterstitialAd.load(
-                    activity,
-                    unit,
-                    request,
-                    new RewardedInterstitialAdLoadCallback() {
-                        @Override
-                        public void onAdLoaded(RewardedInterstitialAd ad) {
-                            if (settled[0]) return;
-                            handler.removeCallbacks(timeout);
-                            Log.i(TAG, "rewarded interstitial loaded, showing");
-                            ad.setFullScreenContentCallback(fullscreen);
-                            ad.show(activity, rewardItem -> {
-                                rewarded[0] = true;
-                                Log.i(TAG, "user earned reward type=" + rewardItem.getType());
-                            });
-                        }
-
-                        @Override
-                        public void onAdFailedToLoad(LoadAdError error) {
-                            failLoad(handler, timeout, settled, call, error);
-                        }
-                    }
-                );
-                return;
-            }
-            RewardedAd.load(
-                activity,
-                unit,
-                request,
-                new RewardedAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(RewardedAd ad) {
-                        if (settled[0]) return;
-                        handler.removeCallbacks(timeout);
-                        Log.i(TAG, "rewarded loaded, showing");
-                        ad.setFullScreenContentCallback(fullscreen);
-                        ad.show(activity, rewardItem -> {
-                            rewarded[0] = true;
-                            Log.i(TAG, "user earned reward type=" + rewardItem.getType());
-                        });
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError error) {
-                        failLoad(handler, timeout, settled, call, error);
-                    }
-                }
-            );
-        });
     }
 
-    private void failLoad(
-        Handler handler,
-        Runnable timeout,
-        boolean[] settled,
-        PluginCall call,
-        LoadAdError error
-    ) {
-        handler.removeCallbacks(timeout);
-        if (settled[0]) return;
-        settled[0] = true;
-        showing = false;
-        Log.e(
-            TAG,
-            "failed to load code=" + error.getCode() + " domain=" + error.getDomain() + " " + error.getMessage()
-        );
-        call.reject(error.getCode() + " " + error.getMessage());
-    }
-
-    private void startSdk() {
-        if (sdkStarted) return;
-        sdkStarted = true;
-        Activity activity = getActivity();
-        if (activity == null) {
-            Log.e(TAG, "startSdk: no activity");
-            return;
-        }
-        activity.runOnUiThread(() -> {
-            try {
-                MobileAds.initialize(activity.getApplicationContext(), status -> Log.i(TAG, "MobileAds initialized"));
-            } catch (Exception e) {
-                Log.e(TAG, "MobileAds.initialize failed", e);
-            }
-        });
+    private void failPending(PluginCall showCall, String message) {
+        if (showCall == pendingInterstitialShow) pendingInterstitialShow = null;
+        if (showCall == pendingRiShow) pendingRiShow = null;
+        if (showCall == pendingRewardedShow) pendingRewardedShow = null;
+        if (showCall != null) showCall.reject(message);
     }
 }

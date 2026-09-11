@@ -5,6 +5,7 @@
 import {
   AD_TUNING,
   INTERSTITIAL_TRIGGERS,
+  PLAY_AD_LOAD,
   REWARD_TYPES,
 } from "./adConfig.js";
 import { getPlatform, isMockAdsEnabled, isWebAdsEnabled } from "./platformEnv.js";
@@ -189,7 +190,9 @@ async function gatedRewarded({ waitForFill = false } = {}) {
   if (rewardedInflight) return rewardedInflight;
   rewardedInflight = (async () => {
     try {
-      const ready = waitForFill
+      // Play: never use the 1s ready race. That was the "광고를 불러올 수 없어요" loop.
+      const wait = waitForFill || usesPlayProtectAds();
+      const ready = wait
         ? await ensureAdsReady()
         : await Promise.race([
             ensureAdsReady(),
@@ -209,16 +212,19 @@ async function gatedRewarded({ waitForFill = false } = {}) {
 
 export async function tryShowInterstitial(trigger) {
   if (!canShowInterstitial(trigger)) return false;
-  // Web/toss: do not block game flow. Play T1/T3 wait for a real fill.
+  // Web/toss: do not block game flow. Play T1/T3 wait for native load (already
+  // timed in the plugin). A JS race at the same 25s used to resolve false while
+  // the native load kept `showing=true` and blocked the protect button.
   const playBoundary = usesPlayProtectAds() && isPlayBoundaryInterstitial(trigger);
-  const readyMs = playBoundary ? 8000 : READY_GATE_MS;
-  const gateMs = playBoundary ? 25000 : 4000;
+  const readyMs = playBoundary ? PLAY_AD_LOAD.jsReadyGateMs : READY_GATE_MS;
+  const gateMs = playBoundary ? PLAY_AD_LOAD.jsShowHangGuardMs : 4000;
   try {
     const ready = await Promise.race([
       ensureAdsReady(),
       new Promise((resolve) => setTimeout(() => resolve(false), readyMs)),
     ]);
     if (!ready || !canShowInterstitial(trigger)) return false;
+    if (playBoundary) preloadInterstitial();
     const result = await Promise.race([
       provider.showInterstitial(),
       new Promise((resolve) =>

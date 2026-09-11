@@ -3,6 +3,7 @@ package com.nolsoopgames.abysspet;
 import android.os.Bundle;
 import androidx.core.splashscreen.SplashScreen;
 import com.getcapacitor.BridgeActivity;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -12,6 +13,11 @@ public class MainActivity extends BridgeActivity {
         SplashScreen.installSplashScreen(this);
         registerPlugin(AbyssPetAdsPlugin.class);
         super.onCreate(savedInstanceState);
+        try {
+            MobileAds.initialize(getApplicationContext(), status -> {});
+        } catch (Exception ignored) {
+            // AdMob init continues from AbyssPetAdsPlugin
+        }
         // first_open / new-user counts must not wait for WebView JS.
         try {
             FirebaseApp.initializeApp(this);
