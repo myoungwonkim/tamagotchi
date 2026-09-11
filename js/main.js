@@ -11,7 +11,7 @@ import {
 import { resolveAdultVariant } from "./adultVariants.js";
 import { addToEncyclopedia, clearEncyclopedia } from "./encyclopedia.js";
 import {
-  getAdultActionMessage,
+  getCareActionMessage,
   shouldShowIdleDialogue,
   resetDialogueTimer,
 } from "./dialogue.js";
@@ -115,6 +115,7 @@ function runGameOverCheck() {
   if (died) {
     captureDeathSnapshot(pet);
     preloadRewarded();
+    preloadInterstitial();
   }
   return died;
 }
@@ -123,6 +124,7 @@ function noteDeathIfNeeded(wasAlive) {
   if (wasAlive && pet && !pet.isAlive) {
     captureDeathSnapshot(pet);
     preloadRewarded();
+    preloadInterstitial();
   }
 }
 
@@ -297,6 +299,8 @@ async function init() {
       if (!getDeathSnapshot()) {
         captureDeathSnapshot(pet);
       }
+      preloadRewarded();
+      preloadInterstitial();
     }
     handleEvolution({ notify: false });
     if (getEvolutionStage(pet).id === "adult") {
@@ -372,6 +376,8 @@ function triggerSharkAttack() {
   applySharkDeath(pet);
   pet.ghostLine = pickGhostLine();
   captureDeathSnapshot(pet);
+  preloadRewarded();
+  preloadInterstitial();
   savePet(pet);
   playSfx("shark");
 
@@ -387,19 +393,11 @@ function triggerSharkAttack() {
   });
 }
 
-const ACTION_MESSAGES = {
-  feed: () => "맛있게 먹었어요!",
-  play: () => "재미있게 놀았어요!",
-  clean: () => "깨끗해졌어요!",
-  sleep: (p) => (p.isSleeping ? "잠들었어요..." : "깨어났어요!"),
-};
-
-function getActionMessage(pet, messageKey) {
-  const adultMessage = getAdultActionMessage(pet, messageKey);
-  if (adultMessage) return adultMessage;
-
-  const getMessage = ACTION_MESSAGES[messageKey];
-  return getMessage ? getMessage(pet) : null;
+function getActionMessage(pet, messageKey, statsBefore) {
+  const line = getCareActionMessage(pet, messageKey, statsBefore);
+  if (line) return line;
+  if (messageKey === "sleep") return pet.isSleeping ? "잠들었어요..." : "깨어났어요!";
+  return null;
 }
 
 function handleAction(actionFn, messageKey) {
@@ -407,6 +405,13 @@ function handleAction(actionFn, messageKey) {
 
   unlockAudioOnce();
 
+  const statsBefore = {
+    hunger: pet.hunger,
+    happiness: pet.happiness,
+    cleanliness: pet.cleanliness,
+    health: pet.health,
+    isSleeping: pet.isSleeping,
+  };
   const changed = actionFn(pet);
   if (!changed) return;
 
@@ -430,7 +435,7 @@ function handleAction(actionFn, messageKey) {
     }
   }
 
-  const message = getActionMessage(pet, messageKey);
+  const message = getActionMessage(pet, messageKey, statsBefore);
   if (message) showMessage(message);
 
   logPetCare(messageKey);

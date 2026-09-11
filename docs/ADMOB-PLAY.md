@@ -2,6 +2,8 @@
 
 정책은 [`MONETIZATION.md`](./MONETIZATION.md). 구현: `AbyssPetAdsPlugin.java` · `js/adsAdMob.js` · `js/ads.js`.
 
+Play에서 광고가 안 불러와진 반복 원인(JS가 로드보다 먼저 포기, 빈 preload, `--mode play` 누락)은 `npm run check:play-ads`가 막는다. `build:play`에 포함되어 있다.
+
 ## 유닛
 
 | 용도 | 포맷 | 환경 변수 |

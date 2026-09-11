@@ -29,6 +29,25 @@ export const AD_TUNING = {
   mockAdDurationMs: 1500,
 };
 
+/**
+ * Play AdMob timing. JS must never give up at or before the native load timeout
+ * (that race is why ads looked "broken" twice). Hang guard is only for a dead bridge.
+ * Keep `nativeLoadTimeoutMs` equal to AbyssPetAdsPlugin.LOAD_TIMEOUT_MS.
+ */
+export const PLAY_AD_LOAD = {
+  nativeInitTimeoutMs: 8_000,
+  nativeLoadTimeoutMs: 25_000,
+  jsReadyGateMs: 10_000,
+  jsShowHangGuardMs: 40_000,
+};
+
+if (PLAY_AD_LOAD.jsShowHangGuardMs <= PLAY_AD_LOAD.nativeLoadTimeoutMs) {
+  throw new Error("Play JS show hang guard must outlast native AdMob load timeout");
+}
+if (PLAY_AD_LOAD.jsReadyGateMs < PLAY_AD_LOAD.nativeInitTimeoutMs) {
+  throw new Error("Play JS ready gate must cover native MobileAds initialize timeout");
+}
+
 export const AD_GROUP_INTERSTITIAL = readEnv("VITE_AD_INTERSTITIAL_ID", TEST_INTERSTITIAL);
 export const AD_GROUP_REWARDED = readEnv("VITE_AD_REWARDED_ID", TEST_REWARDED);
 

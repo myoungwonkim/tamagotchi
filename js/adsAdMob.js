@@ -1,6 +1,6 @@
 /**
  * Play ads via the in-app AbyssPetAds native plugin.
- * Protect uses rewarded interstitial; T1/T3 use a regular interstitial.
+ * Protect: rewarded interstitial, fallback to rewarded. T1/T3: interstitial.
  */
 import { Capacitor, registerPlugin } from "@capacitor/core";
 import { suspendAudioForAds, resumeAudioAfterAds } from "./audio.js";
@@ -30,11 +30,10 @@ const UNIT_REWARDED = FORCE_TEST
 const UNIT_REWARDED_INTERSTITIAL = FORCE_TEST
   ? SAMPLE_REWARDED_INTERSTITIAL
   : env("VITE_ADMOB_REWARDED_INTERSTITIAL_ID", SAMPLE_REWARDED_INTERSTITIAL);
-const USING_SAMPLE_UNITS =
-  FORCE_TEST ||
-  UNIT_INTERSTITIAL.includes("3940256099942544") ||
-  UNIT_REWARDED.includes("3940256099942544") ||
-  UNIT_REWARDED_INTERSTITIAL.includes("3940256099942544");
+
+function isSampleUnit(id) {
+  return Boolean(id && id.includes("3940256099942544"));
+}
 
 const AbyssPetAds = registerPlugin("AbyssPetAds");
 
@@ -72,12 +71,27 @@ export function isSupported() {
   return initialized && Capacitor.isNativePlatform();
 }
 
+function nativeOpts(adId) {
+  return { adId, isTesting: FORCE_TEST || isSampleUnit(adId) };
+}
+
 export async function preloadInterstitial() {
-  await init();
+  if (!(await init()) || !isSupported()) return;
+  try {
+    await AbyssPetAds.preloadInterstitial(nativeOpts(UNIT_INTERSTITIAL));
+  } catch (err) {
+    console.warn("[adsAdMob] preloadInterstitial failed", err);
+  }
 }
 
 export async function preloadRewarded() {
-  await init();
+  if (!(await init()) || !isSupported()) return;
+  try {
+    await AbyssPetAds.preloadRewardedInterstitial(nativeOpts(UNIT_REWARDED_INTERSTITIAL));
+    await AbyssPetAds.preloadRewarded(nativeOpts(UNIT_REWARDED));
+  } catch (err) {
+    console.warn("[adsAdMob] preloadRewarded failed", err);
+  }
 }
 
 async function showNative(method, adId) {
@@ -86,10 +100,7 @@ async function showNative(method, adId) {
   }
   suspendAudioForAds();
   try {
-    const result = await AbyssPetAds[method]({
-      adId,
-      isTesting: USING_SAMPLE_UNITS,
-    });
+    const result = await AbyssPetAds[method](nativeOpts(adId));
     resumeAudioAfterAds();
     return {
       shown: Boolean(result?.shown),
@@ -106,7 +117,9 @@ export async function showInterstitial() {
   return showNative("showInterstitial", UNIT_INTERSTITIAL);
 }
 
-/** Play protect: rewarded interstitial (opt-in, higher eCPM than rewarded). */
+/** Play protect: RI first, then the 1.0.25 rewarded unit if that fill is empty. */
 export async function showRewarded() {
-  return showNative("showRewardedInterstitial", UNIT_REWARDED_INTERSTITIAL);
+  const ri = await showNative("showRewardedInterstitial", UNIT_REWARDED_INTERSTITIAL);
+  if (ri.shown) return ri;
+  return showNative("showRewarded", UNIT_REWARDED);
 }
