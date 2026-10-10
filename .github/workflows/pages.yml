@@ -60,6 +60,8 @@ jobs:
           cp home/about.html _site/about.html
           cp home/contact.html _site/contact.html
           cp home/privacy.html _site/privacy.html
+          mkdir -p _site/sudoku
+          cp home/sudoku/privacy.html _site/sudoku/privacy.html
           cp home/terms.html _site/terms.html
           cp home/terms.html _site/terms-of-service.html
           cp home/robots.txt _site/robots.txt
