@@ -67,6 +67,8 @@ jobs:
           cp home/robots.txt _site/robots.txt
           cp home/sitemap.xml _site/sitemap.xml
           cp home/pages.css _site/pages.css
+          cp home/studio.css _site/studio.css
+          cp home/site.js _site/site.js
           cp favicon.ico _site/favicon.ico
           cp -R assets/brand-icon _site/assets/brand-icon
           cp -R assets/app-icon _site/assets/app-icon
